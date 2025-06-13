@@ -1,0 +1,614 @@
+﻿SALESFORCE METADATA RULES,,,,,,
+rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sfmeta:AvoidAllRecordPermissions,Object Permissions should not be permissive,"'Allow Delete', 'Modify All Records' and 'View All Records' Should be ""false"" for Standard Object ""Account"" in Object Permissions
+
+This rule requires .profile metadata to be downloaded.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+common-sfmeta:InsufficientBranchCoverage,Branches should have sufficient coverage by tests,An issue is created on a file as soon as the branch coverage on this file is less than the required threshold. It gives the number of branches to be covered in order to reach the required threshold.,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+common-sfmeta:InsufficientLineCoverage,Lines should have sufficient coverage by tests,An issue is created on a file as soon as the line coverage on this file is less than the required threshold. It gives the number of lines to be covered in order to reach the required threshold.,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+common-sfmeta:DuplicatedBlocks,Source files should not have any duplicated blocks,An issue is created on a file as soon as there is at least one block of duplicated code on this file,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+common-sfmeta:SkippedUnitTests,Skipped unit tests should be either removed or fixed,Skipped unit tests are considered as dead code. Either they should be activated again (and updated) or they should be removed.,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:CustomProfilesPermission,Limit number of Custom Profiles with Modify All Data Permission,"Custom profiles with â€œModify All Dataâ€ permissions can be extremely risky and can open the door to user-inflicted data loss and corruption.
+    Limit the number of custom profiles with â€œModify All Dataâ€ permissions. Best practice is to have no custom profiles that can modify all of your Salesforce data.",CRITICAL,Salesforce Metadata,VULNERABILITY,FALSE
+codescan-policy:PermissionSetDeveloperPolicy,PermissionSet - Developer Policy,"PermissionSet - Developer Policy gives visibility on access permissions related to Author APEX, Import Custom Objects. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/732"">MITRE, CWE-732</a> - Incorrect Permission Assignment for Critical Resource </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileDataAdminPolicy,Profile - Data Admin Policy,"Profile - Data Admin Policy gives visibility on access permissions related to Manage Data Categories, View All Data, Manage Data Integrations, ModifyAllData , View Encrypted Data, Weekly Data Export, Edit Read Only Fields. <br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfilePlatformAdminPolicy,Profile - Platform Admin Policy,"Profile - Platform Admin Policy gives visibility on Platform Admin permissions.<br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+<li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+<li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+sfmeta:WorkflowWithoutProduct,Workflow Must Reference Product,"For general automation and validation best practices, associate actions in the system to a product line, product type,
+ or product feature.
+ <br/><br/>
+ This rule is specifically for nCino implementations and is not relevant outside of that.
+ If you are not using nCino in your Org, do not activate this rule.
+ nCino specific rules can be determined by the tag ncino-specific.",MAJOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:SharingRecordTypeId,Record Type ID is Missing,"Record Type ID Value is Missing in Criteria Items Tag under Sharing Criteria Rules
+
+
+This rule requires .sharingRules metadata to be downloaded with an API version greater than 32.0.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:ProcessBuilderWithoutProduct,Process Builder Must Reference Product,"For general automation and validation best practices, associate actions in the system to a product line, product type,
+ or product feature. Depending on how widespread the automation is, this ensures that follow-on phases for new lines of
+  business have limited rework. This also ensures optimal performance on automation that runs on Objects, such as Loan,
+   that span many different lines of business.
+   <br/><br/>
+   This rule is specifically for nCino implementations and is not relevant outside of that.
+   If you are not using nCino in your Org, do not activate this rule.
+   nCino specific rules can be determined by the tag ncino-specific.",MAJOR,Salesforce Metadata,CODE_SMELL,TRUE
+codescan-policy:ProfileSessionPolicy,Profile - Session Policy,"Profile - Session Policy gives visibility on access permissions related to Required Session Level and Session Timeout Limit.<br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+<li> <a href=""https://cwe.mitre.org/data/definitions/284"">MITRE, CWE-284</a> - Improper Access Control </li>
+<li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileUserMgmtPolicy,Profile - User Management Policy,"Profile - User Management Policy gives visibility on access permissions related to Manage Users, Manage Roles, Assign Permission Sets,
+ Reset Passwords and Manage Internal Users.<br/>
+<br/>
+ This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:OrganizationPasswordPolicy,Organization - Password Policy,"Organization - Password Policy gives visibility on access permissions related to Passwords Expiry, Enforce password History, Minimum Password Length,
+Password Complexity Requirement, Password Question Requirement, Maximum Invalid Login Attempts, Lockout Effective period, Obscure answer for password resets,
+Require minimum One Day password lifetime.<br/>
+<br/>
+This violation means that there is conflict with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review this configuration. If the permissions are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+<li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+<li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetApiAdminPolicy,PermissionSet - API Admin Policy,"PermissionSet - API Admin Policy gives visibility on access permissions related to  Modify Metadata Through Metadata API Functions,
+Bulk API Hard Delete, API Enabled, Multi-Factor Authentication for API Logins, Manage Multifactor Auth - API, Apex REST Services,
+Access Customer Asset Lifecycle Management APIs, Update Consent Preferences Using REST API. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+sfmeta:ExcessivePageLayout,Limit number of Page Layouts per object,"As the number of page layouts per object increases, the performance of Salesforce org decreases.
+The rule is intended to restrict the maximum number of page layouts that can be accommodated under a single object.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+codescan-policy:PermissionSetPackagesAdminPolicy,PermissionSet - Packages Admin Policy,"PermissionSet - Packages Admin Policy gives visibility on access permissions related to Create and Update Second-Generation Packages,
+Delete Second-Generation Packages, Manage Package Licenses, Download AppExchange Packages, Create AppExchange Packages, Upload AppExchange Packages.<br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/732"">MITRE, CWE-732</a> - Incorrect Permission Assignment for Critical Resource </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetFilesAndContentPolicy,PermissionSet - Files and Content Policy,"PermissionSet - Files and Content Policy gives visibility on access permissions related to  Files Connect Cloud. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileSecuritySettingsPolicy,Profile - Security Settings Policy,"Profile - Security Settings Policy gives visibility on access permissions related to IP Restrict Requests,Manage Certificates,Manage IP Addresses,Manage Encryption Keys,View Threat Detection Events,Profile allows Manage Security Center. <br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:OrganizationSessionPolicy,Organization - Session Policy,"Organization - Session Policy gives visibility on access permissions related to Session Timeout, Enforce login IP ranges on every request.<br/>
+<br/>
+This violation means that there is conflict with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review this configuration. If the permissions are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+<li> <a href=""https://cwe.mitre.org/data/definitions/284"">MITRE, CWE-284</a> - Improper Access Control </li>
+<li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetDataAdminPolicy,PermissionSet - Data Admin Policy,"PermissionSet - Data Admin Policy gives visibility on access permissions related to Manage Data Categories, View All Data, Manage Data Integrations, ModifyAllData , View Encrypted Data, Weekly Data Export, Edit Read Only Fields. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfilePackagesAdminPolicy,Profile - Packages Admin Policy,"Profile - Packages Admin Policy gives visibility on access permissions related to Packaging2, Packaging2Delete, ManagePackageLicenses,
+InstallPackaging, CreatePackaging, PublishPackaging. <br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/732"">MITRE, CWE-732</a> - Incorrect Permission Assignment for Critical Resource </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetUserMgmtPolicy,PermissionSet - User Management Policy,"PermissionSet - User Management Policy gives visibility on access permissions related to Manage Users, Manage Roles, Assign Permission Sets,
+Reset Passwords and Manage Internal Users.<br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetPlatformAdminPolicy,PermissionSet - Platform Admin Policy,"PermissionSet - Platform Admin Policy gives visibility on Platform Admin permissions.<br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+<li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+<li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfilePermissionsAdminPolicy,Profile - Permissions Admin Policy,"Profile - Permissions Admin Policy gives visibility on access permissions related to Manage Profiles and Permission Sets,
+Manage Sharing, Multi-Factor Authentication for User Interface Logins, Manage Auth. Providers, Manage Custom Permissions,
+Manage Login Access Policies, Manage Password Policies, Allow Password Never Expires, Manage Session Permission Set Activations,
+Exempt from Transaction Security, Waive Multi-Factor Authentication for Exempt Users. <br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileFlowsPolicy,Profile - Flows Policy,"Profile - Flows Policy gives visibility on access permissions related to Run Flows, Flows Policy, Manage Flow. <br/>
+<br/>
+ This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/269"">MITRE, CWE-269</a> - Improper Privilege Management </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileApiAdminPolicy,Profile - API Admin Policy,"Profile - API Admin Policy gives visibility on API Admin permissions.<br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+
+<h2>See</h2>
+<ul>
+<li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+<li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetFlowsPolicy,PermissionSet - Flows Policy,"PermissionSet - Flows Policy gives visibility on access permissions related to Run Flows, Flows Policy, Manage Flow. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/269"">MITRE, CWE-269</a> - Improper Privilege Management </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetReportsAndDashboardsAdminPolicy,PermissionSet - Reports And Dashboards Admin Policy,"PermissionSet - Reports And Dashboards Admin Policy gives visibility on access permissions related to  Manage All Private Reports and Dashboards,
+Create and Customize Reports, Manage Reports in Public Folders, Manage Dashboards in Public Folders, Manage Custom Report Types, Report Builder, Report Builder (Lightning Experience),
+Run Reports, Create and Customize Dashboards, Manage Dynamic Dashboards, Export Reports. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetPermissionsAdminPolicy,PermissionSet - Permissions Admin Policy,"PermissionSet - Permissions Admin Policy gives visibility on access permissions related to Manage Profiles and Permission Sets,
+Manage Sharing, Multi-Factor Authentication for User Interface Logins, Manage Auth. Providers, Manage Custom Permissions,
+Manage Login Access Policies, Manage Password Policies, Allow Password Never Expires, Manage Session Permission Set Activations,
+Exempt from Transaction Security, Waive Multi-Factor Authentication for Exempt Users. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileDeveloperPolicy,Profile - Developer Policy,"Profile - Developer Policy gives visibility on access permissions related to Author APEX, Import Custom Objects. <br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/732"">MITRE, CWE-732</a> - Incorrect Permission Assignment for Critical Resource </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfilePasswordPolicy,Profile - Password Policy,"Profile - Password Policy gives visibility on access permissions related to Passwords Expiry, Enforce password History, Minimum Password Length,
+Password Complexity Requirement, Password Question Requirement, Maximum Invalid Login Attempts, Lockout Effective period, Obscure answer for password resets,
+Require minimum One Day password lifetime, Don't Immediately expire links in forgot password emails.<br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+<li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+<li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileReportsAndDashboardsAdminPolicy,Profile - Reports and Dashboards Admin Policy,"Profile - Reports and Dashboards Admin Policy gives visibility on access permissions related to Create Report Folders, Manage All Private Reports and Dashboards,
+Create and Customize Reports, Manage Reports in Public Folders, Manage Dashboards in Public Folders, Manage Custom Report Types, Report Builder, Report Builder (Lightning Experience),
+Run Reports, Create and Customize Dashboards, Manage Dynamic Dashboards, Export Reports. <br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetSecuritySettingsPolicy,PermissionSet - Security Settings Policy,"PermissionSet - Security Settings Policy gives visibility on access permissions related to Manage Certificates,Manage IP Addresses,Manage Encryption Keys,View Threat Detection Events,Profile allows Manage Security Center. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileFilesAndContentPolicy,Profile - Files and Content Policy,"Profile - Files and Content Policy gives visibility on access permissions related to Query All Files, Files Connect Cloud, Manage Salesforce CRM Content, Manage Content Permissions, Manage Content Properties. <br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+sfmeta:ExternalIdOveruse,Potential Overuse - External IDs,Salesforce does not allow more than 5 External IDs per object.,MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:ExcessWorkflowsPerObject,Avoid Excess Workflow Rules per Object,Objects which contain too many decisions are complex and difficult to maintain.,MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:CrossObjectFormulaOveruse,Potential Overuse - Cross-Object Formulas,Salesforce does not allow more than 15 cross-object formulas per object.,MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:RelationShipOveruse,Potential Overuse - Relationship Objects,Salesforce does not allow more than 40 relationships per object.,MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:ExcessiveWorkflowsOrgWide,Avoid Excess Workflow Rules in Org,"This rule helps to limit the number of workflow rules in your salesforce org. This ensures that the workflow rules will not be overloading the system by doing extensive calculations
+ whenever a record is created or updated.
+ <br/>
+ As per the <a href=""https://help.salesforce.com/s/articleView?id=sf.workflow_limits.htm&type=5"">
+ Salesforce documentation</a>, the limit for workflow rules per org is 2000.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:CustomFieldSecurityInStandardObject,Use Page Layout or FLS to mark CustomField as required,The custom fields should be marked as required on standard/shared objects through page layout or field level security rather than at system level.,CRITICAL,Salesforce Metadata,VULNERABILITY,FALSE
+sfmeta:LimitCustomFields,Limit number of Custom Fields per object,"Having a large number of custom fields per object impacts the performance of queries.
+This rule gives the flexibility to configure a limit on the number of fields that can be associated with an object.
+ <br/>
+ <a href=""https://help.salesforce.com/s/articleView?id=sf.custom_field_allocations.htm&type=5"">
+ Salesforce Custom Field limits across editions</a>",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:FlowDecisionLimit,Flow Decision Limits,"Flows which contain too many decisions are complex and difficult to maintain.
+ Consider reducing the number of decisions or utilizing Apex.",MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:ObjectLookupsOveruse,Potential Overuse - Object Lookups,Salesforce does not allow more than 25 Lookup relationships on a single custom object.,MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:ExceedsMaxAllowedComponentsPerType,Avoid Excess Components for Objects,"This rule helps to limit the number of sharing, workflow and validation rules that can be created
+ on an object. This ensures that the components will not be overloading the system by doing extensive calculations
+ whenever a record is created or updated.
+<br/>
+<br/>
+Default Limits<br/>
+Sharing rules should not be more than specified limit per object.
+Default Limit: 19 per objects.
+<br/>
+Active validation rules should not be more than specified limit per object.
+Default Limit: 10 per objects.
+<br/>
+Active Workflow rules should not be more than specified limit per object.
+Default Limit: 10 per objects.
+<br/>
+Inactive Validation rules should not be more than specified limit per object.
+Default Limit: 3 per objects.
+<br/>
+Inactive Workflow rules should not be more than specified limit per object.
+Default Limit: 3 per objects.
+<br/>
+<br/>
+Steps to resolve
+<br/>
+Remove the rules which are redundant or obsolete.",CRITICAL,Salesforce Metadata,CODE_SMELL,FALSE
+common-sfmeta:InsufficientCommentDensity,Source files should have a sufficient density of comment lines,An issue is created on a file as soon as the density of comment lines on this file is less than the required threshold. The number of comment lines to be written in order to reach the required threshold is provided by each issue message.,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:XPathRule,XPath rule template,"CodeScan provides a very handy method for creating new rules by writing an XPath query. When the XPath query finds a match, a violation is created.
+    Let's take a simple example : assume we only want a single form on each metadata fle. 
+  See our <a href=""https://knowledgebase.autorabit.com/codescan/docs/creating-custom-rules-with-xpath-for-codescan-cloud/"">Custom Rules tutorial</a> for more information.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:CheckSystemAdministrator,Limit number of System Administrators,"This rules checks the number of System Administrators for a Salesforce org.
+    <br/>
+    Suggested Solution
+    <br/>
+    Leverage the delegate admin profile option or make custom profiles for these users and make sure
+     they can only access the data that is absolutely essential.",CRITICAL,Salesforce Metadata,VULNERABILITY,FALSE
+sfmeta:ValidationRuleWithoutProduct,Validation Rule Must Reference Product,"For general automation and validation best practices, associate actions in the system to a product line, product type,
+ or product feature. Depending on how widespread the automation is, this ensures that follow-on phases for new lines of
+  business have limited rework. This also ensures optimal performance on automation that runs on Objects, such as Loan,
+   that span many different lines of business.
+   <br/><br/>
+   This rule is specifically for nCino implementations and is not relevant outside of that.
+   If you are not using nCino in your Org, do not activate this rule.
+   nCino specific rules can be determined by the tag ncino-specific.",MAJOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:SystemBypassLogicValidation,System Bypass Logic - Validation Rules,"System bypass logic is required for custom validation rules for integration Users.
+      <br/><br/>
+      This rule is specifically for nCino implementations and is not relevant outside of that.
+      If you are not using nCino in your Org, do not activate this rule.
+      nCino specific rules can be determined by the tag ncino-specific.",MINOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:SystemBypassLogicWorkflow,System Bypass Logic - Workflow Rules,"System bypass logic is required in custom workflow rules for integration Users.
+      <br/><br/>
+      This rule is specifically for nCino implementations and is not relevant outside of that.
+      If you are not using nCino in your Org, do not activate this rule.
+      nCino specific rules can be determined by the tag ncino-specific.",MINOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:RequireDescriptionComponent,Custom Metadata components must have a description field,"Custom Metadata components should have a description of their functionality making it easy
+for others to understand the purpose and functionality of the component as it may not always
+be understandable from the name.
+<br/><br/>
+If you have a project namespace, then it's recommended to include this namespace into
+the description of your shared components. You can configure this rule to verify this by setting
+additional property 'requireProjectNamespace' of this rule to true value.
+<br/><br/>
+Please Note: Checking projects namespace inside component description will work only with the Salesforce
+integration type in CodeScan Cloud. It requires execution of extra Metadata APIs to retrieve the
+properties of Metadata components in your project.
+<br/><br/>
+Alternatively you may manually create the required 'component-properties.json' file which includes results
+of executing 'sfdx force:mdapi:listmetadata' properties and put it inside root of your project. In this case
+the rule will also be able to verify project namespace in the shared components of your project.
+     <BR><h2>Example:</h2><pre>
+ 
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomObject xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+    &lt;fields&gt;
+        &lt;fullName>Price__c&lt;/fullName&gt;       //Bad: This custom field does not have a description.
+        &lt;externalId>false&lt;/externalId&gt;
+        &lt;label&gt;Price&lt;/label&gt;
+        &lt;type>Currency&lt;/type&gt;
+    &lt;/fields&gt;
+  ..........
+&lt;/CustomObject&gt;
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomObject xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+    &lt;fields>
+        &lt;fullName>Price__c&lt;/fullName&gt;
+        &lt;description&gt;This is a description of price&lt;/description&gt;   //Good: A description is recommended.
+        &lt;externalId&gt;false&lt;/externalId&gt;
+        &lt;label&gt;Price&lt;/label&gt;
+        &lt;type&gt;Currency&lt;/type&gt;
+    &lt;/fields&gt;
+  ..........
+&lt;/CustomObject&gt;
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomField xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+      &lt;fullName>Price__c&lt;/fullName&gt;       //Bad: This custom field does not have a description.
+      &lt;externalId>false&lt;/externalId&gt;
+      &lt;label&gt;Price&lt;/label&gt;
+      &lt;type>Currency&lt;/type&gt;
+  ..........
+&lt;/CustomField&gt;
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomField xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+      &lt;fullName>Price__c&lt;/fullName&gt;
+      &lt;description&gt;This is a description of price&lt;/description&gt;   //Good: A description is recommended.
+      &lt;externalId&gt;false&lt;/externalId&gt;
+      &lt;label&gt;Price&lt;/label&gt;
+      &lt;type&gt;Currency&lt;/type&gt;
+  ..........
+&lt;/CustomField&gt;
+     </pre>",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+common-sfmeta:FailedUnitTests,Failed unit tests should be fixed,Test failures or errors generally indicate that regressions have been introduced. Those tests should be handled as soon as possible to reduce the cost to fix the corresponding regressions.,MAJOR,Salesforce Metadata,BUG,FALSE
+sfmeta:SecuritySettings,Enforce Org Security Settings,"Enforce various org security settings. Default settings can be modified and any password policy or session setting configured.
+
+This rule requires .settings file using
+&lt;types&gt;
+	&lt;members&gt;Security&lt;/members&gt;
+    &lt;name&gt;Settings&lt;/name&gt;
+&lt;/types&gt;",CRITICAL,Salesforce Metadata,VULNERABILITY,FALSE
+sfmeta:RequireDescriptionField,Custom fields must have a description field,"Custom fields should have a description of their function to avoid confusion.
+
+This rule requires .object or .field-meta.xml metadata files to be downloaded.
+<br/><br/>
+This rule has been deprecated and all functionality added to sfmeta:RequireDescriptionComponent.
+Please remove this deprecated rule from your custom Quality Profile and add sfmeta:RequireDescriptionComponent.
+     <BR><h2>Example:</h2><pre>
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomObject xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+    &lt;fields&gt;
+        &lt;fullName>Price__c&lt;/fullName&gt;       //Bad: This custom field does not have a description.
+        &lt;externalId>false&lt;/externalId&gt;
+        &lt;label&gt;Price&lt;/label&gt;
+        &lt;type>Currency&lt;/type&gt;
+    &lt;/fields&gt;
+  ..........
+&lt;/CustomObject&gt;
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomObject xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+    &lt;fields>
+        &lt;fullName>Price__c&lt;/fullName&gt;
+        &lt;description&gt;This is a description of price&lt;/description&gt;   //Good: A description is recommended.
+        &lt;externalId&gt;false&lt;/externalId&gt;
+        &lt;label&gt;Price&lt;/label&gt;
+        &lt;type&gt;Currency&lt;/type&gt;
+    &lt;/fields&gt;
+  ..........
+&lt;/CustomObject&gt;
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomField xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+      &lt;fullName>Price__c&lt;/fullName&gt;       //Bad: This custom field does not have a description.
+      &lt;externalId>false&lt;/externalId&gt;
+      &lt;label&gt;Price&lt;/label&gt;
+      &lt;type>Currency&lt;/type&gt;
+  ..........
+&lt;/CustomField&gt;
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomField xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+      &lt;fullName>Price__c&lt;/fullName&gt;
+      &lt;description&gt;This is a description of price&lt;/description&gt;   //Good: A description is recommended.
+      &lt;externalId&gt;false&lt;/externalId&gt;
+      &lt;label&gt;Price&lt;/label&gt;
+      &lt;type&gt;Currency&lt;/type&gt;
+  ..........
+&lt;/CustomField&gt;
+     </pre>",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:HardCodedFlowValue,Avoid Hard Coded Values in Flows,"Hard coded values in flows can lead to unexpected output and make maintenance difficult. Instead, Get Records can be used for the respective object using the DeveloperName. If you’re creating criteria in an entry condition, you can reference DeveloperName (API Name) fields with a formula.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:AvoidLargeFlows,Avoid Large Flows,Too many nodes can cause your Flow to become complex and unmanageable. Consider using Subflows to make your Flow logic reusable and scalable.,MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:AvoidNestedFlowLoops,Avoid Nested Loops In Flows,"Nested loops within your Flows can cause them to become unreadable, inefficient and complex. Consider using Invoked Actions to clean up complex Flows.",MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:DmlInFlowLoop,DML Should Not Be Called In Loops,Using DML in loops can cause Governor Limit Exceptions.,CRITICAL,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:DocumentFlows,Document Flows,"Well documented flows ensure that any member on the team is able to understand the purpose and function of the flow. Documenting the purpose of your Flow, the objects it touches and where it’s invoked from can ensure the maintainability of that Flow in the future.",MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:DuplicateFlowDml,Duplicate DML operations in Flows,"Users should not navigate back between screens if the Flow commits changes to the database or performs actions. This rule aims to avoid potential issues caused by duplicate database operations that might occur if users go back and forth between screens, triggering the same actions multiple times.",MAJOR,Salesforce Metadata,BUG,FALSE
+sfmeta:FlowDMLNaming,Flow DML Naming,"Standardized naming conventions allow an organizations flows to be clean, maintainable and readable. This rule enforces standard naming conventions for DML operations (Query, Update, Create, Delete)",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:FlowInteractionNaming,Flow Interaction Naming,"Standardized naming conventions allow an organizations flows to be clean, maintainable and readable.This rule enforces standard naming conventions for Screens, Actions and Emails.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:FlowLogicNaming,Flow Logic Naming,"Standardized naming conventions allow an organization's flows to be clean, maintainable, and readable. This rule enforces standard naming conventions for Decisions, Assignments, and Loops.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:FlowNaming,Flow Naming,"Standardized naming conventions allow an organizations flows to be clean, maintainable and readable. This rule enforces standard naming conventions for Flows and Domains.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:FlowVariableResourceNaming,Flow Variables & Resources Naming,"Standardized naming conventions allow an organizations flows to be clean, maintainable and readable. This rule enforces standard naming conventions for Variables, Formulas and Choices.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:OldFlowApi,Flows API Version Is Too Old,This rule identifies flows which are using older API versions. Consider updating the API versions of any flows found.,MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:FaultPathsInFlow,Flows Should Include Fault Paths,"Fault paths are a way to handle errors that may occur in your flow. Depending on the Flow and it’s purpose, errors can be logged, show an error screen or send an email of the failure to a group of users. Flows should include Fault paths to ensure that all errors are handled appropriately.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:FilterGetRecords,Get Records Should Be Filtered,"This rule mandates the usage of at least one filter in the Data element ""Get Records"" within Salesforce Flows. Enforcing this rule will encourage flow designers to think critically about their data retrieval needs and apply relevant filters, reducing the risk of performance bottlenecks and unoptimized queries.",CRITICAL,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:RemoveInactiveFlows,Inactive flows should be removed,Inactive flows may cause clutter in the Salesforce org. In extreme cases they can begin to hit the organizations limits. These should be removed if not being used,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:MigrateToFlow,Migrate Workflows and Processes To Flows,"Process Builders and Workflows are being phased out over the coming year. In Winter '23 the ability to create new Workflows will be turned off, in Summer '23 the ability to create new Processes with Process Builder will be turned off. It is recommended that these Processes and Workflows are migrated to Flows. For more information, please see this link: (Salesforce: Transition to Flows)[Help And Training Community]",MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:FlowNullHandler,Missing Null Handler After Get Records in Flow,"Currently, when the Get Records operation doesn't find any data, it returns a null value.
+By implementing a decision element to validate the result of the Get Records operation, we can proactively identify and handle cases where no data is retrieved. This allows us to avoid potential null reference errors and prevent unexpected crashes or data processing issues.",CRITICAL,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:UnusedFlowVariables,Unused Flow Variables,Consider removing unused Flow variables to increase performance and readability.,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:FastFieldUpdates,Use Fast Field Updates,"If a flow is only updating the record that triggered it, it should be using the Fast Field Updates option. This can be up to 10 times faster than the more flexible Actions and Related Records Flow.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:ICULocaleFormats,Adopt the ICU Locale Formats instead of JDK locale formats,Salesforce is retiring the JDK locale formats with the Spring ’24 release. ICU is the new standard and enforced in API version 45. Make sure your custom code does not make use of JDK locale formats and instead uses locale-neutral methods.,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:APIVersionsRetired,API Versions Retired,The retirement of older Salesforce Platform API versions (7.0 through 20.0) after the Summer '22 release is a critical step to ensure the continued smooth operation of Salesforce applications.,MAJOR,Salesforce Metadata,BUG,FALSE
+sfmeta:EnableLWS,Enable Salesforce Lightning Web Security (LWS),LWS is a security feature that enhances the security of Lightning components and helps prevent cross-site scripting (XSS) attacks.,MAJOR,Salesforce Metadata,VULNERABILITY,FALSE
+sfmeta:RollUpOveruse,Potential Overuse of Roll-Up Summaries,Ensure compliance with Salesforce's object limit of 25 roll-up summary fields per object to prevent potential issues arising from exceeding Salesforce platform limits.,CRITICAL,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:AutoLayoutFlows,Set Flows to Auto Layout,"Implementing auto-layout for your flows helps Designers to modify layouts more quickly, allowing them to iterate on their designs with greater speed. It ensures elements are perfectly aligned and evenly spaced, improving readability in complex Flows.",MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:NcinoInactiveWorkflowRule,nCino Inactive Workflow Rules,"Removing inactive, unmanaged workflow rules in a Salesforce instance allows you to maintain an organized workflow environment.",MINOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:ExposedLightningMessageChannel,Exposed Lightning Message Channel,"It is recommended to verify instances where the 'isExposed' flag in Lightning Message Channels is set to true. Setting this flag can lead to unintended access to the Lightning Message Service (LMS) API, potentially resulting in unauthorized message publishing and subscribing across components within the Salesforce ecosystem.",MAJOR,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+sfmeta:AvoidUsingPolyfillConfiguration,Avoid Configuration References to Polyfill.io,"The use of cdn.polyfill.io poses a potential security risk primarily related to URL redirection and external resource loading. If attackers can manipulate references to this domain, they might redirect users to malicious sites or inject harmful scripts, leading to vulnerabilities.",CRITICAL,Salesforce Metadata,VULNERABILITY,FALSE
+sfmeta:OldLWCApi,LWC API Version Is Too Old,This rule identifies Lightning web components which are using older API versions. Consider updating the API versions of any LWC found.,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:NcinoDuplicateLabels,nCino - Avoid Duplicates in Custom Labels,"Maintaining unique labels ensures data accuracy and consistency within the nCino platform. By avoiding the creation of multiple labels with the same value, users can rely on the uniqueness of each label for categorization, and analysis purposes.",MINOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:NcinoNullCollateral,nCino - Collateral Configuration is Null,The Collateral Configuration Field on the Collateral Type object should not be null. This will reduce the likelihood of missing or incomplete Collateral information.,BLOCKER,Salesforce Metadata,BUG,TRUE
+sfmeta:NcinoComponentNamingDuplicate,nCino - Custom Components with Duplicate Names,"Avoiding naming conflicts with existing Managed Package Components minimizes the risk of errors and conflicts within the system, ultimately enhancing system stability and reliability.",CRITICAL,Salesforce Metadata,BUG,TRUE
+sfmeta:NcinoFieldNamingDuplicate,nCino - Custom Fields with Duplicate Names,"Avoiding naming conflicts with existing Managed Package Fields minimizes the risk of errors and conflicts within the system, ultimately enhancing system stability and reliability.",CRITICAL,Salesforce Metadata,BUG,TRUE
+sfmeta:NcinoIntUserConfig,nCino - Data Integration User Configuration,"The nCino Data Integration User should have the following Permission Sets assigned:
+- Exclude Flow
+- Exclude Trigger
+- Exclude Validation
+The Data Integration user is authenticated for background jobs such as nightly batched updates of records.
+Configuring this user’s Permission Sets correctly makes sure that updates by the Data Integration User don't execute additional tasks.",MINOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:NcinoDeprecatedFields,nCino - Deprecated Fields,Deprecated fields in an nCino environment are labelled with a '-D' to make the deprecation visible when configuring the environment. This rule is to identify the location when deprecated fields are used and should be addressed.,BLOCKER,Salesforce Metadata,BUG,TRUE
+sfmeta:NcinoDuplicateLookupKeys,nCino - Duplicate LookupKeys,"In the nCino Record Based Configuration, no two records in the configuration should have duplicate LookupKeys. The LookupKey is a critical identifier for these records, and duplicates could lead to data inconsistency and errors in the system.",BLOCKER,Salesforce Metadata,BUG,TRUE
+sfmeta:NcinoFeeTemplateScreenSection,nCino - Fee Template Record Screen Section,"Ensure that every Fee Template record includes a Screen Section data value. This will reduce the likelihood of missing or incomplete Fee information.
+
+Update the identified Fee Template record by adding a Screen Section data value.",BLOCKER,Salesforce Metadata,BUG,TRUE
+sfmeta:nCinoFieldHistoryTracking,nCino - Field History Tracking Check,Field History Tracking is limited according to the features in your Salesforce org.By default Field History Tracking can be use to track a maximum of 20 fields per object.,MINOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:NcinoNullLookupKeys,nCino - Null LookupKeys,"In the nCino Record Based Configuration, object records without LookupKeys will cause challenges in data management and processing.",BLOCKER,Salesforce Metadata,BUG,TRUE
+sfmeta:ProcessBuilderWithoutProduct,nCino - Process Builder Must Reference Product,"For general automation and validation best practices, associate actions in the system to a product line, product type, or product feature. Depending on how widespread the automation is, this ensures that follow-on phases for new lines of business have limited rework. This also ensures optimal performance on automation that runs on Objects, such as Loan, that span many different lines of business.",MAJOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:NcinoProductFeatureNotExist,nCino - Product Feature record does not exist,"Ensure that for each nCino Product Object, there is a corresponding Product Feature record. Product Object records existing without an associated Product Feature record, can lead to potential data inconsistencies.",CRITICAL,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:NcinoProductFeatureSharing,nCino - Product Feature Sharing,Ensure that each nCino Product Object record is associated with unique Product Feature records. Shared Product Feature records may lead to data inconsistencies and operational challenges.,MAJOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:SystemBypassLogicFlow,nCino - System Bypass Logic - Flows,System bypass logic is required for custom Flows. Checking for the Exclude Flows Permission Set allows the system to cease further processing of the Flow if it is found at the outset. This improves the efficiency of flow execution and reduces unnecessary processing steps.,MINOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:SystemBypassLogicValidation,nCino - System Bypass Logic - Validation Rules,System bypass logic is required for Validation Rules.Checking for the Exclude Validation Permission Set allows the system to cease further processing of the rule if it is found at the outset. This improves the efficiency of Validation Rule execution and reduces unnecessary processing steps.,MINOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:DescriptionRemoteSiteSettings,Description for Remote Site Settings,Remote Site Settings should have a description of their functionality making it easy for others to understand the purpose and functionality of the component as it may not always be understandable from the name.,MINOR,Salesforce Metadata,CODE_SMELL,TRUE

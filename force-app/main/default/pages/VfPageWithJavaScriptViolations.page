@@ -1,0 +1,77 @@
+<apex:page controller="VfPageController">
+    <apex:form>
+        <apex:pageBlock title="VF Page with Rule Violations">
+            <apex:pageBlockSection>
+                <apex:inputText value="{!accountName}" id="accountInput"/>
+                <apex:commandButton value="Process" onclick="processAccount(); return false;"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    
+    <script>
+        // BAD: Using console.log (cs-vf:no-console rule)
+        console.log('Page loaded');
+        console.error('This is an error message');
+        console.warn('This is a warning');
+        
+        function processAccount() {
+            var accountName = document.getElementById('accountInput').value;
+            
+            // BAD: Using eval (cs-vf:no-implied-eval rule)
+            setTimeout("console.log('Delayed execution')", 1000);
+            setInterval("updateStatus()", 5000);
+            
+            // BAD: Self comparison (cs-vf:no-self-compare rule)
+            if (accountName === accountName) {
+                console.log('Self comparison detected');
+            }
+            
+            // BAD: Assignment in return (cs-vf:no-return-assign rule)
+            return accountName = 'Default';
+        }
+        
+        function validateInput() {
+            var input = getValue();
+            
+            // BAD: No parentheses for constructor (cs-vf:new-parens rule)
+            var date = new Date;
+            
+            // BAD: Floating decimal (cs-vf:no-floating-decimal rule)
+            var rate = .5;
+            var amount = 100.;
+            
+            // BAD: Underscore dangle (cs-vf:no-underscore-dangle rule)
+            var _privateVar = 'private';
+            var publicVar_ = 'public';
+            
+            return input;
+        }
+        
+        // BAD: Sparse array (cs-vf:no-sparse-arrays rule)
+        var items = [1, , 3, , 5];
+        
+        // BAD: Octal escape (cs-vf:no-octal-escape rule)
+        var copyright = "Copyright \251 2024";
+        
+        // BAD: Multiple spaces in regex (cs-vf:no-regex-spaces rule)
+        var pattern = /foo   bar/;
+        
+        // BAD: Script URL (cs-vf:no-script-url rule)
+        var scriptUrl = 'javascript:alert("XSS")';
+        
+        // BAD: Extending native types (cs-js:no-extend-native rule)
+        Array.prototype.customMethod = function() {
+            return this.length;
+        };
+        
+        // BAD: Using with statement (implied by wrapper violations)
+        function problematicFunction() {
+            // BAD: New wrapper objects (cs-js:no-new-wrappers rule)
+            var str = new String('hello');
+            var num = new Number(42);
+            var bool = new Boolean(true);
+            
+            return str + num + bool;
+        }
+    </script>
+</apex:page> 

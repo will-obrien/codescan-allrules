@@ -1,0 +1,24 @@
+﻿VISUALFORCE AND LIGHTNING SECURITY HOTSPOTS,,,,,
+key,name,mdDesc,severity,langName,type
+vf:HotspotGetSessionIdUsage,Using GETSESSIONID() and $API.Session_Id is security-sensitive,"The use of GETSESSIONID() and $API.Session_Id is security-sensitive. Ensure that you need to do this.\n\n<h2>See</h2>\n<ul>\n  <li> <a href=""http://cwe.mitre.org/data/definitions/807"">MITRE, CWE-807</a> - Reliance on Untrusted Inputs in a Security Decision </li>\n  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>\n  <li> OWASP Top 10 2017 Category A2 - Broken Authentication </li>\n</ul>",MAJOR,Visual Force & Lightning,SECURITY_HOTSPOT
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+vf:HotspotGetSessionIdUsage,Using GETSESSIONID() and $API.Session_Id is security-sensitive,"The use of GETSESSIONID() and $API.Session_Id is security-sensitive. Ensure that you need to do this.
+
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/807"">MITRE, CWE-807</a> - Reliance on Untrusted Inputs in a Security Decision </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+  <li> OWASP Top 10 2021 Category A7 - Identification and Authentication Failures  </li>
+</ul>",MAJOR,Visual Force & Lightning,SECURITY_HOTSPOT
+cs-vf:npm-audit,Auditing npm dependencies for security vulnerabilities,"<p>There is a plethora of JavaScript libraries for use on the Web and in Node.JS apps.
+This greatly simplifies development, but you need to stay up-to-date on security fixes.</p>
+<p>According to <a href=""https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project"">OWASP Top 10 Most Critical Web Application Security Risks</a>, using Components (ie. dependencies) with known vulnerabilities is ranked 9th, and there are many known stories of security breaches provided by (malicious or not) third-party dependencies.</p>
+<p>This rule inspects package-lock.json file inside your project and identifies if used npm dependencies have any known Common Vulnerabilities and Exposures (CVE).
+The rule relies on <a href=""https://github.com/advisories?query=ecosystem%3Anpm"">GitHub Advisory Database</a>.</p>",MAJOR,Visual Force & Lightning,SECURITY_HOTSPOT
+cs-vf:unsecure-js-dependency,Auditing js dependencies for security vulnerabilities,"<p>There is a plethora of JavaScript libraries for use on the Web and in Node.JS apps.
+This greatly simplifies development, but you need to stay up-to-date on security fixes.</p>
+<p>According to <a href=""https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project"">OWASP Top 10 Most Critical Web Application Security Risks</a>, using Components (ie. dependencies) with known vulnerabilities is ranked 9th, and there are many known stories of security breaches provided by (malicious or not) third-party dependencies.</p>
+<p>This rule identifies the open source JS components inside your project and evaluates if there are any known Common Vulnerabilities and Exposures (CVE) for their versions.</p>",MAJOR,Visual Force & Lightning,SECURITY_HOTSPOT

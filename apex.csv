@@ -1,0 +1,4030 @@
+﻿APEX RULES,,,,,,
+rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:AvoidGlobalModifier,Avoid Using Global Modifier,"Global classes should be avoided (especially in managed packages) as they can never be deleted
+      or changed in signature. Always check twice if something needs to be global. Many interfaces 
+      (e.g. Batch, Schedulable, WebServiceMock, HttpCalloutMock) required global modifiers in the past
+      but donâ€™t require this anymore. Donâ€™t lock yourself in.
+    <BR><h2>Example:</h2><pre>
+
+global class JobSyncScheduler implements Schedulable {	//Bad: Schedulable doesn't need to be global anymore.
+     global void execute(SchedulableContext context){
+    }
+}
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:TrackSuppressWarnings,Track Usage of @SuppressWarnings,"Overuse of the @SupressWarnings annotation can mean issues in your code are not picked up.  This rule flags each usage to make sure it is needed.
+  See <a href=""https://docs.codescan.io/hc/en-us/articles/360012109711-Ignoring-violations"">docs.codescan.io</a> for more information.
+  <BR><h2>Example:</h2><pre>
+
+
+@SuppressWarnings('all')
+public class Foo {
+  
+  // The class will be ignored.
+
+}
+
+
+  </pre>",INFO,APEX,CODE_SMELL,FALSE
+sf:OutboundEmailSend,Sending outbound emails using Messaging.sendEmail,"Single/Mass email messages sent with the Messaging.sendEmail method count against the sending organization's daily email limits. When this limit is reached, calls to the sendEmail method will be rejected and the user will receive an error.
+It's up to the developer to review the code to determine whether or not a fix is needed.
+<br/>
+Read more here:  <a href =""https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm"">Execution Governors and Limits</a>
+  <BR><h2>Example:</h2><pre>
+      Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+      mail.setSubject('Hello team');
+      mail.setToAddresses(new String[] {'test@codescan.io'});
+      mail.setHTMLBody('Testing my email');
+      Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail }); //Bad: Sending outbound emails using Messaging.sendEmail.
+    </pre>",INFO,APEX,CODE_SMELL,FALSE
+sf:AvoidOutboundCallsInBatchApex,Using Database.AllowsCallouts interface in Batch Apex.,"Avoid using the Database.AllowsCallouts interface in your Batch Apex classes as it is not recommended to make HTTP calls as part of your Batch Apex logic.
+<br/>
+Consider using an ETL (extract, transform and load) tools if you're interested in integrating data from other services with Salesforce.
+<br/>
+More about Batch Apex here: <a href =""https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm"">Salesforce Developers - Using Batch Apex</a>
+<BR><h2>Example:</h2><pre>
+global class ProcessTestResult implements Database.Batchable, Database.AllowsCallouts //Bad: Using the Database.AllowsCallouts together with Database.Batchable.
+{
+
+  global List start(Database.BatchableContext bc)
+  {
+    return getQueuedItems();
+  }
+
+  global void execute(Database.BatchableContext BC, List queuedItemsList)
+  {
+    processResults(queuedItemsList);
+  }
+
+  global void finish(Database.BatchableContext BC)
+  {
+  }
+}
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidHardCodedError,Avoid Hard Coded Error Messages,"Error messages that are passed to the client should use custom labels or be set dynamically through method calls. This allows the message to be translated and modified more easily
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+	public void triggerHandler(){
+    	obj.addError('An error occurred', true); //Bad: hard coded error
+    	Trigger.new[0].addError(System.Label.Label_name + bad, false); // Bad: Label is concatenated with a variable.
+    	obj.addError(System.label.errorOccurred); //Good: Custom label
+      throw new AuraHandledException(System.Label.Label_name + bad); //Bad: hard coded error
+    }
+}
+
+public class MySampleApexClass {
+   public static Integer myValue = 0;
+
+   public static Integer getCalculatedValue () {
+        try {
+            myValue = 10;
+            return myValue;
+        } catch (HandledException e) {
+           throw new AuraHandledException(e.getMessage()); //Good: Dynamic Error Message
+        } catch (AssertException ae) {
+           String errMsg = ae.getMessage();
+           throw new AuraHandledException(errMsg); // Bad: Using a variable to store error message is unnecessary.
+        } catch ( StringException se) {
+        // Good: String concatenation with dynamic error message is allowed.
+        throw new AuraHandledException('Exception: ' + se.getError());
+        }
+   }
+}
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ExceptionClassNaming,Exception Class Naming,"A Class name that extends an exception should have a name that ends in ""Exception"".
+		<BR><h2>Example:</h2><pre>
+
+public class MyClass extends Exception { //Bad: we would expect this class name to end in 'Exception'.
+}
+
+public class MyException extends Exception { //Good: this is preferred.
+}
+
+		</pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:LeftBracesLinePositions,Left Braces Positioning Should Be Consistent,"The line positioning of opening braces should remain consistent throughout the project. 
+The rule has separate parameters for classes, triggers, methods, blocks and accessors.
+       <BR><h2>Example:</h2><pre>
+public class Foo{
+	public void test1()		// This is an example of the opening brace on the next line. (methodBracesPosition parameter set to Next)
+	{
+	}
+}
+
+public class Foo{
+	public void test1(){    // This is an example of the opening brace on the same line. (methodBracesPosition parameter set to Same)
+	}
+}
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:ClassWithoutTestClass,Class Without Test Class,"Every Class should have a corresponding Test Class which is named appropriately.
+      <BR><h2>Example:</h2><pre>
+MyClass.cls 
+-------------
+public without sharing class MyClass{ //code...}   //For each class...
+
+
+MyClassTest.cls 
+-------------
+@isTest
+public class MyClassTest{
+    static testMethod void GoodTest(){ //code...}    //...there should be an appropriately named test class.
+}
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:XPathRule,XPath rule template,"CodeScan provides a very handy method for creating new rules by writing an XPath query. When the XPath query finds a match, a violation is created.
+    Let's take a simple example : assume we have a Factory class that must be always declared final. 
+    We'd like to report a violation each time a declaration of Factory is not declared final. Consider the following class: :
+<pre>
+public class a {
+  Factory f1;
+
+  void myMethod() {
+    Factory f2;
+    Integer a;
+  }
+}
+</pre>
+  The following expression does the magic we need:
+<pre>
+//VariableDeclarator
+ [../Type/ReferenceType/ClassOrInterfaceType
+  [@Image = 'Factory'] and ..[@Final='false']]
+</pre>
+  See our <a href=""https://knowledgebase.autorabit.com/codescan/docs/creating-custom-rules-with-xpath-for-codescan-cloud/"">Custom Rules tutorial</a> for more information.",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidForLoopToJustAddElementsToCollection,Avoid For Loop To Just Add Elements To A Collection,"The method .addAll should be used to add all elements from one collection to another.  Using a for loop is unnecessary.<BR><h2>Example:</h2><pre>
+ public class Foo{
+   
+   List<String> listOne;
+   List<String> listTwo;
+   
+   public Foo(){
+     listOne; = new List <String>();
+     listTwo; = new List <String>();
+     
+     listOne.add('one');
+     listOne.add('two');
+     listTwo.add('A');
+     listTwo.add('B');
+     
+   
+   }
+   
+   public void badCombine(){
+     
+     for(String item : listOne)        //Bad: This is unnecessary.
+       listTwo.add(item);
+   }
+   
+   public void goodCombine(){
+   
+     listOne.addAll(listTwo);        //Good: This is preferred.
+ 
+ 
+ }
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:VariableDeclarationHidesAnother,Avoid declarations hiding another field or variable,"One variable can hide another if they have the same name and are accessible in the same place.  Consider renaming the variable.    
+<BR><h2>Example:</h2><pre>
+public class Foo {
+	integer x;
+	public void asdf(){
+		integer x = 0;      //Bad: The variable x defined as a field will be hidden.
+	}
+}
+
+public class Foo {
+	integer x;
+	public void asdf(){
+		integer y = 0;      //Good: Distinct naming is preferred.
+	}
+}
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:FailedUnitTest,Failing Unit Tests,This rule tracks failing unit tests and reports them as violations.,MAJOR,APEX,CODE_SMELL,FALSE
+sf:CouplingBetweenObjects,Coupling Between Objects,"This rule counts the number of unique attributes, local variables, and return types within an object. 
+A number higher than the specified threshold can indicate a high degree of coupling.
+    <BR><h2>Example:</h2><pre>
+
+
+public class Foo {
+   private Blah var1;
+   private Bar var2;
+ 
+ 	// ....followed by many imports of unique objects
+   void ObjectC doWork() {
+     Bardo var55;
+     ObjectA var44;
+     ObjectZ var93;
+     return something;  //Bad: This is not recommended. Could indicate a high degree of coupling.
+   }
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ExcessivePublicCount,Excessive Public Count,"Classes with large numbers of public methods and attributes require disproportionate testing efforts
+since combinational side effects grow rapidly and increase risk. Refactoring these classes into
+smaller ones not only increases testability and reliability but also allows new variations to be
+developed easily.
+    <BR><h2>Example:</h2><pre>
+    
+public class Foo {
+	public String value;
+	public Bar something;
+	public Variable var;
+ // [... more more public attributes ...]
+ 
+	public void doWork() {}
+	public void doMoreWork() {}
+	public void doWorkAgain() {}
+ // [... more more public methods ...]
+}
+    
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidSoqlInLoops,Avoid Calling SOQL and DML Inside Loops.,"Soql and DML calls within loops can cause governor limit exceptions.
+Merge DML is ignored, as there is currently no bulkified way of merging.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	public static void main( String as[] ) {  
+		for (Integer i = 0; i < 10; i++) {
+		  Id name = [ Select Id From Contact Where Name='Sam'; //Bad: avoid this whenever you can, it's really expensive.
+		}
+	}
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:LongMethodName,Long Method Name,"Method names that are too long can make the code difficult to follow.
+     <BR><h2>Example:</h2><pre>
+
+public class LongMethod {
+  public void thisIsSomeReallyLongMethodName() { //Bad: The method name is too long.
+  }
+}
+
+     </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:LongClassName,Long Class Name,"Class names that are too long can make the code difficult to follow. Salesforce Developer Console restricts users from
+creating an Apex Class with class name greater than 40 characters.
+
+    <BR><h2>Example:</h2><pre>
+
+public class AnExcessivelyLongApexClassNameAsNegativeExample {  //Bad: this is not recommended.
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UncommentedEmptyConstructor,Uncommented Empty Constructor,"Uncommented Empty Constructor finds instances where a constructor does not
+contain statements, but there is no comment. By explicitly commenting empty
+constructors it is easier to distinguish between intentional (commented)
+and unintentional empty constructors.
+
+Comments can be added inside the constructor or a formal comment (/** comment */) above the constructor is also valid
+      <BR><h2>Example:</h2><pre>
+  
+public Foo() { 			//Bad: Consider commenting this constructor.
+  super();
+}
+ 
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AuraEnabledWithoutCatchBlock,@AuraEnabled should have Proper Error Handling,"@AuraEnabled actions require error handling and should throw AuraHandledException<br/>
+      Wrap the code that can trigger exceptions in a try-catch block.
+      Throw an AuraHandledException in the catch block. This allows you to provide a custom user-friendly error message.
+      <br/>
+      See <a href=""https://developer.salesforce.com/blogs/2017/09/error-handling-best-practices-lightning-apex.html"">https://developer.salesforce.com/blogs/2017/09/error-handling-best-practices-lightning-apex.html</a> 
+    <BR><h2>Example:</h2><pre>
+public class FooController {					//Good: Try catch block in place.
+	@AuraEnabled public void getSomething() {
+		try{
+			...
+		}catch(Exception e){
+			throw new AuraHandledException(e.getMessage());
+		}
+	}		
+}
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+common-sf:InsufficientBranchCoverage,Branches should have sufficient coverage by tests,An issue is created on a file as soon as the branch coverage on this file is less than the required threshold. It gives the number of branches to be covered in order to reach the required threshold.,MAJOR,APEX,CODE_SMELL,FALSE
+common-sf:InsufficientLineCoverage,Lines should have sufficient coverage by tests,An issue is created on a file as soon as the line coverage on this file is less than the required threshold. It gives the number of lines to be covered in order to reach the required threshold.,MAJOR,APEX,CODE_SMELL,FALSE
+common-sf:InsufficientCommentDensity,Source files should have a sufficient density of comment lines,An issue is created on a file as soon as the density of comment lines on this file is less than the required threshold. The number of comment lines to be written in order to reach the required threshold is provided by each issue message.,MAJOR,APEX,CODE_SMELL,FALSE
+common-sf:DuplicatedBlocks,Source files should not have any duplicated blocks,An issue is created on a file as soon as there is at least one block of duplicated code on this file,MAJOR,APEX,CODE_SMELL,FALSE
+common-sf:SkippedUnitTests,Skipped unit tests should be either removed or fixed,Skipped unit tests are considered as dead code. Either they should be activated again (and updated) or they should be removed.,MAJOR,APEX,CODE_SMELL,FALSE
+common-sf:FailedUnitTests,Failed unit tests should be fixed,Test failures or errors generally indicate that regressions have been introduced. Those tests should be handled as soon as possible to reduce the cost to fix the corresponding regressions.,MAJOR,APEX,BUG,FALSE
+sf:AvoidSizeOfSoql,Avoid Calling sizeOf on a SOQL Statement.,"It's better to use an aggregate call like select COUNT() from table. This rule is not applied to test methods.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	public static void main( String as[] ) {  
+		integer size = [ select id from table ].size();  //Bad: this is not recommended.
+		
+		integer size = [ select count() from table ]; 	//Good: this is preferred.
+	}
+}
+
+    </pre>",MAJOR,APEX,BUG,FALSE
+sf:AbstractClassWithoutAnyMethod,Abstract Class without any Methods,"If an abstract class does not provide any methods, it may be acting as a simple data container 
+that is not meant to be instantiated. In this case, it is probably better to use a private or 
+protected constructor in order to prevent instantiation than make the class misleadingly abstract.
+	   <BR><h2>Example:</h2><pre>
+
+//Bad: data only container?
+public class abstract Example {
+	String field;
+	Integer otherField;
+}
+
+//Good: data container class is protected against instantiation.
+public class Example {
+	String field;
+	Integer otherField;
+	
+	protected Example(){	
+		//protected so that instantiation is not possible
+	}
+}
+            
+        </pre>",BLOCKER,APEX,CODE_SMELL,FALSE
+sf:AvoidMethodsBeforeInitializers,Avoid Calling Methods before Initializers in Constructors,"Local variables should be initialized before calling other methods in the class. Since the constructor may not be fully initialized, the methods may fail due to the state of the object.
+    	<br/>
+    	If you need to run a method, try to initialize all variables first.
+    	<br/>
+    	Note that an implemented accessors (e.g. integer a { get { ... return something } }) is counted as a method as it can also rely on other variables
+		
+      <BR><h2>Example:</h2><pre>
+
+public class Foo {
+  private String status;
+  public Foo(String status){
+	if ( getStatus() == 'something' ){		//Bad: this would fail, as the constructor has not completely initialized the object yet.
+		// ...
+	}
+	this.status = status;
+  }
+  public String getStatus(){
+  	return this.status;
+  }
+}
+
+    </pre>",MAJOR,APEX,BUG,FALSE
+sf:AvoidSoqlWithNegativeLogic,Avoid Calling SOQL with Negative Expressions.,"When working with very large amounts of data, SOQL calls using negative expressions cannot use an index and may be slow.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	public static void main( String as[] ) {  
+		Account[] accs = [ select id from account where field__c != 123 ];  //Bad: this is not recommended.
+	}
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AbstractClassWithoutAbstractMethod,Abstract Class Without Abstract Method,"The abstract class does not contain any abstract methods. An abstract class suggests
+an incomplete implementation, which is to be completed by subclasses implementing the
+abstract methods. If the class is intended to be used as a base class only (not to be instantiated
+directly) a protected constructor can be provided prevent direct instantiation.
+      <BR><h2>Example:</h2><pre>
+
+
+public abstract class Foo {			//Bad: Consider using abstract methods or removing
+  									// the abstract modifier and adding protected constructors
+  void Integer method1() { ... }
+  void Integer method2() { ... }
+
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:InsecureEndpoint,Avoid Cleartext Transmission of Sensitive Information,"Checks against accessing endpoints under plain **http**. You should always use **https** for security.<br/>
+Many communication channels can be ""sniffed"" by attackers during data transmission. For example, network traffic can often be sniffed by any attacker who has access to a network interface. This significantly lowers the difficulty of exploitation by attackers.<br/>
+<br/>
+See <a href=""http://cwe.mitre.org/data/definitions/319.html"">MITRE, CWE-319</a> - Cleartext Transmission of Sensitive Information
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+	void foo() {
+		String endpoint = 'http://localhost:3300';
+		HttpRequest req = new HttpRequest();
+		req.setEndpoint(endpoint);
+	}
+}
+      </pre>",CRITICAL,APEX,VULNERABILITY,FALSE
+sf:SystemDebug,Avoid calling System.debug(),"References to System.debug are usually intended for debugging purposes and can remain in
+the codebase even in production code.<br/>
+<br/>
+This is a potential privacy violation as usernames, passwords, names, contact information, opportunity information, PII and other sensitive data may be stored in unsecured locations or is accessible by unauthorized users.<br/>
+<br/>
+This rule can also be set to 'Strict' to disallow all use of System.debug.<br/>
+<br/>
+Debug logs may be downloaded and sent to a 3rd party by emails or other means as part of reporting possible errors.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+<li><a href=""http://cwe.mitre.org/data/definitions/489.html"">MITRE, CWE-489</a> - Leftover Debug Code</li>
+<li>OWASP Top 10 2021 Category A2 - Cryptographic Failures</li>
+</ul>
+     <BR><h2>Example:</h2><pre>
+ 
+class Foo{
+    public void testA () {
+        System.debug('Entering test');   //Bad: Consider removing this.
+    }
+}
+
+     </pre>",CRITICAL,APEX,VULNERABILITY,FALSE
+sf:LongTriggerName,Long Trigger Name,"Trigger names that are too long can make the code difficult to follow.
+
+    <BR><h2>Example:</h2><pre>
+
+trigger AnExcessivelyLongTriggerNameAsNegativeExample on Account (before insert) { //Bad: this is not recommended.
+System.debug('Hello World!');
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:CommentedTodo,Avoid leaving TODO/FIXME comments in code,"TODO/FIXME's should either be resolved. 
+
+See also - <a href=""http://cwe.mitre.org/data/definitions/546.html"">MITRE, CWE-546</a>
+  <BR><h2>Example:</h2><pre>
+/*      
+* TODO: this would be much better if we did it without bugs...   		//Bad: Resolve this before committing!
+* FIXME: this would be much better if we did it without bugs...   		//Bad: Resolve this before committing!
+*/     
+
+  </pre>",INFO,APEX,CODE_SMELL,FALSE
+sf:CommentRequired,Comment is Required,"Denotes whether comments are required (or unwanted) for specific language elements.
+    <BR><h2>Example:</h2><pre>
+
+/**
+* 
+*
+* @author John Doe
+*/
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:Csrf,Avoid Making DML Operations in Controller Constructor/Action Method,"Check to avoid making DML operations in Apex class constructor/action method. This prevents
+modification of the database just by accessing a page.<br/>
+<br/>
+When a web server is designed to receive a request from a client without any mechanism for verifying that 
+it was intentionally sent, then it might be possible for an attacker to trick a client into making an unintentional 
+request to the web server which will be treated as an authentic request. This can be done via a URL, image load, 
+XMLHttpRequest, etc. and can result in exposure of data or unintended code execution.<br/>
+<br/>
+See <a href=""http://cwe.mitre.org/data/definitions/352.html"">MITRE, CWE-352</a> - Cross-Site Request Forgery (CSRF)
+      <BR><h2>Example:</h2><pre>
+public class FooController {
+	public FooController() {
+		Account data = new Account({'name': 'New data'});  //Bad: not recommended.
+		insert data;
+	}
+}
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:EmptyCatchBlock,Empty Catch Block,"Empty Catch Block finds instances where an exception is caught, but nothing is done.  
+In most circumstances, this swallows an exception which should either be acted on 
+or reported.
+      <BR><h2>Example:</h2><pre>
+  
+public void doSomething() {
+  try {
+    doHeapsOfStuff();
+    
+  } catch (Exception e) {									//Bad: Not recommmended.
+
+  }
+}
+ 
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmailAddressInLiteral,Hard Coded Email Address,Avoid hardcoded email addresses.,BLOCKER,APEX,CODE_SMELL,FALSE
+sf:BrokenNullCheck,Broken Null Check,"The null check is broken since it will throw a NullPointerException itself.
+It is likely that you used || instead of && or vice versa.
+     <BR><h2>Example:</h2><pre>
+
+public String bar(String string) { 
+	if (string != null || !string.equals('')){	//Bad: Should be &&. The !string.equals statement will throw an exception if the string is null.
+		return string;
+	}
+		
+		
+	if (string == null && string.equals('')){	//Bad: Should be ||. The && operator will cause the string.equals('') to throw an exception.
+		return string;
+	}
+}
+        
+        </pre>",CRITICAL,APEX,BUG,FALSE
+sf:AvoidLosingExceptionInformation,Avoid Losing Exception Information,"Statements in a catch block that invoke accessors on the exception without using the information
+only add to code size.  Either remove the invocation, or use the return result.
+		<BR><h2>Example:</h2><pre>
+
+public void bar() {
+	try {
+		// do something
+	} catch (SomeException se) {
+		se.getMessage();  	//Bad: this is not recommended.
+	}
+}
+
+		</pre>",CRITICAL,APEX,BUG,FALSE
+sf:AvoidLogicInTrigger,Avoid Logic in Triggers,"As triggers do not allow methods like regular classes they are less flexible and suited to apply good encapsulation style. Therefore delegate the triggers work to a regular class (often called Trigger handler class). 
+
+The exception to this rule is you may check the Trigger.is* context (Trigger.isInsert for example) inside an if statement.
+<br/>
+Read more here: <a href =""https://developer.salesforce.com/page/Trigger_Frameworks_and_Apex_Trigger_Best_Practices"">https://developer.salesforce.com/page/Trigger_Frameworks_and_Apex_Trigger_Best_Practices</a>
+     <BR><h2>Example:</h2><pre>
+      
+trigger OpportunityTrigger on Opportunity (after insert, after update) {
+
+  //allowed - trigger context handler logic
+  if(Trigger.isAfter && Trigger.isInsert) {
+    OpportunityTriggerHandler.handleAfterInsert(Trigger.new);
+  } else if(Trigger.isAfter && Trigger.isUpdate) {
+    OpportunityTriggerHandler.handleAfterInsert(Trigger.new, Trigger.old);
+  }
+  
+  new OpportunityTriggerHandler.run();		 //Good: this is trigger context handler logic.
+
+  for(Account a : Trigger.new){           	//Bad: this is not recommended.
+		//...
+   }
+}
+     </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidMultipleUnaryOperators,Avoid Multiple Unary Operators,"The use of multiple unary operators may be problematic, and/or confusing.
+Ensure that the intended usage is not a bug, or consider simplifying the expression.
+            
+        <BR><h2>Example:</h2><pre>
+            
+//Bad: These are typo bugs, or at best needlessly complex and confusing.  
+Integer i = - -1;
+Integer j = + - +1;
+Integer z = ~~2;
+boolean b = !!true;
+boolean c = !!!true;
+
+//Good: These are better.
+Integer i = 1;
+Integer j = -1;
+Integer z = 2;
+boolean b = true;
+boolean c = false;
+
+// And these just make your brain hurt:
+Integer i = ~-2;
+Integer j = -~7;
+            
+
+        </pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:AvoidInsecureCookies,Avoid Creating Cookies with isSecure Disabled,"The isSecure parameter indicates whether the cookie can be accessed through HTTPS. 
+<br/>
+By setting isSecure=false, sensitive cookies may be exposed when sending the cookie over an unsecure connection.
+<br/>
+<h2>See</h2>
+<ul>
+	<li><a href=""http://cwe.mitre.org/data/definitions/311"">MITRE, CWE-311</a> - Missing Encryption of Sensitive Data</li>
+	<li><a href=""http://cwe.mitre.org/data/definitions/315"">MITRE, CWE-315</a> - Cleartext Storage of Sensitive Information in a Cookie</li>
+	<li><a href=""https://cwe.mitre.org/data/definitions/614.html"">MITRE, CWE-614</a> - Sensitive Cookie in HTTPS Session Without 'Secure' Attribute</li>
+	<li>OWASP Top 10 2021 Category A7 - Identification and Authentication Failures </li>
+	<li>OWASP Top 10 2021 Category A2 - Cryptographic Failures</li>
+	<li><a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses</li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+    public void foo () {     
+       langCookie = new Cookie('uLang', userLanguage, null, -1, false); //Bad: the cookie can be sent over HTTP.
+    }
+}
+  
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:AvoidSoqlWithNullInWhere,Avoid using null conditions in SOQL WHERE clause.,"By default, the index tables do not include records that are null (records with empty values).
+Therefore, if we want to filter a field which is equal to null, the index will not be applied. SOQL queries require full scans, which can be painfully slow on large data volumes (LDV).
+It's up to the developer to review the code to determine whether or not a fix is needed.
+<br/>
+You can work with Salesforce Customer Support to create custom indexes that include null rows.
+Even if you already have custom indexes on your custom fields, you must explicitly enable and rebuild them to get the empty-value rows indexed.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	public static void main( String as[] ) {
+		Contact[] lst = [ SELECT Id, Name FROM Contact WHERE CustomField__c = null; ];  //Bad: this is not recommended.
+	}
+}
+
+    </pre>",INFO,APEX,CODE_SMELL,FALSE
+sf:ConstructorCallsOverridableMethod,Constructor Calls Overridable Method,"Calling overridable methods during construction poses a risk of invoking methods on an incompletely 
+constructed object and can be difficult to debug.
+It may leave the sub-class unable to construct its superclass or forced to replicate the construction 
+process completely within itself, losing the ability to call super().  If the default constructor 
+contains a call to an overridable method, the subclass may be completely uninstantiable.   Note that 
+this includes method calls throughout the control flow graph - i.e., if a constructor Foo() calls a 
+private method bar() that calls a public method buz(), this denotes a problem.
+      <BR><h2>Example:</h2><pre>
+  
+public class SeniorClass {
+  public SeniorClass(){
+      toString(); 			  //Bad: toString() may throw NullPointerException if overridden.
+  }
+  public virtual String toString(){
+    return 'IAmSeniorClass';
+  }
+}
+
+public class JuniorClass extends SeniorClass {
+  private String name;
+  public JuniorClass(){
+    super();  				//Bad: Automatic call to super() leads to NullPointerException.
+    name = 'JuniorClass';
+  }
+  public virtual String toString(){
+    return name.toUpperCase();
+  }
+}
+  
+      </pre>",CRITICAL,APEX,BUG,FALSE
+sf:EmptyFinallyBlock,Empty Finally Block,"Avoid empty finally blocks. They serve no purpose and should be removed.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+ public void bar() {
+  try {
+    Integer x=2;
+   } finally {
+    			//Bad: Nothing is done here.
+   }
+ }
+}
+ 
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnreachableCode,Unreachable Code,"Code that is unreachable will never be executed.  Consider refactoring any methods with unreachable code.
+      <BR><h2>Example:</h2><pre>
+class Bar{
+	public void foo() {
+		if (false) {
+		   x = 1;			//Bad: This line will never execute.
+		}
+	}
+
+	public void foo() {
+		while (true) {
+		   break;
+		   x = 1;			//Bad: This line after 'break' will never be executed.
+		}
+	}
+	
+	public void fooTwo() {
+		while (true) {
+		   x = 1;
+		   break;			//Good: The assignment can be executed.
+		}
+	}
+}
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:CatchBlockShouldDoMoreThanRethrow,Catch Block Should Do More Than Rethrow,"Simply re-throwing an exception in a catch block serves no purpose as it would appear anyway.  Catch blocks that do nothing but rethrow an exception should either be changed or removed.
+  <BR><h2>Example:</h2><pre>
+
+public void doSomething() {
+  try {
+    doHeapsOfStuff();
+  } catch (Exception e) {
+    throw e;   //Bad: This serves no purpose.
+  }
+}
+
+public void doSomethingElse() {
+  try {
+    doHeapsOfStuff();
+  } catch (Exception e) {
+    System.debug(e.getMessage());     //Good: The exception triggers some logic and is handled within the catch block.
+    throw e;     
+  }
+}
+
+  </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:CyclomaticComplexity,Cyclomatic Complexity,"Complexity directly affects maintenance costs. It is determined by the number of decision points in a method 
+plus one for the method entry.  The decision points include 'if', 'while', 'for', and 'case labels' calls.  
+Generally, numbers ranging from 1-4 denote low complexity, 5-7 denote moderate complexity, 8-10 denote
+high complexity, and 11+ is very high complexity.  Consider breaking the method into smaller methods.
+		
+   <BR><h2>Example:</h2><pre>
+
+public class Foo {		      
+
+   	public void example() {			//Bad: This method has a Cyclomatic Complexity of 10.
+        
+1		if (a == b) {
+2           if (a1 == b1) {
+                fiddle();
+3			} else if (a2 == b2) {
+                fiddle();
+4           } else {
+                fiddle();
+            }
+5           } else if (c == d) {
+                while (c == d) {
+                    fiddle();
+                }
+6           } else if (e == f) {
+                for (Integer n = 0; n &lt; h; n++) {
+                    fiddle();
+                }
+7           } else {
+8               if (a1 == b1) {
+                	fiddle();
+9  				} else if (a2 == b2) {
+                	fiddle();
+10            	} else {
+                	fiddle();
+            	}
+            }
+    	}
+    }
+}
+
+   </pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:AvoidPublicFields,Class Variable Fields should not have Public Accessibility,"Public class variables have some disadvantages:<br/>
+      	<ul>
+      		<li>The internal representation is exposed, and thus cannot be easily changed</li>
+      		<li>When the value is changed in an unexpected way (for example nulled), the implementation may not handle it correctly</li>
+      		<li>Additional validation logic cannot be added</li>
+      	</ul>
+      	<br/>
+      	<h2>See</h2>
+      	<ul>
+		  <li> <a href=""http://cwe.mitre.org/data/definitions/493.html"">MITRE, CWE-493</a> - Critical Public Variable Without Final Modifier </li>
+		</ul>
+    <BR><h2>Example:</h2><pre>
+  public class MyClass {
+  	public static final integer SOME_CONSTANT = 0;     //Good: Constants are not checked.
+  	private String firstName;                          //Good.
+  	public String FIRSTNAME_OVERRIDE;                 //Bad: Not recommended.
+  	public String lastName { get; set; }               //Good.
+  	@AuraEnabled public String lastName               //Good. AuraEnabled is not checked
+  
+  	public String getFirstName() {
+    	return firstName;
+  	}
+  	
+ 	public void setFirstName(String firstName) {
+	 	this.firstName = firstName;
+  	}
+   }
+   
+   //Good. This class is considered a 'Data Transport Object' and is not checked
+   public class MyClass {
+      public String field1;
+      public String field2;
+   }
+    </pre>",MINOR,APEX,VULNERABILITY,FALSE
+sf:AvoidHardCodedCredential,Avoid Using Hard Coded Credentials for Authentication,"To detect hardcoded credentials used in requests to an endpoint, this rule looks for HttpRequest.setHeader methods with 'Authorization' passed as the first parameter.
+<br/>
+You should refrain from hardcoding credentials:
+<ul>
+  <li>They are hard to mantain by being mixed in application code</li> 
+  <li>Particularly hard to update them when used from different classes</li> 
+  <li>Granting a developer access to the codebase means granting knowledge
+     of credentials, keeping a two-level access is not possible.</li> 
+  <li>Using different credentials for different environments is troublesome
+     and error-prone.</li> 
+</ul>
+Instead, you should use *Named Credentials* and a callout endpoint.<br/>
+<br/>
+For more information, you can see <a href=""https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_named_credentials.htm"">here</a>.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/798"">MITRE, CWE-798</a> - Use of Hard-coded Credentials </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/259"">MITRE, CWE-259</a> - Use of Hard-coded Password </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/qQCHAQ"">CERT, MSC03-J.</a> - Never hard code sensitive information </li>
+  <li> OWASP Top 10 2021 Category A7 - Identification and Authentication Failure </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+  <li> Derived from FindSecBugs rule <a href=""http://h3xstream.github.io/find-sec-bugs/bugs.htm#HARD_CODE_PASSWORD"">Hard Coded Password</a> </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+    public void foo(String username, String password) {
+        HttpRequest req = new HttpRequest();
+        
+        Blob headerValue = Blob.valueOf(username + ':' + password);
+        String authorizationHeader = 'BASIC ' + EncodingUtil.base64Encode(headerValue);
+        req.setHeader('Authorization', authorizationHeader);    //Bad: Hardcoded credentials are not recommended.
+        
+        req.setEndpoint('callout:***My_Named_Credential***/some_path');    //Good: Using named credentials is recommended.
+    }
+}
+      </pre>",CRITICAL,APEX,VULNERABILITY,FALSE
+sf:ExcessiveClassLength,Excessive Class Length,"Excessive class file length is an indication that the class may be burdened with excessive 
+responsibilities that could be provided by external classes or functions. In breaking these methods
+apart the code becomes more manageable and ripe for reuse.
+   <BR><h2>Example:</h2><pre>
+
+public class Foo {          //Bad: Consider splitting the class apart.
+
+	public void bar1() {
+      // do stuff
+	}
+	public void bar2() {
+      // do stuff
+	}
+	
+	.......  // 1000 lines of code later...
+	
+    public void barN() {
+      // do stuff
+	}
+}
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:FieldDeclarationsShouldBeAtStartOfClass,Field Declarations Should be at the Start of a Class,"Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+    <BR><h2>Example:</h2><pre>
+      
+public class HelloWorldBean {
+
+  private String _thing;				//Good: Field declared before methods and/or inner classes.
+
+  public String getMessage() {
+    return 'Hello World!';
+  }
+
+  private String _fieldInWrongLocation;	//Bad: Field declared after methods and/or inner classes.
+}
+      
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:ExcessiveParameterList,Excessive Parameter List,"Methods with numerous parameters are a challenge to maintain, especially if most of them share the
+same datatype. These situations usually denote the need for new objects to wrap the numerous parameters.
+   <BR><h2>Example:</h2><pre>
+
+public void addPerson(		//Bad: Too many arguments liable to be mixed up.
+	Integer birthYear, Integer birthMonth, Integer birthDate, Integer height, Integer weight, Integer ssn) {
+
+	. . . .
+}
+ 
+public void addPerson(		//Good: Preferred approach is to use a data transport object.
+	Date birthdate, BodyMeasurements measurements, Integer ssn) {
+
+	. . . .
+}
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:PreserveStackTrace,Preserve Stack Trace,"Throwing a new exception from a catch block without passing the original exception into the
+new exception will cause the original stack trace to be lost making it difficult to debug 
+effectively. 
+      <BR><h2>Example:</h2><pre>
+    
+public class Foo {				//Good: Preferred.
+    void good() {
+        try{
+            Integer.parseInt('a');
+        } catch(Exception e){
+            throw new Exception(e);
+        }
+    }
+    void bad() {				//Bad: Not recommended.
+        try{
+            Integer.parseInt('a');
+        } catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+}
+    
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:TestClassNaming,Test Class Names Should Include 'Test',"Test classes should include the word 'Test' in their class names.
+      <BR><h2>Example:</h2><pre>
+
+//Bad: Test class name doesn't include 'Test'
+@isTest
+public class MyClass{
+    static testMethod void testMethod(){
+      //test code
+    }
+}
+
+//Good: Test class name includes 'Test'
+@isTest
+public class MyClassTest{
+    static testMethod void testMethod(){
+      //test code
+    }
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:BrokenMathCast,Unexpected Casting of Types,"When arithmetic is performed on a type, the type remains the same even if the result is a different type.<br/>
+<br/>
+For example dividing two integers and putting the result in a double will not return a fractional result as you expected.<br/>
+<br/>
+Likewise, multiplying two large integers and putting the result in a long may silently overflow the integer resulting in a wrong number.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> MISRA C++:2008, 5-0-8 - An explicit integral or floating-point conversion shall not increase the size of the underlying type of a cvalue
+  expression. </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/190"">MITRE, CWE-190</a> - Integer Overflow or Wraparound </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/woIyAQ"">CERT, NUM50-J.</a> - Convert integers to floating point for floating-point
+  operations </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/AxE"">CERT, INT18-C.</a> - Evaluate integer expressions in a larger size before
+  comparing or assigning to that size </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat2"">SANS Top 25</a> - Risky Resource Management </li>
+</ul>
+
+      <BR><h2>Example:</h2><pre>
+double twoThirds = 2/3;  //Bad: Yields 0.0
+double twoThirds = 2/3f;  //Good: Yields 0.666...
+double twoThirds = (float)2/3;  //Good: Yields 0.666...
+
+long millisInYear = 1000*3600*24*365;  //Bad: Integer overflow. Yields 2147483649.
+long millisInYear = 1000L*3600*24*365;  //Good: Long multiplication. Yields 31536000000.
+long millisInYear = (long)1000*3600*24*365;  //Good: Long multiplication. Yields 31536000000.
+
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:UnconditionalIfStatement,Unconditional If Statement,"Do not use 'if' statements whose conditionals are always true or always false.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+	<li><a href=""http://cwe.mitre.org/data/definitions/489.html"">MITRE, CWE-489</a> - Leftover Debug Code</li>
+	<li><a href=""http://cwe.mitre.org/data/definitions/570.html"">MITRE, CWE-570</a> - Expression is Always False</li>
+	<li><a href=""http://cwe.mitre.org/data/definitions/571.html"">MITRE, CWE-571</a> - Expression is Always True</li>
+	<li>MISRA C:2004, 13.7 - Boolean operations whose results are invariant shall not be permitted.</li>
+	<li>MISRA C:2012, 14.3 - Controlling expressions shall not be invariant</li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+  public void close() {
+    if (true) {    //Bad: There is no reason for a permanently true 'if' statement, this should be removed. 
+      // ...
+    }					 
+  }
+}
+
+public class Foo {
+  public void close() {
+    if (false) {    //Bad: A permanently false 'if' statement will never run.  
+      // ...
+    }					 
+  }
+}
+
+public class Foo {
+  public void close() {	  
+    // ...    //Good: Remove the permanent 'if statement.
+  }
+}
+
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:FieldLevelSecurity,Field Level Security Vulnerabilities,"This rule makes sure that the code checks for access permissions before running a SOQL, SOSL, or DML operation.<br/>
+This prevents access to protected resources by users without the correct privalages.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+	<li><a href=""https://cwe.mitre.org/data/definitions/282.html"">CWE-282</a> - Improper Ownership Management</li>
+	<li>See <a href=""https://cwe.mitre.org/data/definitions/284.html"">CWE-284</a> - Improper Access Control</li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+public class Foo { 	
+	public void justGiveMeFoo() {
+
+	 	AggregateResult[] test = [SELECT Id FROM Opportunity];  //Bad: The resource is accessed without checking permissions.
+	}
+	
+	public void giveMeFooSafely() {
+		if (Opportunity.sObjectType.getDescribe().isAccessible()) {  //Good: Permissions are checked before any resources are accessed.
+	 		return;
+	 	}
+	 	AggregateResult[] test = [SELECT Id FROM Opportunity]; 
+	}
+
+	public void giveMeFooSafelyWithEnforcedSecurity() {
+	 	AggregateResult[] test = [SELECT Id FROM Opportunity WITH SECURITY_ENFORCED]; //Good: Permissions are checked using the WITH SECURITY_ENFORCED clause
+	}
+
+	public void giveMeFooSafelyWithUserModeSecurity() {
+		AggregateResult[] test = [SELECT Id FROM Opportunity WITH USER_MODE]; //Best: Permissions are checked using the WITH USER_MODE clause
+	}
+
+} 
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:NPathComplexity,NPath Complexity,"The NPath complexity of a method is the number of acyclic execution paths through that method.
+A threshold of 200 is generally considered the point where measures should be taken to reduce 
+complexity and increase readability.
+    <BR><h2>Example:</h2><pre>
+ 
+void bar() {						// this is something more complex than it needs to be,
+	if (y) {						// it should be broken down into smaller methods or functions
+		for (j = 0; j < m; j++) {
+			if (j > r) {
+				doSomething();
+				while (f < 5 ) {
+					anotherThing();
+					f -= 27;
+					}
+				} else {
+					tryThis();
+				}
+			}
+		}
+		if ( r - n > 45) {
+		   while (doMagic()) {
+		      findRabbits();
+		   }
+		}
+		try {
+			doSomethingDangerous();
+		} catch (Exception ex) {
+			makeAmends();
+			} finally {
+				dontDoItAgain();
+				}
+	}
+}
+
+ 
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnusedNullCheckInEquals,Unused Null Check in Equals,"After checking an object reference for null, you should invoke equals() on that object rather than passing it to another object's equals() method.
+    <BR><h2>Example:</h2><pre>
+		
+public class Test {
+
+  public String method1() { return 'ok';}
+  public String method2() { return null;}
+  
+  public void method(String a) {
+    String b;
+	// I don't know if method1() can be 'null'
+	// but I know 'a' is not null..
+	// I'd better write a.equals(method1())
+	
+	if (a != null && method1().equals(a)) { //Bad: will trigger the rule.
+		//whatever
+	}
+	
+	if (method1().equals(a) && a != null) { //Good: won't trigger the rule.
+		//whatever
+	}
+	
+	if (a != null && method1().equals(b)) { //Good: won't trigger the rule.
+		//whatever
+	}
+	
+	if (a != null && 'LITERAL'.equals(a)) { //Good: won't trigger the rule.
+		//whatever
+	}
+	
+	if (a != null && !a.equals('go')) { //Good: won't trigger the rule.
+		a=method2();
+		if (method1().equals(a)) {
+			//whatever
+		}
+  	}
+  }
+}
+				
+			</pre>",MINOR,APEX,BUG,FALSE
+sf:UnusedFormalParameter,Unused Formal Parameter,"Avoid passing parameters to methods or constructors without actually referencing them in the method body.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+	<li>MISRA C++:2008, 0-1-11 - There shall be no unused parameters (named or unnamed) in nonvirtual functions.</li>
+	<li>MISRA C:2012, 2.7 - There should be no unused parameters in functions</li>
+	<li><a href=""https://wiki.sei.cmu.edu/confluence/display/c/MSC12-C.+Detect+and+remove+code+that+has+no+effect+or+is+never+executed"">CERT, MSC12-C.</a> - Detect and remove code that has no effect or is never executed</li>
+</ul>
+    <BR><h2>Example:</h2><pre>
+
+public class Foo {
+	private void bar(String howdy) {
+		//Bad: howdy is not used.
+	}
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:OpenRedirect,URL Redirection to Untrusted Site,"Checks against redirects to user-controlled locations. 
+Untrusted input could cause an attacker to redirect the user to a malicious site and
+an attacker may be able to launch a phishing scam and steal a users credentials.<br/>
+<br/>
+See <a href=""http://cwe.mitre.org/data/definitions/601.html"">MITRE, CWE-601</a> - URL Redirection to Untrusted Site ('Open Redirect')
+<br/>
+Apex recommendations - <a href=""https://developer.salesforce.com/page/Secure_Coding_Arbitrary_Redirect"">developer.salesforce.com</a> - Secure Coding, Arbitrary Redirect
+<BR/>
+Using the retURL, startURL, saveURL, cancelURL parameters are protected by Salesforce.
+This protection is designed to safely redirect only to domains located within the *.salesforce.com, *.visual.force.com, and *.content.force.com space.
+Anything else returns an error message.
+      <BR><h2>Example:</h2><pre>
+public class without sharing Foo {
+    String unsafeLocation = ApexPages.currentPage().getParameters().get('url_param'); //Bad: this is not recommended.
+    
+    PageReference unsafePage() {
+      if (unsafeLocation )
+       return new PageReference(unsafeLocation);
+    }
+    
+    PageReference safePage() {
+      String retURL = ApexPages.currentPage().getParameters().get('retURL'); //Good: retURL uses internal Salesforce protection mechanism
+      return new PageReference(retURL);
+    }
+    
+    PageReference safePage() {
+      if ( unsafeLocation == 'something ) {                      //Good: this is one possibility for a safer redirect.
+        return new PageReference('/somewhere')
+      } else { 
+        return new pageReference('/somewhere-else')
+      }
+    }
+
+    
+}
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:SwitchStmtsShouldHaveDefault,Switch Statements Should Have a When Else Case,"Switch statements should always use a 'when else' case to account for all values and avoid unexpected functionality.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+	<li>MISRA C:2004, 15.0 - The MISRA C switch syntax shall be used.
+	<li>MISRA C:2004, 15.3 - The final clause of a switch statement shall be the default clause
+	<li>MISRA C++:2008, 6-4-3 - A switch statement shall be a well-formed switch statement.
+	<li>MISRA C++:2008, 6-4-6 - The final clause of a switch statement shall be the default-clause
+	<li>MISRA C:2012, 16.1 - All switch statements shall be well-formed
+	<li>MISRA C:2012, 16.4 - Every switch statement shall have a default label
+	<li>MISRA C:2012, 16.5 - A default label shall appear as either the first or the last switch label of a switch statement
+	<li><a href=""http://cwe.mitre.org/data/definitions/478.html"">MITRE, CWE-478</a> - Missing Default Case in Switch Statement
+	<li><a href=""https://www.securecoding.cert.org/confluence/x/YgE"">CERT, MSC01-C.</a> - Strive for logical completeness
+</ul>
+      <BR><h2>Example:</h2><pre>
+public void bar() {
+    Integer x = 2;
+    switch on x {
+      when 1 { 
+        Integer j = 6;
+      }
+      when 2 { 
+        Integer j = 8;
+      }
+          //Bad: Missing a default.
+    }
+    
+    switch on x {
+      when 1 { 
+        Integer j = 6;
+      }
+      when 2 { 
+        Integer j = 8;
+      }
+      when else {
+        Integer j = 100;  //Good: a default case is specified.
+      }
+    }
+}
+      </pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:UseObjectForClearerAPI,Use Object for Clearer API,"When you write a public method, you should be thinking in terms of an API. If your method is public, it means other class
+will use it, therefore, you want (or need) to offer a comprehensive and evolutive API. If you pass a lot of information
+as a simple series of Strings, you may think of using an Object to represent all those information. You'll get a simplier 
+API (such as doWork(Workload workload), rather than a tedious series of Strings) and more importantly, if you need at some
+point to pass extra data, you'll be able to do so by simply modifying or extending Workload without any modification to
+your API.
+    <BR><h2>Example:</h2><pre>
+
+public class MyClass {
+  public void connect(String username,
+    String pssd, 
+    String databaseName, 
+    String databaseAdress) { ... }  //Bad: Not recommended.
+  
+  public void connectTwo(UserData data) { ... }  //Good: This is preferred. Makes for cleaner code.
+	
+  
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:ForLoopShouldBeWhileLoop,For Loop Should Be While Loop,"Some For loops can be simplified to While loops, this makes them more concise.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+	void bar() {
+		for (;true;) true;		//Bad: The for loop contains no Initialiser or Update.
+		
+			while(true){		//Good: Use while loop instead.
+			
+			}   			
+	}
+}
+ 
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:OldApiVersion,API Version is too old,"This rule identifies classes which are using older versions of the API. Change the API Version of this class.
+  <BR><h2>Example:</h2><pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
+&lt;ApexClass xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot; >
+    &lt;apiVersion>19.0&lt;/apiVersion>
+    &lt;status>Active&lt;/status>
+&lt;/ApexClass>
+</pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmptyIfStmt,Empty If Statement,"Avoid 'if' statements where a condition is checked but nothing is done about it.
+    <BR><h2>Example:</h2><pre>
+    
+public class Foo {
+ void bar(Integer x) {
+  if (x == 0) {
+  					//Bad: Nothing is done here.
+  }
+ }
+}
+ 
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:MissingStaticMethodInNonInstantiatableClass,Missing Static Method in Non Instantiatable Class,"A class that has private constructors and does not have any static methods or fields cannot be used.
+      <BR><h2>Example:</h2><pre>
+
+//Bad: This class is unusable, since it cannot be
+// instantiated (private constructor),
+// and no static method can be called.
+
+public class Foo {
+  private Foo() {}
+  void foo() {}
+}
+
+
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:AvoidLiteralsInIfCondition,Avoid Literals in If Condition,"Avoid using hard-coded literals in conditional statements. By declaring them as static variables
+or private members with descriptive names maintainability is enhanced. By default, the literals ""-1"" and ""0"" are ignored.
+More exceptions can be defined with the property ""ignoreMagicNumbers"".
+    <BR><h2>Example:</h2><pre>
+
+private static final Integer TEN = 10;
+
+public void downCastPrimitiveType() {
+	
+    if (i == 10) {		//Bad: this is a magic number, buried in a method.
+    	doSomething();
+    }
+    
+    if (i == TEN) {		//Good: preferred approach.
+    	doSomething();
+    }
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:CommentSize,Comment is Too Large,"Determines whether the dimensions of comments found are within the specified limits.
+    <BR><h2>Example:</h2><pre>
+
+/*
+*
+*	comment.  		//Bad: Too many lines.
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*/
+
+/*
+*  	comment.		//Good: Can be shortened.
+*/
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidNestedSwitchStmts,Avoid Nested Switch Statements,"Avoid creating nested 'switch' statements since they are error-prone, harder to read and harder to maintain.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo {
+  
+  public void bar(Integer x, Integer y, Integer z) {
+    switch on x{
+      when 0 {}
+      when 1 {
+        switch on y {    //Bad: Nested switch statements are confusing.
+          when 0 {}
+        }
+      }
+    }
+  }
+  
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:CallSuperTwiceInConstructor,Avoid Calling Super Twice in a Constructor,"Calling super in a constructor multiple times can be confusing. Try to use a single constructor
+      <BR><h2>Example:</h2><pre>
+
+public class Foo extends Bar{
+  public Foo(boolean p) {
+   if ( p )
+   	super('true value');
+   else
+   	super('false value'); //Bad: This can be confusing.
+  }
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UseLocaleWithCaseConversions,Use Locale with Case Conversions,"When doing String.toLowerCase() or String.toUpperCase() conversions, use Locales to avoids problems with languages that
+have unusual conventions, i.e. Turkish.
+      <BR><h2>Example:</h2><pre>
+    
+class Foo {
+
+ if (x.toLowerCase().equals('list')){ 	//Bad: This will not match 'LIST' when in Turkish locale.
+ 	//...
+ }
+ 
+ //The above could be..
+ if (x.toLowerCase(Locale.US).equals('list')) ...
+ 
+ ///or simply..
+ if (x.equalsIgnoreCase('list')) ...
+
+ 
+ String z = a.toLowerCase(Locale.EN); 	//Good.
+}
+    
+        </pre>",MINOR,APEX,BUG,FALSE
+sf:AvoidUsingSeeAllData,Avoid Using @IsTest(SeeAllData=true),"Whenever possible, you should create test data for each test. Using SeeAllData=true makes it harder to manage the environment as data changes can break unit tests.
+		<BR><h2>Example:</h2><pre>
+
+public class MyTestCase  {
+	@isTest(seeAllData=true) //Bad: this is not recommended.
+	public static void testWithAllData() {
+	}
+	
+	@isTest(seeAllData=false) //Good: this is preferred.
+	//Note: @isTest could have been left out in this case seeing as the class has 'testmethod' already.
+	public static testMethod void testMyCase() {
+	}
+	
+	
+}
+
+		</pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidFieldNameMatchingTypeName,Avoid Field Name Matching Type Name,"It is somewhat confusing to have a field name matching the declaring class name.
+This probably means that type and/or field names should be chosen more carefully.
+      <BR><h2>Example:</h2><pre>
+
+public class Foo extends Bar {
+
+	Integer foo;	//Bad: there is probably a better name that can be used
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:JumbledIncrementer,Jumbled Incrementer,"Avoid jumbled loop incrementers - its usually a mistake, and is confusing even if intentional.
+     <BR><h2>Example:</h2><pre>
+ 
+public class JumbledIncrementerRule1 {
+	public void foo() {
+		for (Integer i = 0; i < 10; i++) {			//Good: only references 'i'
+			for (Integer k = 0; k < 20; i++) {		//Bad: references both 'i' and 'k'
+				system.debug('Hello');
+			}
+		}
+	}
+}
+ 
+     </pre>",MAJOR,APEX,BUG,FALSE
+sf:AvoidUsingHardCodedIP,Avoid Using Hard Coded IP,"Applications with hard-coded IP addresses can become impossible to deploy in some cases.
+<br/>
+<br/>
+This has led to the following vulnerabilities in the past:<br/>
+<br/>
+<ul>
+	<li>CVE-2006-5901</li>
+	<li>CVE-2005-3725</li>
+</ul>
+<br/>
+Externalizing IP adresses is preferable.
+<br/>
+<h2>See</h2>
+<ul>
+	<li>OWASP Top 10 2021 Category A2 - Cryptographic Failures</li>
+	<li><a href=""https://wiki.sei.cmu.edu/confluence/display/java/MSC03-J.+Never+hard+code+sensitive+information"">CERT, MSC03-J.</a> - Never hard code sensitive information</li>
+</ul>
+	    <BR><h2>Example:</h2><pre>
+	    
+public class Foo {
+	private String ip = '127.0.0.1';     //Bad: IP should not be hard coded.
+
+	public String GetIP(){
+		return ServerSettings__c.getInstance().TheIP__c;  //Good: IP is fetched from custom settings. 
+	}
+}
+	    
+	    </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:UnusedModifier,Unused Modifier,"Fields in interfaces are automatically public static final, and methods are public abstract.
+Classes or interfaces nested in an interface are automatically public and static (all nested interfaces are automatically static).
+For historical reasons, modifiers which are implied by the context are accepted by the compiler, but are superfluous.
+     <BR><h2>Example:</h2><pre>
+ 
+public interface Foo {
+  public abstract void bar(); 		//Both abstract and public are ignored by the compiler.
+  public static final Integer X = 0; 	//Public, static, and final all ignored.
+  public static class Bar {} 		//Public and static are ignored.
+  public static interface Baz {} 	//Public and static are ignored.
+}
+public class Bar {
+  public static interface Baz {} 	//Static is ignored.
+}
+ 
+     </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UselessParentheses,Useless Parentheses,"Useless parentheses should be removed.<BR><h2>Example:</h2><pre>
+    
+public class Foo {
+
+   private Integer _bar1;
+   private Integer _bar2;
+
+   public void setBar(Integer n) {
+      _bar1 = Integer.valueOf((n)); //Bad: parentheses around n should be removed here...
+      _bar2 = (n); 					// ...and here
+   }
+
+}
+    
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidBranchingStatementAsLastInLoop,Avoid Branching Statement As Last In Loop,"Using a branching statement as the last part of a loop may be a bug, and/or is confusing.
+Ensure that the usage is not a bug, or consider using another approach.
+            
+        <BR><h2>Example:</h2><pre>
+            
+for (Integer i = 0; i < 10; i++) {
+	/*
+	*do stuff
+	*/
+	if (i*i <= 25) {    //Bad: This is a confusing implementation.
+		continue;
+	}
+	break;
+}
+
+for (Integer i = 0; i < 10; i++) {
+	/*
+	* do stuff
+	*/
+	
+	if (i*i > 25) {    //Good: This is clearer.
+		break;
+	}
+}
+            
+        </pre>",MAJOR,APEX,BUG,FALSE
+sf:TestClassWithoutTestCases,Test Class without Test Methods,"Class is flagged as a Test Class but it doesn't contain any tests. Consider removing the class if it is no longer used, 
+or removing the test flag if it is not a test class. 
+      <BR><h2>Example:</h2><pre>
+
+@IsTest						//Bad: class doesn't contain any tests.
+public class CarTest {
+   public static void otherMethod(){
+   }
+   // code
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidSoqlWithoutLimits,Avoid Calling SOQL Without a Where Clause or Limit Statement,"When working with very large amounts of data, unfiltered SOQL queries can quickly cause governer limit exceptions
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	public static void main( String as[] ) {  
+		Account[] accs = [ select id from account ];  //Bad: if the amount of accounts grow beyond governor limits this may become a problem in the future.
+	}
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:LawOfDemeter,Law of Demeter,"The Law of Demeter is a simple rule, that says ""only talk to friends"". It helps to reduce coupling between classes
+or objects.
+<br/>
+See also the references:
+<br/>
+*   Andrew Hunt, David Thomas, and Ward Cunningham. The Pragmatic Programmer. From Journeyman to Master. Addison-Wesley Longman, Amsterdam, October 1999.;<br/>
+*   K.J. Lieberherr and I.M. Holland. Assuring good style for object-oriented programs. Software, IEEE, 6(5):38â€“48, 1989.;<br/>
+*   <a href=""http://www.ccs.neu.edu/home/lieber/LoD.html"">http://www.ccs.neu.edu/home/lieber/LoD.html</a><br/>
+*	<a href=""http://en.wikipedia.org/wiki/Law_of_Demeter"">http://en.wikipedia.org/wiki/Law_of_Demeter</a>
+
+        <BR><h2>Example:</h2><pre>
+
+public class Foo {
+    /**
+     * This example will result in two violations.
+     */
+    public void example(Bar b) {
+        //Good: This method call is ok, as b is a parameter of 'example'
+        C c = b.getC();
+
+        //Bad: This method call is a violation, as we are using c, which we got from B.
+        // We should ask b directly instead, e.g. 'b.doItOnC();'
+        c.doIt();
+
+        //Bad: This is also a violation, just expressed differently as a method chain without temporary variables.
+        b.getC().doIt();
+
+        // a constructor call, not a method call.
+        D d = new D();
+        //Good: This method call is ok, because we have create the new instance of D locally.
+        d.doSomethingElse(); 
+    }
+}
+
+        </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:NcssConstructorCount,NCSS Constructor Count,"This rule uses the NCSS (Non-Commenting Source Statements) algorithm to determine the number of lines
+of code for a given constructor. NCSS ignores comments, and counts actual statements. Using this algorithm,
+lines of code that are split are counted as one.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo extends Bar {
+ public Foo() {			//this constructor only has 1 NCSS lines
+     super();
+
+
+      super.foo();
+ }
+}
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ForLoopsMustUseBraces,For Loops Must Use Braces,"Avoid using 'for' statements without using curly braces. If the code formatting or 
+indentation is lost then it becomes difficult to separate the code being controlled 
+from the rest.
+       <BR><h2>Example:</h2><pre>
+
+for (Integer i = 0; i < 42; i++)   //Bad: Not recommended.
+   foo();
+   
+for (Integer i = 0; i < 42; i++){  //Good: This is preferred.
+   foo();
+}
+   
+   
+
+       </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:DoNotThrowExceptionInFinally,Do Not Throw Exception in Finally,"Throwing exceptions within a 'finally' block is confusing since they may mask other exceptions 
+or code defects.
+		<BR><h2>Example:</h2><pre>
+    		
+public class Foo {
+	public void bar() {
+		try {
+			// Here do some stuff
+		} catch( Exception e) {
+			// Handling the issue
+		} finally {
+			throw new Exception(); //Bad: this is not recommended.
+		}
+	}
+}
+	    	
+    	</pre>",CRITICAL,APEX,BUG,FALSE
+sf:CallSuperInConstructor,Call Super In Constructor,"It is a good practice to call super() in a constructor. If super() is not called but
+another constructor (such as an overloaded constructor) is called, this rule will not report it.
+      <BR><h2>Example:</h2><pre>
+
+public class Foo extends Bar{
+  public Foo() {
+    //do something...		//Bad: super is not called, this is not recommended.
+  }
+
+public class Foo extends Bar{
+  public Foo() {
+   super();					//Good: this is good practice.
+  }
+  
+ public Foo(Integer code) {
+  // do something with code
+   this();					//Good: this is also OK.
+  }
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryWrapperObjectCreation,Unnecessary Wrapper Object Creation,"Most wrapper classes provide static conversion methods that avoid the need to create intermediate objects
+just to create the primitive forms. Using these may avoid the cost of creating new objects.
+      <BR><h2>Example:</h2><pre>
+
+public Integer convert(String s) {
+  Integer i, i2;
+
+  i = Integer.valueOf(s).intValue(); //Bad: this wastes an object.
+  i = Integer.parseInt(s); 			 //Good: this is preferred.
+
+  i2 = Integer.valueOf(i).intValue(); //Bad: this wastes an object.
+  i2 = i; 							  //Good: this is preferred.
+
+  String s3 = Integer.valueOf(i2).toString(); //Bad: this wastes an object.
+  s3 = Integer.toString(i2); 				  //Good: this is preferred.
+  return i2;
+}
+
+          </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UseSingleton,Use Singleton,"For classes that only have static methods, consider making them Singletons.
+Note that this doesn't apply to abstract classes, since their subclasses may
+well include non-static methods.  Also, if you want this class to be a Singleton,
+remember to add a private constructor to prevent instantiation.
+This rule doesn't apply to classes having static methods with REST annotations.
+		
+    <BR><h2>Example:</h2><pre>
+
+public class MaybeASingleton {  //Bad: Not recommended.
+  public static void foo() {}
+  public static void bar() {}
+}
+
+
+public class MaybeASingleton {  //Good: A private constructor is prevents instantiation.
+  private MaybeASingleton(){
+	// ...
+  }
+  public static void foo() {}
+  public static void bar() {}
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidCatchingGenericException,Avoid Catching Generic Exceptions,"Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/396.html"">MITRE, CWE-396</a> - Declaration of Catch for Generic Exception </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/BIB3AQ"">CERT, ERR08-J.</a> - Do not catch NullPointerException or any of its ancestors
+  </li>
+</ul>
+    <BR><h2>Example:</h2><pre>
+    
+public class PrimitiveType {
+    
+  public void downCastPrimitiveType() {
+    try {
+      system.debug(' i [' + i + ']');
+    } catch(Exception e) {    //Bad: this is not recommended.
+      System.debug(e.getMessage());
+    } catch(RuntimeException e) { //Bad: this is not recommended.
+      System.debug(e.getMessage());
+    } catch(NullPointerException e) { //Bad: this is not recommended.
+      System.debug(e.getMessage());
+    }
+  } 
+}
+    
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:HotspotUserInfoGetSessionIdUsage,Using UserInfo.GetSessionId() Is Security-Sensitive,"The use of UserInfo.GetSessionId() is security-sensitive. Ensure that you need to do this.
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/807"">MITRE, CWE-807</a> - Reliance on Untrusted Inputs in a Security Decision </li>
+  <li> OWASP Top 10 2021 Category A7 - Identification and Authentication Failures </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+</ul>
+
+      <BR><h2>Example:</h2><pre>
+//Make sure you need to call the UserInfo.getSessionId() method.      
+
+//....
+HttpRequest req = new HttpRequest();
+req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());   //There may be a workaround for this.
+//....
+      </pre>",CRITICAL,APEX,SECURITY_HOTSPOT,FALSE
+sf:VariableNamingConventions,Variable Naming Conventions,"A variable naming conventions rule - customize this to your liking.  Currently, it
+checks for final variables that should be fully capitalized and non-final variables
+that should not include underscores.
+        <BR><h2>Example:</h2><pre>
+
+public class Foo {
+   public static final Integer MY_NUM = 0;  //Good: 'final' variable is fully capitalised.
+   public String myTest = '';				//Good: 'non-final' variable has no underscores.
+   DataModule dmTest = new DataModule();
+   
+   public static final Integer newNum = 2;  //Bad: 'final' variable is named in camel-case.
+   public String NEW_TEST = '';				//Bad: 'non-final' variable has underscores and is captalised.
+}
+
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidSOQLInControllerGetter,Avoid SOQL in Controller Getter Methods,"Lazy loading of objects is recommended. This will help to reduce page load times.
+
+See <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_best_practices_performance.htm"">Best Practices for Improving Visualforce Performance</a>
+        <BR><h2>Example:</h2><pre>
+             
+class MyController {
+
+	public function getLines(){
+		return [ select ... ]; //BAD -
+	}
+	
+	private transient List<Account> accounts;
+	public function getLines(){
+		if ( accounts == null ){
+			accounts = [ select .. ]; //GOOD - lazy fetching once
+		}
+		return accounts;
+	}
+
+}
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AssignmentToNonFinalStatic,Assignment To Non Final Static,"Identifies a possible unsafe usage of a static field.
+       <BR><h2>Example:</h2><pre>
+   
+public class StaticField {
+   static Integer x;
+   public FinalFields(Integer y) {
+   
+    x = y; 		//Bad: This is unsafe. x is assigned to an unknown parameter.
+   }
+}
+   
+       </pre>",MAJOR,APEX,BUG,FALSE
+sf:ControllerNaming,Controller Naming Convention,"Controller class names should end with ""Controller"". Only classes linked to a page as a controller or extension are considered.
+    <BR><h2>Example:</h2><pre>
+public class Foo {  //Bad: not recommended.
+  //....
+}
+
+public class FooController{  //Good: Purpose of the class is clear.
+  //....
+}
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidInstanceofChecksInCatchClause,Avoid Instanceof Checks in Catch Clause,"Each caught exception type should be handled in its own catch clause.
+      <BR><h2>Example:</h2><pre>
+
+try { 						//Bad: Avoid this.
+ // do something
+} catch (Exception ee) {
+ if (ee instanceof IOException) {
+  cleanup();
+ }
+}
+
+try {  						//Good: This is preferred.
+ // do something
+} catch (IOException ee) {
+ cleanup();
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UseAssertInsteadOfAssertEquals,Use System.Assert instead of System.assertEquals,"When asserting a value is the same as a boolean literal, use System.assert, instead of System.assertEquals.
+		<BR><h2>Example:</h2><pre>
+
+public class MyTestCase  {
+	public static testMethod void testMyCase() {
+		boolean myVar = true;
+	
+		System.assert(myVar, 'myVar is true'); 		//Good: this is preferred.
+		
+		System.assertEquals(true, myVar, 'myVar is true');  //Bad: this is not recommended.
+	}
+}
+
+		</pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:MethodCouldBeStatic,Method Could Be Static,"Methods that make sense to call outside an object being created can be converted to static.
+      <BR><h2>Example:</h2><pre>
+public class MyHelper{
+  
+ private boolean newBool= true;
+
+ public MyHelper(){}
+
+  public Contact convertLead(Lead newLead){    // This method could be static. 
+    //do stuff ...
+    return newContact;		
+  }
+  
+  public boolean getNewBool(){ 				//This method needs instantiation of an object.
+    return newBool;
+  }
+  
+}
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UseAssertEqualsInsteadOfAssert,Use System.assertEquals instead of System.assert,"This rule detects Unit test assertions in object references equality. 
+Instead of using System.assert combined with "".equals()"" as an equality check, these assertions should be made 
+by more specific methods, like assertEquals.
+      <BR><h2>Example:</h2><pre>
+
+public class FooTest extends TestCase {
+ void testCode() {
+  Object a, b;
+  System.assert(a.equals(b)); //Bad: not recommended.
+  System.assertEquals(a, b);  //Good: this is preferred.
+ }
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:URDataflowAnomalyAnalysis,Variable Not Assigned,"The dataflow analysis tracks local definitions, undefinitions and references to variables on different paths on the data flow.
+Various problems can be deduced from this information. Please note: If a variable's first use is being checked that if it is null, the variable should be assigned null when it is created.
+UR - Anomaly: There is a reference to a variable that was not defined before. This is a bug and leads to an error.
+
+
+          <BR><h2>Example:</h2><pre>
+
+public class Foo {
+ void bar() {
+  Integer buzz;
+  if (buzz == 0) {}  //Bad: buzz is not defined, this is a UR-Anomaly.
+ }
+}
+
+          </pre>",INFO,APEX,BUG,FALSE
+sf:OnlyOneReturn,Methods Should Not Have Too Many Return Statements,"Having too many return methods increases a methods complexity.
+      A method should ideally have only one exit point, and that should be the last statement in the method.
+     <BR><h2>Example:</h2><pre>
+ 
+public class OneReturnOnly1 {
+  public String foo(Integer x) {
+    if (x > 0) {
+      return 'hey';   
+    }
+    return 'hi';	//Bad: Method has two exit points.
+  }
+  
+  public String bar(Integer x {
+    String result = 'hi';
+    
+    if(x > 0){
+      result = 'hey';
+    }
+    return result;		//Good: Method has one exit point.
+  }
+  
+}
+ 
+     </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryCaseChange,Unnecessary Case Change,"Using equalsIgnoreCase() is faster than using toUpperCase()/toLowerCase().equals()
+       <BR><h2>Example:</h2><pre>
+       
+boolean answer1 = buz.toUpperCase().equals('BAZ');          //Bad: should be buz.equalsIgnoreCase('baz').
+    
+boolean answer2 = buz.toUpperCase().equalsIgnoreCase('baz');  //Bad:this is another unnecessary toUpperCase().
+
+boolean answer3 = buz.equalsIgnoreCase('baz')               //Good: this is preferred.
+ 
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmptyMethodInAbstractClassShouldBeAbstract,Empty Method in Abstract Class should be Abstract,"Empty methods in an abstract class should be tagged as abstract. This helps to remove their inappropriate 
+usage by developers who should be implementing their own versions in the concrete subclasses. 
+        <BR><h2>Example:</h2><pre>
+        	
+public abstract class ShouldBeAbstract {
+
+    public Object couldBeAbstract()  {		//Bad: Method should be abstract.
+			return null;
+	}
+
+	public void couldBeAbstract()  {
+    }
+}
+	     	
+    	</pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:ImmutableField,Immutable Field,"Identifies private fields whose values never change once they are initialized either in the declaration 
+of the field or by a constructor.  Making these fields final helps in converting existing classes to becoming immutable ones.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+  private Integer x; 	//Bad: x could be made final. 
+  public Foo() {
+      x = 7;
+  }
+  public void foo() {
+     Integer a = x + 2;
+  }
+}
+  
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UseAssertEqualsInsteadOfAssertEquality,Use System.assertEquals instead of System.assert,"This rule detects unit test assertions in object references equality. 
+Instead of using System.assert combined with ""=="" as an equality operator,
+these assertions should be made by more specific methods, like assertEquals.
+      <BR><h2>Example:</h2><pre>
+
+public class FooTest extends TestCase {
+ void testCode() {
+  Object a, b;
+  System.assert(a == b); 		//Bad: not recommended.
+  System.assertEquals(a, b);    //Good: this is preferred.
+ }
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:InefficientEmptyStringCheck,Inefficient Empty String Check,"String.trim().length() is an inefficient way to check if a String is really empty, as it
+creates a new String object just to check its size. Consider using String.isWhitespace() which
+checks if the String contains only white space characters or is empty
+    <BR><h2>Example:</h2><pre>
+
+public void bar(String string) {
+	if (string != null && string.trim().size() > 0) {  //Bad: This is not recommended.
+		doSomething();
+	}
+	
+	if (string != null && !string.isWhitespace() ) {  //Good: This is preferred.
+		doSomething();
+	}
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:NcssTypeCount,NCSS Type Count,"This rule uses the NCSS (Non-Commenting Source Statements) algorithm to determine the number of lines
+of code for a given type. NCSS ignores comments, and counts actual statements. Using this algorithm,
+lines of code that are split are counted as one.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo extends Bar {		//this class only has 6 NCSS lines
+ public Foo() {
+     super();
+
+
+
+
+
+      super.foo();
+ }
+}
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidCatchingNPE,Avoid Catching NPE,"Code should never throw NullPointerExceptions under normal circumstances.  A catch block may hide the original error, causing other, more subtle problems later on.
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/395.html"">MITRE, CWE-395</a> -Use of NullPointerException Catch to Detect NULL Pointer Dereference</li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/BIB3AQ"">CERT, ERR08-J.</a> - Do not catch NullPointerException or any of its ancestors</li>
+</ul>
+    <BR><h2>Example:</h2><pre>  
+public class Foo {
+  void bar() {
+    try {
+      // do something
+      }  catch (NullPointerException npe) {  Bad: this is not recommended.
+    }
+  }
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidFinalLocalVariable,Avoid Final Local Variable,"Avoid using final local variables, turn them into fields.
+         <BR><h2>Example:</h2><pre>
+public class MyClass {
+  
+  final String finalField;  //Good: This is preferred.
+
+  public void foo() {
+        final String finalLocalVariable;  //Bad: Consider making this a field instead of a local variable.
+  }
+}
+	     </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:CollapsibleIfStatements,Collapsible If Statements,"Sometimes two consecutive 'if' statements can be consolidated by separating their conditions with a boolean short-circuit operator.
+      <BR><h2>Example:</h2><pre>
+  
+void bar() {
+	if (x) {			//Bad: The nested 'if' statement isn't required.
+		if (y) {
+			// do stuff
+		}
+	}
+
+	if (x && y) {		//Good: The two previous 'if' statements can be combined with a boolean short-circuit operator.
+		// do stuff
+	}
+}
+ 
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidDeeplyNestedIfStmts,Avoid Deeply Nested If Statements,"Avoid creating deeply nested 'if..then' statements since they are error-prone, harder to read and harder to maintain.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo {
+  public void bar(Integer x, Integer y, Integer z) {
+    if (x>y) {
+      if (y>z) {
+        if (z==x) {
+         //Bad: This is too deep!
+        }
+      }
+    }
+  }
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:DirectAccessToTriggerArray,Trigger.new and Trigger.old array elements should not be accessed directly.,"The number of elements in a trigger can change so accessing the trigger array directly may suggests a bug.  
+  Updating more than one account may mean that your trigger may not perform correctly. It also may mean that your trigger code is not bulkified.
+  
+ <br/>
+Read more here:  <a href =""https://developer.salesforce.com/page/Trigger_Frameworks_and_Apex_Trigger_Best_Practices"">https://developer.salesforce.com/page/Trigger_Frameworks_and_Apex_Trigger_Best_Practices</a>
+  <BR><h2>Example:</h2><pre>
+
+trigger AccountTrigger on Account (before insert, before update) {
+   Account a = Trigger.new[0]; //Bad: Accessing the trigger array directly is not recommended.
+   
+   foreach ( Account a : Trigger.new ){   //Good: Iterate through the trigger.new array instead.
+   }
+}
+
+  </pre>",MAJOR,APEX,BUG,FALSE
+sf:UnusedLocalVariable,Unused Local Variable,"Detects when a local variable is declared and/or assigned, but not used.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo {
+	public void doSomething() {
+		Integer i = 5; //Bad: this variable is unused.
+	}
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UselessOperationOnImmutable,Useless Operation On Immutable,"An operation on an Immutable object (String, Date, DateTime or Time) won't change the object itself
+since the result of the operation is a new object. Therefore, ignoring the operation result is an error.
+      <BR><h2>Example:</h2><pre>
+    
+
+class Test {
+  void method1() {
+    String a=new String('a');
+    a.concat('b'); 		//Bad: String.concat is immutable and will not modify a.
+  }
+  void method2() {
+    String a=new String('a');
+    a = a.concat('b'); 		//Good: this is probably what you meant to do.
+  }
+}
+    
+      </pre>",CRITICAL,APEX,BUG,FALSE
+sf:DUDataflowAnomalyAnalysis,Potentially Unused Variable,"The dataflow analysis tracks local definitions, undefinitions and references to variables on different paths on the data flow.
+From those informations there can be found various problems.
+DU - Anomaly: A recently defined variable is undefined. These anomalies may appear in normal source text.
+          <BR><h2>Example:</h2><pre>
+
+public class Foo {
+ void bar() {
+  Integer buz = 0;		//Bad: buz is undefined when leaving scope, this is a DU-Anomaly.
+ }
+}
+
+          </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:FinalFieldCouldBeStatic,Final Field Could Be Static,"If a final field is assigned to a compile-time constant it could be made static, thus saving overhead 
+in each object at runtime.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+  public final Integer BAR = 42; //Bad: BAR could be static to save some memory.
+}
+  
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:SimplifyConditional,Unnecessary Null Check with instanceOf,"There is no need to check for 'null' before an 'instanceof'. The 'instanceof' keyword will return 'false' when given a 'null' argument.
+          <BR><h2>Example:</h2><pre>
+      
+class Foo {
+  void bar(Object x) {
+    if (x != null && x instanceof Bar) { 	//Bad: The 'x != null' check is not needed.
+		doStuff();
+    }
+  }
+}      
+           </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UseAnnotationOnTestClass,Use the @IsTest annotation,"Classes containing only test methods should be annotated with @isTest
+      <BR><h2>Example:</h2><pre>
+
+public class CarTest {						//Bad: needs to be annotated with @isTest
+	public static testmethod void testX(){}
+	public static testmethod void testY(){}
+   // code
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidThrowingNewInstanceOfSameException,Avoid Throwing New Instance of Same Exception,"Catch blocks that merely rethrow a caught exception wrapped inside a new instance of the same type only add to
+code size and runtime complexity.
+    <BR><h2>Example:</h2><pre>  
+public void bar() {
+      try {
+       // do something
+      }  catch (SomeException se) {
+         // harmless comment      
+           throw new SomeException(se);  //Bad: this is not recommended.
+      }
+}
+  
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:ReturnEmptyArrayRatherThanNull,"Return Empty Array, Not Null","For any method that returns an array, it is a better to return an empty array rather than a 
+null reference. This removes the need for null checking all results and avoids inadvertent
+NullPointerExceptions.
+        <BR><h2>Example:</h2><pre>
+public class Example {
+
+    public Integer[] badBehavior() {		//Bad: Not recommended.
+                   // ...
+        return null;
+    }
+
+    public String[] bonnePratique() {		//Good: Preferred.
+      //...
+     return new String[0];
+    }
+}
+            </pre>",MINOR,APEX,BUG,FALSE
+sf:ExcessiveMethodLength,Excessive Method Length,"When methods are excessively long this usually indicates that the method is doing more than its
+name/signature might suggest. They also become challenging for others to digest since excessive 
+scrolling causes readers to lose focus.
+Try to reduce the method length by creating helper methods and removing any copy/pasted code.
+   <BR><h2>Example:</h2><pre>
+
+public void doSomething() {
+	system.debug('Hello world!');
+	system.debug('Hello world!');
+		// 98 copies omitted for brevity.
+}
+
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnitTestsShouldIncludeAssert,Unit Test Method should include an assertion,"Unit tests should include at least one assertion.  This makes the tests more robust, and using assert 
+with messages provide the developer a clearer idea of what the test does.
+        <BR><h2>Example:</h2><pre>
+    
+@IsTest
+public class Foo  {
+    public static testmethod void testSomething() {
+        Integer result = 1 + 2;
+        Assert.areEqual(3, result);    //Good: result is checked with an assertion.
+   }
+}
+
+
+@IsTest
+public class Foo  {
+   public static testmethod void testSomething() {
+   	  Integer result = 3 + 4;						//Bad: result is not checked.
+   }
+}
+    
+        </pre>",MAJOR,APEX,BUG,FALSE
+sf:IdempotentOperations,Assignment Has No Effect,"Avoid idempotent operations. There is no affect when assigning a variable to itself, this may indicate a bug.<br/><br/>
+
+<h2>See</h2>
+<ul>
+<li><a href=""https://www.securecoding.cert.org/confluence/x/NYA5"">CERT, MSC12-C.</a> - Detect and remove code that has no effect or is never executed.</li>
+</ul>
+
+      <BR><h2>Example:</h2><pre>
+      
+public class Foo {
+  public void bar() {
+    Integer x = 2;
+    x = x;			//Bad: Avoid this.
+  }
+}
+      
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:MethodWithSameNameAsEnclosingClass,Method with Same Name as Enclosing Class,"Non-constructor methods should not have the same name as the enclosing class.
+       <BR><h2>Example:</h2><pre>
+    
+public class MyClass {
+
+	public MyClass() {}			//Good: this is OK because it is a constructor.
+	
+	public void MyClass() {}	//Bad: this is a method.
+}
+    
+       </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:VariableCouldBeTransient,Controller Variable Could Be Declared Transient,"Consider marking this variable as transient as transient variables are not stored in a page's view-state. 
+Most non-transient data members of a controller which has an apex:form is stored in a page's view-state. 
+Salesforce pages have a limit on view-state size.
+
+This rule checks controllers classes whose pages have an apex:forms (therefore view-state can exist). 
+This rule flags non-transient array and object fields, which are more likely to large amounts of view-state.
+Care must be taken when marking a field as transient as this field will need to be recreated on every request.
+ 
+      <BR><h2>Example:</h2><pre>
+  
+public class BarController {
+	List<Account> accounts; 		//Bad: the amount of data may exceed the view-state limit.
+	transient List<Account> accounts; //Good: accounts are not stored in view-state.
+}
+  
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:EmptyStatementNotInLoop,Empty Statement Not in Loop,"An empty statement (or a semicolon by itself) that is not used as the sole body of a 'for' 
+or 'while' loop is probably a bug.  It could also be a double semicolon, which has no purpose
+and should be removed.
+       <BR><h2>Example:</h2><pre>
+
+public void doit() {
+      					
+      system.debug('look at the extra semicolon');; //Bad: This semicolon has no purpose.
+
+}
+
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UncommentedEmptyMethod,Uncommented Empty Method,"Uncommented Empty Method finds instances where a method does not contain
+statements, but there is no comment. By explicitly commenting empty methods
+it is easier to distinguish between intentional (commented) and unintentional
+empty methods.
+
+Comments can be added inside the method or a formal comment (/** comment */) above the method is also valid
+      <BR><h2>Example:</h2><pre>
+  
+public void doSomething() {		//Bad: Consider commenting this method.
+	
+}
+ 
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:LogicInversion,Logic Inversion,"Use opposite operator instead of negating the whole expression with a logic complement operator.
+	<BR><h2>Example:</h2><pre>
+    
+public boolean bar(Integer a, Integer b) {
+
+	if (!(a == b)){ 		//Bad: Use '!=' instead.
+         return false;
+    }
+
+	if (!(a < b)){		//Bad: Use '>=' instead.
+         return false;
+    }
+
+	return true;
+}
+    
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ArrayIsStoredDirectly,Array is Stored Directly,"Constructors and methods receiving arrays should clone objects and store the copy.<br/>
+This prevents future changes from the user affecting the internal functionality.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/374"">MITRE, CWE-374</a> - Passing Mutable Objects to an Untrusted Method</li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/QIEVAQ"">CERT, OBJ06-J.</a> - Defensively copy mutable inputs and mutable internal
+  components </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/JQLEAw"">CERT, OBJ13-J.</a> - Ensure that references to mutable objects are not exposed
+  </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+  private String [] x;
+    public void foo (String [] param) {
+      
+      this.x=param;		//Bad: don't do this, make a copy of the array at least.
+    }
+}
+  
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:AbstractNaming,Abstract Naming Conventions,"Abstract classes should be named 'AbstractXXX'.
+       <BR><h2>Example:</h2><pre>
+
+public abstract class Foo {  //Bad: this should be 'AbstractFoo'.
+}
+
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UselessStringValueOf,Useless String Value Of,"No need to call String.valueOf to append to a string; just use the valueOf() argument directly.<br/>
+<br/>
+<br/>
+Note: Currently, there is no Date.format(string) function. The preferred method for formatting a date instead of String.valueOf(dateNow) to avoid Timezone problems is:<br/>
+	 
+	<pre>DateTime.newInstance(dateNow, Time.newInstance(0,0,0,0)).format('YYYY-MM-DD');</pre>
+
+
+      <BR><h2>Example:</h2><pre>
+
+public String convert(Integer i) {
+	String s;
+	s = 'a' + String.valueOf(i);	//Bad: String.valueOf() is not required.
+	
+	s = 'a' + i; 					//Good: This approach is preferred.
+	return s;
+
+}
+          </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:CommentContent,Invalid Comment Words or Phrases Found,"A rule for the politically correct... we don't want to offend anyone.
+  <BR><h2>Example:</h2><pre>
+/*      
+*OMG, this is horrible, Bob is an idiot !!!   		//Bad: That's not very nice!
+*/     
+
+/*      
+*This could be better. Bob, take note.   			//Good: Preferred.
+*/     
+
+  </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ShortClassName,Short Class Name,"Classes with short names are not recommended.
+			
+        <BR><h2>Example:</h2><pre>
+    
+public class Foo {  //Bad: this is not recommended.
+}
+    
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AtLeastOneConstructor,At Least One Constructor,"Each class should declare at least one constructor.
+  <BR><h2>Example:</h2><pre>
+  
+public class Foo {	
+ public void doSomething() { ... }		//Bad: Class is missing a Constructor.
+ public void doOtherThing { ... }
+}
+
+public class Bar {	
+ public void Bar(){ ... }			//Good: Class has a Constructor.
+ public void doSomething() { ... }		
+ public void doOtherThing { ... }
+}
+
+  
+  </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnitAssertionsShouldIncludeMessage,Unit Assertions should include a Message,"Unit assertions should include a message - i.e., use the three argument version of
+assertEquals(), not the two argument version.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo extends TestCase {
+ public void testSomething() {
+  System.assertEquals('foo', 'bar');  	//Bad: assertEquals() does not contain a message.
+  
+  System.assertEquals('foo', 'bar', 'Foo does not equal bar');  //Good: use this method instead.
+ 
+  
+ }
+}
+  
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidCatchingThrowable,Avoid Catching Throwable,"Catching Throwable errors is not recommended since its scope is very broad. It includes runtime issues such as OutOfMemoryError that should be exposed and managed separately.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/396.html"">MITRE, CWE-396</a> - Declaration of Catch for Generic Exception </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/BIB3AQ"">CERT, ERR08-J.</a> - Do not catch NullPointerException or any of its ancestors
+  </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+	
+public void bar() {
+	try {
+     // do something
+    } catch (Throwable th) {  //Bad: should not catch 'Throwable'.
+		th.printStackTrace();
+    }
+  }
+	
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ShortMethodName,Short Method Name,"Method names that are very short are not helpful to the reader.
+     <BR><h2>Example:</h2><pre>
+
+public class ShortMethod {
+	public void a( Integer i ) { //Bad: The method name should be more descriptive.
+	}
+}
+
+     </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:NullAssignment,Null Assignment,"Assigning a ""null"" to a variable (outside of its declaration) is usually bad form.  Sometimes, this type
+of assignment is an indication that the programmer doesn't completely understand what is going on in the code.  
+      <BR><h2>Example:</h2><pre>
+ 
+public void bar() {
+	Object x = null; 				//Good: This is OK.
+	x = new Object();
+     // big, complex piece of code here
+	x = null; 						//Bad: This is not required.
+     // big, complex piece of code here
+}
+
+ 
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidUsingTestIsRunningTest,Avoid Using Test.isRunningTest(),"Avoid using Test.isRunningTest(), using this can hide problems that occur during testing.
+		<BR><h2>Example:</h2><pre>
+
+public class MyClass  {
+  public static void myFunction() {
+	
+    if ( !Test.isRunningTest ){      //Bad: This is not recommended.
+	  //don't run during tests.
+	}
+  }
+}
+
+
+		</pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:MisplacedNullCheck,Misplaced Null Check,"The null check here is misplaced. If the variable is null a NullPointerException will be thrown.
+Either the check is useless (the variable will never be null) or it is incorrect.
+      <BR><h2>Example:</h2><pre>
+    
+public class Foo {
+	void bar() {
+		if (a.equals(baz) && a != null) {  //Bad: If a is null, an exception will be thrown before the 'if' statement checks that a is not null.
+			//...
+		}
+
+
+		if (a != null && a.equals(baz)) {  //Good: The 'if' statement checks if a is null before using a.
+			//...
+		}
+	}
+}
+    
+      
+
+public class Foo {
+	void bar() {
+		if (a.equals(baz) || a == null) {	//Bad: If a is null, an exception will be thrown before the 'if' statement checks if a is null.
+			//..
+		}
+
+		if (a == null || a.equals(baz)) {	//Good: The 'if' statement will run if a is null or a.equals(baz) is true.
+			//..
+		}
+	}
+}
+   </pre>",MAJOR,APEX,BUG,FALSE
+sf:HotspotEncrypt,Encrypting Data Is Security-Sensitive,"Encrypting data is security-sensitive. Although most encryption problems are solved or managed by Salesforce, care must be taken when relying on encryption.<br/>
+<br/>
+See <a href=""https://developer.salesforce.com/page/Secure_Coding_Storing_Secrets"">Storing Sensitive Data</a> for more information.<br/>
+<br/>
+For example:<br/>
+<ul>
+	<li>Ensure that keys are generated randomly</li>
+	<li>That keys are stored securely in a Protected Custom Setting or Protected Custom Metadata type</li>
+	<li>Never store keys in Apex classes</li>
+	<li>You may want to consider a key-rotation scheme</li>
+	<li>Consider whether the keys can be leaked: have the keys been downloaded to an unsecure site, for example</li>
+</ul>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/522.html"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+  <li> [OWASP Top 10 2021 Category A2 - Identification and Authentication Failures </li>
+  <li> [OWASP Top 10 2021 Category A5 - Security Misconfiguration </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+</ul>",CRITICAL,APEX,SECURITY_HOTSPOT,FALSE
+sf:UnnecessaryConstructor,Unnecessary Constructor,"This rule detects when a constructor is not necessary; i.e., when there is only one constructor,
+it's public, has an empty body, and takes no arguments.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo { 
+  public Foo() {}		//Bad: This constructor is unnecessary.
+
+  public Foo(List bar) {  //Good: This constructor serves a purpose.
+  	//do work....
+  }
+}
+  
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ClassNamingConventions,Class Naming Conventions,"Class names should always begin with an upper case character.
+      <BR><h2>Example:</h2><pre>
+
+public class Foo {}		//Good: this is preferred.
+
+public class foo {}		//Bad: not recommended.
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:SimpleRedirectAction,Page Action with a simple redirection,"Avoid creating page action which makes a simple client side redirect.
+<br/>
+Consider using an apex:outputLink in your apex:form or other non action method instead and implement the action through an apex:page action attribute - where it makes sense.
+    <BR><h2>Example:</h2><pre>
+public class EditController {
+  public PageReference Close()
+  {
+    PageReference pr = new PageReference('/home/home.jsp');
+    pr.setRedirect(true); //Bad: The action method contains only client-side GET redirect.
+    return pr;
+  }
+}
+
+&lt;apex:outputLink value=&quot;{!$Page.homePage}&quot;> //Good: Client-side redirect can be implemented with an apex:outputLink component.
+  Home Page
+&lt;/apex:outputLink>
+
+	
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryConversionTemporary,Unnecessary Temporary Variable for String Conversion,"Avoid the use temporary objects when converting primitives to Strings. Use the static conversion methods
+on the wrapper classes instead.
+      <BR><h2>Example:</h2><pre>
+  
+public String convert(Integer x) {
+	String foo = new Integer(x).toString();	//Bad: this wastes an object.
+	
+	return Integer.toString(x);				//Good: preferred approach.
+}
+ 
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:PositionLiteralsFirstInComparisons,Position Literals First in Comparisons,"Position literals first in comparisons, if the second argument is null then NullPointerExceptions 
+can be avoided, they will just return false.
+  <BR><h2>Example:</h2><pre>
+
+class Foo {
+  boolean bar(String x) {
+    return x.equals('2'); 	//Bad: this can result in a null pointer
+  }
+  boolean foo(String x) {
+    return '2'.equals(x); 	//Good: this is preferred
+  }
+}
+
+
+  </pre>",MAJOR,APEX,BUG,FALSE
+sf:ReturnFromFinallyBlock,Return from Finally Block,"Avoid returning from a finally block, this can discard exceptions.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/584.html"">MITRE, CWE-584</a> - Return Inside Finally Block </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/mIEbAQ"">CERT, ERR04-J.</a> - Do not complete abruptly from a finally block </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class Bar {
+	public String foo() {
+		try {
+			doHeapsOfStuff();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			return 'A. O. K.';  		//Bad: Return is not recommended here.
+		}
+		
+		return 'A. O. K.'; 				//Good: A return outside the block will not discard exceptions
+	}
+}
+
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:LocalVariableCouldBeFinal,Local Variable Could Be Final,"A local variable assigned only can be declared final once.
+      <BR><h2>Example:</h2><pre>
+  
+public class Bar {
+	public void foo () {
+		String a = 'a'; 		//Bad: if a will not be assigned again it is better to make it final.
+		final String b = 'b';	//Good: this is preferred.
+	}
+}
+  
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidUsingBatchApexInTrigger,Using Batch Apex from a trigger is dangerous,"Using Batch Apex from a trigger is dangerous.
+<br/>
+You must be able to guarantee that the trigger does not add more batch jobs than the limit. In particular, consider API bulk updates, import wizards, mass record changes through the user interface, and all cases where more than one record can be updated at a time.
+<br/>
+Read more here: <a href =""https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm"">Salesforce Developers - Using Batch Apex</a>
+<BR><h2>Example:</h2><pre>
+trigger OpportunityTrigger on Opportunity (after insert, after update) {
+  ID batchprocessid = Database.executeBatch(worker); //Bad: Executing Apex Batch from Trigger.
+}
+     </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidSoqlAggregate,Avoid Calling Aggregate Functions on Non-Grouped Query,"Calling aggregate functions can easily overrun governor limits that limit the total number of rows accessed.
+
+Instead of using Min/Max of a column, it's better to sort the query and return a limit of 1 to get the top/bottom item
+    <BR><h2>Example:</h2><pre>
+[ Select Max(LastModifiedDate) From Account ] // Bad: This query can cause a governor limit error if there are too many Accounts.
+
+[ Select LastModifiedDate From Account Order By LastModifiedDate Desc Limit 1 ] //Good: This query will not cause a governor limit error.
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ClassWithoutTestCases,Test Methods in Non-Test Class,"Having test methods in non-test classes is not a good practice. Move the test methods into a separate test class.
+      <BR><h2>Example:</h2><pre>
+
+//Consider moving test methods to a separate test class
+public class Car {
+   public static testmethod () {		//Bad: consider moving to a separate test class.
+    // do something
+   }
+   // code
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidDMLInUnitTests,Avoid DML in Tests,"Avoid DML which creates data in unit test functions. These functions should be moved into helper functions and re-used.
+
+This rule specifically looks for 'insert' DML in test methods.
+      <BR><h2>Example:</h2><pre>
+
+public class SimpleTest {
+	public static testmethod void testX() {
+		Account a = new Account();
+		a.name = 'Test';
+		insert a;     //Bad: the account should be created in a helper function
+	}
+}
+
+          </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:TooManyMethods,Too Many Methods,"A class with too many methods is probably a good suspect for refactoring, in order to reduce its complexity and find a way to
+have more fine grained objects.  Get and set methods for class variables should be replaced where possible with an accessor. 
+
+<p>For example:</p>
+
+<pre>
+Account myAccount { 
+  get{ return [ select id ... ]; }
+}
+</pre>            
+        <BR><h2>Example:</h2><pre>
+
+public class Foo { 
+	private void doWork() {}
+	public void doPublicWork() {}
+	public void doWorkAgain() {}
+	private void soMuchWork(){}
+ // [... more and more methods ...]		//Bad: Too many methods, consider refactoring. 
+ 
+}
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:FutureMethodInLoop,Avoid Calling @Future Methods Inside Loops,"Avoid calling @Future Methods Inside Loops. Soql and DML calls within loops can cause governor limit exceptions.
+ 	  <BR><h2>Example:</h2><pre>
+    
+
+public class Something {
+   @future public void futureMethod(){  
+   }
+	public void badAction() {  
+		for (Integer i = 0; i < 10; i++) {
+		  futureMethod();			//Bad: this is not recommended.
+		}
+	} 
+}
+
+    
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:WhileLoopsMustUseBraces,While Loops Must Use Braces,"Avoid using 'while' statements without using braces to surround the code block. If the code 
+formatting or indentation is lost then it becomes difficult to separate the code being
+controlled from the rest.
+      <BR><h2>Example:</h2><pre>
+
+while (true)	//Bad: Not recommended.
+      x++;
+      
+while (true) {	//Good: Preferred approach.
+      x++;
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidPrefixingMethodParameters,Avoid Prefixing Method Parameters,"Prefixing parameters by 'in' or 'out' pollutes the name of the parameters and reduces code readability. 
+To indicate whether or not a parameter will be modified in a method, its better to document method
+behavior with comments.
+            
+        <BR><h2>Example:</h2><pre>
+public class Foo {
+  public void bar(
+      Integer inLeftOperand,		//Bad: This is unclear and not recommended. 
+      Result outRightOperand) {
+      outRightOperand.setValue(inLeftOperand * outRightOperand.getValue());
+  }
+
+}
+
+public class Foo {
+	/**
+	 * 
+	 * @param leftOperand, (purpose), not modified by method.
+	 * @param rightOperand (purpose), will be modified by the method: contains the result.
+	 */
+	public void bar(				//Good: This is preferred.
+	      Integer leftOperand,
+	      Result rightOperand) {
+	      rightOperand.setValue(leftOperand * rightOperand.getValue());
+	}
+}
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:SimplifiedTernary,Ternary Operators Can Be Simplified With || or &&,"Look for ternary operators with the form `condition ? literalBoolean : foo`
+or `condition ? foo : literalBoolean`.<br/>
+
+These expressions can be simplified respectively to:<br/>
+`condition || foo`  when the literalBoolean is true<br/>
+`!condition && foo` when the literalBoolean is false<br/><br/>
+or<br/><br/>
+`!condition || foo` when the literalBoolean is true<br/>
+`condition && foo`  when the literalBoolean is false<br/>
+        
+    <BR><h2>Example:</h2><pre>
+        
+public class Foo {
+    public boolean test() {
+        return condition ? true : something(); //Can be as simple as return condition || something();
+    }
+
+    public void test2() {
+        final boolean value = condition ? false : something(); //Can be as simple as value = !condition && something();
+    }
+
+    public boolean test3() {
+        return condition ? something() : true; //Can be as simple as return !condition || something();
+    }
+
+    public void test4() {
+        final boolean otherValue = condition ? something() : false; //Can be as simple as condition && something();
+    }
+}
+        
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AssignmentInOperand,Avoid Assignments in Operands,"Avoid assignments in operands; this can make code more complicated and harder to read.
+  <BR><h2>Example:</h2><pre>
+      
+public void babar() {
+ System.debug(a = 0);   	//Bad: assignment in a call is not recommended.
+}
+  
+public void bar() {
+    Integer x = 2;
+    if ((x = getX()) == 3) {  //Bad: assignment in an if conditional is not recommended.
+      system.debug('3!');
+    }
+}
+
+public void barber() {
+  Integer x = 2;
+  while ( (x = getX()) != 0 ) {}  //Bad: assignment in a while conditional is not recommended.
+ }
+
+public void better() {
+    Integer x = 2;
+    x = getX();
+    if (x == 3) {  			  //Good: the assignment is performed outside the operand.
+      system.debug('3!');
+    }
+}
+  
+  </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:LongVariable,Long Variable Name,"Fields, formal arguments, or local variable names that are too long can make the code difficult to follow.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	Integer reallyLongIntName = -3;  			//Bad: field name is too long.
+	public static void main( String argumentsList[] ) { //Bad: formal arg name is too long.
+		Integer otherReallyLongName = -5; 		//Bad: local variable name is too long
+		for (Integer interestingIntIndex = 0;	//Bad: 'for' loop index name is too long.
+             interestingIntIndex < 10;
+             interestingIntIndex ++ ) {
+    }
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:SuspiciousConstantFieldName,Suspicious Constant Field Name,"Field names using all uppercase characters - which some naming conventions indicate to be constants - should
+be declared as final.
+       <BR><h2>Example:</h2><pre>
+    
+public class Foo {
+
+  double PI = 3.16;			//Bad: the value of PI can be altered.
+  
+  final double PI = 3.16; 	//Good: this is preferred.
+    
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidProtectedFieldInFinalClass,Avoid Protected Field in Final Class,"Do not use protected fields in final classes since they cannot be subclassed.
+Clarify your intent by using private or package access modifiers instead.
+         <BR><h2>Example:</h2><pre>
+
+public final class Bar {
+  private Integer x;
+  protected Integer y;  //Bad: Bar cannot be subclassed, y should be made either private or package visible.
+  Bar() {}
+}
+ 
+         </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:NonStaticInitializer,Non Static Initializer,"A non-static initializer block will be called any time a constructor is invoked (just prior to 
+invoking the constructor).  While this is a valid language construct, it is rarely used and is 
+confusing.
+       <BR><h2>Example:</h2><pre>
+   
+public class MyClass {
+ 
+  {
+   system.debug('I am about to construct myself'); //Bad: This block gets run before any call to a constructor
+  }
+}
+   
+       </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:TooManyFields,Too Many Fields,"Classes that have too many fields can become unwieldy and could be redesigned to have fewer fields,
+possibly through grouping related fields in new objects.  For example, a class with individual 
+city/state/zip fields could park them within a single Address field.
+      <BR><h2>Example:</h2><pre>
+   
+public class Person {	//Bad: Too many separate fields.
+   Integer birthYear;
+   Integer birthMonth;
+   Integer birthDate;
+   float height;
+   float weight;
+}
+
+public class Person {	//Good: This is more manageable.
+   Date birthDate;
+   BodyMeasurements measurements;
+}
+   
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AuraControllerNaming,Aura Controller Naming Convention,"Aura Controller class names should end with ""Controller"". Only classes linked to a page as a controller or extension are considered.
+    <BR><h2>Example:</h2><pre>
+public class Foo {  //Bad: not recommended.
+  //....
+}
+
+public class FooController{  //Good: Purpose of the class is clear.
+  //....
+}
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmptyTryBlock,Empty Try Block,"Avoid empty try blocks.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+ public void bar() {
+  try {						//Bad: Nothing is done here.
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
+ }
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:StringToString,String To String,"Avoid calling toString() on objects already known to be string instances; this is unnecessary.
+    <BR><h2>Example:</h2><pre>
+
+private String baz() {
+    String bar = 'howdy';
+    return bar.toString();   //Bad: this is not recommended;
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryBooleanAssertion,Unnecessary Boolean Assertion,"A Unit test assertion with a boolean literal is unnecessary since it always will evaluate to the same thing.
+Consider using flow control (in case of assertTrue(false) or similar) or simply removing
+statements like system.assert(true) and system.assert(!true).  If you just want a test to halt after finding
+an error, use the system.assert(false, 'message') method and provide an indication message of why it did.
+      <BR><h2>Example:</h2><pre>
+
+public class SimpleTest {
+	public static testmethod void testX() {
+		System.assert(true);		 //Bad: serves no real purpose.
+	}
+}
+
+          </pre>",MAJOR,APEX,BUG,FALSE
+sf:UnnecessaryReturn,Unnecessary Return,"Avoid the use of unnecessary return statements.
+      <BR><h2>Example:</h2><pre>
+		
+public class Foo {
+  public void bar() {
+    Integer x = 42;
+    return;			//Bad: avoid this.
+  }
+}
+		
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:NcssMethodCount,NCSS Method Count,"This rule uses the NCSS (Non-Commenting Source Statements) algorithm to determine the number of lines
+of code for a given method. NCSS ignores comments, and counts actual statements. Using this algorithm,
+lines of code that are split are counted as one.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo extends Bar {
+ public Integer methd() {		//this method only has 1 NCSS lines
+     super.methd();
+     
+
+ 
+      return 1;
+ }
+}
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:BooleanGetMethodName,Boolean Get Method Name,"Methods that return boolean results should be named as predicate statements to denote this.
+I.e, 'isReady()', 'hasValues()', 'canCommit()', 'willFail()', etc.   Avoid the use of the 'get'
+prefix for these methods.
+        <BR><h2>Example:</h2><pre>
+            
+public boolean getFoo(); 	//Bad: not recommended.
+
+public boolean isFoo(); 	//Good: this is preferred.
+
+public boolean getFoo(boolean bar); //This is OK, unless checkParameterizedMethods=true
+     </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnusedPrivateMethod,Unused Private Method,"Unused Private Method detects when a private method is declared but is unused.  
+
+A potential 'false postive' can occur: private methods can still be used in a child class. However, it's best practise to declare these methods as protected to demonstrate that this class can be used in child classes.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	private void foo() {} //Bad: this method is unused.
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AddEmptyString,Add Empty String,"The conversion of literals to strings by concatenating them with empty strings is inefficient.
+It is much better to use one of the type-specific toString() methods instead.
+        <BR><h2>Example:</h2><pre>
+             
+String s = '' + 123; 				//Bad: this is inefficient. 
+String t = Integer.toString(456); 	//Good: this is the preferred approach.
+            
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmptyStaticInitializer,Empty Static Initializer,"An empty static initializer serve no purpose and should be removed.
+       <BR><h2>Example:</h2><pre>
+   
+public class Foo {
+	static {		//Bad: This should be removed.
+	// empty
+	}
+}
+
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:GodClass,God Class Rule,"The God Class rule detects the God Class design flaw using metrics. God classes do too many things,
+are very big and overly complex. They should be split apart to be more object-oriented.<br/>
+The rule uses the detection strategy described in ""Object-Oriented Metrics in Practice"".<br/>
+<br/>
+Every violation will include three metrics:<br/>
+<ul>
+  <li>WMC = Weighted Methods Count</li>
+  <li>ATFD = Access To Foreign Data</li>
+  <li>TCC = Tight Class Cohesion</li>
+</ul
+<br/>
+The violations are reported against the entire class. See also the references:<br/>
+Michele Lanza and Radu Marinescu. Object-Oriented Metrics in Practice:<br/>
+Using Software Metrics to Characterize, Evaluate, and Improve the Design<br/>
+of Object-Oriented Systems. Springer, Berlin, 1 edition, October 2006. Page 80.<br/>
+        <BR><h2>Example:</h2><pre>
+
+global class GodEngine {
+  
+  void GodEngine() {}
+  
+  public void doGodStuff {
+    OutsideClassOne.doStuff();
+    OutsideClassTwo.doStuff();
+    if(doingStuff) {                         //Bad: This class accesses too many outside classes/data and is overly complex.
+    	OutsideClassThree.doStuff();
+    } else if (OutsideClass.isdoingOtherStuff()) {
+      OutsideClassFour.doStuff();
+    }
+    OutsideClassFive.doStuff();
+    OutsideClassSix.doStuff();
+    OutsideClassSeven.doStuff();
+    
+    //...and more and more lines...
+  }
+
+  //..and more and more methods...
+
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ExceptionAsFlowControl,Exception as Flow Control,"Using Exceptions as form of flow control is not recommended as they obscure true exceptions when debugging.
+Either add the necessary validation or use an alternate control structure.
+      <BR><h2>Example:</h2><pre>
+  
+public void bar() {
+    try {
+      try {
+      } catch (Exception e) {
+        throw new WrapperException(e); //Bad: this is essentially a GOTO to the WrapperException catch block.	
+       }
+     } catch (WrapperException e) {
+     // do some more stuff
+    }
+  }
+  
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:MisleadingVariableName,Misleading Variable Name,"Detects when a non-field has a name starting with 'm_'.  This usually denotes a field and could be confusing.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+    private Integer m_foo; 			//Good: this is OK.
+    
+    public void bar(String m_baz) { //Bad: this is not recommended...
+      Integer m_boz = 42; 			//...and neither is this.
+    }
+}
+  
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:TrackNoSonar,Track Usage of //NOSONAR,"Overuse of the //NOSONAR rule suppression can mean issues in your code are not picked up.  This rule flags each usage to make sure it is needed.
+  See <a href=""https://docs.codescan.io/hc/en-us/articles/360012109711-Ignoring-violations"">docs.codescan.io</a> for more information.
+  <BR><h2>Example:</h2><pre>
+
+
+public class Foo {
+  // The following line will be ignored
+  integer unusedValue = 1; //NOSONAR
+
+}
+
+
+  </pre>",INFO,APEX,CODE_SMELL,FALSE
+sf:UnitTestContainsTooManyAsserts,Unit Test Method Contains Too Many Asserts,"Unit tests should not contain too many asserts.  Many asserts are indicative of a complex test, for which 
+it is harder to verify correctness.  Consider breaking the test scenario into multiple, shorter test scenarios.  
+Customize the maximum number of assertions used by this Rule to suit your needs.
+		<BR><h2>Example:</h2><pre>
+
+public class MyTestCase  {
+	public testmethod void testMyCaseWithOneAssert() {	//Good: only one assert is used.
+		boolean myVar = false;		
+		system.assert(myVar);
+	}
+
+	@IsTest
+	public void testMyCaseWithMoreAsserts() {	//Bad: too many asserts. Consider breaking the test into smaller parts.
+		boolean myVar = false;		
+		system.assert(myVar);
+		system.assertEquals(false, myVar);
+	}
+}
+
+		</pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryFinalModifier,Unnecessary Final Modifier,"When a class has the final modifier, all the methods are automatically final and do not need to be
+tagged as such.
+      <BR><h2>Example:</h2><pre>
+
+public final class Foo {
+    
+    private final void foo() {
+    	// This final modifier is not necessary, since the class is final
+    	// and thus, all methods are final
+    }
+}
+
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ConfusingTernary,Confusing Ternary,"Avoid negation within an 'if' expression with an 'else' clause. Most 'if (x != y)' cases 
+without an ""else"" are often return cases, so consistent use of this rule makes the code 
+easier to read.  Also, this resolves trivial ordering problems, such as ""does the error 
+case go first?"" or ""does the common case go first?"".
+        <BR><h2>Example:</h2><pre>
+//Consider re-writing this...
+return (x != y) ? diff : same;
+
+//or this...
+if (x != y) diff(); else same(); 
+
+//like this:
+if (x == y) same(); else diff();
+
+
+          
+        </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidDuplicateLiterals,Avoid Duplicate Literals,"Code containing duplicate String literals can usually be improved by declaring the String as a constant field.
+    <BR><h2>Example:</h2><pre>
+
+private void bar() {
+     buz('Howdy');  //Bad: the String 'Howdy' could be declared as a constant field.
+     buz('Howdy');
+     buz('Howdy');
+     buz('Howdy');
+ }
+ 
+ private void buz(String x) {}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidRethrowingException,Avoid Re-Throwing Exception,"Catch blocks that merely rethrow a caught exception only add to code size and runtime complexity.
+    <BR><h2>Example:</h2><pre>  
+public void bar() {
+    try {
+    // do something
+    }  catch (SomeException se) {
+       throw se;					//Bad: this is not recommended.
+    }
+}
+  
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidConstantsInterface,Avoid Constants Interface,"An interface should be used only to characterize the external behaviour of an
+implementing class: using an interface as a container of constants is a poor 
+usage pattern and not recommended.
+      <BR><h2>Example:</h2><pre>
+    
+public interface ConstantsInterface {			//Bad: not recommended.
+   public static final Integer CONSTANT1 = 0;
+   public static final String CONSTANT2 = '1';
+}
+
+public final class ConstantsClass {					//Good: using a final class as a container for constants is preferred.
+   public static final Integer CONSTANT3 = 0;
+   public static final String CONSTANT4 = '1';
+}
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidNotFinalPublicStaticFields,Avoid Declaring Non-Final Public Static Fields,"There is no good reason to declare a field ""public"" and ""static"" without also declaring it ""final"". 
+      Most of the time this is a kludge to share a state among several objects. But with this approach, 
+      any object can do whatever it wants with the shared state, such as setting it toÂ null.
+    <BR><h2>Example:</h2><pre>
+      
+public class PrimitiveType {
+  
+  public static integer sharedStateVariable;				//Bad: Not recommended.
+  
+  
+  public static final integer aStaticFinalVariable = 123;	//Good: Preferred.
+}
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnescapedOutput,Unescaped Error Message XSS,"Reports on calls to `addError` with disabled escaping. The message passed to `addError`
+will be displayed directly to the user in the UI, making it prime ground for XSS
+attacks if unescaped.<br/>
+<br/>
+See <a href=""http://cwe.mitre.org/data/definitions/79.html"">MITRE, CWE-79</a> - Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+	public void triggerHandler(){
+    	Trigger.new[0].addError(html, false); //Bad: html could contain an XSS vulnerability.
+    	Trigger.new[0].addError(html, true); //Good: html is safely escaped.
+    }
+}
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:EmptyStatementBlock,Avoid Empty Statement Blocks,"Empty block statements serve no purpose and should be removed.
+	<BR><h2>Example:</h2><pre>
+    
+public class Foo {
+
+   private Integer _bar;
+
+   public void setBar(Integer bar) {
+      { _bar = bar; } 		//This is ok.
+      {} 					//Bad: This should be removed.
+   }
+
+}
+    
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryLocalBeforeReturn,Unnecessary Local Before Return,"Avoid the creation of unnecessary local variables.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+   public Integer foo() {
+     Integer x = doSomething();
+     return x;  				//Bad: Instead, just 'return doSomething();'.
+   }
+}
+  
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:NonUnitTestContainsAsserts,Non Test Method Contains Asserts,"Asserts should only be used in test methods.
+		<BR><h2>Example:</h2><pre>
+
+public class MyTestCase  {
+
+	public testmethod void testMyCaseWithOneAssert() {  //Good: assert is being used within a test method.
+		boolean myVar = false;		
+		system.assert(myVar);
+	}
+
+
+	public void aNonTestMethodWithAsserts() {
+		boolean myVar = false;		
+		system.assertEquals(false, myVar);			//Bad: assertions should not be used outside test methods.
+	}
+}
+
+		</pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:EqualsNull,Equals Null,"Tests for null should not use the equals() method. The '==' operator should be used instead.
+        <BR><h2>Example:</h2><pre>
+       
+String x = 'foo';
+
+if (x.equals(null)) { //Bad: Not recommended.
+   	doSomething();
+	}
+	
+if (x == null) { 	//Good: This is preferred.
+	}
+    
+        </pre>",BLOCKER,APEX,BUG,FALSE
+sf:IfStmtsMustUseBraces,If Statements Must Use Braces,"Avoid using 'if' statements without using braces to surround the code block. If the code 
+formatting or indentation is lost then it becomes difficult to separate the code being
+controlled from the rest.
+     <BR><h2>Example:</h2><pre>
+ 
+
+if (foo)	//Bad: Not recommended.
+	x++;
+	y++;	
+
+if (foo) {	//Good: Preferred approach.
+	x++;
+	y++;
+}
+
+ 
+     </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidReassigningParameters,Avoid Reassigning Parameters,"Reassigning values to incoming parameters is not recommended.  Use temporary local variables instead.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo {
+  private void foo(String bar) {
+    bar = 'something else';			//Bad: Not recommended.
+  }
+}
+
+    </pre>",MAJOR,APEX,BUG,FALSE
+sf:AvoidFieldNameMatchingMethodName,Avoid Field Name Matching Method Name,"It can be confusing to have a field name with the same name as a method. While this is permitted, 
+having information (field) and actions (method) is not clear naming. Developers versed in 
+Smalltalk often prefer this approach as the methods denote accessor methods.
+      <BR><h2>Example:</h2><pre>
+
+public class Foo {
+
+	Object bar;
+					//Bad: naming a variable and a method bar is confusing and not recommended.
+	void bar() {
+	}
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:OneDeclarationPerLine,One Declaration Per Line,"Apex allows the use of several variable declarations of the same type on one line. However, it
+can lead to quite messy code. This rule looks for several declarations on the same line.
+            
+        <BR><h2>Example:</h2><pre>
+public class Foo {	
+	String name; 			//Good: separate declarations are preferred.
+	String lastname; 
+
+	String name, lastname;	//Bad: combined declarations are not recommended.
+}
+        	
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:HotspotDeserializeJson,Deserializing JSON Is Security-Sensitive,"Deserializing an object from an untrusted source is security-sensitive. An attacker could modify the content of the data.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/502.html"">MITRE, CWE-502</a> - Deserialization of Untrusted Data </li>
+  <li> OWASP Top 10 2021 Category A8 - Software and Data Integrity Failures </li>
+  <li> <a href=""https://www.owasp.org/index.php/Deserialization_of_untrusted_data"">OWASP Deserialization of untrusted data</a> </li>
+  <li> Derived from FindSecBugs rule <a href=""https://find-sec-bugs.github.io/bugs.htm#OBJECT_DESERIALIZATION"">OBJECT_DESERIALIZATION </a> </li>
+</ul>
+  <BR><h2>Example:</h2><pre>
+
+class Car{ 
+  
+  private String make;
+  private String year;
+  
+  public void createCar(String z, String x){ 
+    Car c = (Car)JSON.deserializeStrict(
+      '{""make"":""'+ z + '"",""year"":""' + x + '""}', Car.class);   //Bad: Unknown inputs are used to create the object.
+  }
+}
+
+  </pre>",MAJOR,APEX,SECURITY_HOTSPOT,FALSE
+sf:UnescapedSource,URL Parameters should be Escaped/Sanitized,"Makes sure that all values obtained from URL parameters are properly escaped / sanitized to avoid XSS attacks.<br/>
+Input can be sanitized using Integer.valueOf, Date.valueOf, String.escapeHtml3, etc, or escaped using the 
+esapi.encoder() functions from <a href=""https://github.com/forcedotcom/force-dot-com-esapi"">https://github.com/forcedotcom/force-dot-com-esapi</a><br/>
+<br/>
+Tips to avoid this problem: Use an Id variable instead of String variable to store Id type parameters.
+
+<br/>
+See <a href=""http://cwe.mitre.org/data/definitions/79.html"">MITRE, CWE-79</a> - Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+  public Foo() {
+    String unescapedstring = ApexPages.currentPage().getParameters().get('url_param');
+    
+    someOtherFunction(unescapedstring); 	 //Bad: this string is used elsewhere and may lead to an XSS vulnerability
+    
+    someOtherFunction(integer.valueof(unescapedstring));   //Good: the string is safely checked as an integer  
+  }
+}
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:DMLWithoutSharingEnabled,Sharing should be Configured on Classes with DML,"Executing DML should be done inside a class annotated with 'with sharing', 'inherited sharing' or 'without sharing'.<br/>
+<br/>
+By setting allowWithoutSharing=false, DML in classes flagged with 'without sharing' are still flagged.
+This can be useful for manual reviews of classes working around security problems.
+<br/>
+<h2>See</h2>
+<ul>
+	<li><a href=""https://cwe.mitre.org/data/definitions/282.html"">CWE-282</a> - Improper Ownership Management</li>
+	<li>See <a href=""https://cwe.mitre.org/data/definitions/284.html"">CWE-284</a> - Improper Access Control</li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+    public void foo () {     
+      Account[] accounts = [ select name from account ]; // Bad: this returns all accounts not only the ones the current user has access to. 
+    }
+}
+  
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:HotspotCookies,Using Cookies Is Security-Sensitive,"Attackers can use widely-available tools to view the cookie and read the sensitive information. Even if the information is encoded in a way that is not human-readable, certain techniques could determine which encoding is being used, then decode the information.<br/>
+	<br/>
+  <h2>See</h2>
+  <ul>
+	  <li> <a href=""http://cwe.mitre.org/data/definitions/312.html"">MITRE, CWE-312</a> - Cleartext Storage of Sensitive Information </li>
+	  <li> <a href=""http://cwe.mitre.org/data/definitions/315.html"">MITRE, CWE-315</a> - Cleartext Storage of Sensitive Information in a Cookie </li>
+	  <li> <a href=""https://cwe.mitre.org/data/definitions/565.html"">MITRE CWE-565</a> - Reliance on Cookies without Validation and Integrity Checking </li>
+	  <li> OWASP Top 10 2021 Category A3 - Injection </li>
+	  <li> OWASP Top 10 2021 Category A2 - Cryptographic Failures </li>
+	  <li> <a href=""https://wiki.sei.cmu.edu/confluence/display/java/FIO52-J.+Do+not+store+unencrypted+sensitive+information+on+the+client+side"">CERT,
+	  FIO52-J.</a> - Do not store unencrypted sensitive information on the client side </li>
+	  <li> Derived from FindSecBugs rule <a href=""https://find-sec-bugs.github.io/bugs.htm#COOKIE_USAGE"">COOKIE_USAGE</a> </li>
+	</ul>
+  <BR><h2>Example:</h2><pre>
+
+  Cookie userCookie = new Cookie('CookieName', fieldValueToBeStoredAsCookie, null, 315569260, false);
+  ApexPages.currentPage().setCookies(new Cookie[] {
+      userCookie     //Bad: The cookie could be targeted by attackers to get access to sensitive information.
+  });
+
+  </pre>",CRITICAL,APEX,SECURITY_HOTSPOT,FALSE
+sf:SOQLInjection,Avoid Untrusted/Unescaped Variables in DML Query,"Detects the usage of untrusted / unescaped variables in DML queries.<br/>
+<br/>
+Without sufficient removal or quoting of SOQL syntax in user-controllable inputs, the generated SOQL query can cause those inputs to 
+be interpreted as SOQL instead of ordinary user data. 
+This can be used to alter query logic to bypass security checks.<br/>
+<br/>
+Input can be cleansed by using Id.valueOf, Date.valueOf, etc. Or escaped using String.escapeSingleQuotes().<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/89"">MITRE, CWE-89</a> - Improper Neutralization of Special Elements used in an SQL Command </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/20.html"">MITRE, CWE-20</a> - Improper Input Validation </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/943.html"">MITRE, CWE-943</a> - Improper Neutralization of Special Elements in Data Query Logic
+  </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/PgIRAg"">CERT, IDS00-J.</a> - Prevent SQL injection </li>
+  <li> OWASP Top 10 2021 Category A3 - Injection </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat1"">SANS Top 25</a> - Insecure Interaction Between Components </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+
+public class Foo {
+	public void test1() {
+		//Bad: getFilter function may return unescaped data (potentially from user input).
+		String field1 = getFilter(); 
+		String field2 = 'SELECT Id FROM Account WHERE ';
+		Database.query(field2 + field1);
+		
+		//Good: the function result is cleaned
+		String field1 = '\'' + String.escapeSingleQuotes(getSomeId()) + '\'';
+		String field2 = 'SELECT Id FROM Account WHERE isPublic = true and Id = ';
+		Database.query(field2 + field1);
+		
+		//Good: better yet, use SOQL's built-in variable replacements
+		String field1 = getSomeID();
+		String field2 = 'SELECT Id FROM Account WHERE isPublic = true and Id = :field1';
+		Database.query(field2);
+	}		
+}
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:HotspotTypeReflection,Type Reflection Is Security Sensitive,"Dynamically executing code is security-sensitive.  If the code comes from an untrusted source, the untrusted source may be able to choose which code to run.<br/>
+This vulnerability can lead to:
+<br/><ul>
+<li>Unintended modification of the system state.</li>
+<li>Errors and/or termination of the application.</li>
+<li>Leaking of sensitive information in an error message.</li><br/>
+<br/>
+<h2>See</h2> 
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/95.html"">MITRE CWE-95</a> - Improper Neutralization of Directives in Dynamically Evaluated Code
+  ('Eval Injection') </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/470.html"">MITRE CWE-470</a> - Use of Externally-Controlled Input to Select Classes or Code
+  ('Unsafe Reflection') </li>
+  <li> OWASP Top 10 2021 Category A3 - Injection </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+public MyController {
+  private interface Implementation{
+    void run();
+  }
+  private class AdminImplementation implements Implementation{
+    public void run(){
+      ... do something privileged
+    }
+  }
+  private class StandardImplementation implements Implementation{
+    public void run(){
+	  ... normal implementation
+    }
+  }
+
+  public void init(){
+    Implementation i = Type.forName(implementationName);
+      i.run(); //Bad: This unchecked implementation could lead to unexpectedly running the AdminImplementation code.
+  }
+
+}
+      </pre>",MAJOR,APEX,SECURITY_HOTSPOT,FALSE
+sf:AvoidInsecureMessageDigests,Avoid Insecure Digest Algorithms,"MD5 and SHA-1 algorithms are no longer considered secure because it's too easy to create a hash collision between to message contents.<br/>
+  	<br/>
+  	This allows an attacker to craft content which produces the same hash.<br/>
+  	<br/>
+  	The SHA256 and SHA512 are considered secure alternatives<br/>
+  	<br/>
+	<h2>See</h2>
+	<ul>
+	  <li> <a href=""http://cwe.mitre.org/data/definitions/328"">MITRE, CWE-328</a> - Reversible One-Way Hash </li>
+	  <li> <a href=""http://cwe.mitre.org/data/definitions/327"">MITRE, CWE-327</a> - Use of a Broken or Risky Cryptographic Algorithm </li>
+	  <li> OWASP Top 10 2021 Category A5 - Security Misconfiguration </li>
+	  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+	  <li> <a href=""http://shattered.io/"">SHAttered</a> - The first concrete collision attack against SHA-1. </li>
+	</ul>
+  <BR><h2>Example:</h2><pre>
+
+Crypto.generateDigest('MD5', blob); //Bad: This is not secure.
+
+Crypto.generateDigest('SHA1', blob); //Bad: This is not secure.
+
+Crypto.generateDigest('SHA-256', blob); //Good: This is considered secure.
+
+  </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:BadCrypto,Apex Classes should use Random IV/Key,"The rule makes sure you are using randomly generated IVs and keys for `Crypto` calls.
+Hard-wiring these values greatly compromises the security of encrypted data.<br/>
+<br/>
+Read <a href=""https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_restful_crypto.htm"">here</a> for more information.<br/>
+<h2>See</h2>
+<ul>
+    <li>OWASP Top 10 2017 Category A5 - Security Misconfiguration</li>
+	<li><a href=""https://cwe.mitre.org/data/definitions/329.html"">MITRE,CWE-329</a> - Not Using a Random IV with CBC Mode</li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+  
+  public void cryptoExamples(){
+    Blob hardCodedKey = Blob.valueOf('0000000000000000');
+    Blob hardCodedIV = Blob.valueOf('Hardcoded IV 123');
+    Blob data = Blob.valueOf('Data to be encrypted');
+    
+    //Bad: use of hard coded key/iv.
+    Blob encrypted = Crypto.encrypt('AES128', hardCodedKey, hardCodedIV, data);
+    
+    //Good: this is preferred.
+    Blob key = Crypto.generateAesKey(128);
+    Blob data = Blob.valueOf('Data to be encrypted');
+    Blob encrypted = Crypto.encryptWithManagedIV('AES128', key, data);
+  }
+  
+}
+      </pre>",CRITICAL,APEX,VULNERABILITY,FALSE
+sf:AssertEqualsOrder,Assert Argument Order,"If the arguments provided to the assertEquals or assertNotEquals method are reversed, the test will have unexpected results.
+      <BR><h2>Example:</h2><pre>
+
+@isTest
+public class MyClassTest{
+
+    static testMethod void BadTest(){
+      //test code 
+      System.assertEquals(es.size(), 0); //Bad: This is backwards.  Will show 'unit test failed: System.AssertException: Assertion Failed: Expected: 4, Actual: 0'
+    }    
+    
+    static testMethod void GoodTest(){
+      //test code 
+      System.assertEquals(0, es.size()); //Good: This is the correct order.
+    }  
+    
+}
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:InsufficientCommentDensity,Source files should have a sufficient density of comment lines,"An issue is created on a file as soon as the density of comment lines on this file is less than the required threshold.
+
+The number of comment lines to be written in order to reach the required threshold is provided by each issue message.
+
+Note. This rule is an alternative to existing common-rule:InsufficientCommentDensity and intended to be used only in Sonarlint
+environment and/or with CodeScan IDE Plugins.",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidTabCharacter,Avoid using Tab Characters Check,"Checks that there are no tab characters ('\t') in the source code.
+      <BR><h2>Example:</h2><pre>
+
+public String bar(String string) {
+ if (string != null) {	//Bad: Should not use tab indent
+		return string;
+	}
+
+
+	if (string != null) {
+		return  string;  	//Bad: Should not use tab separator.
+	}
+}
+        </pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:StaticCanNotBeUsedInInnerClass,Static can not be used in inner classes,"Static can only be used on fields, properties and methods of top level classes only.
+    <BR><h2>Example:</h2><pre>
+public class BasicClass {
+
+    public class AnInnerClass {
+        public static String thing;
+        public static String pubicString { get; set; }
+        public static String getMessage() {
+            return 'Hello World!';
+        }
+    }
+}
+	
+    </pre>",MAJOR,APEX,BUG,FALSE
+sf:MethodReturnsInternalArray,Method Returns Internal Array,"Exposing internal arrays directly allows the user to modify some code that could be critical.<br/>
+It is safer to return a copy of the array.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/375"">MITRE, CWE-375</a> - Returning a Mutable Object to an Untrusted Caller </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/zQCuAQ"">CERT, OBJ05-J.</a> - Do not return references to private mutable class members
+  </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/QIEVAQ"">CERT, OBJ06-J.</a> - Defensively copy mutable inputs and mutable internal
+  components </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/JQLEAw"">CERT, OBJ13-J.</a> - Ensure that references to mutable objects are not exposed
+  </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class SecureSystem {
+  String [] ud;
+  public SecureSystem(){
+  	this.ud = new String[]{'standard', 'second'};
+  }
+  public String [] getUserData() {
+      return ud; //Bad: don't return the internal array directly, return a copy.
+  }
+  public String [] getUserDataSecure() {
+      return ud.clone(); //Good: user can't unexpectedly modify content
+  }
+}
+
+SecureSystem s = new SecureSystem();
+s.getUserData()[0] = 'secure'; //Secure system now has an unexpected value
+  
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:EmptySwitchLabel,Empty Switch Label,"Avoid 'switch' statements where a label is defined but nothing is in it
+    <BR><h2>Example:</h2><pre>
+    trigger leadDuplicatePreventer on Lead (before insert,before update) {
+	  switch on triggerEvent {
+	      when AFTER_INSERT {
+	      	//BAD: this should not be empty
+	      }
+	  }
+	}
+ }
+}
+ 
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:CommentedOutCode,Avoid Commented Out Code,"Avoid leaving commented out code in the codebase.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+	<li>MISRA C:2004, 2.4 - Sections of code should not be ""commented out"".</li>
+	<li>MISRA C++:2008, 2-7-2 - Sections of code shall not be ""commented out"" using C-style comments.</li>
+	<li>MISRA C++:2008, 2-7-3 - Sections of code should not be ""commented out"" using C++ comments.</li>
+	<li>MISRA C:2012, Dir. 4.4 - Sections of code should not be ""commented out""</li>
+</ul>
+  <BR><h2>Example:</h2><pre>
+/* 
+void somethingCool(){
+	//one day we should do this...     //Bad: remove this.
+	if ( cool ) ...
+}
+*/     
+
+
+  </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:LeftBracesSpacingPositions,Left Braces Spacing Should Be Consistent,"The space between a statement or class and an opening brace should remain consistent throughout the project.  
+The rule has separate parameters for classes, triggers, methods, blocks and enums.
+       <BR><h2>Example:</h2><pre>
+public class Foo{		// This is an example of no spaces. (Class parameter set to None)
+}
+
+public class Foo {		// This is an example of a single space. (Class parameter set to Single)
+}
+
+
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:RightBracesLinePositions,Right Braces Positioning Should Be Consistent,"The line positioning of closing braces should remain consistent throughout the project. 
+
+       <BR><h2>Example:</h2><pre>
+      
+public class Foo {
+	public void test1() {
+		if ( true )
+		{				// This is an example of the closing brace on the next line. (blockBracesPosition parameter set to Next)
+		}
+	}
+}
+
+public class Foo {
+	public void test1() {
+		try{
+		}catch(Exception e){     // This is an example of the closing brace on the same line. (blockBracesPosition parameter set to Ignore)
+		}finally{
+		}
+	}
+}
+
+
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:RightBracesSpacingPositions,Right Braces Spacing Should Be Consistent,"The space between a closing brace and the next statement should remain consistent throughout the project.
+       <BR><h2>Example:</h2><pre>
+public class Foo{
+	public void example1(){
+		if ( true ){
+		}else{			// This is an example of no spaces. (Rule set to None)
+		}
+	}
+}
+
+public class Bar{
+	public void example2(){
+		if ( true ){
+		} else{			// This is an example of a single space. (Rule set to Single)
+		}
+	}
+}
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:ThrowFromFinallyBlock,Throw from Finally Block,"Avoid throwing from a finally block, this can discard any previous exceptions.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/584.html"">MITRE, CWE-584</a> - Return Inside Finally Block </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/mIEbAQ"">CERT, ERR04-J.</a> - Do not complete abruptly from a finally block </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class Bar {
+	public String foo() {
+		try {
+			...
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			throw new Exception('My Exception');  		//Bad: Throwing an exception is not recommended here.
+		}
+	}
+}
+
+      </pre>",CRITICAL,APEX,BUG,FALSE
+sf:ClassNamedException,Exception Classes Should Extend an Exception,"A Class name that ends in ""Exception"" should extend an exception.
+		<BR><h2>Example:</h2><pre>
+
+public class MyException { //Bad: we would expect this class to be an exception
+}
+
+public class MyException extends Exception { //Good: this class is an exception after all.
+}
+
+		</pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:AvoidInstantiatingObjectsInLoops,Avoid instantiating objects in loops,"New objects created within loops should be checked to see if they can created outside and reused.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	public static void main( String as[] ) {  
+		for (Integer i = 0; i < 10; i++) {
+		
+			Foo f = new Foo(); 			//Bad: avoid this whenever you can, it's really expensive.
+		}
+	}
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:StringInstantiation,String Instantiation,"Avoid instantiating String objects; this is usually unnecessary since they are immutable and can be safely shared.
+    <BR><h2>Example:</h2><pre>
+
+private String bar = new String('bar'); //Bad: this is not recommended.
+
+private String bar = 'bar';				//Good: this is preferred.
+
+    </pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:exception,Tracks CodeScan Parser Problems,"An exception occurred while parsing this file. Please send a description of this problem to support@code-scan.com.<BR>
+<BR>
+WARNING: No violation can be detected on this file due this error.",MAJOR,APEX,CODE_SMELL,FALSE
+sf:MethodNamingConventions,Method Naming Conventions,"Method names should always begin with a lower case character, and should not contain underscores.
+          <BR><h2>Example:</h2><pre>
+
+public class Foo {
+	public void fooStuff() {  //Good: camel-case is preferred.
+	}
+	
+	public void Foo_Bar(){    //Bad: not recommended.
+	}
+}
+
+          </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidUsingHardCodedId,Avoid Using Hard Coded Salesforce Id,"Application with hard-coded Salesforce Ids can become impossible to deploy in some cases. 
+Using Custom Settings for Salesforce Ids is preferable.
+	    	
+	    <BR><h2>Example:</h2><pre>
+	    
+public class Foo {
+	private String RecordTypeId = '906F00000008msrIAA'; 	//Bad: Salesforce Id should not be hard-coded.
+	
+	public String GetId(){
+		return ServerSettings__c.getInstance().MyId__c;  //Good: Salesforce Id is fetched from custom settings. 
+	}
+	
+}
+	    
+	    </pre>",MAJOR,APEX,BUG,FALSE
+sf:ShortVariable,Short Variable Name,"Fields, local variables, or parameter names that are very short are not helpful to the reader.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	private Integer q = 15; 						//Bad: the field name is too short.
+	public static void main( String as[] ) {  	//Bad: parameter name is too short.
+		Integer r = 20 + q; 						//Bad: local variable name is too short.
+		for (Integer i = 0; i < 10; i++) { 			//Good: this is not a violation (inside 'for' loop).
+			//do stuff
+		}
+	}
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmptyWhileStmt,Empty While Statement,"Avoid instances where a while statement does nothing.  
+       <BR><h2>Example:</h2><pre>
+  
+void bar(Integer a, Integer b) {
+	while (a == b) {
+						//Bad: Nothing is done here.
+	}
+}
+ 
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:SingularField,Private Field Could Be Declared Locally,"Fields whose scopes are limited to just single methods do not rely on the containing
+object to provide them to other methods. They may be better implemented as local variables
+within those methods.
+			
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+    private Integer x;
+    
+    public void foo(Integer y) {			 
+     x = y + 5;			//Bad: x has no reason to exist at the Foo instance level.
+     return x;
+    }
+    
+    public void bar(Integer y) {			 
+     integer x = y + 5;			//Good: x is declared within the method.
+     return x;
+    }
+}
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UseCollectionIsEmpty,Use Collection isEmpty,"The isEmpty() method on Lists, Maps and Sets are provided to determine if a collection has any elements.
+Comparing the value of size() to 0 does not convey intent as well as the isEmpty() method.
+      <BR><h2>Example:</h2><pre>
+    
+public class Foo {
+  void good() {				//Good: Preferred.
+    List foo = getList();
+    if (foo.isEmpty()) {
+      doWork();
+    }
+  }
+
+  void bad() {				//Bad: Not recommended.
+    List foo = getList();
+    if (foo.size() == 0) {
+      doWork();
+    }
+  }
+}
+    
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnitTestsShouldIncludeStartTest,Unit Test Method should include Test.StartTest() and Test.StopTest(),"Unit tests should include Test.startTest() and Test.stopTest()
+        <BR><h2>Example:</h2><pre>
+    
+@IsTest
+public class Foo  {
+   public static testmethod void testSomething() {
+      Bar b = findBar();
+      Test.startTest();
+	  // System.assert(b.isX());
+	  b.work();
+      Test.stopTest();
+   }
+}
+    
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:IfElseStmtsMustUseBraces,If Else Statements Must Use Braces,"Avoid using 'if..else' statements without using surrounding braces. If the code formatting 
+or indentation is lost then it becomes difficult to separate the code being controlled 
+from the rest.
+       <BR><h2>Example:</h2><pre>
+
+   
+if (foo)			
+       x = x+1;
+   else            //Bad: Not recommended.
+       x = x-1;
+
+  
+if (foo){			
+	x++;
+} else {          //Good: This is preferred.
+	y++;
+}
+
+if (foo) x++;		//This is ignored. The rule doesn't check this statement.
+
+
+       </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnusedPrivateField,Unused Private Field,"Detects when a private field is declared and/or assigned a value, but not used.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+  private static Integer FOO = 2; //Bad: this field is unused.
+  private Integer i = 5; //Bad: this field is unused.
+  private Integer j = 6;
+  
+  public Integer addOne() {
+    return j++;
+  }
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryParentheses,Unnecessary Parentheses,"Sometimes expressions are wrapped in unnecessary parentheses, making them look like function calls.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+   boolean bar() {
+      return (true);
+      }
+}
+  
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmptyInitializer,Empty Initializer,"Empty initializers serve no purpose and should be removed.
+       <BR><h2>Example:</h2><pre>
+   
+public class Foo {
+
+   static {} //Bad: This serves no purpose...
+
+   {} 		//and neither does this.
+
+}
+    
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:MultipleTriggersOnObject,Avoid creating multiple triggers on the same object,"Avoid creating multiple triggers on the same object
+
+<pre>
+trigger AccountTriggerInsert on Account (before insert) {	//Bad: Multiple triggers on the same object should be avoided.
+}
+trigger AccountTriggerUpdate on Account (before update) {
+}
+</pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:SimplifyBooleanReturns,Simplify Boolean Returns,"Avoid unnecessary if-then-else statements when returning a boolean. The result of
+the conditional test can be returned instead.
+    <BR><h2>Example:</h2><pre>
+
+public boolean isBarEqualTo(Integer x) {
+   
+	if (bar == x) {		 //Bad: This bit of code...
+		return true;
+	} else {
+		return false;
+    }
+}
+
+public boolean isBarEqualTo(Integer x) {
+
+   	return bar == x;	//Good: ...can be replaced with this.
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidGetSetMethods,Avoid Get and Set Methods,"Accessor methods should be defined with the field.  If the get or set method does not relate to a field, consider renaming the method.
+    <BR><h2>Example:</h2><pre>
+public class Foo {					
+	private Boolean rightWay{
+		get{
+		  return rightWay;
+		} 
+		set {					//Good: Accessors are defined with the field.
+		  rightWay = value;
+		}
+    }  
+	
+	private Boolean wrongWay = 'true';
+					
+	public Boolean getWrongWay() {		//Bad: This is not recommended.
+		return wrongWay;
+	}
+}
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidReversedOperators,Avoid Reversed Operators,"Reversing operators may be a bug, or at the very least make it hard to read.
+
+Although += and =+ may at first seem like a small difference, the result is very different.  
+      <BR><h2>Example:</h2><pre>
+
+Integer target = 7
+integer x = 4;
+
+target =- num; //Bad: Target is now -4, not 3. Was this expected?
+target = -num; //Good: This is looks like you'd expect and will return -4.
+
+target =+ num; //Bad: Target would be 4, not 11.
+target += num; //Good: This looks correct and will return 11.
+  
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:PossibleIncrementerBug,Suspicious For Loop Incrementer,"Incrementers which do not match the body of the for loop could be a bug.
+  <BR><h2>Example:</h2><pre>
+
+
+for (X=? ; X > N ; X ++ ) //Bad: Looks like the incrementer or the check is wrong.
+for (X=? ; X < N ; X ++ ) //Good: Incrementing up should check that X is less than N.
+for (X=? ; X > N ; X -- ) //Good: Decrementing should check that X is more than N.
+
+
+  </pre>",MAJOR,APEX,BUG,FALSE
+sf:AvoidSalesforceSystemClassNames,Avoid Salesforce System Class Names,"Classes with names that already exist as Salesforce System classes will take precedence due to namespacing.  This can cause problems when trying to access the original Salesforce classes.
+  <BR><h2>Example:</h2><pre>
+        
+public class Database {
+	//Bad: The Salesforce class Database class will not be accessible by default.
+}
+
+
+  </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:StatementsShouldBeOnSeparateLines,Statements Should Be On Separate Lines,"Statements should be on separate lines to increase readability and maintainability.
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+
+  public void foo(Integer i){
+    statement(); i++;   //Bad: Statements should be on separate lines.
+  }
+
+}
+      </pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:SwitchDensity,Switch Statement is Too Dense,"A high ratio of statements to labels in a switch statement implies that the switch statement
+is overloaded.  Consider moving the statements into new methods or creating subclasses based
+on the switch variable.
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+
+  public void bar(int x) {
+    switch on x {
+      when 1 {
+        System.err.println('I am a fish.');
+        System.err.println('I am a fish.');
+        System.err.println('I am a fish.');
+        System.err.println('I am a fish.');
+        System.err.println('I am a fish.');	  //Bad: The switch statement is too dense.
+      } 
+      when 2 {
+        doLotsOfStuff();    //Good: A large amount of logic is contained in a separate method.
+       	break;
+      }
+    }
+  }
+
+}
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:TooFewBranchesForASwitchStatement,Too Few Branches for a Switch Statement,"Switch statements are intended to be used to support complex branching behaviour. Using a switch for only a few
+cases is ill-advised, since switches are not as easy to understand as if-else statements. In these cases use the
+if-else statement to increase code readability.
+        <BR><h2>Example:</h2><pre>
+             
+public class TinySwitch {
+
+	public void foo(int i) {
+		switch on i {			//Bad: Two branches is not enough to require a switch statement.
+			when 0 {
+				//do stuff
+			}
+			when 1 {
+				// do things
+			}
+		}
+	}
+	
+	public void bar(int i) {
+		switch on i {			//Good: Large numbers or branches are better handled by a switch statement.
+			when 0 {
+				//do stuff
+			}
+			when 1 {
+				// do things
+			}
+			when 2 {
+				// do other stuff
+			}
+			when 3 {
+				// do a few more things
+			}
+			when 4 {
+				// do different things
+			}
+			when 5 {
+				// do junk
+			}
+		}
+	}
+}
+            
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmptySwitchStatements,Switch Statements Should Not Be Empty,"Empty switch statements serve no purpose and should be removed.
+       <BR><h2>Example:</h2><pre>
+   
+public void bar() {
+    Integer x = 2;
+    switch on x {
+        // once there was code here
+        // but it's been commented out or something
+    }
+}
+
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidHttpReferer,Avoid Using HTTP Referer Headers,"HTTP Referer headers can be modified by attackers. Making a decision based on the value of the referer can be dangerous.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/807"">MITRE, CWE-807</a> - Reliance on Untrusted Inputs in a Security Decision </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/293"">MITRE, CWE-293</a> - Using Referer Field for Authentication </li>
+  <li> OWASP Top 10 2021 Category A7 - Broken Authentication </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+	public static void foo() {
+		String referer = ApexPages.currentPage().getHeaders().get('Referer');    //Bad: Do not rely on Referer headers.
+		// Do stuff with 'referer'...
+	}	
+}
+      </pre>",CRITICAL,APEX,VULNERABILITY,FALSE
+sf:DivisionByZeroPossible,Division by Zero,"Division by zero exception may occur when zero could be the denominator to a division or modulo operation.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/369.html"">MITRE, CWE-369</a> - Divide by zero </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/KAGyAw"">CERT, NUM02-J.</a> - Ensure that division and remainder operations do not
+  result in divide-by-zero errors </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/cAI"">CERT, INT33-C.</a> - Ensure that division and remainder operations do not result
+  in divide-by-zero errors </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+  public int i1 = 1 / Float.valueOf(ApexPages.currentPage().getParameters().get('value'));    //Bad: This may cause a division by zero.
+
+  pubic getI1(){
+    float value = Float.valueOf(ApexPages.currentPage().getParameters().get('value'));
+      if ( value > 0 )
+        int i1 = 1 / value;   //Good: Division by zero is checked for.
+  }
+}
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:SingleMethodSingleton,Single Method Singleton,"Some classes contain overloaded getInstance. The problem with overloaded getInstance methods
+	is that the instance created using the overloaded method is not cached and so, new objects will be created for every invocation.
+	<BR><h2>Example:</h2><pre>
+public class Singleton {
+    
+  private static Singleton singleton = new Singleton( );
+	
+  private Singleton(){ }
+	
+  public static Singleton getInstance() {
+    return singleton;
+  }
+  
+  
+  public static Singleton getInstance(Object obj){   //Bad: You should only have one getInstance() method. 
+    Singleton singleton = (Singleton) obj;
+		return singleton;			
+  }
+}
+	
+	</pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:APIVersionsRetired,API Versions Retired,The retirement of older Salesforce Platform API versions (7.0 through 20.0) after the Summer '22 release is a critical step to ensure the continued smooth operation of Salesforce applications.,MAJOR,APEX,BUG,FALSE
+sf:FixDuplicateConditions,"Avoid duplicate conditions in ""if""/""else if"" and ""switch"" statements to eliminate dead code","When the same conditions are used in statements like ""if""/""else if"" or ""switch"", it can lead to duplicated or dead code.",MAJOR,APEX,BUG,FALSE
+sf:IdempotentBinaryOperators,Avoid Identical Expressions on Both Sides of a Binary Operator,"When both sides of a binary operator have identical values, the condition will always give the same result.",MAJOR,APEX,BUG,FALSE
+sf:AvoidEmailInLoops,Avoid Sending Emails in Loops,Avoid using Messaging.sendEmail within loops to prevent exceeding Salesforce governor limits and enhance application performance.,MAJOR,APEX,BUG,FALSE
+sf:NcinoAvoidDescribeMapInLoops,Avoid using methods getDescribe and getMap inside Loops,"The ‘getDescribe’ and ‘getMap’ methods typically involve fetching metadata information for objects and fields, and invoking them inside loops can result in unnecessary overhead.",MAJOR,APEX,BUG,TRUE
+sf:RefactorAssert,Consider Using Assert in place of System.Assert,Salesforce’s Assert class offers a collection of static methods that assist in creating clearer assertions within Apex test code. This new class aims to enhance the readability and maintainability of test code for developers. It is preferable to use Assert in your tests instead of older System.Assert methods.,MINOR,APEX,CODE_SMELL,FALSE
+sf:LongLines,Lines should not be too long in APEX,Limiting the length code lines enhances code clarity and readability by reducing complexity and improving quick understanding.,MINOR,APEX,CODE_SMELL,FALSE
+sf:FixDuplicateMethods,Methods should not share the same implementations,"To avoid duplication and confusion, it is important to ensure that two methods with identical implementations are avoided.",MAJOR,APEX,CODE_SMELL,FALSE
+sf:MisuseOfAssertClass,Misuse of Assert Class,"Assert Class can be misused if not applied correctly. To ensure the correctness of our code and avoid common pitfalls, we need to establish best practices for its usage.",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:MultiLineComment,Multi-line comments should not be empty,"An empty multi-line comment is likely to be a mistake and doesn’t help to improve the readability of the code. For these reasons, it should be removed.",MINOR,APEX,CODE_SMELL,FALSE
+sf:MaximumNumberOfCase,Switch statements should not have too many case clauses,Switch statements with a large number of case clauses create complex and difficult-to-read code,MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidAbsoluteURL,"URLs of Salesforce pages should be relative, not absolute",Code using absolute URLs for Salesforce pages will break in different environments. Use relative URLs instead.,MAJOR,APEX,BUG,FALSE
+sf:UseAreEqualInsteadOfAssertBoolean,Use Assert Equals Instead Of Boolean Equality Assertion,"This rule detects unit test assertions in object references equality. Instead of using Assert.isTrue combined with ""=="" as an equality operator, these assertions should be made by more specific methods, like Assert.areEqual(expected, actual).",MINOR,APEX,CODE_SMELL,FALSE
+sf:UseAreEqualInsteadOfIsTrue,Use Assert.areEqual instead of Assert.isTrue,"This rule detects Unit test assertions in object references equality. Instead of using Assert.isTrue as an equality check, these assertions should be made by more specific methods, like Assert.areEqual.",MINOR,APEX,CODE_SMELL,FALSE
+sf:UseIsTrueInsteadOfAreEqual,Use Assert.isTrue instead of Assert.areEqual,"When asserting a value is the same as a boolean literal, use Assert.isTrue, instead of Assert.areEqual.",MINOR,APEX,CODE_SMELL,FALSE
+sf:SystemRunAs,Use System.runAs to test user permissions,"To ensure accurate and realistic testing of user permissions, it is crucial to utilize System.runAs during test execution. This ensures that logic is tested in the same context it will run in.",MAJOR,APEX,CODE_SMELL,FALSE
+sf:NullCoalescingOperator,Use the null coalescing operator instead of the ternary operator,Consider replacing ternary operators (? :) for explicit null checks with the Null Coalescing operator (??) where applicable to enhance code performance and clarity.,MINOR,APEX,CODE_SMELL,FALSE
+sf:IfElseDefaultCase,“If ... else if” should have “else” case,"Including a default case using an ""else"" statement at the end of ""if"" and ""else if"" clauses to handle all conditions and provide clarity in code.",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:CommentHardcodedValues,Comment All Hardcoded Values,"Ensure that any hardcoded values or strings in the code are accompanied by descriptive comments or, alternatively, use constants. This practice enhances code readability, maintainability, and will make it easier for other developers to understand the purpose of these values.",MINOR,APEX,CODE_SMELL,FALSE
+sf:OptimizeParallelUnitTests,Utilizing Apex Unit Tests with @IsTest(IsParallel),"When writing Apex unit tests, ensure that the @IsTest(IsParallel) annotation is set, whether true or false.This keeps the option of running tests in parallel visible through development to optimize test execution times.",MINOR,APEX,CODE_SMELL,FALSE
+sf:IsBlankForNullChecks,Use IsBlank for Null Checks,Use the built-in isBlank and isNotBlank methods instead of the != and == operators to check for null or empty values.,MINOR,APEX,CODE_SMELL,FALSE
+sf:ClassExplicitSharing,Avoid Classes Without Explicit Sharing,"Enforce security best practices on classes by ensuring that sharing settings ('with sharing', 'without sharing', or 'inherited sharing') are explicitly declared. This prevents accidental data exposure and enhances code maintainability and compliance with security policies.",MAJOR,APEX,CODE_SMELL,FALSE
+sf:CognitiveComplexity,Cognitive Complexity,"Cognitive Complexity gauges the intricacy of a method's control flow, reflecting its level of comprehension difficulty. Methods exhibiting high Cognitive Complexity present maintenance challenges.",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:OuterClassExplicitSharing,Outer Class Explicit Sharing,"Enforce security best practices on classes by ensuring that sharing settings ('with sharing', 'without sharing', or 'inherited sharing') are explicitly declared. This prevents accidental data exposure and enhances code maintainability and compliance with security policies.",MAJOR,APEX,VULNERABILITY,FALSE
+sf:SystemBypassLogicTrigger,nCino - System Bypass Logic - Triggers,System bypass logic is required for custom triggers. Checking for the Exclude Trigger Permission Set allows the system to cease further processing of the Trigger if it is found at the outset. This improves the efficiency of Trigger execution and reduces unnecessary processing steps.,MINOR,APEX,CODE_SMELL,TRUE
+sf:NcinoTriggerHandler,nCino - Trigger Handler Framework,"The Trigger Handler Framework removes logic from Triggers and enforces consistency across the platform. There are many ways to create a Trigger Framework/Factory; however, the nCino Managed Package can save users time, money, and effort. By levering the nCino Trigger Framework, users can:
+Control the execution of Triggers at runtime.
+Simplify existing customizations and logic.
+Encourage best practice of a single Trigger per object.
+Build caching to reduce SOQL queries.
+Reduce CPU Time.
+Build in bulk.",MAJOR,APEX,CODE_SMELL,TRUE
