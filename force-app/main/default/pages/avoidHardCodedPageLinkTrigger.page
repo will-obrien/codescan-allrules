@@ -1,0 +1,12 @@
+<apex:page controller="avoidHardCodedPageLinkTriggerController">
+    <apex:form>
+        <h1>VF Rule Trigger: vf:AvoidHardCodedPageLink</h1>
+        <p>This page is designed to trigger the rule: Avoid Hard-Coded Page Links.</p>
+        <p>Rule Description: vf:AvoidHardCodedPageLink</p>
+        
+        <apex:pageBlock title="Test Block">
+            <apex:inputText value="{!testValue}" label="Test Input"/>
+            <apex:commandButton value="Test Action" action="{!testAction}"/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

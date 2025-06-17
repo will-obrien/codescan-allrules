@@ -1,0 +1,117 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:VariableDeclarationHidesAnother,Avoid declarations hiding another field or variable,"One variable can hide another if they have the same name and are accessible in the same place.  Consider renaming the variable.    
+<BR><h2>Example:</h2><pre>
+public class Foo {
+	integer x;
+	public void asdf(){
+		integer x = 0;      //Bad: The variable x defined as a field will be hidden.
+	}
+}
+
+public class Foo {
+	integer x;
+	public void asdf(){
+		integer y = 0;      //Good: Distinct naming is preferred.
+	}
+}
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:FailedUnitTest,Failing Unit Tests,This rule tracks failing unit tests and reports them as violations.,MAJOR,APEX,CODE_SMELL,FALSE
+sf:CouplingBetweenObjects,Coupling Between Objects,"This rule counts the number of unique attributes, local variables, and return types within an object. 
+A number higher than the specified threshold can indicate a high degree of coupling.
+    <BR><h2>Example:</h2><pre>
+
+
+public class Foo {
+   private Blah var1;
+   private Bar var2;
+ 
+ 	// ....followed by many imports of unique objects
+   void ObjectC doWork() {
+     Bardo var55;
+     ObjectA var44;
+     ObjectZ var93;
+     return something;  //Bad: This is not recommended. Could indicate a high degree of coupling.
+   }
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ExcessivePublicCount,Excessive Public Count,"Classes with large numbers of public methods and attributes require disproportionate testing efforts
+since combinational side effects grow rapidly and increase risk. Refactoring these classes into
+smaller ones not only increases testability and reliability but also allows new variations to be
+developed easily.
+    <BR><h2>Example:</h2><pre>
+    
+public class Foo {
+	public String value;
+	public Bar something;
+	public Variable var;
+ // [... more more public attributes ...]
+ 
+	public void doWork() {}
+	public void doMoreWork() {}
+	public void doWorkAgain() {}
+ // [... more more public methods ...]
+}
+    
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidSoqlInLoops,Avoid Calling SOQL and DML Inside Loops.,"Soql and DML calls within loops can cause governor limit exceptions.
+Merge DML is ignored, as there is currently no bulkified way of merging.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	public static void main( String as[] ) {  
+		for (Integer i = 0; i < 10; i++) {
+		  Id name = [ Select Id From Contact Where Name='Sam'; //Bad: avoid this whenever you can, it's really expensive.
+		}
+	}
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:LongMethodName,Long Method Name,"Method names that are too long can make the code difficult to follow.
+     <BR><h2>Example:</h2><pre>
+
+public class LongMethod {
+  public void thisIsSomeReallyLongMethodName() { //Bad: The method name is too long.
+  }
+}
+
+     </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:LongClassName,Long Class Name,"Class names that are too long can make the code difficult to follow. Salesforce Developer Console restricts users from
+creating an Apex Class with class name greater than 40 characters.
+
+    <BR><h2>Example:</h2><pre>
+
+public class AnExcessivelyLongApexClassNameAsNegativeExample {  //Bad: this is not recommended.
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UncommentedEmptyConstructor,Uncommented Empty Constructor,"Uncommented Empty Constructor finds instances where a constructor does not
+contain statements, but there is no comment. By explicitly commenting empty
+constructors it is easier to distinguish between intentional (commented)
+and unintentional empty constructors.
+
+Comments can be added inside the constructor or a formal comment (/** comment */) above the constructor is also valid
+      <BR><h2>Example:</h2><pre>
+  
+public Foo() { 			//Bad: Consider commenting this constructor.
+  super();
+}
+ 
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AuraEnabledWithoutCatchBlock,@AuraEnabled should have Proper Error Handling,"@AuraEnabled actions require error handling and should throw AuraHandledException<br/>
+      Wrap the code that can trigger exceptions in a try-catch block.
+      Throw an AuraHandledException in the catch block. This allows you to provide a custom user-friendly error message.
+      <br/>
+      See <a href=""https://developer.salesforce.com/blogs/2017/09/error-handling-best-practices-lightning-apex.html"">https://developer.salesforce.com/blogs/2017/09/error-handling-best-practices-lightning-apex.html</a> 
+    <BR><h2>Example:</h2><pre>
+public class FooController {					//Good: Try catch block in place.
+	@AuraEnabled public void getSomething() {
+		try{
+			...
+		}catch(Exception e){
+			throw new AuraHandledException(e.getMessage());
+		}
+	}		
+}
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+common-sf:InsufficientBranchCoverage,Branches should have sufficient coverage by tests,An issue is created on a file as soon as the branch coverage on this file is less than the required threshold. It gives the number of branches to be covered in order to reach the required threshold.,MAJOR,APEX,CODE_SMELL,FALSE

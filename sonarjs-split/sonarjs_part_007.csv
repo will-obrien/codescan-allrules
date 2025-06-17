@@ -1,0 +1,285 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S4275,Getters and setters should access the expected fields,"<p>Getters and setters provide a way to enforce encapsulation by providing <code>public</code> methods that give controlled access to
+<code>private</code> fields. However in classes with multiple fields it is not unusual that copy and paste is used to quickly create the needed
+getters and setters, which can result in the wrong field being accessed by a getter or setter.</p>
+<p>This rule raises an issue in any of these cases:</p>
+<ul>
+  <li> A setter does not update the field with the corresponding name. </li>
+  <li> A getter does not access the field with the corresponding name. </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<pre>
+class A {
+  private _x: number = 0;
+  private y: number = 0;
+
+  public get x() {  // Noncompliant: field 'x' is not used in the return value
+    return this.y;
+  }
+
+  public setX(val: number) { // Noncompliant: field 'x' is not updated
+    this.y = val;
+  }
+
+  public getY() { // Noncompliant: field 'y' is not used in the return value
+    return this.x;
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+class A {
+  private _x: number = 0;
+  private y: number = 0;
+
+  public get x() {
+    return this._x;
+  }
+
+  public setX(val: number) {
+    this.x = val;
+  }
+
+  public getY() {
+    return this.y;
+  }
+}
+</pre>",CRITICAL,JavaScript,BUG,FALSE
+javascript:S3626,Jump statements should not be redundant,"<p>Jump statements, such as <code>return</code>, <code>break</code> and <code>continue</code> let you change the default flow of program execution,
+but jump statements that direct the control flow to the original direction are just a waste of keystrokes.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function redundantJump(x) {
+  if (x == 1) {
+    console.log(""x == 1"");
+    return; // Noncompliant
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function redundantJump(x) {
+  if (x == 1) {
+    console.log(""x == 1"");
+  }
+}
+</pre>
+<h2>Exceptions</h2>
+<p><code>break</code> and <code>return</code> inside <code>switch</code> statement are ignored, because they are often used for consistency.
+<code>continue</code> with label is also ignored, because label is usually used for clarity. Also a jump statement being a single statement in a block
+is ignored.</p>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S4140,Sparse arrays should not be declared,"<p>An array declared with missing (""sparse"") elements is likely to be an error: an extra comma was inserted or perhaps the developer meant to insert
+the missing value and forgot.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+let a = [1, , 3, 6, 9];  // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+let a = [1, 3, 6, 9];
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3972,Conditionals should start on new lines,"<p>Code is clearest when each statement has its own line. Nonetheless, it is a common pattern to combine on the same line an <code>if</code> and its
+resulting <em>then</em> statement. However, when an <code>if</code> is placed on the same line as the closing <code>}</code> from a preceding
+<em>then</em>, <em>else</em> or <em>else if</em> part, it is either an error - <code>else</code> is missing - or the invitation to a future error as
+maintainers fail to understand that the two statements are unconnected.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (condition1) {
+  // ...
+} if (condition2) {  // Noncompliant
+  //...
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (condition1) {
+  // ...
+} else if (condition2) {
+  //...
+}
+</pre>
+<p>Or</p>
+<pre>
+if (condition1) {
+  // ...
+}
+
+if (condition2) {
+  //...
+}
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S2681,Multiline blocks should be enclosed in curly braces,"<p>Curly braces can be omitted from a one-line block, such as with an <code>if</code> statement or <code>for</code> loop, but doing so can be
+misleading and induce bugs.</p>
+<p>This rule raises an issue when the whitespacing of the lines after a one line block indicates an intent to include those lines in the block, but
+the omission of curly braces means the lines will be unconditionally executed once.</p>
+<p>Note that this rule considers tab characters to be equivalent to 1 space. If you mix spaces and tabs you will sometimes see issues in code which
+looks fine in your editor but is confusing when you change the size of tabs.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (condition)
+  firstActionInBlock();
+  secondAction();  // Noncompliant; executed unconditionally
+thirdAction();
+
+if (condition) firstActionInBlock(); secondAction();  // Noncompliant; secondAction executed unconditionally
+
+if (condition) firstActionInBlock();  // Noncompliant
+  secondAction();  // Executed unconditionally
+
+if (condition); secondAction();  // Noncompliant; secondAction executed unconditionally
+
+let str = undefined;
+for (let i = 0; i &lt; array.length; i++)
+  str = array[i];
+  doTheThing(str);  // Noncompliant; executed only on last array element
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (condition) {
+  firstActionInBlock();
+  secondAction();
+}
+thirdAction();
+
+let str = undefined;
+for (let i = 0; i &lt; array.length; i++) {
+  str = array[i];
+  doTheThing(str);
+}
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/483.html"">MITRE, CWE-483</a> - Incorrect Block Delimitation </li>
+</ul>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3512,Template strings should be used instead of concatenation,"<p>ECMAScript 2015 added the ability to use template literals instead of concatenation. Since their use is clearer and more concise, they are
+preferred in environments that support ECMAScript 2015.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function sayHello(name) {
+  console.log(""hello "" + name);  // Noncompliant
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function sayHello(name) {
+  console.log(`hello ${name}`);
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1523,Dynamically executing code is security-sensitive,"<p>Executing code dynamically is security-sensitive. It has led in the past to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-9807"">CVE-2017-9807</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-9802"">CVE-2017-9802</a> </li>
+</ul>
+<p>Some APIs enable the execution of dynamic code by providing it as strings at runtime. These APIs might be useful in some very specific
+meta-programming use-cases. However most of the time their use is frowned upon as they also increase the risk of <a
+href=""https://www.owasp.org/index.php/Code_Injection"">Injected Code</a>. Such attacks can either run on the server or in the client (exemple: XSS
+attack) and have a huge impact on an applicationâ€™s security.</p>
+<p>This rule raises issues on calls to <code>eval</code> and <code>Function</code> constructor. This rule does not detect code injections. It only
+highlights the use of APIs which should be used sparingly and very carefully. The goal is to guide security code reviews.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> the executed code may come from an untrusted source and hasnâ€™t been sanitized. </li>
+  <li> you really need to run code dynamically. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Regarding the execution of unknown code, the best solution is to not run code provided by an untrusted source. If you really need to do it, run the
+code in a <a href=""https://en.wikipedia.org/wiki/Sandbox_(computer_security)"">sandboxed</a> environment. Use jails, firewalls and whatever means your
+operating system and programming language provide (example: <a
+href=""https://wiki.sei.cmu.edu/confluence/display/java/SEC54-J.+Create+a+secure+sandbox+using+a+security+manager"">Security Managers</a> in java, <a
+href=""https://www.w3schools.com/tags/att_iframe_sandbox.asp"">iframes</a> and <a href=""https://en.wikipedia.org/wiki/Same-origin_policy"">same-origin
+policy</a> for javascript in a web browser).</p>
+<p>Do not try to create a blacklist of dangerous code. It is impossible to cover all attacks that way.</p>
+<p>Avoid using dynamic code APIs whenever possible. Hard-coded code is always safer.</p>
+<h2>Sensitive Code Example</h2>
+<pre>
+let value = eval('obj.' + propName); // Sensitive
+let func = Function('obj' + propName); // Sensitive
+</pre>
+<h2>Exceptions</h2>
+<p>This rule will not raise an issue when the argument of the <code>eval</code> or <code>Function</code> is a literal string as it is reasonably
+safe.</p>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A1-Injection"">OWASP Top 10 2017 Category A1</a> - Injection </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/95.html"">MITRE CWE-95</a> - Improper Neutralization of Directives in Dynamically Evaluated Code
+  ('Eval Injection') </li>
+</ul>",CRITICAL,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S1525,Debugger statements should not be used,"<p>The debugger statement can be placed anywhere in procedures to suspend execution. Using the debugger statement is similar to setting a breakpoint
+in the code. By definition such statement must absolutely be removed from the source code to prevent any unexpected behavior or added vulnerability to
+attacks in production.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+for (i = 1; i&lt;5; i++) {
+  // Print i to the Output window.
+  Debug.write(""loop index is "" + i);
+  // Wait for user to resume.
+  debugger;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+for (i = 1; i&lt;5; i++) {
+  // Print i to the Output window.
+  Debug.write(""loop index is "" + i);
+}
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/489.html"">MITRE, CWE-489</a> - Leftover Debug Code </li>
+</ul>
+<h2>Deprecated</h2>
+<p>This rule is deprecated; use {rule:javascript:S4507} instead.</p>",MINOR,JavaScript,VULNERABILITY,FALSE
+javascript:S1527,"""future reserved words"" should not be used as identifiers","<p>The following words may be used as keywords in future evolutions of the language, so using them as identifiers should be avoided to allow an easier
+adoption of those potential future versions:</p>
+<ul>
+  <li> <code>await</code> </li>
+  <li> <code>class</code> </li>
+  <li> <code>const</code> </li>
+  <li> <code>enum</code> </li>
+  <li> <code>export</code> </li>
+  <li> <code>extends</code> </li>
+  <li> <code>implements</code> </li>
+  <li> <code>import</code> </li>
+  <li> <code>interface</code> </li>
+  <li> <code>let</code> </li>
+  <li> <code>package</code> </li>
+  <li> <code>private</code> </li>
+  <li> <code>protected</code> </li>
+  <li> <code>public</code> </li>
+  <li> <code>static</code> </li>
+  <li> <code>super</code> </li>
+  <li> <code>yield</code> </li>
+</ul>
+<p>Use of these words as identifiers would produce an error in JavaScript <code>strict</code> mode code.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var package = document.getElementsByName(""foo""); // Noncompliant
+var someData = { package: true };                 // Compliant, as it is not used as an identifier here
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var elements = document.getElementsByName(""foo""); // Compliant
+</pre>",BLOCKER,JavaScript,CODE_SMELL,FALSE
+javascript:S2757,"Non-existent operators '=+', '=-' and '=!' should not be used","<p>The use of operators pairs (<code>=+</code>, <code>=-</code> or <code>=!</code>) where the reversed, single operator was meant (<code>+=</code>,
+<code>-=</code> or <code>!=</code>) will compile and run, but not produce the expected results.</p>
+<p>This rule raises an issue when <code>=+</code>, <code>=-</code> and <code>=!</code> are used without any space between the two operators and when
+there is at least one whitespace after.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+let target =-5;
+let num = 3;
+
+target =- num;  // Noncompliant; target = -3. Is that really what's meant?
+target =+ num; // Noncompliant; target = 3
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+let target = -5;
+let num = 3;
+
+target = -num;  // Compliant; intent to assign inverse value of num is clear
+target += num;
+</pre>",MAJOR,JavaScript,BUG,FALSE

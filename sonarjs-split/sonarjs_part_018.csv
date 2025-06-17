@@ -1,0 +1,477 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S1537,Trailing commas should not be used,"<p>Most browsers parse and discard a meaningless, trailing comma. Unfortunately, thatâ€™s not the case for Internet Explorer below version 9, which
+throws a meaningless error. Therefore trailing commas should be eliminated.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var settings = {
+    'foo'  : oof,
+    'bar' : rab,    // Noncompliant - trailing comma
+};
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var settings = {
+    'foo'  : oof,
+    'bar' : rab
+};
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S2068,Hard-coded credentials are security-sensitive,"<p>Because it is easy to extract strings from an application source code or binary, credentials should not be hard-coded. This is particularly true
+for applications that are distributed or that are open-source.</p>
+<p>In the past, it has led to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-13466"">CVE-2019-13466</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-15389"">CVE-2018-15389</a> </li>
+</ul>
+<p>Credentials should be stored outside of the code in a configuration file, a database, or a management service for secrets.</p>
+<p>This rule flags instances of hard-coded credentials used in database and LDAP connections. It looks for hard-coded credentials in connection
+strings, and for variable names that match any of the patterns from the provided list.</p>
+<p>Itâ€™s recommended to customize the configuration of this rule with additional credential words such as ""oauthToken"", ""secret"", â€¦â€‹</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> Credentials allows access to a sensitive component like a database, a file storage, an API or a service. </li>
+  <li> Credentials are used in production environments. </li>
+  <li> Application re-distribution is required before updating the credentials. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> Store the credentials in a configuration file that is not pushed to the code repository. </li>
+  <li> Store the credentials in a database. </li>
+  <li> Use your cloud providerâ€™s service for managing secrets. </li>
+  <li> If the a password has been disclosed through the source code: change it. </li>
+</ul>
+<h2>Sensitive Code Example</h2>
+<pre>
+var mysql = require('mysql');
+
+var connection = mysql.createConnection(
+{
+  host:'localhost',
+  user: ""admin"",
+  database: ""project"",
+  password: ""mypassword"", // sensitive
+  multipleStatements: true
+});
+
+connection.connect();
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var mysql = require('mysql');
+
+var connection = mysql.createConnection({
+  host: process.env.MYSQL_URL,
+  user: process.env.MYSQL_USERNAME,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE
+});
+connection.connect();
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A2-Broken_Authentication"">OWASP Top 10 2017 Category A2</a> - Broken Authentication </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/798"">MITRE, CWE-798</a> - Use of Hard-coded Credentials </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/259"">MITRE, CWE-259</a> - Use of Hard-coded Password </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+  <li> Derived from FindSecBugs rule <a href=""https://h3xstream.github.io/find-sec-bugs/bugs.htm#HARD_CODE_PASSWORD"">Hard Coded Password</a> </li>
+</ul>",BLOCKER,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S5332,Using clear-text protocols is security-sensitive,"<p>Clear-text protocols as <code>ftp</code>, <code>telnet</code> or non secure <code>http</code> are lacking encryption of transported data. They are
+also missing the capability to build an authenticated connection. This mean that any attacker who can sniff traffic from the network can read, modify
+or corrupt the transported content. These protocol are not secure as they expose applications to a large range of risk:</p>
+<ul>
+  <li> Sensitive data exposure </li>
+  <li> Traffic redirected to a malicious endpoint </li>
+  <li> Malware infected software update or installer </li>
+  <li> Execution of client side code </li>
+  <li> Corruption of critical information </li>
+</ul>
+<p>Note also that using the <code>http</code> protocol is being deprecated by <a
+href=""https://blog.mozilla.org/security/2015/04/30/deprecating-non-secure-http"">major web browser</a>.</p>
+<p>In the past, it has led to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""https://nvd.nist.gov/vuln/detail/CVE-2019-6169"">CVE-2019-6169</a> </li>
+  <li> <a href=""https://nvd.nist.gov/vuln/detail/CVE-2019-12327"">CVE-2019-12327</a> </li>
+  <li> <a href=""https://nvd.nist.gov/vuln/detail/CVE-2019-11065"">CVE-2019-11065</a> </li>
+</ul>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> The confidentiality and integrity of data is necessary in the context of the web application. </li>
+  <li> The data is exchanged on an exposed network (Internet, public network etc). </li>
+  <li> Your application renders web pages with a relaxed mixed content policy. </li>
+  <li> OS level protections against clear-text traffic are deactivated. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> Use <code>ssh</code> as an alternative to <code>telnet</code> </li>
+  <li> Use <code>sftp</code>, <code>scp</code> or <code>ftps</code> instead of <code>ftp</code> </li>
+  <li> Use <code>https</code> instead of <code>http</code> </li>
+  <li> Use <code>SMTP</code> over <code>SSL/TLS</code> or <code>SMTP</code> with <code>STARTTLS</code> instead of clear-text SMTP </li>
+  <li> Configure your application to block mixed content when rendering web pages. </li>
+  <li> If available, enforce OS level deativation of all clear-text traffic </li>
+</ul>
+<p>It is recommended to secure all transport channels (event local network) as it can take a single non secure connection to compromise an entire
+application or system.</p>
+<h2>Sensitive Code Example</h2>
+<pre>
+url = ""http://example.com""; // Sensitive
+url = ""ftp://anonymous@example.com""; // Sensitive
+url = ""telnet://anonymous@example.com""; // Sensitive
+</pre>
+<p>For <a href=""https://nodemailer.com"">nodemailer</a>:</p>
+<pre>
+const nodemailer = require(""nodemailer"");
+let transporter = nodemailer.createTransport({
+  secure: false, // Sensitive
+  requireTLS: false // Sensitive
+});
+</pre>
+<pre>
+const nodemailer = require(""nodemailer"");
+let transporter = nodemailer.createTransport({}); // Sensitive
+</pre>
+<p>For <a href=""https://github.com/mscdex/node-ftp"">ftp</a>:</p>
+<pre>
+var Client = require('ftp');
+var c = new Client();
+c.connect({
+  'secure': false // Sensitive
+});
+</pre>
+<p>For <a href=""https://github.com/mkozjak/node-telnet-client"">telnet-client</a>:</p>
+<pre>
+const Telnet = require('telnet-client'); // Sensitive
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+url = ""https://example.com""; // Compliant
+url = ""sftp://anonymous@example.com""; // Compliant
+url = ""ssh://anonymous@example.com""; // Compliant
+</pre>
+<p>For <a href=""https://nodemailer.com"">nodemailer</a> one of the following options must be set:</p>
+<pre>
+const nodemailer = require(""nodemailer"");
+let transporter = nodemailer.createTransport({
+  secure: true, // Compliant
+  requireTLS: true, // Compliant
+  port: 465, // Compliant
+  secured: true // Compliant
+});
+</pre>
+<p>For <a href=""https://github.com/mscdex/node-ftp"">ftp</a>:</p>
+<pre>
+var Client = require('ftp');
+var c = new Client();
+c.connect({
+  'secure': true // Compliant
+});
+</pre>
+<h2>Exceptions</h2>
+<p>No issue is reported for the following cases because they are not considered sensitive:</p>
+<ul>
+  <li> Insecure protocol scheme followed by loopback addresses like 127.0.0.1 or <code>localhost</code> </li>
+</ul>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""https://mobile-security.gitbook.io/masvs/security-requirements/0x10-v5-network_communication_requirements"">Mobile AppSec Verification
+  Standard</a> - Network Communication Requirements </li>
+  <li> <a href=""https://owasp.org/www-project-mobile-top-10/2016-risks/m3-insecure-communication"">OWASP Mobile Top 10 2016 Category M3</a> - Insecure
+  Communication </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/200.html"">MITRE, CWE-200</a> - Exposure of Sensitive Information to an Unauthorized Actor </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/319"">MITRE, CWE-319</a> - Cleartext Transmission of Sensitive Information </li>
+  <li> <a href=""https://security.googleblog.com/2016/09/moving-towards-more-secure-web.html"">Google, Moving towards more secure web</a> </li>
+  <li> <a href=""https://blog.mozilla.org/security/2015/04/30/deprecating-non-secure-http/"">Mozilla, Deprecating non secure http</a> </li>
+</ul>",CRITICAL,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S4123,"""await"" should only be used with promises","<p>It is possible to use <code>await</code> on values which are not <code>Promise</code>s, but itâ€™s useless and misleading. The point of
+<code>await</code> is to pause execution until the <code>Promise</code>'s asynchronous code has run to completion. With anything other than a
+<code>Promise</code>, thereâ€™s nothing to wait for.</p>
+<p>This rule raises an issue when an <code>await</code>ed value is guaranteed not to be a <code>Promise</code>.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+let x = 42;
+await x; // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+let x = new Promise(resolve =&gt; resolve(42));
+await x;
+
+let y = p ? 42 : new Promise(resolve =&gt; resolve(42));
+await y;
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S6299,Disabling Vue.js built-in escaping is security-sensitive,"<p>Vue.js framework prevents XSS vulnerabilities by automatically escaping HTML contents with the use of native API browsers like
+<code>innerText</code> instead of <code>innerHtml</code>.</p>
+<p>Itâ€™s still possible to explicity use <code>innerHtml</code> and similar APIs to render HTML. Accidentally rendering malicious HTML data will
+introduce an XSS vulnerability in the application and enable a wide range of serious attacks like accessing/modifying sensitive information or
+impersonating other users.</p>
+<h2>Ask Yourself Whether</h2>
+<p>The application needs to render HTML content which:</p>
+<ul>
+  <li> could be user controlled and not previously sanitized. </li>
+  <li> is difficult to understand how it was constructed. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> Avoid injecting HTML content with <code>v-html</code> directive unless the content can be considered 100% safe, instead try to rely as much as
+  possible on built-in auto-escaping Vue.js features. </li>
+  <li> Take care when using the <code>v-bind:href</code> directive to set URLs which can contain malicious Javascript
+  (<code>javascript:onClick(...)</code>). </li>
+  <li> Event directives like <code>:onmouseover</code> are also prone to Javascript injection and should not be used with unsafe values. </li>
+</ul>
+<h2>Sensitive Code Example</h2>
+<p>When using Vue.js templates, the <code>v-html</code> directive enables HTML rendering without any sanitization:</p>
+<pre>
+&lt;div v-html=""htmlContent""&gt;&lt;/div&gt; &lt;!-- Noncompliant --&gt;
+</pre>
+<p>When using a rendering function, the <code>innerHTML</code> attribute enables HTML rendering without any sanitization:</p>
+<pre>
+Vue.component('element', {
+  render: function (createElement) {
+    return createElement(
+      'div',
+      {
+        domProps: {
+          innerHTML: this.htmlContent, // Noncompliant
+        }
+      }
+    );
+  },
+});
+</pre>
+<p>When using JSX, the <code>domPropsInnerHTML</code> attribute enables HTML rendering without any sanitization:</p>
+<pre>
+&lt;div domPropsInnerHTML={this.htmlContent}&gt;&lt;/div&gt; &lt;!-- Noncompliant --&gt;
+</pre>
+<h2>Compliant Solution</h2>
+<p>When using Vue.js templates, putting the content as a child node of the element is safe:</p>
+<pre>
+&lt;div&gt;{{ htmlContent }}&lt;/div&gt;
+</pre>
+<p>When using a rendering function, using the <code>innerText</code> attribute or putting the content as a child node of the element is safe:</p>
+<pre>
+Vue.component('element', {
+  render: function (createElement) {
+    return createElement(
+      'div',
+      {
+        domProps: {
+          innerText: this.htmlContent,
+        }
+      },
+      this.htmlContent // Child node
+    );
+  },
+});
+</pre>
+<p>When using JSX, putting the content as a child node of the element is safe:</p>
+<pre>
+&lt;div&gt;{this.htmlContent}&lt;/div&gt;
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://owasp.org/www-project-top-ten/2017/A7_2017-Cross-Site_Scripting_(XSS)"">OWASP Top 10 2017 Category A7</a> - Cross-Site
+  Scripting (XSS) </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/79.html"">MITRE, CWE-79</a> - Improper Neutralization of Input During Web Page Generation
+  ('Cross-site Scripting') </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/80.html"">MITRE, CWE-80</a> - Improper Neutralization of Script-Related HTML Tags in a Web Page
+  (Basic XSS) </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/83.html"">MITRE, CWE-83</a> - Improper Neutralization of Script in Attributes in a Web Page
+  </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/84.html"">MITRE, CWE-84</a> - Improper Neutralization of Encoded URI Schemes in a Web Page </li>
+  <li> <a href=""https://vuejs.org/v2/guide/security.html#Injecting-HTML"">Vue.js - Security - Injecting HTML</a> </li>
+</ul>",BLOCKER,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S930,Function calls should not pass extra arguments,"<p>You can easily call a JavaScript function with more arguments than the function needs, but the extra arguments will be just ignored by function
+execution.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function say(a, b) {
+  print(a + "" "" + b);
+}
+
+say(""hello"", ""world"", ""!""); // Noncompliant; last argument is not used
+</pre>
+<h2>Exceptions</h2>
+<p>No issue is reported when <code>arguments</code> is used in the body of the function being called.</p>
+<pre>
+function doSomething(a, b) {
+  compute(arguments);
+}
+
+doSomething(1, 2, 3) // Compliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/628.html"">MITRE, CWE-628</a> - Function Call with Incorrectly Specified Arguments </li>
+</ul>",CRITICAL,JavaScript,BUG,FALSE
+javascript:S138,Functions should not have too many lines of code,"<p>A function that grows too large tends to aggregate too many responsibilities.</p>
+<p>Such functions inevitably become harder to understand and therefore harder to maintain.</p>
+<p>Above a specific threshold, it is strongly advised to refactor into smaller functions which focus on well-defined tasks.</p>
+<p>Those smaller functions will not only be easier to understand, but also probably easier to test.</p>
+<h2>Exceptions</h2>
+<p>This function ignores Immediately Invoked Function Expressions (IIFE), which are functions that are created and invoked without ever being assigned
+a name.</p>
+<pre>
+(function () { // Ignored by this rule
+
+  function open() {  // Classic function declaration; not ignored
+    // ...
+  }
+
+  function read() {
+    // ...
+  }
+
+  function readlines() {
+    // ...
+  }
+})();
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S5527,Server hostnames should be verified during SSL/TLS connections,"<p>To establish a SSL/TLS connection not vulnerable to man-in-the-middle attacks, itâ€™s essential to make sure the server presents the right
+certificate.</p>
+<p>The certificateâ€™s hostname-specific data should match the server hostname.</p>
+<p>Itâ€™s not recommended to re-invent the wheel by implementing custom hostname verification.</p>
+<p>TLS/SSL libraries provide built-in hostname verification functions that should be used.</p>
+<h2>Noncompliant Code Example</h2>
+<p><a href=""https://nodejs.org/api/https.html"">https</a> built-in module:</p>
+<pre>
+let options = {
+  hostname: 'www.example.com',
+  port: 443,
+  path: '/',
+  method: 'GET',
+  secureProtocol: 'TLSv1_2_method',
+  checkServerIdentity: function() {} // Noncompliant: hostname is not verified
+};
+
+let req = https.request(options, (res) =&gt; {
+  res.on('data', (d) =&gt; {
+    process.stdout.write(d);
+  });
+}); // Noncompliant
+</pre>
+<p><a href=""https://nodejs.org/api/tls.html"">tls</a> built-in module:</p>
+<pre>
+let options = {
+    secureProtocol: 'TLSv1_2_method',
+    checkServerIdentity: function() {}  // Noncompliant: hostname is not verified
+};
+
+let socket = tls.connect(443, ""www.example.com"", options, () =&gt; {
+  process.stdin.pipe(socket);
+  process.stdin.resume();
+});  // Noncompliant
+</pre>
+<p><a href=""https://www.npmjs.com/package/request"">request</a> module:</p>
+<pre>
+let socket = request.get({
+    url: 'https://www.example.com',
+    secureProtocol: 'TLSv1_2_method',
+    checkServerIdentity: function() {}  // Noncompliant: hostname is not verified
+});
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://nodejs.org/api/https.html"">https</a> built-in module:</p>
+<pre>
+let options = {
+  hostname: 'www.example.com',
+  port: 443,
+  path: '/',
+  method: 'GET',
+  secureProtocol: 'TLSv1_2_method'
+};
+
+let req = https.request(options, (res) =&gt; {
+  res.on('data', (d) =&gt; {
+    process.stdout.write(d);
+  });
+}); // Compliant: default checkServerIdentity function is secure
+</pre>
+<p><a href=""https://nodejs.org/api/tls.html"">tls</a> built-in module:</p>
+<pre>
+let options = {
+    secureProtocol: 'TLSv1_2_method',
+    checkServerIdentity: (servername, peer) =&gt; {
+        if (servername !== ""www.example.com"") {
+            return new Error ('Error');  // Compliant: there is at least one check
+        }
+    }
+};
+
+let socket = tls.connect(443, ""www.example.com"", options, () =&gt; {
+  process.stdin.pipe(socket);
+  process.stdin.resume();
+}); // Compliant
+</pre>
+<p><a href=""https://www.npmjs.com/package/request"">request</a> module:</p>
+<pre>
+let socket = request.get({
+    url: 'https://www.example.com/',
+    secureProtocol: 'TLSv1_2_method' // Compliant
+}); // Compliant:  default checkServerIdentity function is secure
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A6-Security_Misconfiguration"">OWASP Top 10 2017 Category A6</a> - Security
+  Misconfiguration </li>
+  <li> <a href=""https://mobile-security.gitbook.io/masvs/security-requirements/0x10-v5-network_communication_requirements"">Mobile AppSec Verification
+  Standard</a> - Network Communication Requirements </li>
+  <li> <a href=""https://owasp.org/www-project-mobile-top-10/2016-risks/m3-insecure-communication"">OWASP Mobile Top 10 2016 Category M3</a> - Insecure
+  Communication </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/297.html"">MITRE, CWE-297</a> - Improper Validation of Certificate with Host Mismatch </li>
+</ul>",CRITICAL,JavaScript,VULNERABILITY,FALSE
+javascript:S1848,Objects should not be created to be dropped immediately without being used,"<p>There is no good reason to create a new object to not do anything with it. Most of the time, this is due to a missing piece of code and so could
+lead to an unexpected behavior in production.</p>
+<p>If it was done on purpose because the constructor has side-effects, then that side-effect code should be moved into a separate method and called
+directly.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+new MyConstructor(); // Non-Compliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var something = new MyConstructor();  // Compliant
+</pre>
+<h2>Exceptions</h2>
+<p>Immediately dropped new objects inside <code>try</code>-statements are ignored.</p>
+<pre>
+try {
+  new MyConstructor();
+} catch (e) {
+  /* ... */
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S2376,Property getters and setters should come in pairs,"<p>When an object is created with a setter for a property but without a getter for that property, the property is inaccessible and is thus
+useless.</p>
+<p>This rule also enforces the reverse situation (getter but no setter).</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var obj = {
+    set foo(value) {
+        this.fooval = value;
+    }
+};
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var obj = {
+    set foo(value) {
+        this.fooval = value;
+    },
+    get foo() {
+        return this.fooval;
+    }
+};
+</pre>
+<p>or</p>
+<pre>
+var obj = {
+    setFoo(value) {    // a standard method, not a setter
+        this.fooval = value;
+    }
+};
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE

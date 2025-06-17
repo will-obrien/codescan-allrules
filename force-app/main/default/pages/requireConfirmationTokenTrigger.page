@@ -1,0 +1,12 @@
+<apex:page controller="requireConfirmationTokenTriggerController">
+    <apex:form>
+        <h1>VF Rule Trigger: vf:RequireConfirmationToken</h1>
+        <p>This page is designed to trigger the rule: Require CSRF Protection On GET Requests</p>
+        <p>Rule Description: vf:RequireConfirmationToken</p>
+        
+        <apex:pageBlock title="Test Block">
+            <apex:inputText value="{!testValue}" label="Test Input"/>
+            <apex:commandButton value="Test Action" action="{!testAction}"/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,12 @@
+<apex:page controller="imgWithoutAltCheckTriggerController">
+    <apex:form>
+        <h1>VF Rule Trigger: vf:ImgWithoutAltCheck</h1>
+        <p>This page is designed to trigger the rule: Images Tags Should Have an "alt" Attribute</p>
+        <p>Rule Description: vf:ImgWithoutAltCheck</p>
+        
+        <apex:pageBlock title="Test Block">
+            <apex:inputText value="{!testValue}" label="Test Input"/>
+            <apex:commandButton value="Test Action" action="{!testAction}"/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

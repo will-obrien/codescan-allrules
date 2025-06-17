@@ -1,0 +1,85 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+codescan-policy:PermissionSetPermissionsAdminPolicy,PermissionSet - Permissions Admin Policy,"PermissionSet - Permissions Admin Policy gives visibility on access permissions related to Manage Profiles and Permission Sets,
+Manage Sharing, Multi-Factor Authentication for User Interface Logins, Manage Auth. Providers, Manage Custom Permissions,
+Manage Login Access Policies, Manage Password Policies, Allow Password Never Expires, Manage Session Permission Set Activations,
+Exempt from Transaction Security, Waive Multi-Factor Authentication for Exempt Users. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileDeveloperPolicy,Profile - Developer Policy,"Profile - Developer Policy gives visibility on access permissions related to Author APEX, Import Custom Objects. <br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/732"">MITRE, CWE-732</a> - Incorrect Permission Assignment for Critical Resource </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfilePasswordPolicy,Profile - Password Policy,"Profile - Password Policy gives visibility on access permissions related to Passwords Expiry, Enforce password History, Minimum Password Length,
+Password Complexity Requirement, Password Question Requirement, Maximum Invalid Login Attempts, Lockout Effective period, Obscure answer for password resets,
+Require minimum One Day password lifetime, Don't Immediately expire links in forgot password emails.<br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+<li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+<li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileReportsAndDashboardsAdminPolicy,Profile - Reports and Dashboards Admin Policy,"Profile - Reports and Dashboards Admin Policy gives visibility on access permissions related to Create Report Folders, Manage All Private Reports and Dashboards,
+Create and Customize Reports, Manage Reports in Public Folders, Manage Dashboards in Public Folders, Manage Custom Report Types, Report Builder, Report Builder (Lightning Experience),
+Run Reports, Create and Customize Dashboards, Manage Dynamic Dashboards, Export Reports. <br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetSecuritySettingsPolicy,PermissionSet - Security Settings Policy,"PermissionSet - Security Settings Policy gives visibility on access permissions related to Manage Certificates,Manage IP Addresses,Manage Encryption Keys,View Threat Detection Events,Profile allows Manage Security Center. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileFilesAndContentPolicy,Profile - Files and Content Policy,"Profile - Files and Content Policy gives visibility on access permissions related to Query All Files, Files Connect Cloud, Manage Salesforce CRM Content, Manage Content Permissions, Manage Content Properties. <br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+sfmeta:ExternalIdOveruse,Potential Overuse - External IDs,Salesforce does not allow more than 5 External IDs per object.,MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:ExcessWorkflowsPerObject,Avoid Excess Workflow Rules per Object,Objects which contain too many decisions are complex and difficult to maintain.,MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:CrossObjectFormulaOveruse,Potential Overuse - Cross-Object Formulas,Salesforce does not allow more than 15 cross-object formulas per object.,MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:RelationShipOveruse,Potential Overuse - Relationship Objects,Salesforce does not allow more than 40 relationships per object.,MINOR,Salesforce Metadata,CODE_SMELL,FALSE

@@ -1,0 +1,455 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S4423,Weak SSL/TLS protocols should not be used,"<p>This rule raises an issue when an insecure TLS protocol version (i.e. a protocol different from ""TLSv1.2"", ""TLSv1.3"", ""DTLSv1.2"", or ""DTLSv1.3"") is
+used or allowed.</p>
+<p>It is recommended to enforce TLS 1.2 as the minimum protocol version and to disallow older versions like TLS 1.0. Failure to do so could open the
+door to downgrade attacks: a malicious actor who is able to intercept the connection could modify the requested protocol version and downgrade it to a
+less secure version.</p>
+<h2>Noncompliant Code Example</h2>
+<p><code>secureProtocol</code>, <code>minVersion</code>/<code>maxVersion</code> and <code>secureOptions</code> should not be set to use weak TLS
+protocols (TLSv1.1 and lower):</p>
+<pre>
+let options = {
+  secureProtocol: 'TLSv1_method' // Noncompliant: TLS1.0 is insecure
+};
+
+let options = {
+  minVersion: 'TLSv1.1',  // Noncompliant: TLS1.1 is insecure
+  maxVersion: 'TLSv1.2'
+};
+
+let options = {
+  secureOptions: constants.SSL_OP_NO_SSLv2 | constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_TLSv1
+}; // Noncompliant TLS 1.1 (constants.SSL_OP_NO_TLSv1_1) is not disabled
+</pre>
+<p><a href=""https://nodejs.org/api/https.html"">https</a> built-in module:</p>
+<pre>
+let req = https.request(options, (res) =&gt; {
+  res.on('data', (d) =&gt; {
+    process.stdout.write(d);
+  });
+});  // Noncompliant
+</pre>
+<p><a href=""https://nodejs.org/api/tls.html"">tls</a> built-in module:</p>
+<pre>
+let socket = tls.connect(443, ""www.example.com"", options, () =&gt; { });  // Noncompliant
+</pre>
+<p><a href=""https://www.npmjs.com/package/request"">request</a> module:</p>
+<pre>
+let socket = request.get(options);
+</pre>
+<h2>Compliant Solution</h2>
+<p>Set either <code>secureProtocol</code> or <code>secureOptions</code> or <code>minVersion</code> to use secure protocols only (TLSv1.2 and
+higher):</p>
+<pre>
+let options = {
+  secureProtocol: 'TLSv1_2_method'
+};
+// or
+let options = {
+  secureOptions: constants.SSL_OP_NO_SSLv2 | constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_TLSv1 | constants.SSL_OP_NO_TLSv1_1
+};
+// or
+let options = {
+    minVersion: 'TLSv1.2'
+};
+</pre>
+<p><a href=""https://nodejs.org/api/https.html"">https</a> built-in module:</p>
+<pre>
+let req = https.request(options, (res) =&gt; {
+  res.on('data', (d) =&gt; {
+    process.stdout.write(d);
+  });
+});  // Compliant
+</pre>
+<p><a href=""https://nodejs.org/api/tls.html"">tls</a> built-in module:</p>
+<pre>
+let socket = tls.connect(443, ""www.example.com"", options, () =&gt; { });
+</pre>
+<p><a href=""https://www.npmjs.com/package/request"">request</a> module:</p>
+<pre>
+let socket = request.get(options);
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A6-Security_Misconfiguration"">OWASP Top 10 2017 Category A6</a> - Security
+  Misconfiguration </li>
+  <li> <a href=""https://mobile-security.gitbook.io/masvs/security-requirements/0x10-v5-network_communication_requirements"">Mobile AppSec Verification
+  Standard</a> - Network Communication Requirements </li>
+  <li> <a href=""https://owasp.org/www-project-mobile-top-10/2016-risks/m3-insecure-communication"">OWASP Mobile Top 10 2016 Category M3</a> - Insecure
+  Communication </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/326.html"">MITRE, CWE-327</a> - Inadequate Encryption Strength </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/327.html"">MITRE, CWE-326</a> - Use of a Broken or Risky Cryptographic Algorithm </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+  <li> <a href=""https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices#22-use-secure-protocols"">SSL and TLS Deployment Best
+  Practices - Use secure protocols</a> </li>
+</ul>",CRITICAL,JavaScript,VULNERABILITY,FALSE
+javascript:S4787,Encrypting data is security-sensitive,"<p>Encrypting data is security-sensitive. It has led in the past to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-7902"">CVE-2017-7902</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2006-1378"">CVE-2006-1378</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2003-1376"">CVE-2003-1376</a> </li>
+</ul>
+<p>Proper encryption requires both the encryption algorithm and the key to be strong. Obviously the private key needs to remain secret and be renewed
+regularly. However these are not the only means to defeat or weaken an encryption.</p>
+<p>This rule flags function calls that initiate encryption/decryption.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> the private key might not be random, strong enough or the same key is reused for a long long time. </li>
+  <li> the private key might be compromised. It can happen when it is stored in an unsafe place or when it was transferred in an unsafe manner. </li>
+  <li> the key exchange is made without properly authenticating the receiver. </li>
+  <li> the encryption algorithm is not strong enough for the level of protection required. Note that encryption algorithms strength decreases as time
+  passes. </li>
+  <li> the chosen encryption library is deemed unsafe. </li>
+  <li> a nonce is used, and the same value is reused multiple times, or the nonce is not random. </li>
+  <li> the RSA algorithm is used, and it does not incorporate an Optimal Asymmetric Encryption Padding (OAEP), which might weaken the encryption.
+  </li>
+  <li> the CBC (Cypher Block Chaining) algorithm is used for encryption, and itâ€™s IV (Initialization Vector) is not generated using a secure random
+  algorithm, or it is reused. </li>
+  <li> the Advanced Encryption Standard (AES) encryption algorithm is used with an unsecure mode. See the recommended practices for more information.
+  </li>
+</ul>
+<p>You are at risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> Generate encryption keys using secure random algorithms. </li>
+  <li> When generating cryptographic keys (or key pairs), it is important to use a key length that provides enough entropy against brute-force
+  attacks. For the Blowfish algorithm the key should be at least 128 bits long, while for the RSA algorithm it should be at least 2048 bits long.
+  </li>
+  <li> Regenerate the keys regularly. </li>
+  <li> Always store the keys in a safe location and transfer them only over safe channels. </li>
+  <li> If there is an exchange of cryptographic keys, check first the identity of the receiver. </li>
+  <li> Only use strong encryption algorithms. Check regularly that the algorithm is still deemed secure. It is also imperative that they are
+  implemented correctly. Use only encryption libraries which are deemed secure. Do not define your own encryption algorithms as they will most
+  probably have flaws. </li>
+  <li> When a nonce is used, generate it randomly every time. </li>
+  <li> When using the RSA algorithm, incorporate an Optimal Asymmetric Encryption Padding (OAEP). </li>
+  <li> When CBC is used for encryption, the IV must be random and unpredictable. Otherwise it exposes the encrypted value to crypto-analysis attacks
+  like ""Chosen-Plaintext Attacks"". Thus a secure random algorithm should be used. An IV value should be associated to one and only one encryption
+  cycle, because the IVâ€™s purpose is to ensure that the same plaintext encrypted twice will yield two different ciphertexts. </li>
+  <li> The Advanced Encryption Standard (AES) encryption algorithm can be used with various modes. Galois/Counter Mode (GCM) with no padding should be
+  preferred to the following combinations which are not secured:
+    <ul>
+      <li> Electronic Codebook (ECB) mode: Under a given key, any given plaintext block always gets encrypted to the same ciphertext block. Thus, it
+      does not hide data patterns well. In some senses, it doesnâ€™t provide serious message confidentiality, and it is not recommended for use in
+      cryptographic protocols at all. </li>
+      <li> Cipher Block Chaining (CBC) with PKCS#5 padding (or PKCS#7) is susceptible to padding oracle attacks. </li>
+    </ul>  </li>
+</ul>
+<h2>Sensitive Code Example</h2>
+<pre>
+// === Client side ===
+crypto.subtle.encrypt(algo, key, plainData); // Sensitive
+crypto.subtle.decrypt(algo, key, encData); // Sensitive
+</pre>
+<pre>
+// === Server side ===
+const crypto = require(""crypto"");
+const cipher = crypto.createCipher(algo, key); // Sensitive
+const cipheriv = crypto.createCipheriv(algo, key, iv); // Sensitive
+const decipher = crypto.createDecipher(algo, key); // Sensitive
+const decipheriv = crypto.createDecipheriv(algo, key, iv); // Sensitive
+const pubEnc = crypto.publicEncrypt(key, buf); // Sensitive
+const privDec = crypto.privateDecrypt({ key: key, passphrase: secret }, pubEnc); // Sensitive
+const privEnc = crypto.privateEncrypt({ key: key, passphrase: secret }, buf); // Sensitive
+const pubDec = crypto.publicDecrypt(key, privEnc); // Sensitive
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A6-Security_Misconfiguration"">OWASP Top 10 2017 Category A6</a> - Security
+  Misconfiguration </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/321.html"">MITRE, CWE-321</a> - Use of Hard-coded Cryptographic Key </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/322.html"">MITRE, CWE-322</a> - Key Exchange without Entity Authentication </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/323.html"">MITRE, CWE-323</a> - Reusing a Nonce, Key Pair in Encryption </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/324.html"">MITRE, CWE-324</a> - Use of a Key Past its Expiration Date </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/325.html"">MITRE, CWE-325</a> - Missing Required Cryptographic Step </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/326.html"">MITRE, CWE-326</a> - Inadequate Encryption Strength </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/327.html"">MITRE, CWE-327</a> - Use of a Broken or Risky Cryptographic Algorithm </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+</ul>
+<h2>Deprecated</h2>
+<p>This rule is deprecated; use {rule:javascript:S4426}, {rule:javascript:S5542}, {rule:javascript:S5547} instead.</p>",CRITICAL,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S5876,A new session should be created during user authentication,"<p>Session fixation attacks occur when an attacker can force a legitimate user to use a session ID that he knows. To avoid fixation attacks, itâ€™s a
+good practice to generate a new session each time a user authenticates and delete/invalidate the existing session (the one possibly known by the
+attacker).</p>
+<h2>Noncompliant Code Example</h2>
+<p>For <a href=""http://www.passportjs.org/"">Passport.js</a>:</p>
+<pre>
+app.post('/login',
+  passport.authenticate('local', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Sensitive - no session.regenerate after login
+    res.redirect('/');
+  });
+</pre>
+<h2>Compliant Solution</h2>
+<p>For <a href=""http://www.passportjs.org/"">Passport.js</a>:</p>
+<pre>
+app.post('/login',
+  passport.authenticate('local', { failureRedirect: '/login' }),
+  function(req, res) {
+    let prevSession = req.session;
+    req.session.regenerate((err) =&gt; {  // Compliant
+      Object.assign(req.session, prevSession);
+      res.redirect('/');
+    });
+  });
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A2-Broken_Authentication"">OWASP Top 10 2017 Category A2</a> -
+  Broken Authentication </li>
+  <li> <a href=""https://www.owasp.org/index.php/Session_fixation"">OWASP Sesssion Fixation</a> </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/384.html"">MITRE, CWE-384</a> - Session Fixation </li>
+</ul>",CRITICAL,JavaScript,VULNERABILITY,FALSE
+javascript:S6079,"Tests should not execute any code after ""done()"" is called","<p>The <code>done</code> callback is used to inform Mocha when an asynchronous test ends. Exceptions thrown after <code>done</code> (with or without
+parameters) is called are not handled in a consistent manner. Sometimes they will be correctly handled, but they might as well be assigned to a
+different test, no test at all, or even be completely ignored. Even when it works as expected this will be a source of confusion for other developers.
+Thus no code should be executed after <code>done</code> is called.</p>
+<p>This rule raises an issue when some code is executed after a call to <code>done</code>.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+const expect = require(""chai"").expect;
+const fs = require(""fs"");
+
+describe(""Code is executed after Done"", function() {
+    it(""Has asserts after done()"", function(done) {
+        try {
+            expect(1).toEqual(2);
+        } catch (err) {
+            done();
+            // This assertion will be ignored and the test will pass.
+            expect(err).to.be.an.instanceof(RangeError);  // Noncompliant
+        }
+    });
+
+    it(""Throws an error some time after done()"", function(done) {
+        fs.readFile(""/etc/bashrc"", 'utf8', function(err, data) {
+            done();
+            setTimeout(() =&gt; {  // Noncompliant
+                // This assertion error will not be assigned to any test.
+                // Developers will have to guess which test failed.
+                expect(data).to.match(/some expected string/);
+            }, 3000);
+        });
+    });
+
+    it(""Has code after done(err)"", function(done) {
+        try {
+            throw Error(""An error"");
+        } catch (err) {
+            done(err);
+        }
+        fs.readFile(""/etc/bashrc"", 'utf8', function(err, data) {  // Noncompliant
+            // This assertion error will be assigned to ""Other test"".
+            expect(data).to.match(/some expected string/);
+        });
+    });
+
+    it(""Other test"", function(done) {
+        done()
+    });
+});
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const expect = require(""chai"").expect;
+const fs = require(""fs"");
+
+describe(""Code is executed after Done"", function() {
+    it(""Has asserts after done()"", function(done) {
+        try {
+            expect(1).toEqual(2);
+        } catch (err) {
+            expect(err).to.be.an.instanceof(RangeError);
+            done();
+        }
+    });
+
+    it(""Throws an error some time after done()"", function(done) {
+        fs.readFile(""/etc/bashrc"", 'utf8', function(err, data) {
+            setTimeout(() =&gt; {
+                expect(data).to.match(/some expected string/);
+                done();
+            }, 3000);
+        });
+    });
+
+    it(""Has code after done(err)"", function(done) {
+        try {
+            throw Error(""An error"");
+        } catch (err) {
+            return done(err);
+        }
+        fs.readFile(""/etc/bashrc"", 'utf8', function(err, data) {
+            // This assertion error will be assigned to ""Other test"".
+            expect(data).to.match(/some expected string/);
+            done();
+        });
+    });
+
+    it(""Other test"", function(done) {
+        done()
+    });
+});
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S5542,Encryption algorithms should be used with secure mode and padding scheme,"<p>Encryption operation mode and the padding scheme should be chosen appropriately to guarantee data confidentiality, integrity and authenticity:</p>
+<ul>
+  <li> For block cipher encryption algorithms (like AES):
+    <ul>
+      <li> The GCM (Galois Counter Mode) mode which <a href=""https://en.wikipedia.org/wiki/Galois/Counter_Mode#Mathematical_basis"">works
+      internally</a> with zero/no padding scheme, is recommended, as it is designed to provide both data authenticity (integrity) and confidentiality.
+      Other similar modes are CCM, CWC, EAX, IAPM and OCB. </li>
+      <li> The CBC (Cipher Block Chaining) mode by itself provides only data confidentiality, itâ€™s recommended to use it along with Message
+      Authentication Code or similar to achieve data authenticity (integrity) too and thus to <a
+      href=""https://en.wikipedia.org/wiki/Padding_oracle_attack"">prevent padding oracle attacks</a>. </li>
+      <li> The ECB (Electronic Codebook) mode doesnâ€™t provide serious message confidentiality: under a given key any given plaintext block always gets
+      encrypted to the same ciphertext block. This mode should not be used. </li>
+    </ul>  </li>
+  <li> For RSA encryption algorithm, the recommended padding scheme is OAEP. </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<p><a href=""https://nodejs.org/api/crypto.html"">crypto</a> built-in module:</p>
+<pre>
+crypto.createCipheriv(""AES-128-CBC"", key, iv); // Noncompliant: CBC with PKCS5/7 (set by default) is vulnerable to oracle padding attacks
+crypto.createCipheriv(""AES-128-ECB"", key, """"); // Noncompliant: ECB doesn't provide serious message confidentiality
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://nodejs.org/api/crypto.html"">crypto</a> built-in module:</p>
+<pre>
+crypto.createCipheriv(""AES-256-GCM"", key, iv);
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A6-Security_Misconfiguration"">OWASP Top 10 2017 Category A6</a> - Security
+  Misconfiguration </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/327.html"">MITRE, CWE-327</a> - Use of a Broken or Risky Cryptographic Algorithm </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+</ul>",CRITICAL,JavaScript,VULNERABILITY,FALSE
+javascript:S1067,Expressions should not be too complex,"<p>The complexity of an expression is defined by the number of <code>&amp;&amp;</code>, <code>||</code> and <code>condition ? ifTrue : ifFalse</code>
+operators it contains.</p>
+<p>A single expressionâ€™s complexity should not become too high to keep the code readable.</p>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S5547,Cipher algorithms should be robust,"<p><a href=""https://en.wikipedia.org/wiki/Strong_cryptography"">Strong cipher algorithms</a> are cryptographic systems resistant to cryptanalysis, they
+are not vulnerable to well-known attacks like brute force attacks for example.</p>
+<p>A general recommendation is to only use cipher algorithms intensively tested and promoted by the cryptographic community.</p>
+<p>More specifically for block cipher, itâ€™s not recommended to use algorithm with a block size inferior than 128 bits.</p>
+<h2>Noncompliant Code Example</h2>
+<p><a href=""https://nodejs.org/api/crypto.html"">crypto</a> built-in module:</p>
+<pre>
+crypto.createCipheriv(""DES"", key, iv); // Noncompliant: DES / 3DES is unsecure
+crypto.createCipheriv(""DES-EDE"", key, """"); // Noncompliant: DES / 3DES is unsecure
+crypto.createCipheriv(""DES-EDE3"", key, """"); // Noncompliant: DES / 3DES is unsecure
+crypto.createCipheriv(""RC2"", key, iv); // Noncompliant: RC2 is vulnerable to a related-key attack
+crypto.createCipheriv(""RC4"", key, """");// Noncompliant: RC4 is vulnerable to several attacks
+crypto.createCipheriv(""BF"", key, iv);// Noncompliant: Blowfish use a 64-bit block size makes it vulnerable to birthday attacks
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://nodejs.org/api/crypto.html"">crypto</a> built-in module:</p>
+<pre>
+crypto.createCipheriv(""AES-256-GCM"", key, iv);
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/327.html"">MITRE, CWE-327</a> - Use of a Broken or Risky Cryptographic Algorithm </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+</ul>",CRITICAL,JavaScript,VULNERABILITY,FALSE
+javascript:S1854,Unused assignments should be removed,"<p>A dead store happens when a local variable is assigned a value that is not read by any subsequent instruction. Calculating or retrieving a value
+only to then overwrite it or throw it away, could indicate a serious error in the code. Even if itâ€™s not an error, it is at best a waste of resources.
+Therefore all calculated values should be used.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+i = a + b; // Noncompliant; calculation result not used before value is overwritten
+i = compute();
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+i = a + b;
+i += compute();
+</pre>
+<h2>Exceptions</h2>
+<p>This rule ignores initializations to -1, 0, 1, <code>null</code>, <code>undefined</code>, [], {}, <code>true</code>, <code>false</code> and
+<code>""""</code>. Variables that start with an underscore (e.g. '<code>_unused</code>') are ignored.</p>
+<p>This rule also ignores variables declared with object destructuring using rest syntax (used to exclude some properties from object):</p>
+<pre>
+let {a, b, ...rest} = obj; // 'a' and 'b' are ok
+doSomething(rest);
+
+let [x1, x2, x3] = arr;    // but 'x1' is noncompliant, as omitting syntax can be used: ""let [, x2, x3] = arr;""
+doSomething(x2, x3);
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/563.html"">MITRE, CWE-563</a> - Assignment to Variable without Use ('Unused Variable') </li>
+</ul>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S5659,JWT should be signed and verified with strong cipher algorithms,"<p>If a JSON Web Token (JWT) is not signed with a strong cipher algorithm (or not signed at all) an attacker can forge it and impersonate user
+identities.</p>
+<ul>
+  <li> Donâ€™t use <code>none</code> algorithm to sign or verify the validity of a token. </li>
+  <li> Donâ€™t use a token without verifying its signature before. </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<p><a href=""https://www.npmjs.com/package/jsonwebtoken"">jsonwebtoken</a> library:</p>
+<pre>
+const jwt = require('jsonwebtoken');
+
+let token = jwt.sign({ foo: 'bar' }, key, { algorithm: 'none' }); // Noncompliant: 'none' cipher doesn't sign the JWT (no signature will be included)
+
+jwt.verify(token, key, { expiresIn: 360000 * 5, algorithms: ['RS256', 'none'] }, callbackcheck); // Noncompliant: 'none' cipher should not be used when verifying JWT signature
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://www.npmjs.com/package/jsonwebtoken"">jsonwebtoken</a> library:</p>
+<pre>
+const jwt = require('jsonwebtoken');
+
+let token = jwt.sign({ foo: 'bar' }, key, { algorithm: 'HS256' }); // Compliant
+
+jwt.verify(token, key, { expiresIn: 360000 * 5, algorithms: ['HS256'] }, callbackcheck); // Compliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/347.html"">MITRE, CWE-347</a> - Improper Verification of Cryptographic Signature </li>
+</ul>",CRITICAL,JavaScript,VULNERABILITY,FALSE
+javascript:S3353,"Unchanged variables should be marked ""const""","<p>Marking a variable that is unchanged after initialization <code>const</code> is an indication to future maintainers that ""no this isnâ€™t updated,
+and itâ€™s not supposed to be"". <code>const</code> should be used in these situations in the interests of code clarity.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function seek(input) {
+  let target = 32;  // Noncompliant
+  for (let i of input) {  // Noncompliant
+    if (i == target) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function getUrl(query) { &nbsp;&nbsp;&nbsp;
+  let&nbsp;url; // Noncompliant
+  url = ""http://example.com"";
+  return url;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function seek(input) {
+  const target = 32;
+  for (const i of input) {
+    if (i == target) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function getUrl(query) { &nbsp;
+  const&nbsp;url = ""http://example.com"";
+  return url;
+}
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE

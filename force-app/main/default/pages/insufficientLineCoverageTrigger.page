@@ -1,0 +1,12 @@
+<apex:page controller="insufficientLineCoverageTriggerController">
+    <apex:form>
+        <h1>VF Rule Trigger: common-vf:InsufficientLineCoverage</h1>
+        <p>This page is designed to trigger the rule: Lines should have sufficient coverage by tests</p>
+        <p>Rule Description: common-vf:InsufficientLineCoverage</p>
+        
+        <apex:pageBlock title="Test Block">
+            <apex:inputText value="{!testValue}" label="Test Input"/>
+            <apex:commandButton value="Test Action" action="{!testAction}"/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

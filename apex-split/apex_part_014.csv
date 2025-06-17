@@ -1,0 +1,133 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:AbstractNaming,Abstract Naming Conventions,"Abstract classes should be named 'AbstractXXX'.
+       <BR><h2>Example:</h2><pre>
+
+public abstract class Foo {  //Bad: this should be 'AbstractFoo'.
+}
+
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UselessStringValueOf,Useless String Value Of,"No need to call String.valueOf to append to a string; just use the valueOf() argument directly.<br/>
+<br/>
+<br/>
+Note: Currently, there is no Date.format(string) function. The preferred method for formatting a date instead of String.valueOf(dateNow) to avoid Timezone problems is:<br/>
+	 
+	<pre>DateTime.newInstance(dateNow, Time.newInstance(0,0,0,0)).format('YYYY-MM-DD');</pre>
+
+
+      <BR><h2>Example:</h2><pre>
+
+public String convert(Integer i) {
+	String s;
+	s = 'a' + String.valueOf(i);	//Bad: String.valueOf() is not required.
+	
+	s = 'a' + i; 					//Good: This approach is preferred.
+	return s;
+
+}
+          </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:CommentContent,Invalid Comment Words or Phrases Found,"A rule for the politically correct... we don't want to offend anyone.
+  <BR><h2>Example:</h2><pre>
+/*      
+*OMG, this is horrible, Bob is an idiot !!!   		//Bad: That's not very nice!
+*/     
+
+/*      
+*This could be better. Bob, take note.   			//Good: Preferred.
+*/     
+
+  </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ShortClassName,Short Class Name,"Classes with short names are not recommended.
+			
+        <BR><h2>Example:</h2><pre>
+    
+public class Foo {  //Bad: this is not recommended.
+}
+    
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AtLeastOneConstructor,At Least One Constructor,"Each class should declare at least one constructor.
+  <BR><h2>Example:</h2><pre>
+  
+public class Foo {	
+ public void doSomething() { ... }		//Bad: Class is missing a Constructor.
+ public void doOtherThing { ... }
+}
+
+public class Bar {	
+ public void Bar(){ ... }			//Good: Class has a Constructor.
+ public void doSomething() { ... }		
+ public void doOtherThing { ... }
+}
+
+  
+  </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnitAssertionsShouldIncludeMessage,Unit Assertions should include a Message,"Unit assertions should include a message - i.e., use the three argument version of
+assertEquals(), not the two argument version.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo extends TestCase {
+ public void testSomething() {
+  System.assertEquals('foo', 'bar');  	//Bad: assertEquals() does not contain a message.
+  
+  System.assertEquals('foo', 'bar', 'Foo does not equal bar');  //Good: use this method instead.
+ 
+  
+ }
+}
+  
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidCatchingThrowable,Avoid Catching Throwable,"Catching Throwable errors is not recommended since its scope is very broad. It includes runtime issues such as OutOfMemoryError that should be exposed and managed separately.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/396.html"">MITRE, CWE-396</a> - Declaration of Catch for Generic Exception </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/BIB3AQ"">CERT, ERR08-J.</a> - Do not catch NullPointerException or any of its ancestors
+  </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+	
+public void bar() {
+	try {
+     // do something
+    } catch (Throwable th) {  //Bad: should not catch 'Throwable'.
+		th.printStackTrace();
+    }
+  }
+	
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ShortMethodName,Short Method Name,"Method names that are very short are not helpful to the reader.
+     <BR><h2>Example:</h2><pre>
+
+public class ShortMethod {
+	public void a( Integer i ) { //Bad: The method name should be more descriptive.
+	}
+}
+
+     </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:NullAssignment,Null Assignment,"Assigning a ""null"" to a variable (outside of its declaration) is usually bad form.  Sometimes, this type
+of assignment is an indication that the programmer doesn't completely understand what is going on in the code.  
+      <BR><h2>Example:</h2><pre>
+ 
+public void bar() {
+	Object x = null; 				//Good: This is OK.
+	x = new Object();
+     // big, complex piece of code here
+	x = null; 						//Bad: This is not required.
+     // big, complex piece of code here
+}
+
+ 
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidUsingTestIsRunningTest,Avoid Using Test.isRunningTest(),"Avoid using Test.isRunningTest(), using this can hide problems that occur during testing.
+		<BR><h2>Example:</h2><pre>
+
+public class MyClass  {
+  public static void myFunction() {
+	
+    if ( !Test.isRunningTest ){      //Bad: This is not recommended.
+	  //don't run during tests.
+	}
+  }
+}
+
+
+		</pre>",MINOR,APEX,CODE_SMELL,FALSE

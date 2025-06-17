@@ -1,0 +1,12 @@
+<apex:page controller="exceptionTriggerController">
+    <h1>VF Rule Trigger: vf:exception</h1>
+    <p>This page triggers the rule: Tracks CodeScan Parser Problems</p>
+    
+    <!-- Triggers vf:exception - Syntax that might cause parser issues -->
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <!-- Intentionally problematic syntax -->
+        {!$Action.Case.New}
+        <apex:commandButton value="Submit" action="{!save}" />
+    </apex:form>
+</apex:page>

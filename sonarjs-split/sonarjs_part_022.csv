@@ -1,0 +1,294 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S1116,Extra semicolons should be removed,"<p>Extra semicolons (<code>;</code>) are usually introduced by mistake, for example because:</p>
+<ul>
+  <li> It was meant to be replaced by an actual statement, but this was forgotten. </li>
+  <li> There was a typo which lead the semicolon to be doubled, i.e. <code>;;</code>. </li>
+  <li> There was a misunderstanding about where semicolons are required or useful. </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var x = 1;; // Noncompliant
+
+function foo() {
+};  // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var x = 1;
+
+function foo() {
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S5958,Tests should check which exception is thrown,"<p>It is not good enough to test if an exception is raised, without checking which exception it is. Such tests will not be able to differentiate the
+expected exception from an unexpected one. They should instead validate the exception message and/or type.</p>
+<p>This rule raises an issue in the following cases:</p>
+<ul>
+  <li> When an asynchronous Mocha test calls the <code>done()</code> callback, without parameters, in a <code>catch</code> block and there is no
+  reference to the caught exception in this block. Either the error should be passed to <code>done()</code> or the exception should be checked
+  further. </li>
+  <li> When Chai assertions are used to test if a function throws any exception, or an exception of type <code>Error</code> without checking the
+  message. </li>
+  <li> When Chai assertions are used to test if a function does not throw an exception of type <code>Error</code> without checking the message. </li>
+</ul>
+<p>Rule doesn't raise an issue when assertion is negated using <code>not</code>, it such case the exception doesn't need to be specific.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+const expect = require(""chai"").expect;
+const fs = require(""fs"");
+
+describe(""exceptions are not tested properly"", function() {
+    const funcThrows = function () { throw new TypeError('What is this type?'); };
+    const funcNoThrow = function () { /*noop*/ };
+
+    it(""forgot to pass the error to 'done()'"", function(done) {
+        fs.readFile(""/etc/zshrc"", 'utf8', function(err, data) {
+            try {
+                expect(data).to.match(/some expected string/);
+            } catch (e) {  // Noncompliant
+                // Either the exception should be passed to done(e), or the exception should be tested further.
+                done();
+            }
+        });
+    });
+
+    it(""does not 'expect' a specific exception"", function() {
+        expect(funcThrows).to.throw();  // Noncompliant
+        // Error is not precise enough
+        expect(funcThrows).to.throw(Error);  // Noncompliant
+    });
+});
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const expect = require(""chai"").expect;
+const { AssertionError } = require('chai');
+const fs = require(""fs"");
+
+describe(""exceptions are tested properly"", function() {
+    const funcThrows = function () { throw new TypeError('What is this type?'); };
+    const funcNoThrow = function () { /*noop*/ };
+
+    it(""forgot to pass the error to 'done()'"", function(done) {
+        fs.readFile(""/etc/zshrc"", 'utf8', function(err, data) {
+            try {
+                expect(data).to.match(/some expected string/);
+            } catch (e) {
+                expect(e).to.be.an.instanceof(AssertionError);
+                done();
+            }
+        });
+    });
+
+    it(""does not 'expect' a specific exception"", function() {
+        expect(funcThrows).to.throw(TypeError);
+        expect(funcNoThrow).to.not.throw(Error, /My error message/);
+    });
+});
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3415,Assertion arguments should be passed in the correct order,"<p>Many assertion functions have specific parameters for the expected and actual values. Swap them, and your test will still have the same outcome
+(succeed/fail when it should) but the error messages will be confusing.</p>
+<p>This rule raises an issue when the ""expected"" argument of an assertion function is a hard-coded value and the ""actual"" argument is not.</p>
+<p>This rule currently supports Chai assertions.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+const assert = require('chai').assert;
+const expect = require('chai').expect;
+const should = require('chai').should();
+
+it(""inverts arguments"", function() {
+    assert.equal(42, aNumber); // Noncompliant
+    expect(42).to.equal(aNumber); // Noncompliant
+    should.fail(42, aNumber);  // Noncompliant
+});
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const assert = require('chai').assert;
+const expect = require('chai').expect;
+const should = require('chai').should();
+
+it(""inverts arguments"", function() {
+    assert.equal(aNumber, 42);
+    expect(aNumber).to.equal(42);
+    should.fail(aNumber, 42);
+});
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1117,Variables should not be shadowed,"<p>Overriding or shadowing a variable declared in an outer scope can strongly impact the readability, and therefore the maintainability, of a piece of
+code. Further, it could lead maintainers to introduce bugs because they think theyâ€™re using one variable but are really using another.</p>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1119,Labels should not be used,"<p>Labels are not commonly used, and many developers do not understand how they work. Moreover, their usage makes the control flow harder to follow,
+which reduces the codeâ€™s readability.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+myLabel: {
+  let x = doSomething();
+  if (x &gt; 0) {
+    break myLabel;
+  }
+  doSomethingElse();
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+let x = doSomething();
+if (x &lt;= 0) {
+  doSomethingElse();
+}
+</pre>
+<p>&nbsp;</p>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1472,Function call arguments should not start on new lines,"<p>Because semicolons at the ends of statements are optional, starting function call arguments on a separate line makes the code confusing. It could
+lead to errors and most likely <em>will</em> lead to questions for maintainers.</p>
+<p>What was the initial intent of the developer?</p>
+<ol>
+  <li> Define a function and then execute some unrelated code inside a closure ? </li>
+  <li> Pass the second function as a parameter to the first one ? </li>
+</ol>
+<p>The first option will be the one chosen by the JavaScript interpreter.</p>
+<p>By extension, and to improve readability, any kind of function call argument should not start on new line.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var fn = function () {
+  //...
+}
+
+(function () { // Noncompliant
+  //...
+})();
+</pre>
+<h2>Compliant Solution</h2>
+<p>Either</p>
+<pre>
+// define a function
+var fn = function () {
+  //...
+}; // &lt;-- semicolon added
+
+// then execute some code inside a closure
+(function () {
+  //...
+})();
+</pre>
+<p>Or</p>
+<pre>
+var fn = function () {
+  //...
+}(function () { // &lt;-- start function call arguments on same line
+  //...
+})();
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S4502,Disabling CSRF protections is security-sensitive,"<p>A cross-site request forgery (CSRF) attack occurs when a trusted user of a web application can be forced, by an attacker, to perform sensitive
+actions that he didnâ€™t intend, such as updating his profile or sending a message, more generally anything that can change the state of the
+application.</p>
+<p>The attacker can trick the user/victim to click on a link, corresponding to the privileged action, or to visit a malicious web site that embeds a
+hidden web request and as web browsers automatically include cookies, the actions can be authenticated and sensitive.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> The web application uses cookies to authenticate users. </li>
+  <li> There exist sensitive operations in the web application that can be performed when the user is authenticated. </li>
+  <li> The state / resources of the web application can be modified by doing HTTP POST or HTTP DELETE requests for example. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> Protection against CSRF attacks is strongly recommended:
+    <ul>
+      <li> to be activated by default for all <a href=""https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Safe_methods"">unsafe HTTP
+      methods</a>. </li>
+      <li> implemented, for example, with an unguessable CSRF token </li>
+    </ul>  </li>
+  <li> Of course all sensitive operations should not be performed with <a
+  href=""https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Safe_methods"">safe HTTP</a> methods like <code>GET</code> which are designed to be
+  used only for information retrieval. </li>
+</ul>
+<h2>Sensitive Code Example</h2>
+<p><a href=""https://www.npmjs.com/package/csurf"">Express.js CSURF middleware</a> protection is not found on an unsafe HTTP method like POST
+method:</p>
+<pre>
+let csrf = require('csurf');
+let express = require('express');
+
+let csrfProtection = csrf({ cookie: true });
+
+let app = express();
+
+// Sensitive: this operation doesn't look like protected by CSURF middleware (csrfProtection is not used)
+app.post('/money_transfer', parseForm, function (req, res) {
+  res.send('Money transferred');
+});
+</pre>
+<p>Protection provided by <a href=""https://www.npmjs.com/package/csurf"">Express.js CSURF middleware</a> is globally disabled on unsafe methods:</p>
+<pre>
+let csrf = require('csurf');
+let express = require('express');
+
+app.use(csrf({ cookie: true, ignoreMethods: [""POST"", ""GET""] })); // Sensitive as POST is unsafe method
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://www.npmjs.com/package/csurf"">Express.js CSURF middleware</a> protection is used on unsafe methods:</p>
+<pre>
+let csrf = require('csurf');
+let express = require('express');
+
+let csrfProtection = csrf({ cookie:  true });
+
+let app = express();
+
+app.post('/money_transfer', parseForm, csrfProtection, function (req, res) { // Compliant
+  res.send('Money transferred')
+});
+</pre>
+<p>Protection provided by <a href=""https://www.npmjs.com/package/csurf"">Express.js CSURF middleware</a> is enabled on unsafe methods:</p>
+<pre>
+let csrf = require('csurf');
+let express = require('express');
+
+app.use(csrf({ cookie: true, ignoreMethods: [""GET""] })); // Compliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/352.html"">MITRE, CWE-352</a> - Cross-Site Request Forgery (CSRF) </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A6-Security_Misconfiguration"">OWASP Top 10 2017 Category A6</a> - Security
+  Misconfiguration </li>
+  <li> <a href=""https://owasp.org/www-community/attacks/csrf"">OWASP: Cross-Site Request Forgery</a> </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat1"">SANS Top 25</a> - Insecure Interaction Between Components </li>
+</ul>",CRITICAL,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S2201,Return values from functions without side effects should not be ignored,"<p>When the call to a function doesnâ€™t have any side effects, what is the point of making the call if the results are ignored? In such case, either
+the function call is useless and should be dropped or the source code doesnâ€™t behave as expected.</p>
+<p>To prevent generating any false-positives, this rule triggers an issues only on a predefined list of known objects &amp; functions.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+'hello'.lastIndexOf('e'); // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+let char = 'hello'.lastIndexOf('e');
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S4624,Template literals should not be nested,"<p>Template literals (previously named ""template strings"") are an elegant way to build a string without using the <code>+</code> operator to make
+strings concatenation more readable.</p>
+<p>However, itâ€™s possible to build complex string literals by nesting together multiple template literals, and therefore lose readability and
+maintainability.</p>
+<p>In such situations, itâ€™s preferable to move the nested template into a separate statement.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+let color = ""red"";
+let count = 3;
+let message = `I have ${color ? `${count} ${color}` : count} apples`; // Noncompliant; nested template strings not easy to read
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+let color = ""red"";
+let count = 3;
+let apples = color ? `${count} ${color}` : count;
+let message = `I have ${apples} apples`;
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S6035,Single-character alternations in regular expressions should be replaced with character classes,"<p>When an alternation contains multiple alternatives that consist of a single character, it can be rewritten as a character class. This should be
+preferred because it is more efficient and can even help prevent stack overflows when used inside a repetition (see rule {rule:javascript:S5998}).</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+/a|b|c/; // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+/[abc]/;
+// or
+/[a-c]/;
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE

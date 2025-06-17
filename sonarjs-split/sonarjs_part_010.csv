@@ -1,0 +1,314 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S125,Sections of code should not be commented out,"<p>Programmers should not comment out code as it bloats programs and reduces readability.</p>
+<p>Unused code should be deleted and can be retrieved from source control history if required.</p>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S4784,Using regular expressions is security-sensitive,"<p>Using regular expressions is security-sensitive. It has led in the past to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-16021"">CVE-2017-16021</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-13863"">CVE-2018-13863</a> </li>
+</ul>
+<p>Evaluating regular expressions against input strings is potentially an extremely CPU-intensive task. Specially crafted regular expressions such as
+<code>(a+)+s</code> will take several seconds to evaluate the input string <code>aaaaaaaaaaaaaaaaaaaaaaaaaaaaabs</code>. The problem is that with
+every additional <code>a</code> character added to the input, the time required to evaluate the regex doubles. However, the equivalent regular
+expression, <code>a+s</code> (without grouping) is efficiently evaluated in milliseconds and scales linearly with the input size.</p>
+<p>Evaluating such regular expressions opens the door to <a
+href=""https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS"">Regular expression Denial of Service (ReDoS)</a> attacks. In the
+context of a web application, attackers can force the web server to spend all of its resources evaluating regular expressions thereby making the
+service inaccessible to genuine users.</p>
+<p>This rule flags any execution of a hardcoded regular expression which has at least 3 characters and at least two instances of any of the following
+characters: <code>*+{</code>.</p>
+<p>Example: <code>(a+)*</code></p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> the executed regular expression is sensitive and a user can provide a string which will be analyzed by this regular expression. </li>
+  <li> your regular expression engine performance decrease with specially crafted inputs and regular expressions. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Check whether your regular expression engine (the algorithm executing your regular expression) has any known vulnerabilities. Search for
+vulnerability reports mentioning the one engine youâ€™re are using.</p>
+<p>Use if possible a library which is not vulnerable to Redos Attacks such as <a href=""https://github.com/google/re2"">Google Re2</a>.</p>
+<p>Remember also that a ReDos attack is possible if a user-provided regular expression is executed. This rule wonâ€™t detect this kind of injection.</p>
+<h2>Sensitive Code Example</h2>
+<pre>
+const regex = /(a+)+b/; // Sensitive
+const regex2 = new RegExp(""(a+)+b""); // Sensitive
+
+str.search(""(a+)+b""); // Sensitive
+str.match(""(a+)+b""); // Sensitive
+str.split(""(a+)+b""); // Sensitive
+</pre>
+<p>Note: String.matchAll does not raise any issue as it is not supported by NodeJS.</p>
+<h2>Exceptions</h2>
+<p>Some corner-case regular expressions will not raise an issue even though they might be vulnerable. For example: <code>(a|aa)+</code>,
+<code>(a|a?)+</code>.</p>
+<p>It is a good idea to test your regular expression if it has the same pattern on both side of a ""<code>|</code>"".</p>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A1-Injection"">OWASP Top 10 2017 Category A1</a> - Injection </li>
+  <li> <a href=""https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS"">MITRE, CWE-624</a> - Executable Regular Expression Error
+  </li>
+  <li> OWASP Regular expression Denial of Service - ReDoS </li>
+</ul>
+<h2>Deprecated</h2>
+<p>This rule is deprecated; use {rule:javascript:S5852} instead.</p>",CRITICAL,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S2123,Values should not be uselessly incremented,"<p>A value that is incremented or decremented and then not stored is at best wasted code and at worst a bug.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function pickNumber() {
+  let i = 0;
+  i = i++; // Noncompliant; i is still zero
+
+  return i++; // Noncompliant; 0 returned
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function pickNumber() {
+  let i = 0;
+  i++;
+
+  return ++i;
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S3699,The output of functions that don't return anything should not be used,"<p>If a function does not return anything, it makes no sense to use its output. Specifically, passing it to another function, or assigning its
+""result"" to a variable is probably a bug because such functions return <code>undefined</code>, which is probably not what was intended.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function foo() {
+  console.log(""Hello, World!"");
+}
+
+a = foo();
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function foo() {
+  console.log(""Hello, World!"");
+}
+
+foo();
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S2392,Variables should be used in the blocks where they are declared,"<p>Variables that are declared inside a block but used outside of it (which is possible with a <code>var</code>-style declaration) should be declared
+outside the block.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function doSomething(a, b) {
+  if (a &gt; b) {
+    var x = a - b;  // Noncompliant
+  }
+
+  if (a &gt; 4) {
+    console.log(x);
+  }
+
+  for (var i = 0; i &lt; m; i++) { // Noncompliant, both loops use same variable
+  }
+
+  for (var i = 0; i &lt; n; i++) {
+  }
+
+  return a + b;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function doSomething(a, b) {
+  var x;
+
+  if (a &gt; b) {
+    x = a - b;
+  }
+
+  if (a &gt; 4) {
+    console.log(x);
+  }
+
+  for (let i = 0; i &lt; m; i++) {
+  }
+
+  for (let i = 0; i &lt; n; i++) {
+  }
+
+
+  return a + b;
+}
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S2245,Using pseudorandom number generators (PRNGs) is security-sensitive,"<p>Using pseudorandom number generators (PRNGs) is security-sensitive. For example, it has led in the past to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-6386"">CVE-2013-6386</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2006-3419"">CVE-2006-3419</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-4102"">CVE-2008-4102</a> </li>
+</ul>
+<p>When software generates predictable values in a context requiring unpredictability, it may be possible for an attacker to guess the next value that
+will be generated, and use this guess to impersonate another user or access sensitive information.</p>
+<p>As the <code>Math.random()</code> function relies on a weak pseudorandom number generator, this function should not be used for security-critical
+applications or for protecting sensitive data. In such context, a cryptographically strong pseudorandom number generator (CSPRNG) should be used
+instead.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> the code using the generated value requires it to be unpredictable. It is the case for all encryption mechanisms or when a secret value, such
+  as a password, is hashed. </li>
+  <li> the function you use generates a value which can be predicted (pseudo-random). </li>
+  <li> the generated value is used multiple times. </li>
+  <li> an attacker can access the generated value. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> Use a cryptographically strong pseudorandom number generator (CSPRNG) like <code>crypto.getRandomValues()</code>. </li>
+  <li> Use the generated random values only once. </li>
+  <li> You should not expose the generated random value. If you have to store it, make sure that the database or file is secure. </li>
+</ul>
+<h2>Sensitive Code Example</h2>
+<pre>
+const val = Math.random(); // Sensitive
+// Check if val is used in a security context.
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+// === Client side ===
+const crypto = window.crypto || window.msCrypto;
+var array = new Uint32Array(1);
+crypto.getRandomValues(array); // Compliant for security-sensitive use cases
+
+// === Server side ===
+const crypto = require('crypto');
+const buf = crypto.randomBytes(1); // Compliant for security-sensitive use cases
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""https://mobile-security.gitbook.io/masvs/security-requirements/0x08-v3-cryptography_verification_requirements"">Mobile AppSec
+  Verification Standard</a> - Cryptography Requirements </li>
+  <li> <a href=""https://owasp.org/www-project-mobile-top-10/2016-risks/m5-insufficient-cryptography"">OWASP Mobile Top 10 2016 Category M5</a> -
+  Insufficient Cryptography </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/338.html"">MITRE, CWE-338</a> - Use of Cryptographically Weak Pseudo-Random Number Generator
+  (PRNG) </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/330.html"">MITRE, CWE-330</a> - Use of Insufficiently Random Values </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/326.html"">MITRE, CWE-326</a> - Inadequate Encryption Strength </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/1241.html"">MITRE, CWE-1241</a> - Use of Predictable Algorithm in Random Number Generator </li>
+  <li> Derived from FindSecBugs rule <a href=""https://h3xstream.github.io/find-sec-bugs/bugs.htm#PREDICTABLE_RANDOM"">Predictable Pseudo Random Number
+  Generator</a> </li>
+</ul>",CRITICAL,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S2819,Origins should be verified during cross-origin communications,"<p>Browsers <a href=""https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage"">allow message exchanges</a> between Window objects of
+different origins.</p>
+<p>Because any window can send / receive messages from other window it is important to verify the senderâ€™s / receiverâ€™s identity:</p>
+<ul>
+  <li> When sending message with postMessage method, the identityâ€™s receiver should be defined (the wildcard keyword (<code>*</code>) should not be
+  used). </li>
+  <li> When receiving message with message event, the senderâ€™s identity should be verified using the origin and possibly source properties. </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<p>When sending message:</p>
+<pre>
+var iframe = document.getElementById(""testiframe"");
+iframe.contentWindow.postMessage(""secret"", ""*""); // Noncompliant: * is used
+</pre>
+<p>When receiving message:</p>
+<pre>
+window.addEventListener(""message"", function(event) { // Noncompliant: no checks are done on the origin property.
+      console.log(event.data);
+ });
+</pre>
+<h2>Compliant Solution</h2>
+<p>When sending message:</p>
+<pre>
+var iframe = document.getElementById(""testsecureiframe"");
+iframe.contentWindow.postMessage(""hello"", ""https://secure.example.com""); // Compliant
+</pre>
+<p>When receiving message:</p>
+<pre>
+window.addEventListener(""message"", function(event) {
+
+  if (event.origin !== ""http://example.org"") // Compliant
+    return;
+
+  console.log(event.data)
+});
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management"">OWASP Top 10 2017 Category A3</a> -
+  Broken Authentication and Session Management </li>
+  <li> <a href=""https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage"">developer.mozilla.org</a> - postMessage API </li>
+</ul>",CRITICAL,JavaScript,VULNERABILITY,FALSE
+javascript:S4326,"""await"" should not be used redundantly","<p>An <code>async</code> function always wraps the return value in a <code>Promise</code>. Using <code>return await</code> is therefore redundant.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+async function foo() {
+  // ...
+}
+
+async function bar() {
+  // ...
+  return await foo(); // Noncompliant
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+async function foo() {
+  // ...
+}
+
+async function bar() {
+  // ...
+  return foo();
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1763,All code should be reachable,"<p>Jump statements (<code>return</code>, <code>break</code> and <code>continue</code>) and <code>throw</code> expressions move control flow out of the
+current code block. So any statements that come after a jump are dead code.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function fun(a) {
+  var i = 10;
+  return i + a;
+  i++;             // Noncompliant; this is never executed
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function fun(int a) {
+  var i = 10;
+  return i + a;
+}
+</pre>
+<h2>Exceptions</h2>
+<p>This rule ignores unreachable <code>break</code> statements in <code>switch</code> clauses.</p>
+<pre>
+switch (x) {
+  case 42:
+     return 43;
+     break;   // Compliant
+  default:
+    doSomething();
+}
+</pre>
+<p>Hoisted variables declarations without initialization are always considered reachable.</p>
+<pre>
+function bar() {
+  return x = function() {
+    x.foo = 42;
+  }
+  var x;
+}
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/561.html"">MITRE, CWE-561</a> - Dead Code </li>
+</ul>",MAJOR,JavaScript,BUG,FALSE
+javascript:S1481,Unused local variables and functions should be removed,"<p>If a local variable or a local function is declared but not used, it is dead code and should be removed. Doing so will improve maintainability
+because developers will not wonder what the variable or function is used for.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function numberOfMinutes(hours) {
+  var seconds = 0;   // seconds is never used
+  return hours * 60;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function numberOfMinutes(hours) {
+  return hours * 60;
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE

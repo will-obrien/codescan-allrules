@@ -1,0 +1,380 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+cs-js:no-obj-calls,disallow calling global object properties as functions,"<p>ECMAScript provides several global objects that are intended to be used as-is. Some of these objects look as if they could be constructors due their capitalization (such as <code>Math</code> and <code>JSON</code>) but will throw an error if you try to execute them as functions.</p>
+<p>The <a href=""https://es5.github.io/#x15.8"">ECMAScript 5 specification</a> makes it clear that both <code>Math</code> and <code>JSON</code> cannot be invoked:</p>
+<blockquote>
+  <p>The Math object does not have a <code>[[Call]]</code> internal property; it is not possible to invoke the Math object as a function.</p>
+</blockquote>
+<p>And the <a href=""https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect-object"">ECMAScript 2015 specification</a> makes it clear that <code>Reflect</code> cannot be invoked:</p>
+<blockquote>
+  <p>The Reflect object also does not have a <code>[[Call]]</code> internal method; it is not possible to invoke the Reflect object as a function.</p>
+</blockquote>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows calling the <code>Math</code>, <code>JSON</code> and <code>Reflect</code> objects as functions.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-obj-calls: ""error""*/
+
+var math = Math();
+var json = JSON();
+var reflect = Reflect();
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-obj-calls: ""error""*/
+
+function area(r) {
+    return Math.PI * r * r;
+}
+var object = JSON.parse(""{}"");
+var value = Reflect.get({ x: 1, y: 2 }, ""x"");
+</code></pre>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://es5.github.io/#x15.8"">The Math Object</a></li>
+</ul>",MINOR,JavaScript,BUG,FALSE
+cs-js:no-extra-bind,disallow unnecessary calls to `.bind()`,"<p>The <code>bind()</code> method is used to create functions with specific <code>this</code> values and, optionally, binds arguments to specific values. When used to specify the value of <code>this</code>, it's important that the function actually use <code>this</code> in its function body. For example:</p>
+<pre><code class=""js language-js"">var boundGetName = (function getName() {
+    return this.name;
+}).bind({ name: ""ESLint"" });
+
+console.log(boundGetName());      // ""ESLint""
+</code></pre>
+<p>This code is an example of a good use of <code>bind()</code> for setting the value of <code>this</code>.</p>
+<p>Sometimes during the course of code maintenance, the <code>this</code> value is removed from the function body. In that case, you can end up with a call to <code>bind()</code> that doesn't accomplish anything:</p>
+<pre><code class=""js language-js"">// useless bind
+var boundGetName = (function getName() {
+    return ""ESLint"";
+}).bind({ name: ""ESLint"" });
+
+console.log(boundGetName());      // ""ESLint""
+</code></pre>
+<p>In this code, the reference to <code>this</code> has been removed but <code>bind()</code> is still used. In this case, the <code>bind()</code> is unnecessary overhead (and a performance hit) and can be safely removed.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at avoiding the unnecessary use of <code>bind()</code> and as such will warn whenever an immediately-invoked function expression (IIFE) is using <code>bind()</code> and doesn't have an appropriate <code>this</code> value. This rule won't flag usage of <code>bind()</code> that includes function argument binding.</p>
+<p><strong>Note:</strong> Arrow functions can never have their <code>this</code> value set using <code>bind()</code>. This rule flags all uses of <code>bind()</code> with arrow functions as a problem</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extra-bind: ""error""*/
+/*eslint-env es6*/
+
+var x = function () {
+    foo();
+}.bind(bar);
+
+var x = (() =&gt; {
+    foo();
+}).bind(bar);
+
+var x = (() =&gt; {
+    this.foo();
+}).bind(bar);
+
+var x = function () {
+    (function () {
+      this.foo();
+    }());
+}.bind(bar);
+
+var x = function () {
+    function foo() {
+      this.bar();
+    }
+}.bind(baz);
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extra-bind: ""error""*/
+
+var x = function () {
+    this.foo();
+}.bind(bar);
+
+var x = function (a) {
+    return a + 1;
+}.bind(foo, bar);
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you are not concerned about unnecessary calls to <code>bind()</code>, you can safely disable this rule.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind"">Function.prototype.bind</a></li>
+<li><a href=""https://www.smashingmagazine.com/2014/01/understanding-javascript-function-prototype-bind/"">Understanding JavaScript's Function.prototype.bind</a></li>
+</ul>",MINOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-undef,disallow the use of undeclared variables unless mentioned in `/*global */` comments,"<p>This rule can help you locate potential ReferenceErrors resulting from misspellings of variable and parameter names, or accidental implicit globals (for example, from forgetting the <code>var</code> keyword in a <code>for</code> loop initializer).</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Any reference to an undeclared variable causes a warning, unless the variable is explicitly mentioned in a <code>/*global ...*/</code> comment, or specified in the <a href=""https://eslint.org/docs/user-guide/configuring#specifying-globals""><code>globals</code> key in the configuration file</a>. A common use case for these is if you intentionally use globals that are defined elsewhere (e.g. in a script sourced from HTML).</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: ""error""*/
+
+var a = someFunction();
+b = 10;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule with <code>global</code> declaration:</p>
+<pre><code class=""js language-js"">/*global someFunction b:true*/
+/*eslint no-undef: ""error""*/
+
+var a = someFunction();
+b = 10;
+</code></pre>
+<p>The <code>b:true</code> syntax in <code>/*global */</code> indicates that assignment to <code>b</code> is correct.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule with <code>global</code> declaration:</p>
+<pre><code class=""js language-js"">/*global b*/
+/*eslint no-undef: ""error""*/
+
+b = 10;
+</code></pre>
+<p>By default, variables declared in <code>/*global */</code> are read-only, therefore assignment is incorrect.</p>
+<h2 id=""options"">Options</h2>
+<ul>
+<li><code>typeof</code> set to true will warn for variables used inside typeof check (Default false).</li>
+</ul>
+<h3 id=""typeof"">typeof</h3>
+<p>Examples of <strong>correct</strong> code for the default <code>{ ""typeof"": false }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: ""error""*/
+
+if (typeof UndefinedIdentifier === ""undefined"") {
+    // do something ...
+}
+</code></pre>
+<p>You can use this option if you want to prevent <code>typeof</code> check on a variable which has not been declared.</p>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""typeof"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: [""error"", { ""typeof"": true }] */
+
+if(typeof a === ""string""){}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""typeof"": true }</code> option with <code>global</code> declaration:</p>
+<pre><code class=""js language-js"">/*global a*/
+/*eslint no-undef: [""error"", { ""typeof"": true }] */
+
+if(typeof a === ""string""){}
+</code></pre>
+<h2 id=""environments"">Environments</h2>
+<p>For convenience, ESLint provides shortcuts that pre-define global variables exposed by popular libraries and runtime environments. This rule supports these environments, as listed in <a href=""../user-guide/configuring.md#specifying-environments"">Specifying Environments</a>.  A few examples are given below.</p>
+<h3 id=""browser"">browser</h3>
+<p>Examples of <strong>correct</strong> code for this rule with <code>browser</code> environment:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: ""error""*/
+/*eslint-env browser*/
+
+setTimeout(function() {
+    alert(""Hello"");
+});
+</code></pre>
+<h3 id=""nodejs"">Node.js</h3>
+<p>Examples of <strong>correct</strong> code for this rule with <code>node</code> environment:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: ""error""*/
+/*eslint-env node*/
+
+var fs = require(""fs"");
+module.exports = function() {
+    console.log(fs);
+};
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If explicit declaration of global variables is not to your taste.</p>
+<h2 id=""compatibility"">Compatibility</h2>
+<p>This rule provides compatibility with treatment of global variables in <a href=""http://jshint.com/"">JSHint</a> and <a href=""http://www.jslint.com"">JSLint</a>.</p>",MAJOR,JavaScript,BUG,FALSE
+cs-js:wrap-iife,require parentheses around immediate `function` invocations,"<p>You can immediately invoke function expressions, but not function declarations. A common technique to create an immediately-invoked function expression (IIFE) is to wrap a function declaration in parentheses. The opening parentheses causes the contained function to be parsed as an expression, rather than a declaration.</p>
+<pre><code class=""js language-js"">// function expression could be unwrapped
+var x = function () { return { y: 1 };}();
+
+// function declaration must be wrapped
+function () { /* side effects */ }(); // SyntaxError
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule requires all immediately-invoked function expressions to be wrapped in parentheses.</p>
+<h2 id=""options"">Options</h2>
+<p>This rule has two options, a string option and an object option.</p>
+<p>String option:</p>
+<ul>
+<li><code>""outside""</code> enforces always wrapping the <em>call</em> expression. The default is <code>""outside""</code>.</li>
+<li><code>""inside""</code> enforces always wrapping the <em>function</em> expression.</li>
+<li><code>""any""</code> enforces always wrapping, but allows either style.</li>
+</ul>
+<p>Object option:</p>
+<ul>
+<li><code>""functionPrototypeMethods"": true</code> additionally enforces wrapping function expressions invoked using <code>.call</code> and <code>.apply</code>. The default is <code>false</code>.</li>
+</ul>
+<h3 id=""outside"">outside</h3>
+<p>Examples of <strong>incorrect</strong> code for the default <code>""outside""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""outside""]*/
+
+var x = function () { return { y: 1 };}(); // unwrapped
+var x = (function () { return { y: 1 };})(); // wrapped function expression
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the default <code>""outside""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""outside""]*/
+
+var x = (function () { return { y: 1 };}()); // wrapped call expression
+</code></pre>
+<h3 id=""inside"">inside</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>""inside""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""inside""]*/
+
+var x = function () { return { y: 1 };}(); // unwrapped
+var x = (function () { return { y: 1 };}()); // wrapped call expression
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""inside""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""inside""]*/
+
+var x = (function () { return { y: 1 };})(); // wrapped function expression
+</code></pre>
+<h3 id=""any"">any</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>""any""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""any""]*/
+
+var x = function () { return { y: 1 };}(); // unwrapped
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""any""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""any""]*/
+
+var x = (function () { return { y: 1 };}()); // wrapped call expression
+var x = (function () { return { y: 1 };})(); // wrapped function expression
+</code></pre>
+<h3 id=""functionprototypemethods"">functionPrototypeMethods</h3>
+<p>Examples of <strong>incorrect</strong> code for this rule with the <code>""inside"", { ""functionPrototypeMethods"": true }</code> options:</p>
+<pre><code class=""js language-js"">/* eslint wrap-iife: [2, ""inside"", { functionPrototypeMethods: true }] */
+
+var x = function(){ foo(); }()
+var x = (function(){ foo(); }())
+var x = function(){ foo(); }.call(bar)
+var x = (function(){ foo(); }.call(bar))
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>""inside"", { ""functionPrototypeMethods"": true }</code> options:</p>
+<pre><code class=""js language-js"">/* eslint wrap-iife: [2, ""inside"", { functionPrototypeMethods: true }] */
+
+var x = (function(){ foo(); })()
+var x = (function(){ foo(); }).call(bar)
+</code></pre>",MINOR,JavaScript,BUG,FALSE
+cs-js:no-func-assign,disallow reassigning `function` declarations,"<p>JavaScript functions can be written as a FunctionDeclaration <code>function foo() { ... }</code> or as a FunctionExpression <code>var foo = function() { ... };</code>. While a JavaScript interpreter might tolerate it, overwriting/reassigning a function written as a FunctionDeclaration is often indicative of a mistake or issue.</p>
+<pre><code class=""js language-js"">function foo() {}
+foo = bar;
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows reassigning <code>function</code> declarations.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-func-assign: ""error""*/
+
+function foo() {}
+foo = bar;
+
+function foo() {
+    foo = bar;
+}
+</code></pre>
+<p>Examples of <strong>incorrect</strong> code for this rule, unlike the corresponding rule in JSHint:</p>
+<pre><code class=""js language-js"">/*eslint no-func-assign: ""error""*/
+
+foo = bar;
+function foo() {}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-func-assign: ""error""*/
+
+var foo = function () {}
+foo = bar;
+
+function foo(foo) { // `foo` is shadowed.
+    foo = bar;
+}
+
+function foo() {
+    var foo = bar;  // `foo` is shadowed.
+}
+</code></pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-regex-spaces,disallow multiple spaces in regular expressions,"<p>Regular expressions can be very complex and difficult to understand, which is why it's important to keep them as simple as possible in order to avoid mistakes. One of the more error-prone things you can do with a regular expression is to use more than one space, such as:</p>
+<pre><code class=""js language-js"">var re = /foo   bar/;
+</code></pre>
+<p>In this regular expression, it's very hard to tell how many spaces are intended to be matched. It's better to use only one space and then specify how many spaces are expected, such as:</p>
+<pre><code class=""js language-js"">var re = /foo {3}bar/;
+</code></pre>
+<p>Now it is very clear that three spaces are expected to be matched.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows multiple spaces in regular expression literals.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-regex-spaces: ""error""*/
+
+var re = /foo   bar/;
+var re = new RegExp(""foo   bar"");
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-regex-spaces: ""error""*/
+
+var re = /foo {3}bar/;
+var re = new RegExp(""foo {3}bar"");
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow multiple spaces in a regular expression, then you can safely turn this rule off.</p>",MINOR,JavaScript,CODE_SMELL,FALSE
+cs-js:secure-document,validate document global access,"<p>This rule makes sure that only supported properties and functions are used to access the document global.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>When the rule is enabled, unsupported calls or API objects are disallowed.  Your Lightning components are permitted to use:</p>
+<ul>
+<li>Standard Lightning Component Framework features.</li>
+<li>Standard Javascript features.</li>
+<li>Standard Locker Service SecureObject object features. </li>
+</ul>
+<p>All disallowed uses are shown in red on this <a href=""http://documentation.auraframework.org/lockerApiTest/index.app?aura.mode=DEV"">Document vs SecureDocument Compatibility Table</a>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">var curScriptElement = document.currentScript; //Using document.currentScript is disallowed.
+</code></pre>",BLOCKER,JavaScript,CODE_SMELL,FALSE
+cs-js:no-implied-eval,disallow the use of `eval()`-like methods,"<p>It's considered a good practice to avoid using <code>eval()</code> in JavaScript. There are security and performance implications involved with doing so, which is why many linters recommend disallowing <code>eval()</code>. However, there are some other ways to pass a string and have it interpreted as JavaScript code that have similar concerns.</p>
+<p>The first is using <code>setTimeout()</code>, <code>setInterval()</code> or <code>execScript()</code> (Internet Explorer only), both of which can accept a string of JavaScript code as their first argument. For example:</p>
+<pre><code class=""js language-js"">setTimeout(""alert('Hi!');"", 100);
+</code></pre>
+<p>This is considered an implied <code>eval()</code> because a string of JavaScript code is
+ passed in to be interpreted. The same can be done with <code>setInterval()</code> and <code>execScript()</code>. Both interpret the JavaScript code in  the global scope. For  both <code>setTimeout()</code> and <code>setInterval()</code>, the first argument can also be a function, and that is considered safer and is more performant:</p>
+<pre><code class=""js language-js"">setTimeout(function() {
+    alert(""Hi!"");
+}, 100);
+</code></pre>
+<p>The best practice is to always use a function for the first argument of <code>setTimeout()</code> and <code>setInterval()</code> (and avoid <code>execScript()</code>).</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to eliminate implied <code>eval()</code> through the use of <code>setTimeout()</code>, <code>setInterval()</code> or <code>execScript()</code>. As such, it will warn when either function is used with a string as the first argument.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-implied-eval: ""error""*/
+
+setTimeout(""alert('Hi!');"", 100);
+
+setInterval(""alert('Hi!');"", 100);
+
+execScript(""alert('Hi!')"");
+
+window.setTimeout(""count = 5"", 10);
+
+window.setInterval(""foo = bar"", 10);
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-implied-eval: ""error""*/
+
+setTimeout(function() {
+    alert(""Hi!"");
+}, 100);
+
+setInterval(function() {
+    alert(""Hi!"");
+}, 100);
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow <code>setTimeout()</code> and <code>setInterval()</code> with string arguments, then you can safely disable this rule.</p>",MAJOR,JavaScript,VULNERABILITY,FALSE
+cs-js:ecma-intrinsics,validate javascript APIs,"<p>This rule makes sure that intrinsic Javascript APIs are used according to the documentation. It disallows deprecated, non-standard and removed features.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Intrinsic APIs are those found in the <a href=""https://tc39.github.io/ecma262/"">ECMAScript Language Specification</a>.</p>
+<p>When the rule is enabled, unsupported calls or API objects are disallowed.  Your Lightning components are permitted to use:</p>
+<ul>
+<li>Standard Lightning Component Framework features.</li>
+<li>Standard Javascript features.</li>
+<li>Standard Locker Service SecureObject object features. </li>
+</ul>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">String.doSomething = function(){}  //This is a violation, the intrinsic type String is modified.
+</code></pre>",MAJOR,JavaScript,BUG,FALSE
+cs-js:no-div-regex,disallow division operators explicitly at the beginning of regular expressions,"<p>Require regex literals to escape division operators.</p>
+<pre><code class=""js language-js"">function bar() { return /=foo/; }
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This is used to disambiguate the division operator to not confuse users. Without an escape character users may think that the regular expression is a division expression.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-div-regex: ""error""*/
+
+function bar() { return /=foo/; }
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-div-regex: ""error""*/
+
+function bar() { return /\=foo/; }
+</code></pre>",MINOR,JavaScript,CODE_SMELL,FALSE

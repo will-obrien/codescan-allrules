@@ -1,0 +1,22 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+vf:NoOnClickJavascript,Remove OnClick Javascript,"Javascript in ""onclick"", ""onmouseover"" and similar actions within Lightning components is ignored.  This could cause problems you are migrating to Lightning.  These actions should be used to invoke actions from the controller instead.
+		
+    <BR><h2>Example:</h2><pre>
+	
+
+&lt;aura:component&gt;
+
+  &lt;input type=""button"" value=""Flawed HTML Button"" onclick=""alert('bad')""/&gt;  //Bad: This will not work.
+
+  &lt;lightning:button label=""Framework Button"" onclick=""{!c.handleClick}""/&gt;    //Good: This uses the controller action handleClick.
+
+&lt;/aura:component&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:APIVersionsRetired,API Versions Retired,The retirement of older Salesforce Platform API versions (7.0 through 20.0) after the Summer '22 release is a critical step to ensure the continued smooth operation of Salesforce applications.,MAJOR,Visual Force & Lightning,BUG,FALSE
+vf:AccessibleLwc,Use Accessibility Attributes,Updating your LWC components with certain attributes can make your components more accessible to differently abled users.,MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidJavaScriptScriptlets,Avoid JavaScript Scriptlets in Aura Components and Apex Pages,"JavaScript scriptlets should not be directly embedded within the markup of Aura components or Apex pages. Instead, utilize Salesforce Static resources for including JavaScript code. Using direct <script> tags in components or pages can pose a security risk, increasing the likelihood of cross-site scripting (XSS) attacks.",CRITICAL,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:AvoidUsingPolyfill,Avoid Script References to Polyfill.io,"The use of cdn.polyfill.io poses a potential security risk primarily related to URL redirection and external resource loading. If attackers can manipulate references to this domain, they might redirect users to malicious sites or inject harmful scripts, leading to vulnerabilities.",CRITICAL,Visual Force & Lightning,VULNERABILITY,FALSE

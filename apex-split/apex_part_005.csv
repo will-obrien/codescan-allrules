@@ -1,0 +1,250 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:AvoidLogicInTrigger,Avoid Logic in Triggers,"As triggers do not allow methods like regular classes they are less flexible and suited to apply good encapsulation style. Therefore delegate the triggers work to a regular class (often called Trigger handler class). 
+
+The exception to this rule is you may check the Trigger.is* context (Trigger.isInsert for example) inside an if statement.
+<br/>
+Read more here: <a href =""https://developer.salesforce.com/page/Trigger_Frameworks_and_Apex_Trigger_Best_Practices"">https://developer.salesforce.com/page/Trigger_Frameworks_and_Apex_Trigger_Best_Practices</a>
+     <BR><h2>Example:</h2><pre>
+      
+trigger OpportunityTrigger on Opportunity (after insert, after update) {
+
+  //allowed - trigger context handler logic
+  if(Trigger.isAfter && Trigger.isInsert) {
+    OpportunityTriggerHandler.handleAfterInsert(Trigger.new);
+  } else if(Trigger.isAfter && Trigger.isUpdate) {
+    OpportunityTriggerHandler.handleAfterInsert(Trigger.new, Trigger.old);
+  }
+  
+  new OpportunityTriggerHandler.run();		 //Good: this is trigger context handler logic.
+
+  for(Account a : Trigger.new){           	//Bad: this is not recommended.
+		//...
+   }
+}
+     </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidMultipleUnaryOperators,Avoid Multiple Unary Operators,"The use of multiple unary operators may be problematic, and/or confusing.
+Ensure that the intended usage is not a bug, or consider simplifying the expression.
+            
+        <BR><h2>Example:</h2><pre>
+            
+//Bad: These are typo bugs, or at best needlessly complex and confusing.  
+Integer i = - -1;
+Integer j = + - +1;
+Integer z = ~~2;
+boolean b = !!true;
+boolean c = !!!true;
+
+//Good: These are better.
+Integer i = 1;
+Integer j = -1;
+Integer z = 2;
+boolean b = true;
+boolean c = false;
+
+// And these just make your brain hurt:
+Integer i = ~-2;
+Integer j = -~7;
+            
+
+        </pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:AvoidInsecureCookies,Avoid Creating Cookies with isSecure Disabled,"The isSecure parameter indicates whether the cookie can be accessed through HTTPS. 
+<br/>
+By setting isSecure=false, sensitive cookies may be exposed when sending the cookie over an unsecure connection.
+<br/>
+<h2>See</h2>
+<ul>
+	<li><a href=""http://cwe.mitre.org/data/definitions/311"">MITRE, CWE-311</a> - Missing Encryption of Sensitive Data</li>
+	<li><a href=""http://cwe.mitre.org/data/definitions/315"">MITRE, CWE-315</a> - Cleartext Storage of Sensitive Information in a Cookie</li>
+	<li><a href=""https://cwe.mitre.org/data/definitions/614.html"">MITRE, CWE-614</a> - Sensitive Cookie in HTTPS Session Without 'Secure' Attribute</li>
+	<li>OWASP Top 10 2021 Category A7 - Identification and Authentication Failures </li>
+	<li>OWASP Top 10 2021 Category A2 - Cryptographic Failures</li>
+	<li><a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses</li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+    public void foo () {     
+       langCookie = new Cookie('uLang', userLanguage, null, -1, false); //Bad: the cookie can be sent over HTTP.
+    }
+}
+  
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:AvoidSoqlWithNullInWhere,Avoid using null conditions in SOQL WHERE clause.,"By default, the index tables do not include records that are null (records with empty values).
+Therefore, if we want to filter a field which is equal to null, the index will not be applied. SOQL queries require full scans, which can be painfully slow on large data volumes (LDV).
+It's up to the developer to review the code to determine whether or not a fix is needed.
+<br/>
+You can work with Salesforce Customer Support to create custom indexes that include null rows.
+Even if you already have custom indexes on your custom fields, you must explicitly enable and rebuild them to get the empty-value rows indexed.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	public static void main( String as[] ) {
+		Contact[] lst = [ SELECT Id, Name FROM Contact WHERE CustomField__c = null; ];  //Bad: this is not recommended.
+	}
+}
+
+    </pre>",INFO,APEX,CODE_SMELL,FALSE
+sf:ConstructorCallsOverridableMethod,Constructor Calls Overridable Method,"Calling overridable methods during construction poses a risk of invoking methods on an incompletely 
+constructed object and can be difficult to debug.
+It may leave the sub-class unable to construct its superclass or forced to replicate the construction 
+process completely within itself, losing the ability to call super().  If the default constructor 
+contains a call to an overridable method, the subclass may be completely uninstantiable.   Note that 
+this includes method calls throughout the control flow graph - i.e., if a constructor Foo() calls a 
+private method bar() that calls a public method buz(), this denotes a problem.
+      <BR><h2>Example:</h2><pre>
+  
+public class SeniorClass {
+  public SeniorClass(){
+      toString(); 			  //Bad: toString() may throw NullPointerException if overridden.
+  }
+  public virtual String toString(){
+    return 'IAmSeniorClass';
+  }
+}
+
+public class JuniorClass extends SeniorClass {
+  private String name;
+  public JuniorClass(){
+    super();  				//Bad: Automatic call to super() leads to NullPointerException.
+    name = 'JuniorClass';
+  }
+  public virtual String toString(){
+    return name.toUpperCase();
+  }
+}
+  
+      </pre>",CRITICAL,APEX,BUG,FALSE
+sf:EmptyFinallyBlock,Empty Finally Block,"Avoid empty finally blocks. They serve no purpose and should be removed.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+ public void bar() {
+  try {
+    Integer x=2;
+   } finally {
+    			//Bad: Nothing is done here.
+   }
+ }
+}
+ 
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnreachableCode,Unreachable Code,"Code that is unreachable will never be executed.  Consider refactoring any methods with unreachable code.
+      <BR><h2>Example:</h2><pre>
+class Bar{
+	public void foo() {
+		if (false) {
+		   x = 1;			//Bad: This line will never execute.
+		}
+	}
+
+	public void foo() {
+		while (true) {
+		   break;
+		   x = 1;			//Bad: This line after 'break' will never be executed.
+		}
+	}
+	
+	public void fooTwo() {
+		while (true) {
+		   x = 1;
+		   break;			//Good: The assignment can be executed.
+		}
+	}
+}
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:CatchBlockShouldDoMoreThanRethrow,Catch Block Should Do More Than Rethrow,"Simply re-throwing an exception in a catch block serves no purpose as it would appear anyway.  Catch blocks that do nothing but rethrow an exception should either be changed or removed.
+  <BR><h2>Example:</h2><pre>
+
+public void doSomething() {
+  try {
+    doHeapsOfStuff();
+  } catch (Exception e) {
+    throw e;   //Bad: This serves no purpose.
+  }
+}
+
+public void doSomethingElse() {
+  try {
+    doHeapsOfStuff();
+  } catch (Exception e) {
+    System.debug(e.getMessage());     //Good: The exception triggers some logic and is handled within the catch block.
+    throw e;     
+  }
+}
+
+  </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:CyclomaticComplexity,Cyclomatic Complexity,"Complexity directly affects maintenance costs. It is determined by the number of decision points in a method 
+plus one for the method entry.  The decision points include 'if', 'while', 'for', and 'case labels' calls.  
+Generally, numbers ranging from 1-4 denote low complexity, 5-7 denote moderate complexity, 8-10 denote
+high complexity, and 11+ is very high complexity.  Consider breaking the method into smaller methods.
+		
+   <BR><h2>Example:</h2><pre>
+
+public class Foo {		      
+
+   	public void example() {			//Bad: This method has a Cyclomatic Complexity of 10.
+        
+1		if (a == b) {
+2           if (a1 == b1) {
+                fiddle();
+3			} else if (a2 == b2) {
+                fiddle();
+4           } else {
+                fiddle();
+            }
+5           } else if (c == d) {
+                while (c == d) {
+                    fiddle();
+                }
+6           } else if (e == f) {
+                for (Integer n = 0; n &lt; h; n++) {
+                    fiddle();
+                }
+7           } else {
+8               if (a1 == b1) {
+                	fiddle();
+9  				} else if (a2 == b2) {
+                	fiddle();
+10            	} else {
+                	fiddle();
+            	}
+            }
+    	}
+    }
+}
+
+   </pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:AvoidPublicFields,Class Variable Fields should not have Public Accessibility,"Public class variables have some disadvantages:<br/>
+      	<ul>
+      		<li>The internal representation is exposed, and thus cannot be easily changed</li>
+      		<li>When the value is changed in an unexpected way (for example nulled), the implementation may not handle it correctly</li>
+      		<li>Additional validation logic cannot be added</li>
+      	</ul>
+      	<br/>
+      	<h2>See</h2>
+      	<ul>
+		  <li> <a href=""http://cwe.mitre.org/data/definitions/493.html"">MITRE, CWE-493</a> - Critical Public Variable Without Final Modifier </li>
+		</ul>
+    <BR><h2>Example:</h2><pre>
+  public class MyClass {
+  	public static final integer SOME_CONSTANT = 0;     //Good: Constants are not checked.
+  	private String firstName;                          //Good.
+  	public String FIRSTNAME_OVERRIDE;                 //Bad: Not recommended.
+  	public String lastName { get; set; }               //Good.
+  	@AuraEnabled public String lastName               //Good. AuraEnabled is not checked
+  
+  	public String getFirstName() {
+    	return firstName;
+  	}
+  	
+ 	public void setFirstName(String firstName) {
+	 	this.firstName = firstName;
+  	}
+   }
+   
+   //Good. This class is considered a 'Data Transport Object' and is not checked
+   public class MyClass {
+      public String field1;
+      public String field2;
+   }
+    </pre>",MINOR,APEX,VULNERABILITY,FALSE

@@ -1,0 +1,12 @@
+<apex:page controller="unsupportedTagsInHtml5CheckTriggerController">
+    <apex:form>
+        <h1>VF Rule Trigger: vf:UnsupportedTagsInHtml5Check</h1>
+        <p>This page is designed to trigger the rule: Tags No Longer Supported in HTML5 Should Not Be Used</p>
+        <p>Rule Description: vf:UnsupportedTagsInHtml5Check</p>
+        
+        <apex:pageBlock title="Test Block">
+            <apex:inputText value="{!testValue}" label="Test Input"/>
+            <apex:commandButton value="Test Action" action="{!testAction}"/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

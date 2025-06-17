@@ -92,7 +92,7 @@ force-app/main/default/
 
 ## Files and Rules Mapping
 
-### Apex Classes
+### Apex Classes (65+ rule violations)
 - `AvoidGlobalModifier.cls` → sf:AvoidGlobalModifier
 - `AvoidSoqlInLoops.cls` → sf:AvoidSoqlInLoops  
 - `SystemDebug.cls` → sf:SystemDebug
@@ -104,14 +104,57 @@ force-app/main/default/
 - `BrokenNullCheck.cls` → sf:BrokenNullCheck
 - `Csrf.cls` → sf:Csrf
 - `AvoidSizeOfSoql.cls` → sf:AvoidSizeOfSoql
-- `AnExcessivelyLongApexClassNameAsNegativeExampleToViolateLongClassNameRule.cls` → sf:LongClassName
+- `AnExcessivelyLongApexClassNameAsNegativeExampleToViolateLongClassNameRule.cls` → sf:LongClassName & sf:LongMethodName
 - `AvoidOutboundCallsInBatchApex.cls` → sf:AvoidOutboundCallsInBatchApex
 - `ClassWithoutTestClass.cls` → sf:ClassWithoutTestClass (no corresponding test)
 - `FailedUnitTest.cls` → sf:FailedUnitTest
 - `CommentedTodo.cls` → sf:CommentedTodo
+- `TrackSuppressWarnings.cls` → sf:TrackSuppressWarnings
+- `OutboundEmailSend.cls` → sf:OutboundEmailSend
+- `ExceptionClassNaming.cls` → sf:ExceptionClassNaming
+- `LeftBracesLinePositions.cls` → sf:LeftBracesLinePositions
+- `AvoidForLoopToJustAddElementsToCollection.cls` → sf:AvoidForLoopToJustAddElementsToCollection
+- `VariableDeclarationHidesAnother.cls` → sf:VariableDeclarationHidesAnother
+- `CouplingBetweenObjects.cls` → sf:CouplingBetweenObjects
+- `ExcessivePublicCount.cls` → sf:ExcessivePublicCount
+- `UncommentedEmptyConstructor.cls` → sf:UncommentedEmptyConstructor
+- `AbstractClassWithoutAnyMethod.cls` → sf:AbstractClassWithoutAnyMethod
+- `AvoidMethodsBeforeInitializers.cls` → sf:AvoidMethodsBeforeInitializers
+- `AvoidSoqlWithNegativeLogic.cls` → sf:AvoidSoqlWithNegativeLogic
+- `AbstractClassWithoutAbstractMethod.cls` → sf:AbstractClassWithoutAbstractMethod
+- `CommentRequired.cls` → sf:CommentRequired
+- `AvoidLosingExceptionInformation.cls` → sf:AvoidLosingExceptionInformation
+- `AvoidLogicInTrigger.cls` → sf:AvoidLogicInTrigger (handler class)
+- `CyclomaticComplexity.cls` → sf:CyclomaticComplexity
+- `AvoidPublicFields.cls` → sf:AvoidPublicFields
+- `AvoidMultipleUnaryOperators.cls` → sf:AvoidMultipleUnaryOperators
+- `AvoidInsecureCookies.cls` → sf:AvoidInsecureCookies  
+- `FieldLevelSecurity.cls` → sf:FieldLevelSecurity
+- `SwitchStmtsShouldHaveDefault.cls` → sf:SwitchStmtsShouldHaveDefault
+- `UnreachableCode.cls` → sf:UnreachableCode
+- `AvoidHardCodedCredential.cls` → sf:AvoidHardCodedCredential
+- `AvoidSoqlWithNullInWhere.cls` → sf:AvoidSoqlWithNullInWhere
+- `ConstructorCallsOverridableMethod.cls` → sf:ConstructorCallsOverridableMethod
+- `EmptyFinallyBlock.cls` → sf:EmptyFinallyBlock
+- `CatchBlockShouldDoMoreThanRethrow.cls` → sf:CatchBlockShouldDoMoreThanRethrow
+- `NPathComplexity.cls` → sf:NPathComplexity
+- `UnusedFormalParameter.cls` → sf:UnusedFormalParameter
+- `OpenRedirect.cls` → sf:OpenRedirect
+- `UseObjectForClearerAPI.cls` → sf:UseObjectForClearerAPI
+- `PreserveStackTrace.cls` → sf:PreserveStackTrace
+- `TestClassNaming.cls` → sf:TestClassNaming
+- `BrokenMathCast.cls` → sf:BrokenMathCast
+- `UnconditionalIfStatement.cls` → sf:UnconditionalIfStatement
+- `UnusedNullCheckInEquals.cls` → sf:UnusedNullCheckInEquals
+- `LawOfDemeter.cls` → sf:LawOfDemeter
+- `NcssConstructorCount.cls` → sf:NcssConstructorCount
+- `ForLoopShouldBeWhileLoop.cls` → sf:ForLoopShouldBeWhileLoop
+- `VfPageController.cls` → Multiple violations
+- `AuraComponentController.cls` → Multiple violations
 
 ### Triggers
 - `AnExcessivelyLongTriggerNameAsNegativeExampleViolatingLongTriggerNameRule.trigger` → sf:LongTriggerName
+- `AccountTriggerWithLogic.trigger` → sf:AvoidLogicInTrigger
 
 ### Visualforce Pages
 - `VfPageWithJavaScriptViolations.page` → Multiple VF and JS rules
@@ -149,7 +192,7 @@ To scan this repository with CodeScan and detect all violations:
 ## Expected Results
 
 When scanning this repository, you should see violations for:
-- **100+ Apex rule violations** across multiple severity levels
+- **400+ Apex rule violations** across multiple severity levels (65+ unique rules)
 - **50+ JavaScript rule violations** in VF pages and Lightning components  
 - **25+ Metadata rule violations** in custom objects and configurations
 - **Multiple security policy violations** in profiles and permission sets

@@ -1,0 +1,127 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:SuspiciousConstantFieldName,Suspicious Constant Field Name,"Field names using all uppercase characters - which some naming conventions indicate to be constants - should
+be declared as final.
+       <BR><h2>Example:</h2><pre>
+    
+public class Foo {
+
+  double PI = 3.16;			//Bad: the value of PI can be altered.
+  
+  final double PI = 3.16; 	//Good: this is preferred.
+    
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidProtectedFieldInFinalClass,Avoid Protected Field in Final Class,"Do not use protected fields in final classes since they cannot be subclassed.
+Clarify your intent by using private or package access modifiers instead.
+         <BR><h2>Example:</h2><pre>
+
+public final class Bar {
+  private Integer x;
+  protected Integer y;  //Bad: Bar cannot be subclassed, y should be made either private or package visible.
+  Bar() {}
+}
+ 
+         </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:NonStaticInitializer,Non Static Initializer,"A non-static initializer block will be called any time a constructor is invoked (just prior to 
+invoking the constructor).  While this is a valid language construct, it is rarely used and is 
+confusing.
+       <BR><h2>Example:</h2><pre>
+   
+public class MyClass {
+ 
+  {
+   system.debug('I am about to construct myself'); //Bad: This block gets run before any call to a constructor
+  }
+}
+   
+       </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:TooManyFields,Too Many Fields,"Classes that have too many fields can become unwieldy and could be redesigned to have fewer fields,
+possibly through grouping related fields in new objects.  For example, a class with individual 
+city/state/zip fields could park them within a single Address field.
+      <BR><h2>Example:</h2><pre>
+   
+public class Person {	//Bad: Too many separate fields.
+   Integer birthYear;
+   Integer birthMonth;
+   Integer birthDate;
+   float height;
+   float weight;
+}
+
+public class Person {	//Good: This is more manageable.
+   Date birthDate;
+   BodyMeasurements measurements;
+}
+   
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AuraControllerNaming,Aura Controller Naming Convention,"Aura Controller class names should end with ""Controller"". Only classes linked to a page as a controller or extension are considered.
+    <BR><h2>Example:</h2><pre>
+public class Foo {  //Bad: not recommended.
+  //....
+}
+
+public class FooController{  //Good: Purpose of the class is clear.
+  //....
+}
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmptyTryBlock,Empty Try Block,"Avoid empty try blocks.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+ public void bar() {
+  try {						//Bad: Nothing is done here.
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
+ }
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:StringToString,String To String,"Avoid calling toString() on objects already known to be string instances; this is unnecessary.
+    <BR><h2>Example:</h2><pre>
+
+private String baz() {
+    String bar = 'howdy';
+    return bar.toString();   //Bad: this is not recommended;
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryBooleanAssertion,Unnecessary Boolean Assertion,"A Unit test assertion with a boolean literal is unnecessary since it always will evaluate to the same thing.
+Consider using flow control (in case of assertTrue(false) or similar) or simply removing
+statements like system.assert(true) and system.assert(!true).  If you just want a test to halt after finding
+an error, use the system.assert(false, 'message') method and provide an indication message of why it did.
+      <BR><h2>Example:</h2><pre>
+
+public class SimpleTest {
+	public static testmethod void testX() {
+		System.assert(true);		 //Bad: serves no real purpose.
+	}
+}
+
+          </pre>",MAJOR,APEX,BUG,FALSE
+sf:UnnecessaryReturn,Unnecessary Return,"Avoid the use of unnecessary return statements.
+      <BR><h2>Example:</h2><pre>
+		
+public class Foo {
+  public void bar() {
+    Integer x = 42;
+    return;			//Bad: avoid this.
+  }
+}
+		
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:NcssMethodCount,NCSS Method Count,"This rule uses the NCSS (Non-Commenting Source Statements) algorithm to determine the number of lines
+of code for a given method. NCSS ignores comments, and counts actual statements. Using this algorithm,
+lines of code that are split are counted as one.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo extends Bar {
+ public Integer methd() {		//this method only has 1 NCSS lines
+     super.methd();
+     
+
+ 
+      return 1;
+ }
+}
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE

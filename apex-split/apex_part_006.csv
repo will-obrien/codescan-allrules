@@ -1,0 +1,266 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:AvoidHardCodedCredential,Avoid Using Hard Coded Credentials for Authentication,"To detect hardcoded credentials used in requests to an endpoint, this rule looks for HttpRequest.setHeader methods with 'Authorization' passed as the first parameter.
+<br/>
+You should refrain from hardcoding credentials:
+<ul>
+  <li>They are hard to mantain by being mixed in application code</li> 
+  <li>Particularly hard to update them when used from different classes</li> 
+  <li>Granting a developer access to the codebase means granting knowledge
+     of credentials, keeping a two-level access is not possible.</li> 
+  <li>Using different credentials for different environments is troublesome
+     and error-prone.</li> 
+</ul>
+Instead, you should use *Named Credentials* and a callout endpoint.<br/>
+<br/>
+For more information, you can see <a href=""https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_named_credentials.htm"">here</a>.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/798"">MITRE, CWE-798</a> - Use of Hard-coded Credentials </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/259"">MITRE, CWE-259</a> - Use of Hard-coded Password </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/qQCHAQ"">CERT, MSC03-J.</a> - Never hard code sensitive information </li>
+  <li> OWASP Top 10 2021 Category A7 - Identification and Authentication Failure </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+  <li> Derived from FindSecBugs rule <a href=""http://h3xstream.github.io/find-sec-bugs/bugs.htm#HARD_CODE_PASSWORD"">Hard Coded Password</a> </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+    public void foo(String username, String password) {
+        HttpRequest req = new HttpRequest();
+        
+        Blob headerValue = Blob.valueOf(username + ':' + password);
+        String authorizationHeader = 'BASIC ' + EncodingUtil.base64Encode(headerValue);
+        req.setHeader('Authorization', authorizationHeader);    //Bad: Hardcoded credentials are not recommended.
+        
+        req.setEndpoint('callout:***My_Named_Credential***/some_path');    //Good: Using named credentials is recommended.
+    }
+}
+      </pre>",CRITICAL,APEX,VULNERABILITY,FALSE
+sf:ExcessiveClassLength,Excessive Class Length,"Excessive class file length is an indication that the class may be burdened with excessive 
+responsibilities that could be provided by external classes or functions. In breaking these methods
+apart the code becomes more manageable and ripe for reuse.
+   <BR><h2>Example:</h2><pre>
+
+public class Foo {          //Bad: Consider splitting the class apart.
+
+	public void bar1() {
+      // do stuff
+	}
+	public void bar2() {
+      // do stuff
+	}
+	
+	.......  // 1000 lines of code later...
+	
+    public void barN() {
+      // do stuff
+	}
+}
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:FieldDeclarationsShouldBeAtStartOfClass,Field Declarations Should be at the Start of a Class,"Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+    <BR><h2>Example:</h2><pre>
+      
+public class HelloWorldBean {
+
+  private String _thing;				//Good: Field declared before methods and/or inner classes.
+
+  public String getMessage() {
+    return 'Hello World!';
+  }
+
+  private String _fieldInWrongLocation;	//Bad: Field declared after methods and/or inner classes.
+}
+      
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:ExcessiveParameterList,Excessive Parameter List,"Methods with numerous parameters are a challenge to maintain, especially if most of them share the
+same datatype. These situations usually denote the need for new objects to wrap the numerous parameters.
+   <BR><h2>Example:</h2><pre>
+
+public void addPerson(		//Bad: Too many arguments liable to be mixed up.
+	Integer birthYear, Integer birthMonth, Integer birthDate, Integer height, Integer weight, Integer ssn) {
+
+	. . . .
+}
+ 
+public void addPerson(		//Good: Preferred approach is to use a data transport object.
+	Date birthdate, BodyMeasurements measurements, Integer ssn) {
+
+	. . . .
+}
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:PreserveStackTrace,Preserve Stack Trace,"Throwing a new exception from a catch block without passing the original exception into the
+new exception will cause the original stack trace to be lost making it difficult to debug 
+effectively. 
+      <BR><h2>Example:</h2><pre>
+    
+public class Foo {				//Good: Preferred.
+    void good() {
+        try{
+            Integer.parseInt('a');
+        } catch(Exception e){
+            throw new Exception(e);
+        }
+    }
+    void bad() {				//Bad: Not recommended.
+        try{
+            Integer.parseInt('a');
+        } catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+}
+    
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:TestClassNaming,Test Class Names Should Include 'Test',"Test classes should include the word 'Test' in their class names.
+      <BR><h2>Example:</h2><pre>
+
+//Bad: Test class name doesn't include 'Test'
+@isTest
+public class MyClass{
+    static testMethod void testMethod(){
+      //test code
+    }
+}
+
+//Good: Test class name includes 'Test'
+@isTest
+public class MyClassTest{
+    static testMethod void testMethod(){
+      //test code
+    }
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:BrokenMathCast,Unexpected Casting of Types,"When arithmetic is performed on a type, the type remains the same even if the result is a different type.<br/>
+<br/>
+For example dividing two integers and putting the result in a double will not return a fractional result as you expected.<br/>
+<br/>
+Likewise, multiplying two large integers and putting the result in a long may silently overflow the integer resulting in a wrong number.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> MISRA C++:2008, 5-0-8 - An explicit integral or floating-point conversion shall not increase the size of the underlying type of a cvalue
+  expression. </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/190"">MITRE, CWE-190</a> - Integer Overflow or Wraparound </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/woIyAQ"">CERT, NUM50-J.</a> - Convert integers to floating point for floating-point
+  operations </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/AxE"">CERT, INT18-C.</a> - Evaluate integer expressions in a larger size before
+  comparing or assigning to that size </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat2"">SANS Top 25</a> - Risky Resource Management </li>
+</ul>
+
+      <BR><h2>Example:</h2><pre>
+double twoThirds = 2/3;  //Bad: Yields 0.0
+double twoThirds = 2/3f;  //Good: Yields 0.666...
+double twoThirds = (float)2/3;  //Good: Yields 0.666...
+
+long millisInYear = 1000*3600*24*365;  //Bad: Integer overflow. Yields 2147483649.
+long millisInYear = 1000L*3600*24*365;  //Good: Long multiplication. Yields 31536000000.
+long millisInYear = (long)1000*3600*24*365;  //Good: Long multiplication. Yields 31536000000.
+
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:UnconditionalIfStatement,Unconditional If Statement,"Do not use 'if' statements whose conditionals are always true or always false.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+	<li><a href=""http://cwe.mitre.org/data/definitions/489.html"">MITRE, CWE-489</a> - Leftover Debug Code</li>
+	<li><a href=""http://cwe.mitre.org/data/definitions/570.html"">MITRE, CWE-570</a> - Expression is Always False</li>
+	<li><a href=""http://cwe.mitre.org/data/definitions/571.html"">MITRE, CWE-571</a> - Expression is Always True</li>
+	<li>MISRA C:2004, 13.7 - Boolean operations whose results are invariant shall not be permitted.</li>
+	<li>MISRA C:2012, 14.3 - Controlling expressions shall not be invariant</li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+  public void close() {
+    if (true) {    //Bad: There is no reason for a permanently true 'if' statement, this should be removed. 
+      // ...
+    }					 
+  }
+}
+
+public class Foo {
+  public void close() {
+    if (false) {    //Bad: A permanently false 'if' statement will never run.  
+      // ...
+    }					 
+  }
+}
+
+public class Foo {
+  public void close() {	  
+    // ...    //Good: Remove the permanent 'if statement.
+  }
+}
+
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:FieldLevelSecurity,Field Level Security Vulnerabilities,"This rule makes sure that the code checks for access permissions before running a SOQL, SOSL, or DML operation.<br/>
+This prevents access to protected resources by users without the correct privalages.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+	<li><a href=""https://cwe.mitre.org/data/definitions/282.html"">CWE-282</a> - Improper Ownership Management</li>
+	<li>See <a href=""https://cwe.mitre.org/data/definitions/284.html"">CWE-284</a> - Improper Access Control</li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+public class Foo { 	
+	public void justGiveMeFoo() {
+
+	 	AggregateResult[] test = [SELECT Id FROM Opportunity];  //Bad: The resource is accessed without checking permissions.
+	}
+	
+	public void giveMeFooSafely() {
+		if (Opportunity.sObjectType.getDescribe().isAccessible()) {  //Good: Permissions are checked before any resources are accessed.
+	 		return;
+	 	}
+	 	AggregateResult[] test = [SELECT Id FROM Opportunity]; 
+	}
+
+	public void giveMeFooSafelyWithEnforcedSecurity() {
+	 	AggregateResult[] test = [SELECT Id FROM Opportunity WITH SECURITY_ENFORCED]; //Good: Permissions are checked using the WITH SECURITY_ENFORCED clause
+	}
+
+	public void giveMeFooSafelyWithUserModeSecurity() {
+		AggregateResult[] test = [SELECT Id FROM Opportunity WITH USER_MODE]; //Best: Permissions are checked using the WITH USER_MODE clause
+	}
+
+} 
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:NPathComplexity,NPath Complexity,"The NPath complexity of a method is the number of acyclic execution paths through that method.
+A threshold of 200 is generally considered the point where measures should be taken to reduce 
+complexity and increase readability.
+    <BR><h2>Example:</h2><pre>
+ 
+void bar() {						// this is something more complex than it needs to be,
+	if (y) {						// it should be broken down into smaller methods or functions
+		for (j = 0; j < m; j++) {
+			if (j > r) {
+				doSomething();
+				while (f < 5 ) {
+					anotherThing();
+					f -= 27;
+					}
+				} else {
+					tryThis();
+				}
+			}
+		}
+		if ( r - n > 45) {
+		   while (doMagic()) {
+		      findRabbits();
+		   }
+		}
+		try {
+			doSomethingDangerous();
+		} catch (Exception ex) {
+			makeAmends();
+			} finally {
+				dontDoItAgain();
+				}
+	}
+}
+
+ 
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE

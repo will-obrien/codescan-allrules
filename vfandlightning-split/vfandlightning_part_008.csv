@@ -1,0 +1,196 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+vf:UnsupportedTagsInHtml5Check,Tags No Longer Supported in HTML5 Should Not Be Used,"&lt;p&gt;
+The following tags are no longer supported in HTML5 and should not be used:
+&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&amp;lt;acronym&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;applet&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;basefont&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;big&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;center&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;dir&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;font&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;frame&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;frameset&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;isindex&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;noframes&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;strike&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;tt&amp;gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+More information on deprecated tags is avaliable here - <a href=""https://www.tutorialspoint.com/html5/html5_deprecated_tags.htm"">https://www.tutorialspoint.com/html5/html5_deprecated_tags.htm</a>
+
+
+    <BR><h2>Example:</h2><pre>
+
+ &lt;apex:page&gt;
+  &lt;html&gt;
+
+    &lt;p&gt&lt;big&gt;This is big text&lt;/big&gt;&lt;/p&gt   //Bad: This is deprecated.
+
+    &lt;p id=""bigger""&gt;This is big text&lt;/p&gt;           //Good: The size of the text should now be specified in CSS.
+
+
+  &lt;/html&gt;
+&lt;/apex:page&gt;
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidHtmlCommentCheck,Avoid HTML Comments,"Checks for occurrence of HTML comments on server side pages.<br/>
+HTML comments can be seen by the end user. Comments left behind by developers could include information that helps attackers.
+<br/>
+Salesforce doesn't display normal comments, but conditional comments are visible. See <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_html_features_ie_conditional_comments.htm"">HTML Comments and IE Conditional Comments</a>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/615.html"">MITRE, CWE-615</a> - Information Exposure Through Comments </li>
+  <li> OWASP Top 10 2017 Category A3 - Sensitive Data Exposure </li>
+</ul>
+    <BR><h2>Example:</h2><pre>
+
+&lt;!-- 
+This is a header comment and can be ignored.
+--&gt;
+
+&lt;apex:page&gt;
+	//Page content.
+
+	&lt;!-- Comment --&gt;  	//Bad: Consider removing this comment.
+	
+&lt;/apex:page&gt;
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:ImgWithoutAltCheck,"Images Tags Should Have an ""alt"" Attribute","<p>
+The <code>alt</code> attribute provides a textual alternative to an image.
+It is used whenever the actual image cannot be rendered.
+Common reasons for that include:
+</p>
+
+<ul>
+  <li>The image can no longer be found</li>
+  <li>Slow internet connections, while waiting for the image to download</li>
+  <li>Visually impaired users using a screen reader software</li>
+  <li>Images loading is disabled, e.g. to reduce data consumption on mobile phones</li>
+</ul>
+
+<p>The following code illustrates this rule:</p>
+
+
+
+  
+<pre>
+&lt;img src=""foo.png"" /&gt;                                           //Bad: this is not recommended.
+&lt;img src=""foo.png"" alt=""Some textual description of foo.png"" /&gt; //Good: this is preferred.",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:InlineStyleCheck,Avoid Inline CSS Styles,"The goal of this rule is to ban the usage of HTML ""style"" property to make sure that all CSS styles are defined in CSS classes.
+
+&lt;style&gt; tags can also be a weak point for HTML injection.
+
+""For &lt;style&gt; tags the CDATA (HTML 4) or raw text (HTML 5) context applies. In this mode, the parser
+searches for the closing script or style tag, and dispatches the contents of the string between these tags to the javascript or
+CSS parser. No HTML decoding occurs. This is because the HTML parser does not understand javascript or CSS; its parsing role is
+limited to determining the length of the string to pass to the JS or CSS parser.""
+
+More information at: <a href=""https://developer.salesforce.com/page/Secure_Coding_Cross_Site_Scripting"">https://developer.salesforce.com/page/Secure_Coding_Cross_Site_Scripting</a>
+
+     <BR><h2>Example:</h2><pre>
+
+ &lt;style&gt; //Bad: using the inline style property is not recommended.
+
+ 	//content...
+
+ &lt;/style&gt;
+
+
+     </pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:NonConsecutiveHeadingCheck,Avoid Non Consecutive Heading Tags,"<p>
+Heading tags are used by search engines and screen reader softwares to construct an outline of the page.
+Starting at <code>&lt;h1&gt;</code> and not skipping any level eases this automatic construction.
+</p>
+
+    
+
+<p>The following code:</p>
+
+<pre>
+&lt;h2&gt;My Title&lt;/h2&gt;     //Bad: h1 is not being used before h2.
+
+&lt;h3&gt;My Sub Title&lt;/h3&gt; //Good: h3 is being used after h2.
+</pre>
+
+<p>should be refactored into:</p>
+
+<pre>
+&lt;h1&gt;My Title&lt;/h1&gt;     //Good.
+
+&lt;h2&gt;My Sub Title&lt;/h2&gt; //Good.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:MaxLineLengthCheck,Avoid Long Lines,"Having to scroll horizontally makes it harder to get a quick overview and understanding of any piece of code.
+    <BR><h2>Example:</h2><pre>
+		
+ &lt;apex:page&gt;
+  &lt;html&gt;
+    &lt;div class='foo'&gt;       //Bad: The line below is much too long. Consider breaking it up over multiple lines. 
+      &lt;p&gt;This may be a description on a page, html text or an element with a lot of attributes but having to scroll to the right a long way to find out what is going on is the worst&lt;/p&gt; 
+    &lt;/div&gt;
+  &lt;/html&gt;
+&lt;/apex:page&gt;
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidHardCodedPageLink,Avoid Hard-Coded Page Links.,"Avoid hard-coded Page links, use correct page references.
+  <BR><h2>Example:</h2><pre>
+&lt;apex:page>
+	
+	&lt;apex:outputLink value=""/apex/otherpage.html"">   //Bad: Hard-coded page link.
+  		This is a link to another page.
+  	&lt;/apex:outputLink>
+  	
+  	&lt;apex:outputLink value=""{!$Page.otherPage}"">  //Good: This is recommended.
+  		This is a link to another page.
+  	&lt;/apex:outputLink>
+
+&lt;/apex:page>
+  </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:LightningPageCheck,Check for Lightning Migration Issues for apex:page attributes,"This rule looks for apex:page attributes usage which may no longer work in lightning.
+
+See <a href=""https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf"">https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf</a>
+    <BR><h2>Example:</h2><pre>
+
+
+&lt;apex:page showheader='false' sidebar='false' title='not supported'&gt; //Bad: not recommended.
+&lt;/apex:page&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:InputImgWithoutWidthOrHeightCheck,"Image buttons should always have a ""width"" and a ""height"" attribute","If the <code>width</code> and <code>height</code> attributes are set, the space required for the image is reserved immediately by the browser, even before it actually starts to load the image.
+Without those attributes, the page layout constantly changes as images are loaded until they are all loaded, which can disorient users.
+
+  
+
+<p>The following code:</p>
+
+<pre>
+&lt;img src=""logo.png"" alt=""My Company"" /&gt;                           //Bad: this is not recommended.
+</pre>
+
+should be refactored into:
+
+<pre>
+&lt;img src=""logo.png"" alt=""My Company"" width=""100"" height=""50"" /&gt;   //Good: this is preferred.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:LightningIframeCheck,Check for Lightning Migration Issues for apex:iframe,"This rule looks for apex:iframe usage which may no longer work in lightning.
+Although apex:iframe is supported in Lightning Experience, we recommend avoiding it.
+Only use this component if you're comfortable working with iframes in JavaScript and understand how they affect the DOM. If you haven't worked with nested iframes before, you might run into problems that are difficult to debug.
+
+
+See <a href=""https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf"">https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf</a>
+    <BR><h2>Example:</h2><pre>
+
+
+&lt;apex:page&gt;
+	&lt;apex:iframe&gt;&lt;/apex:iframe&gt; //Bad: not recommended.
+&lt;/apex:page&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE

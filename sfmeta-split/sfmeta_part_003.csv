@@ -1,0 +1,130 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+codescan-policy:OrganizationSessionPolicy,Organization - Session Policy,"Organization - Session Policy gives visibility on access permissions related to Session Timeout, Enforce login IP ranges on every request.<br/>
+<br/>
+This violation means that there is conflict with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review this configuration. If the permissions are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+<li> <a href=""https://cwe.mitre.org/data/definitions/284"">MITRE, CWE-284</a> - Improper Access Control </li>
+<li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetDataAdminPolicy,PermissionSet - Data Admin Policy,"PermissionSet - Data Admin Policy gives visibility on access permissions related to Manage Data Categories, View All Data, Manage Data Integrations, ModifyAllData , View Encrypted Data, Weekly Data Export, Edit Read Only Fields. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfilePackagesAdminPolicy,Profile - Packages Admin Policy,"Profile - Packages Admin Policy gives visibility on access permissions related to Packaging2, Packaging2Delete, ManagePackageLicenses,
+InstallPackaging, CreatePackaging, PublishPackaging. <br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/732"">MITRE, CWE-732</a> - Incorrect Permission Assignment for Critical Resource </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetUserMgmtPolicy,PermissionSet - User Management Policy,"PermissionSet - User Management Policy gives visibility on access permissions related to Manage Users, Manage Roles, Assign Permission Sets,
+Reset Passwords and Manage Internal Users.<br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetPlatformAdminPolicy,PermissionSet - Platform Admin Policy,"PermissionSet - Platform Admin Policy gives visibility on Platform Admin permissions.<br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+<li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+<li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfilePermissionsAdminPolicy,Profile - Permissions Admin Policy,"Profile - Permissions Admin Policy gives visibility on access permissions related to Manage Profiles and Permission Sets,
+Manage Sharing, Multi-Factor Authentication for User Interface Logins, Manage Auth. Providers, Manage Custom Permissions,
+Manage Login Access Policies, Manage Password Policies, Allow Password Never Expires, Manage Session Permission Set Activations,
+Exempt from Transaction Security, Waive Multi-Factor Authentication for Exempt Users. <br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileFlowsPolicy,Profile - Flows Policy,"Profile - Flows Policy gives visibility on access permissions related to Run Flows, Flows Policy, Manage Flow. <br/>
+<br/>
+ This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/269"">MITRE, CWE-269</a> - Improper Privilege Management </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileApiAdminPolicy,Profile - API Admin Policy,"Profile - API Admin Policy gives visibility on API Admin permissions.<br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+
+<h2>See</h2>
+<ul>
+<li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+<li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetFlowsPolicy,PermissionSet - Flows Policy,"PermissionSet - Flows Policy gives visibility on access permissions related to Run Flows, Flows Policy, Manage Flow. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/269"">MITRE, CWE-269</a> - Improper Privilege Management </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:PermissionSetReportsAndDashboardsAdminPolicy,PermissionSet - Reports And Dashboards Admin Policy,"PermissionSet - Reports And Dashboards Admin Policy gives visibility on access permissions related to  Manage All Private Reports and Dashboards,
+Create and Customize Reports, Manage Reports in Public Folders, Manage Dashboards in Public Folders, Manage Custom Report Types, Report Builder, Report Builder (Lightning Experience),
+Run Reports, Create and Customize Dashboards, Manage Dynamic Dashboards, Export Reports. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE

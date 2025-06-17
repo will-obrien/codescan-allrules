@@ -1,0 +1,336 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+cs-js:no-irregular-whitespace,disallow irregular whitespace outside of strings and comments,"<p>Invalid or irregular whitespace causes issues with ECMAScript 5 parsers and also makes code harder to debug in a similar nature to mixed tabs and spaces.</p>
+<p>Various whitespace characters can be inputted by programmers by mistake for example from copying or keyboard shortcuts. Pressing Alt + Space on macOS adds in a non breaking space character for example.</p>
+<p>Known issues these spaces cause:</p>
+<ul>
+<li>Zero Width Space<ul>
+<li>Is NOT considered a separator for tokens and is often parsed as an <code>Unexpected token ILLEGAL</code></li>
+<li>Is NOT shown in modern browsers making code repository software expected to resolve the visualization</li></ul></li>
+<li>Line Separator<ul>
+<li>Is NOT a valid character within JSON which would cause parse errors</li></ul></li>
+</ul>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at catching invalid whitespace that is not a normal tab and space. Some of these characters may cause issues in modern browsers and others will be a debugging issue to spot.</p>
+<p>This rule disallows the following characters except where the options allow:</p>
+<pre><code>\u000B - Line Tabulation (\v) - &lt;VT&gt;
+\u000C - Form Feed (\f) - &lt;FF&gt;
+\u00A0 - No-Break Space - &lt;NBSP&gt;
+\u0085 - Next Line
+\u1680 - Ogham Space Mark
+\u180E - Mongolian Vowel Separator - &lt;MVS&gt;
+\ufeff - Zero Width No-Break Space - &lt;BOM&gt;
+\u2000 - En Quad
+\u2001 - Em Quad
+\u2002 - En Space - &lt;ENSP&gt;
+\u2003 - Em Space - &lt;EMSP&gt;
+\u2004 - Tree-Per-Em
+\u2005 - Four-Per-Em
+\u2006 - Six-Per-Em
+\u2007 - Figure Space
+\u2008 - Punctuation Space - &lt;PUNCSP&gt;
+\u2009 - Thin Space
+\u200A - Hair Space
+\u200B - Zero Width Space - &lt;ZWSP&gt;
+\u2028 - Line Separator
+\u2029 - Paragraph Separator
+\u202F - Narrow No-Break Space
+\u205f - Medium Mathematical Space
+\u3000 - Ideographic Space
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option for exceptions:</p>
+<ul>
+<li><code>""skipStrings"": true</code> (default) allows any whitespace characters in string literals</li>
+<li><code>""skipComments"": true</code> allows any whitespace characters in comments</li>
+<li><code>""skipRegExps"": true</code> allows any whitespace characters in regular expression literals</li>
+<li><code>""skipTemplates"": true</code> allows any whitespace characters in template literals</li>
+</ul>
+<h3 id=""skipstrings"">skipStrings</h3>
+<p>Examples of <strong>incorrect</strong> code for this rule with the default <code>{ ""skipStrings"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: ""error""*/
+
+function thing()&amp;nbsp;/*&lt;NBSP&gt;*/{
+    return 'test';
+}
+
+function thing(&amp;nbsp;/*&lt;NBSP&gt;*/){
+    return 'test';
+}
+
+function thing&amp;nbsp;/*&lt;NBSP&gt;*/(){
+    return 'test';
+}
+
+function thingá Ž/*&lt;MVS&gt;*/(){
+    return 'test';
+}
+
+function thing() {
+    return 'test';â€‚/*&lt;ENSP&gt;*/
+}
+
+function thing() {
+    return 'test';&amp;nbsp;/*&lt;NBSP&gt;*/
+}
+
+function thing() {
+    // Description&amp;nbsp;&lt;NBSP&gt;: some descriptive text
+}
+
+/*
+Description&amp;nbsp;&lt;NBSP&gt;: some descriptive text
+*/
+
+function thing() {
+    return /&amp;nbsp;&lt;NBSP&gt;regexp/;
+}
+
+/*eslint-env es6*/
+function thing() {
+    return `templateâ€‚&lt;NBSP&gt;string`;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule with the default <code>{ ""skipStrings"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: ""error""*/
+
+function thing() {
+    return '&amp;nbsp;&lt;NBSP&gt;thing';
+}
+
+function thing() {
+    return 'â€‹&lt;ZWSP&gt;thing';
+}
+
+function thing() {
+    return 'th&amp;nbsp;&lt;NBSP&gt;ing';
+}
+</code></pre>
+<h3 id=""skipcomments"">skipComments</h3>
+<p>Examples of additional <strong>correct</strong> code for this rule with the <code>{ ""skipComments"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: [""error"", { ""skipComments"": true }]*/
+
+function thing() {
+    // Description&amp;nbsp;&lt;NBSP&gt;: some descriptive text
+}
+
+/*
+Description&amp;nbsp;&lt;NBSP&gt;: some descriptive text
+*/
+</code></pre>
+<h3 id=""skipregexps"">skipRegExps</h3>
+<p>Examples of additional <strong>correct</strong> code for this rule with the <code>{ ""skipRegExps"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: [""error"", { ""skipRegExps"": true }]*/
+
+function thing() {
+    return /&amp;nbsp;&lt;NBSP&gt;regexp/;
+}
+</code></pre>
+<h3 id=""skiptemplates"">skipTemplates</h3>
+<p>Examples of additional <strong>correct</strong> code for this rule with the <code>{ ""skipTemplates"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: [""error"", { ""skipTemplates"": true }]*/
+/*eslint-env es6*/
+
+function thing() {
+    return `templateâ€‚&lt;NBSP&gt;string`;
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you decide that you wish to use whitespace other than tabs and spaces outside of strings in your application.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li>[ECMA whitespace](https://es5.github.io/#x7.2 \xA0)</li>
+<li><a href=""http://timelessrepo.com/json-isnt-a-javascript-subset"">JSON whitespace issues</a></li>
+</ul>",MAJOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-unused-expressions,disallow unused expressions,"<p>An unused expression which has no effect on the state of the program indicates a logic error.</p>
+<p>For example, <code>n + 1;</code> is not a syntax error, but it might be a typing mistake where a programmer meant an assignment statement <code>n += 1;</code> instead.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to eliminate unused expressions which have no effect on the state of the program.</p>
+<p>This rule does not apply to function calls or constructor calls with the <code>new</code> operator, because they could have <em>side effects</em> on the state of the program.</p>
+<pre><code class=""js language-js"">var i = 0;
+function increment() { i += 1; }
+increment(); // return value is unused, but i changed as a side effect
+
+var nThings = 0;
+function Thing() { nThings += 1; }
+new Thing(); // constructed object is unused, but nThings changed as a side effect
+</code></pre>
+<p>This rule does not apply to directives (which are in the form of literal string expressions such as <code>""use strict"";</code> at the beginning of a script, module, or function).</p>
+<p>Sequence expressions (those using a comma, such as <code>a = 1, b = 2</code>) are always considered unused unless their return value is assigned or used in a condition evaluation, or a function call is made with the sequence expression value.</p>
+<h2 id=""options"">Options</h2>
+<p>This rule, in its default state, does not require any arguments. If you would like to enable one or more of the following you may pass an object with the options set as follows:</p>
+<ul>
+<li><code>allowShortCircuit</code> set to <code>true</code> will allow you to use short circuit evaluations in your expressions (Default: <code>false</code>).</li>
+<li><code>allowTernary</code> set to <code>true</code> will enable you to use ternary operators in your expressions similarly to short circuit evaluations (Default: <code>false</code>).</li>
+<li><code>allowTaggedTemplates</code> set to <code>true</code> will enable you to use tagged template literals in your expressions (Default: <code>false</code>).</li>
+</ul>
+<p>These options allow unused expressions <em>only if all</em> of the code paths either directly change the state (for example, assignment statement) or could have <em>side effects</em> (for example, function call).</p>
+<p>Examples of <strong>incorrect</strong> code for the default <code>{ ""allowShortCircuit"": false, ""allowTernary"": false }</code> options:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: ""error""*/
+
+0
+
+if(0) 0
+
+{0}
+
+f(0), {}
+
+a &amp;&amp; b()
+
+a, b()
+
+c = a, b;
+
+a() &amp;&amp; function namedFunctionInExpressionContext () {f();}
+
+(function anIncompleteIIFE () {});
+
+injectGlobal`body{ color: red; }`
+</code></pre>
+<p>Note that one or more string expression statements (with or without semi-colons) will only be considered as unused if they are not in the beginning of a script, module, or function (alone and uninterrupted by other statements). Otherwise, they will be treated as part of a ""directive prologue"", a section potentially usable by JavaScript engines. This includes ""strict mode"" directives.</p>
+<pre><code class=""js language-js"">""use strict"";
+""use asm""
+""use stricter"";
+""use babel""
+""any other strings like this in the prologue"";
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the default <code>{ ""allowShortCircuit"": false, ""allowTernary"": false }</code> options:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: ""error""*/
+
+{} // In this context, this is a block statement, not an object literal
+
+{myLabel: someVar} // In this context, this is a block statement with a label and expression, not an object literal
+
+function namedFunctionDeclaration () {}
+
+(function aGenuineIIFE () {}());
+
+f()
+
+a = 0
+
+new C
+
+delete a.b
+
+void a
+</code></pre>
+<h3 id=""allowshortcircuit"">allowShortCircuit</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""allowShortCircuit"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowShortCircuit"": true }]*/
+
+a || b
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""allowShortCircuit"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowShortCircuit"": true }]*/
+
+a &amp;&amp; b()
+a() || (b = c)
+</code></pre>
+<h3 id=""allowternary"">allowTernary</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""allowTernary"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowTernary"": true }]*/
+
+a ? b : 0
+a ? b : c()
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""allowTernary"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowTernary"": true }]*/
+
+a ? b() : c()
+a ? (b = c) : d()
+</code></pre>
+<h3 id=""allowshortcircuitandallowternary"">allowShortCircuit and allowTernary</h3>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""allowShortCircuit"": true, ""allowTernary"": true }</code> options:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowShortCircuit"": true, ""allowTernary"": true }]*/
+
+a ? b() || (c = d) : e()
+</code></pre>
+<h3 id=""allowtaggedtemplates"">allowTaggedTemplates</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""allowTaggedTemplates"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowTaggedTemplates"": true }]*/
+
+`some untagged template string`;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""allowTaggedTemplates"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowTaggedTemplates"": true }]*/
+
+tag`some tagged template string`;
+</code></pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-param-reassign,disallow reassigning `function` parameters,"<h1 id=""disallowreassignmentoffunctionparametersnoparamreassign"">Disallow Reassignment of Function Parameters (no-param-reassign)</h1>
+<p>Assignment to variables declared as function parameters can be misleading and lead to confusing behavior, as modifying function parameters will also mutate the <code>arguments</code> object. Often, assignment to function parameters is unintended and indicative of a mistake or programmer error.</p>
+<p>This rule can be also configured to fail when function parameters are modified. Side effects on parameters can cause counter-intuitive execution flow and make errors difficult to track down.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to prevent unintended behavior caused by modification or reassignment of function parameters.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: ""error""*/
+
+function foo(bar) {
+    bar = 13;
+}
+
+function foo(bar) {
+    bar++;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: ""error""*/
+
+function foo(bar) {
+    var baz = bar;
+}
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule takes one option, an object, with a boolean property <code>""props""</code> and an array <code>""ignorePropertyModificationsFor""</code>. <code>""props""</code> is <code>false</code> by default. If <code>""props""</code> is set to <code>true</code>, this rule warns against the modification of parameter properties unless they're included in <code>""ignorePropertyModificationsFor""</code>, which is an empty array by default.</p>
+<h3 id=""props"">props</h3>
+<p>Examples of <strong>correct</strong> code for the default <code>{ ""props"": false }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: [""error"", { ""props"": false }]*/
+
+function foo(bar) {
+    bar.prop = ""value"";
+}
+
+function foo(bar) {
+    delete bar.aaa;
+}
+
+function foo(bar) {
+    bar.aaa++;
+}
+</code></pre>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""props"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: [""error"", { ""props"": true }]*/
+
+function foo(bar) {
+    bar.prop = ""value"";
+}
+
+function foo(bar) {
+    delete bar.aaa;
+}
+
+function foo(bar) {
+    bar.aaa++;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""props"": true }</code> option with <code>""ignorePropertyModificationsFor""</code> set:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: [""error"", { ""props"": true, ""ignorePropertyModificationsFor"": [""bar""] }]*/
+
+function foo(bar) {
+    bar.prop = ""value"";
+}
+
+function foo(bar) {
+    delete bar.aaa;
+}
+
+function foo(bar) {
+    bar.aaa++;
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow assignment to function parameters, then you can safely disable this rule.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://spin.atomicobject.com/2011/04/10/javascript-don-t-reassign-your-function-arguments/"">JavaScript: Donâ€™t Reassign Your Function Arguments</a></li>
+</ul>",MAJOR,JavaScript,CODE_SMELL,FALSE

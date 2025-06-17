@@ -1,0 +1,180 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:AvoidGlobalModifier,Avoid Using Global Modifier,"Global classes should be avoided (especially in managed packages) as they can never be deleted
+      or changed in signature. Always check twice if something needs to be global. Many interfaces 
+      (e.g. Batch, Schedulable, WebServiceMock, HttpCalloutMock) required global modifiers in the past
+      but donâ€™t require this anymore. Donâ€™t lock yourself in.
+    <BR><h2>Example:</h2><pre>
+
+global class JobSyncScheduler implements Schedulable {	//Bad: Schedulable doesn't need to be global anymore.
+     global void execute(SchedulableContext context){
+    }
+}
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:TrackSuppressWarnings,Track Usage of @SuppressWarnings,"Overuse of the @SupressWarnings annotation can mean issues in your code are not picked up.  This rule flags each usage to make sure it is needed.
+  See <a href=""https://docs.codescan.io/hc/en-us/articles/360012109711-Ignoring-violations"">docs.codescan.io</a> for more information.
+  <BR><h2>Example:</h2><pre>
+
+
+@SuppressWarnings('all')
+public class Foo {
+  
+  // The class will be ignored.
+
+}
+
+
+  </pre>",INFO,APEX,CODE_SMELL,FALSE
+sf:OutboundEmailSend,Sending outbound emails using Messaging.sendEmail,"Single/Mass email messages sent with the Messaging.sendEmail method count against the sending organization's daily email limits. When this limit is reached, calls to the sendEmail method will be rejected and the user will receive an error.
+It's up to the developer to review the code to determine whether or not a fix is needed.
+<br/>
+Read more here:  <a href =""https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm"">Execution Governors and Limits</a>
+  <BR><h2>Example:</h2><pre>
+      Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+      mail.setSubject('Hello team');
+      mail.setToAddresses(new String[] {'test@codescan.io'});
+      mail.setHTMLBody('Testing my email');
+      Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail }); //Bad: Sending outbound emails using Messaging.sendEmail.
+    </pre>",INFO,APEX,CODE_SMELL,FALSE
+sf:AvoidOutboundCallsInBatchApex,Using Database.AllowsCallouts interface in Batch Apex.,"Avoid using the Database.AllowsCallouts interface in your Batch Apex classes as it is not recommended to make HTTP calls as part of your Batch Apex logic.
+<br/>
+Consider using an ETL (extract, transform and load) tools if you're interested in integrating data from other services with Salesforce.
+<br/>
+More about Batch Apex here: <a href =""https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm"">Salesforce Developers - Using Batch Apex</a>
+<BR><h2>Example:</h2><pre>
+global class ProcessTestResult implements Database.Batchable, Database.AllowsCallouts //Bad: Using the Database.AllowsCallouts together with Database.Batchable.
+{
+
+  global List start(Database.BatchableContext bc)
+  {
+    return getQueuedItems();
+  }
+
+  global void execute(Database.BatchableContext BC, List queuedItemsList)
+  {
+    processResults(queuedItemsList);
+  }
+
+  global void finish(Database.BatchableContext BC)
+  {
+  }
+}
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidHardCodedError,Avoid Hard Coded Error Messages,"Error messages that are passed to the client should use custom labels or be set dynamically through method calls. This allows the message to be translated and modified more easily
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+	public void triggerHandler(){
+    	obj.addError('An error occurred', true); //Bad: hard coded error
+    	Trigger.new[0].addError(System.Label.Label_name + bad, false); // Bad: Label is concatenated with a variable.
+    	obj.addError(System.label.errorOccurred); //Good: Custom label
+      throw new AuraHandledException(System.Label.Label_name + bad); //Bad: hard coded error
+    }
+}
+
+public class MySampleApexClass {
+   public static Integer myValue = 0;
+
+   public static Integer getCalculatedValue () {
+        try {
+            myValue = 10;
+            return myValue;
+        } catch (HandledException e) {
+           throw new AuraHandledException(e.getMessage()); //Good: Dynamic Error Message
+        } catch (AssertException ae) {
+           String errMsg = ae.getMessage();
+           throw new AuraHandledException(errMsg); // Bad: Using a variable to store error message is unnecessary.
+        } catch ( StringException se) {
+        // Good: String concatenation with dynamic error message is allowed.
+        throw new AuraHandledException('Exception: ' + se.getError());
+        }
+   }
+}
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ExceptionClassNaming,Exception Class Naming,"A Class name that extends an exception should have a name that ends in ""Exception"".
+		<BR><h2>Example:</h2><pre>
+
+public class MyClass extends Exception { //Bad: we would expect this class name to end in 'Exception'.
+}
+
+public class MyException extends Exception { //Good: this is preferred.
+}
+
+		</pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:LeftBracesLinePositions,Left Braces Positioning Should Be Consistent,"The line positioning of opening braces should remain consistent throughout the project. 
+The rule has separate parameters for classes, triggers, methods, blocks and accessors.
+       <BR><h2>Example:</h2><pre>
+public class Foo{
+	public void test1()		// This is an example of the opening brace on the next line. (methodBracesPosition parameter set to Next)
+	{
+	}
+}
+
+public class Foo{
+	public void test1(){    // This is an example of the opening brace on the same line. (methodBracesPosition parameter set to Same)
+	}
+}
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:ClassWithoutTestClass,Class Without Test Class,"Every Class should have a corresponding Test Class which is named appropriately.
+      <BR><h2>Example:</h2><pre>
+MyClass.cls 
+-------------
+public without sharing class MyClass{ //code...}   //For each class...
+
+
+MyClassTest.cls 
+-------------
+@isTest
+public class MyClassTest{
+    static testMethod void GoodTest(){ //code...}    //...there should be an appropriately named test class.
+}
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:XPathRule,XPath rule template,"CodeScan provides a very handy method for creating new rules by writing an XPath query. When the XPath query finds a match, a violation is created.
+    Let's take a simple example : assume we have a Factory class that must be always declared final. 
+    We'd like to report a violation each time a declaration of Factory is not declared final. Consider the following class: :
+<pre>
+public class a {
+  Factory f1;
+
+  void myMethod() {
+    Factory f2;
+    Integer a;
+  }
+}
+</pre>
+  The following expression does the magic we need:
+<pre>
+//VariableDeclarator
+ [../Type/ReferenceType/ClassOrInterfaceType
+  [@Image = 'Factory'] and ..[@Final='false']]
+</pre>
+  See our <a href=""https://knowledgebase.autorabit.com/codescan/docs/creating-custom-rules-with-xpath-for-codescan-cloud/"">Custom Rules tutorial</a> for more information.",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidForLoopToJustAddElementsToCollection,Avoid For Loop To Just Add Elements To A Collection,"The method .addAll should be used to add all elements from one collection to another.  Using a for loop is unnecessary.<BR><h2>Example:</h2><pre>
+ public class Foo{
+   
+   List<String> listOne;
+   List<String> listTwo;
+   
+   public Foo(){
+     listOne; = new List <String>();
+     listTwo; = new List <String>();
+     
+     listOne.add('one');
+     listOne.add('two');
+     listTwo.add('A');
+     listTwo.add('B');
+     
+   
+   }
+   
+   public void badCombine(){
+     
+     for(String item : listOne)        //Bad: This is unnecessary.
+       listTwo.add(item);
+   }
+   
+   public void goodCombine(){
+   
+     listOne.addAll(listTwo);        //Good: This is preferred.
+ 
+ 
+ }
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE

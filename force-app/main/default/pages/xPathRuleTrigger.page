@@ -1,0 +1,20 @@
+<apex:page controller="xPathRuleTriggerController">
+    <h1>VF Rule Trigger: vf:XPathRule</h1>
+    <p>This page triggers the rule: XPath rule template</p>
+    
+    <!-- Triggers vf:XPathRule - Multiple forms on a page -->
+    <apex:form>
+        <apex:inputText value="{!testValue1}" />
+        <apex:commandButton value="Submit Form 1" action="{!save}" />
+    </apex:form>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue2}" />
+        <apex:commandButton value="Submit Form 2" action="{!save}" />
+    </apex:form>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue3}" />
+        <apex:commandButton value="Submit Form 3" action="{!save}" />
+    </apex:form>
+</apex:page>

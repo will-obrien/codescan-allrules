@@ -1,0 +1,205 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+cs-vf:no-catch-shadow,disallow `catch` clause parameters from shadowing variables in the outer scope,"<p>In IE 8 and earlier, the catch clause parameter can overwrite the value of a variable in the outer scope, if that variable has the same name as the catch clause parameter.</p>
+<pre><code class=""js language-js"">var err = ""x"";
+
+try {
+    throw ""problem"";
+} catch (err) {
+
+}
+
+console.log(err)    // err is 'problem', not 'x'
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at preventing unexpected behavior in your program that may arise from a bug in IE 8 and earlier, in which the catch clause parameter can leak into outer scopes. This rule will warn whenever it encounters a catch clause parameter that has the same name as a variable in an outer scope.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-catch-shadow: ""error""*/
+
+var err = ""x"";
+
+try {
+    throw ""problem"";
+} catch (err) {
+
+}
+
+function err() {
+    // ...
+};
+
+try {
+    throw ""problem"";
+} catch (err) {
+
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-catch-shadow: ""error""*/
+
+var err = ""x"";
+
+try {
+    throw ""problem"";
+} catch (e) {
+
+}
+
+function err() {
+    // ...
+};
+
+try {
+    throw ""problem"";
+} catch (e) {
+
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you do not need to support IE 8 and earlier, you should turn this rule off.</p>",MAJOR,Visual Force & Lightning,BUG,FALSE
+vf:BoldTagsCheck,"""strong"" Tags Should Be Used Instead of ""b""","<p>
+The &lt;strong&gt;/&lt;b&gt; tags have exactly the same effect in most web browsers, but there is a fundamental difference between them: &lt;strong&gt; has a semantic meaning whereas &lt;b&gt; only conveys styling information like CSS.
+</p>
+<p>
+When &lt;b&gt; can have simply no effect on a Palm device with limited display or when a screen reader software is used by a blind person, &lt;strong&gt; will:
+</p>
+
+<ul>
+  <li>Underline the characters on a Palm Pilot</li>
+  <li>Speak with lower tone when using a screen reader such as Jaws</li>
+  <li>And display the text bold in normal browsers</li>
+</ul>
+
+<p>Consequently:</p>
+
+<ul>
+  <li>in order to convey semantics, the &lt;b&gt; tags shall never be used,</li>
+  <li>in order to convey styling information, the &lt;b&gt; should be avoided and CSS should be used instead.</li>
+</ul>
+
+     
+
+<h2>Noncompliant Code Example</h2>
+
+<pre>
+&lt;i&gt;car&lt;/i&gt;                 //Bad: this is not recommended.
+&lt;b&gt;train&lt;/b&gt;               //Bad: this is not recommended.
+</pre>
+
+<h2>Compliant Solution</h2>
+
+<pre>
+&lt;em&gt;car&lt;/em&gt;               //Good: this is preferred.
+&lt;strong&gt;train&lt;/strong&gt;     //Good: this is preferred.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:InlineStyleAttributesCheck,Avoid Inline CSS Style Attributes,"<p>
+This rule detects the usage of HTML ""style"" attributes to make sure that all CSS styles are defined in CSS classes.
+</p>
+
+     <BR><h2>Example:</h2><pre>
+
+ &lt;p style=""color: blue;"" &gt; //Bad: using inline style attributes is not recommended.
+
+ 	//content...
+
+ &lt;/p&gt;
+
+
+     </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:LightningEnhancedListCheck,Check for Lightning Migration Issues for apex:enhancedList,"This rule looks for apex:enhancedList usage which may no longer work in lightning.
+apex:enhancedList isn't supported in Lightning Experience.
+We recommend avoiding <apex:enhancedList> in Lightning Experience.
+
+See <a href=""https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf"">https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf</a>
+    <BR><h2>Example:</h2><pre>
+
+
+&lt;apex:page&gt;
+	&lt;apex:enhancedList&gt;&lt;/apex:enhancedList&gt; //Bad: not recommended.
+&lt;/apex:page&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:RequireConfirmationToken,Require CSRF Protection On GET Requests,"Require CSRF protection on GET requests must be enabled from the Visual Force Page settings.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/352.html"">MITRE, CWE-352</a> - Cross-Site Request Forgery (CSRF) </li>
+  <li> OWASP Top 10 2017 Category A6 - Security Misconfiguration </li>
+  <li> <a href=""https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29"">OWASP: Cross-Site Request Forgery</a> </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat1"">SANS Top 25</a> - Insecure Interaction Between Components </li>
+  <li> Derived from FindSecBugs rule <a href=""https://find-sec-bugs.github.io/bugs.htm#SPRING_CSRF_PROTECTION_DISABLED"">SPRING_CSRF_PROTECTION_DISABLED</a> </li>
+  <li> <a href=""https://trailhead.salesforce.com/en/content/learn/modules/secdev_application_logic_vulnerabilities/secdev_app_logic_csrf"">Salesforce Trailhead: Prevent Cross-Site Request Forgery (CSRF)</a> </li>
+</ul>
+  <BR><h2>Example:</h2><pre>//This setting must be enabled while creating a Visualforce page in Setup. </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:LightningAvoidHardcodedSalesforceDomain,Check for Lightning Migration Issues for Salesforce.com and Force.com Links,"URL references might not work as expected if you decide to swap to My Domain or in Lightning Experience. 
+
+If you decide to use My Domain, you have to replace hard-coded references to your original URL with references to your new domain.
+
+Using something lie {! $Site.Domain } may work better. 
+
+
+See <a href=""https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf"">https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf</a>
+    <BR><h2>Example:</h2><pre>
+
+<apex:page>
+	<a href=""https://na1.salesforce.com/..."">link</a> //Bad: This is not recommended.
+	<a href=""https://{! $Site.Domain }/..."">link</a> //Good: This is preferred.
+</apex:page>
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidHardCodedResourceReferences,Avoid Hard Coded Resource References,"This rule identifies files that have been referenced with a hard-coded path.  Best practise is to upload the files as a Static Resource.  
+  This allows referencing with $Resource.&lt;resource_name&gt;.  
+  
+  More information on Static resources is available here: <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_resources.htm"">Using Static Resources</a>
+  <BR><h2>Example:</h2><pre>
+	&lt;apex:page&gt;
+		
+		&lt;apex:image url=""/resource/TestImage.png"" /&gt;   	//Bad: Path is hard-coded.
+	
+		&lt;apex:image url=""{!$Resource.TestImage}"" /&gt;		//Good: Static Resource referencing is used.
+		
+	&lt;/apex:page&gt;
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:ImgWithoutWidthOrHeightCheck,"Images Tags Should Always Have a ""width"" and a ""height"" Attribute","If the <code>width</code> and <code>height</code> attributes are set, the space required for the image is reserved immediately by the browser, even before it actually starts to load the image.
+Without those attributes, the page layout constantly changes as images are loaded until they are all loaded, which can disorient users.
+
+
+<p>The following code:</p>
+
+<pre>
+&lt;img src=""logo.png"" alt=""My Company"" /&gt;                           //Bad: this is not recommended.
+</pre>
+
+should be refactored into:
+
+<pre>
+&lt;img src=""logo.png"" alt=""My Company"" width=""100"" height=""50"" /&gt;   //Good: this is preferred.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidDotNamespace,Avoid Using Dot Namespace,"Avoid using apex. Component notation for namespaces.
+   <BR><h2>Example:</h2><pre>
+	&lt;aura:application&gt;
+	  &lt;c.Lash_DemoLighting&gt;&lt;/c.Lash_DemoLighting&gt;   //Bad: This syntax is not recommended.
+   	
+	  &lt;c:Lash_DemoLighting/&gt;	//Good: This syntax is preferred.
+	
+	&lt;aura:application&gt;
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidMultipleForms,Avoid Multiple Forms,"Multiple forms increase a page's view state and is not recommended
+    <BR><h2>Example:</h2><pre>
+	
+
+&lt;apex:page&gt;
+  &lt;apex:form&gt;
+  &lt;/apex:form&gt;
+  &lt;apex:form&gt; 	//Bad: page should only have a single apex:form
+  &lt;/apex:form&gt;
+&lt;/apex:page&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE

@@ -1,0 +1,163 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:MisplacedNullCheck,Misplaced Null Check,"The null check here is misplaced. If the variable is null a NullPointerException will be thrown.
+Either the check is useless (the variable will never be null) or it is incorrect.
+      <BR><h2>Example:</h2><pre>
+    
+public class Foo {
+	void bar() {
+		if (a.equals(baz) && a != null) {  //Bad: If a is null, an exception will be thrown before the 'if' statement checks that a is not null.
+			//...
+		}
+
+
+		if (a != null && a.equals(baz)) {  //Good: The 'if' statement checks if a is null before using a.
+			//...
+		}
+	}
+}
+    
+      
+
+public class Foo {
+	void bar() {
+		if (a.equals(baz) || a == null) {	//Bad: If a is null, an exception will be thrown before the 'if' statement checks if a is null.
+			//..
+		}
+
+		if (a == null || a.equals(baz)) {	//Good: The 'if' statement will run if a is null or a.equals(baz) is true.
+			//..
+		}
+	}
+}
+   </pre>",MAJOR,APEX,BUG,FALSE
+sf:HotspotEncrypt,Encrypting Data Is Security-Sensitive,"Encrypting data is security-sensitive. Although most encryption problems are solved or managed by Salesforce, care must be taken when relying on encryption.<br/>
+<br/>
+See <a href=""https://developer.salesforce.com/page/Secure_Coding_Storing_Secrets"">Storing Sensitive Data</a> for more information.<br/>
+<br/>
+For example:<br/>
+<ul>
+	<li>Ensure that keys are generated randomly</li>
+	<li>That keys are stored securely in a Protected Custom Setting or Protected Custom Metadata type</li>
+	<li>Never store keys in Apex classes</li>
+	<li>You may want to consider a key-rotation scheme</li>
+	<li>Consider whether the keys can be leaked: have the keys been downloaded to an unsecure site, for example</li>
+</ul>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/522.html"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+  <li> [OWASP Top 10 2021 Category A2 - Identification and Authentication Failures </li>
+  <li> [OWASP Top 10 2021 Category A5 - Security Misconfiguration </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+</ul>",CRITICAL,APEX,SECURITY_HOTSPOT,FALSE
+sf:UnnecessaryConstructor,Unnecessary Constructor,"This rule detects when a constructor is not necessary; i.e., when there is only one constructor,
+it's public, has an empty body, and takes no arguments.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo { 
+  public Foo() {}		//Bad: This constructor is unnecessary.
+
+  public Foo(List bar) {  //Good: This constructor serves a purpose.
+  	//do work....
+  }
+}
+  
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ClassNamingConventions,Class Naming Conventions,"Class names should always begin with an upper case character.
+      <BR><h2>Example:</h2><pre>
+
+public class Foo {}		//Good: this is preferred.
+
+public class foo {}		//Bad: not recommended.
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:SimpleRedirectAction,Page Action with a simple redirection,"Avoid creating page action which makes a simple client side redirect.
+<br/>
+Consider using an apex:outputLink in your apex:form or other non action method instead and implement the action through an apex:page action attribute - where it makes sense.
+    <BR><h2>Example:</h2><pre>
+public class EditController {
+  public PageReference Close()
+  {
+    PageReference pr = new PageReference('/home/home.jsp');
+    pr.setRedirect(true); //Bad: The action method contains only client-side GET redirect.
+    return pr;
+  }
+}
+
+&lt;apex:outputLink value=&quot;{!$Page.homePage}&quot;> //Good: Client-side redirect can be implemented with an apex:outputLink component.
+  Home Page
+&lt;/apex:outputLink>
+
+	
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryConversionTemporary,Unnecessary Temporary Variable for String Conversion,"Avoid the use temporary objects when converting primitives to Strings. Use the static conversion methods
+on the wrapper classes instead.
+      <BR><h2>Example:</h2><pre>
+  
+public String convert(Integer x) {
+	String foo = new Integer(x).toString();	//Bad: this wastes an object.
+	
+	return Integer.toString(x);				//Good: preferred approach.
+}
+ 
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:PositionLiteralsFirstInComparisons,Position Literals First in Comparisons,"Position literals first in comparisons, if the second argument is null then NullPointerExceptions 
+can be avoided, they will just return false.
+  <BR><h2>Example:</h2><pre>
+
+class Foo {
+  boolean bar(String x) {
+    return x.equals('2'); 	//Bad: this can result in a null pointer
+  }
+  boolean foo(String x) {
+    return '2'.equals(x); 	//Good: this is preferred
+  }
+}
+
+
+  </pre>",MAJOR,APEX,BUG,FALSE
+sf:ReturnFromFinallyBlock,Return from Finally Block,"Avoid returning from a finally block, this can discard exceptions.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/584.html"">MITRE, CWE-584</a> - Return Inside Finally Block </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/mIEbAQ"">CERT, ERR04-J.</a> - Do not complete abruptly from a finally block </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class Bar {
+	public String foo() {
+		try {
+			doHeapsOfStuff();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			return 'A. O. K.';  		//Bad: Return is not recommended here.
+		}
+		
+		return 'A. O. K.'; 				//Good: A return outside the block will not discard exceptions
+	}
+}
+
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:LocalVariableCouldBeFinal,Local Variable Could Be Final,"A local variable assigned only can be declared final once.
+      <BR><h2>Example:</h2><pre>
+  
+public class Bar {
+	public void foo () {
+		String a = 'a'; 		//Bad: if a will not be assigned again it is better to make it final.
+		final String b = 'b';	//Good: this is preferred.
+	}
+}
+  
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidUsingBatchApexInTrigger,Using Batch Apex from a trigger is dangerous,"Using Batch Apex from a trigger is dangerous.
+<br/>
+You must be able to guarantee that the trigger does not add more batch jobs than the limit. In particular, consider API bulk updates, import wizards, mass record changes through the user interface, and all cases where more than one record can be updated at a time.
+<br/>
+Read more here: <a href =""https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm"">Salesforce Developers - Using Batch Apex</a>
+<BR><h2>Example:</h2><pre>
+trigger OpportunityTrigger on Opportunity (after insert, after update) {
+  ID batchprocessid = Database.executeBatch(worker); //Bad: Executing Apex Batch from Trigger.
+}
+     </pre>",MAJOR,APEX,CODE_SMELL,FALSE

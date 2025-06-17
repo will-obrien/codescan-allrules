@@ -1,0 +1,213 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:IfStmtsMustUseBraces,If Statements Must Use Braces,"Avoid using 'if' statements without using braces to surround the code block. If the code 
+formatting or indentation is lost then it becomes difficult to separate the code being
+controlled from the rest.
+     <BR><h2>Example:</h2><pre>
+ 
+
+if (foo)	//Bad: Not recommended.
+	x++;
+	y++;	
+
+if (foo) {	//Good: Preferred approach.
+	x++;
+	y++;
+}
+
+ 
+     </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidReassigningParameters,Avoid Reassigning Parameters,"Reassigning values to incoming parameters is not recommended.  Use temporary local variables instead.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo {
+  private void foo(String bar) {
+    bar = 'something else';			//Bad: Not recommended.
+  }
+}
+
+    </pre>",MAJOR,APEX,BUG,FALSE
+sf:AvoidFieldNameMatchingMethodName,Avoid Field Name Matching Method Name,"It can be confusing to have a field name with the same name as a method. While this is permitted, 
+having information (field) and actions (method) is not clear naming. Developers versed in 
+Smalltalk often prefer this approach as the methods denote accessor methods.
+      <BR><h2>Example:</h2><pre>
+
+public class Foo {
+
+	Object bar;
+					//Bad: naming a variable and a method bar is confusing and not recommended.
+	void bar() {
+	}
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:OneDeclarationPerLine,One Declaration Per Line,"Apex allows the use of several variable declarations of the same type on one line. However, it
+can lead to quite messy code. This rule looks for several declarations on the same line.
+            
+        <BR><h2>Example:</h2><pre>
+public class Foo {	
+	String name; 			//Good: separate declarations are preferred.
+	String lastname; 
+
+	String name, lastname;	//Bad: combined declarations are not recommended.
+}
+        	
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:HotspotDeserializeJson,Deserializing JSON Is Security-Sensitive,"Deserializing an object from an untrusted source is security-sensitive. An attacker could modify the content of the data.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/502.html"">MITRE, CWE-502</a> - Deserialization of Untrusted Data </li>
+  <li> OWASP Top 10 2021 Category A8 - Software and Data Integrity Failures </li>
+  <li> <a href=""https://www.owasp.org/index.php/Deserialization_of_untrusted_data"">OWASP Deserialization of untrusted data</a> </li>
+  <li> Derived from FindSecBugs rule <a href=""https://find-sec-bugs.github.io/bugs.htm#OBJECT_DESERIALIZATION"">OBJECT_DESERIALIZATION </a> </li>
+</ul>
+  <BR><h2>Example:</h2><pre>
+
+class Car{ 
+  
+  private String make;
+  private String year;
+  
+  public void createCar(String z, String x){ 
+    Car c = (Car)JSON.deserializeStrict(
+      '{""make"":""'+ z + '"",""year"":""' + x + '""}', Car.class);   //Bad: Unknown inputs are used to create the object.
+  }
+}
+
+  </pre>",MAJOR,APEX,SECURITY_HOTSPOT,FALSE
+sf:UnescapedSource,URL Parameters should be Escaped/Sanitized,"Makes sure that all values obtained from URL parameters are properly escaped / sanitized to avoid XSS attacks.<br/>
+Input can be sanitized using Integer.valueOf, Date.valueOf, String.escapeHtml3, etc, or escaped using the 
+esapi.encoder() functions from <a href=""https://github.com/forcedotcom/force-dot-com-esapi"">https://github.com/forcedotcom/force-dot-com-esapi</a><br/>
+<br/>
+Tips to avoid this problem: Use an Id variable instead of String variable to store Id type parameters.
+
+<br/>
+See <a href=""http://cwe.mitre.org/data/definitions/79.html"">MITRE, CWE-79</a> - Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+  public Foo() {
+    String unescapedstring = ApexPages.currentPage().getParameters().get('url_param');
+    
+    someOtherFunction(unescapedstring); 	 //Bad: this string is used elsewhere and may lead to an XSS vulnerability
+    
+    someOtherFunction(integer.valueof(unescapedstring));   //Good: the string is safely checked as an integer  
+  }
+}
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:DMLWithoutSharingEnabled,Sharing should be Configured on Classes with DML,"Executing DML should be done inside a class annotated with 'with sharing', 'inherited sharing' or 'without sharing'.<br/>
+<br/>
+By setting allowWithoutSharing=false, DML in classes flagged with 'without sharing' are still flagged.
+This can be useful for manual reviews of classes working around security problems.
+<br/>
+<h2>See</h2>
+<ul>
+	<li><a href=""https://cwe.mitre.org/data/definitions/282.html"">CWE-282</a> - Improper Ownership Management</li>
+	<li>See <a href=""https://cwe.mitre.org/data/definitions/284.html"">CWE-284</a> - Improper Access Control</li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+    public void foo () {     
+      Account[] accounts = [ select name from account ]; // Bad: this returns all accounts not only the ones the current user has access to. 
+    }
+}
+  
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:HotspotCookies,Using Cookies Is Security-Sensitive,"Attackers can use widely-available tools to view the cookie and read the sensitive information. Even if the information is encoded in a way that is not human-readable, certain techniques could determine which encoding is being used, then decode the information.<br/>
+	<br/>
+  <h2>See</h2>
+  <ul>
+	  <li> <a href=""http://cwe.mitre.org/data/definitions/312.html"">MITRE, CWE-312</a> - Cleartext Storage of Sensitive Information </li>
+	  <li> <a href=""http://cwe.mitre.org/data/definitions/315.html"">MITRE, CWE-315</a> - Cleartext Storage of Sensitive Information in a Cookie </li>
+	  <li> <a href=""https://cwe.mitre.org/data/definitions/565.html"">MITRE CWE-565</a> - Reliance on Cookies without Validation and Integrity Checking </li>
+	  <li> OWASP Top 10 2021 Category A3 - Injection </li>
+	  <li> OWASP Top 10 2021 Category A2 - Cryptographic Failures </li>
+	  <li> <a href=""https://wiki.sei.cmu.edu/confluence/display/java/FIO52-J.+Do+not+store+unencrypted+sensitive+information+on+the+client+side"">CERT,
+	  FIO52-J.</a> - Do not store unencrypted sensitive information on the client side </li>
+	  <li> Derived from FindSecBugs rule <a href=""https://find-sec-bugs.github.io/bugs.htm#COOKIE_USAGE"">COOKIE_USAGE</a> </li>
+	</ul>
+  <BR><h2>Example:</h2><pre>
+
+  Cookie userCookie = new Cookie('CookieName', fieldValueToBeStoredAsCookie, null, 315569260, false);
+  ApexPages.currentPage().setCookies(new Cookie[] {
+      userCookie     //Bad: The cookie could be targeted by attackers to get access to sensitive information.
+  });
+
+  </pre>",CRITICAL,APEX,SECURITY_HOTSPOT,FALSE
+sf:SOQLInjection,Avoid Untrusted/Unescaped Variables in DML Query,"Detects the usage of untrusted / unescaped variables in DML queries.<br/>
+<br/>
+Without sufficient removal or quoting of SOQL syntax in user-controllable inputs, the generated SOQL query can cause those inputs to 
+be interpreted as SOQL instead of ordinary user data. 
+This can be used to alter query logic to bypass security checks.<br/>
+<br/>
+Input can be cleansed by using Id.valueOf, Date.valueOf, etc. Or escaped using String.escapeSingleQuotes().<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/89"">MITRE, CWE-89</a> - Improper Neutralization of Special Elements used in an SQL Command </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/20.html"">MITRE, CWE-20</a> - Improper Input Validation </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/943.html"">MITRE, CWE-943</a> - Improper Neutralization of Special Elements in Data Query Logic
+  </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/PgIRAg"">CERT, IDS00-J.</a> - Prevent SQL injection </li>
+  <li> OWASP Top 10 2021 Category A3 - Injection </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat1"">SANS Top 25</a> - Insecure Interaction Between Components </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+
+public class Foo {
+	public void test1() {
+		//Bad: getFilter function may return unescaped data (potentially from user input).
+		String field1 = getFilter(); 
+		String field2 = 'SELECT Id FROM Account WHERE ';
+		Database.query(field2 + field1);
+		
+		//Good: the function result is cleaned
+		String field1 = '\'' + String.escapeSingleQuotes(getSomeId()) + '\'';
+		String field2 = 'SELECT Id FROM Account WHERE isPublic = true and Id = ';
+		Database.query(field2 + field1);
+		
+		//Good: better yet, use SOQL's built-in variable replacements
+		String field1 = getSomeID();
+		String field2 = 'SELECT Id FROM Account WHERE isPublic = true and Id = :field1';
+		Database.query(field2);
+	}		
+}
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:HotspotTypeReflection,Type Reflection Is Security Sensitive,"Dynamically executing code is security-sensitive.  If the code comes from an untrusted source, the untrusted source may be able to choose which code to run.<br/>
+This vulnerability can lead to:
+<br/><ul>
+<li>Unintended modification of the system state.</li>
+<li>Errors and/or termination of the application.</li>
+<li>Leaking of sensitive information in an error message.</li><br/>
+<br/>
+<h2>See</h2> 
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/95.html"">MITRE CWE-95</a> - Improper Neutralization of Directives in Dynamically Evaluated Code
+  ('Eval Injection') </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/470.html"">MITRE CWE-470</a> - Use of Externally-Controlled Input to Select Classes or Code
+  ('Unsafe Reflection') </li>
+  <li> OWASP Top 10 2021 Category A3 - Injection </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+public MyController {
+  private interface Implementation{
+    void run();
+  }
+  private class AdminImplementation implements Implementation{
+    public void run(){
+      ... do something privileged
+    }
+  }
+  private class StandardImplementation implements Implementation{
+    public void run(){
+	  ... normal implementation
+    }
+  }
+
+  public void init(){
+    Implementation i = Type.forName(implementationName);
+      i.run(); //Bad: This unchecked implementation could lead to unexpectedly running the AdminImplementation code.
+  }
+
+}
+      </pre>",MAJOR,APEX,SECURITY_HOTSPOT,FALSE

@@ -1,0 +1,27 @@
+<apex:page controller="hotspotGetSessionIdUsageHotspotController">
+     <apex:form>
+         <h1>Security Hotspot Trigger: vf:HotspotGetSessionIdUsage</h1>
+         <p>This page triggers the hotspot: Using GETSESSIONID() and $API.Session_Id is security-sensitive</p>
+         
+         <apex:pageBlock title="Session Management">
+             <!-- Triggers vf:HotspotGetSessionIdUsage - Using GETSESSIONID() -->
+             <apex:outputText value="Current Session ID: {{!GETSESSIONID()}}" />
+             
+             <br/><br/>
+             
+             <!-- Another trigger for $API.Session_Id -->
+             <apex:outputText value="API Session: {{!$Api.Session_Id}}" />
+             
+             <br/><br/>
+             
+             <apex:inputText value="{{!sessionValue}}" label="Session Input"/>
+             <apex:commandButton value="Process with Session" action="{{!processSession}}"/>
+         </apex:pageBlock>
+         
+         <script>
+             // JavaScript that might use session information
+             var sessionId = '{!GETSESSIONID()}'; // Security hotspot
+             console.log('Session ID in JavaScript:', sessionId);
+         </script>
+     </apex:form>
+ </apex:page>

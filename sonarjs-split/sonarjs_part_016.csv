@@ -1,0 +1,376 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S5443,Using publicly writable directories is security-sensitive,"<p>Operating systems have global directories where any user has write access. Those folders are mostly used as temporary storage areas like
+<code>/tmp</code> in Linux based systems. An application manipulating files from these folders is exposed to race conditions on filenames: a malicious
+user can try to create a file with a predictable name before the application does. A successful attack can result in other files being accessed,
+modified, corrupted or deleted. This risk is even higher if the application runs with elevated permissions.</p>
+<p>In the past, it has led to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""https://nvd.nist.gov/vuln/detail/CVE-2012-2451"">CVE-2012-2451</a> </li>
+  <li> <a href=""https://nvd.nist.gov/vuln/detail/CVE-2015-1838"">CVE-2015-1838</a> </li>
+</ul>
+<p>This rule raises an issue whenever it detects a hard-coded path to a publicly writable directory like <code>/tmp</code> (see examples bellow). It
+also detects access to environment variables that point to publicly writable directories, e.g., <code>TMP</code> and <code>TMPDIR</code>.</p>
+<ul>
+  <li> <code>/tmp</code> </li>
+  <li> <code>/var/tmp</code> </li>
+  <li> <code>/usr/tmp</code> </li>
+  <li> <code>/dev/shm</code> </li>
+  <li> <code>/dev/mqueue</code> </li>
+  <li> <code>/run/lock</code> </li>
+  <li> <code>/var/run/lock</code> </li>
+  <li> <code>/Library/Caches</code> </li>
+  <li> <code>/Users/Shared</code> </li>
+  <li> <code>/private/tmp</code> </li>
+  <li> <code>/private/var/tmp</code> </li>
+  <li> <code>\Windows\Temp</code> </li>
+  <li> <code>\Temp</code> </li>
+  <li> <code>\TMP</code> </li>
+</ul>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> Files are read from or written into a publicly writable folder </li>
+  <li> The application creates files with predictable names into a publicly writable folder </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> Use a dedicated sub-folder with tightly controlled permissions </li>
+  <li> Use secure-by-design APIs to create temporary files. Such API will make sure:
+    <ul>
+      <li> The generated filename is unpredictable </li>
+      <li> The file is readable and writable only by the creating user ID </li>
+      <li> The file descriptor is not inherited by child processes </li>
+      <li> The file will be destroyed as soon as it is closed </li>
+    </ul>  </li>
+</ul>
+<h2>Sensitive Code Example</h2>
+<pre>
+const fs = require('fs');
+
+let tmp_file = ""/tmp/temporary_file""; // Sensitive
+fs.readFile(tmp_file, 'utf8', function (err, data) {
+  // ...
+});
+</pre>
+<pre>
+const fs = require('fs');
+
+let tmp_dir = process.env.TMPDIR; // Sensitive
+fs.readFile(tmp_dir + ""/temporary_file"", 'utf8', function (err, data) {
+  // ...
+});
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const tmp = require('tmp');
+
+const tmpobj = tmp.fileSync(); // Compliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A5-Broken_Access_Control"">OWASP Top 10 2017 Category A5</a> - Broken Access Control </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/377"">MITRE, CWE-377</a> - Insecure Temporary File </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/379"">MITRE, CWE-379</a> - Creation of Temporary File in Directory with Incorrect Permissions
+  </li>
+  <li> <a href=""https://www.owasp.org/index.php/Insecure_Temporary_File"">OWASP, Insecure Temporary File</a> </li>
+</ul>",CRITICAL,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S1764,Identical expressions should not be used on both sides of a binary operator,"<p>Using the same value on either side of a binary operator is almost always a mistake. In the case of logical operators, it is either a copy/paste
+error and therefore a bug, or it is simply wasted code, and should be simplified. In the case of bitwise operators and most binary mathematical
+operators, having the same value on both sides of an operator yields predictable results, and should be simplified.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (a == b &amp;&amp; a == b) { // if the first one is true, the second one is too
+  doX();
+}
+if (a &gt; a) { // always false
+  doW();
+}
+
+var j = 5 / 5; //always 1
+var k = 5 - 5; //always 0
+</pre>
+<h2>Exceptions</h2>
+<p>The specific case of testing one variable against itself is a valid test for <code>NaN</code> and is therefore ignored.</p>
+<p>Similarly, left-shifting 1 onto 1 is common in the construction of bit masks, and is ignored.</p>
+<p>Moreover comma operator <code>,</code> and <code>instanceof</code> operator are ignored as there are use-cases when there usage is valid.</p>
+<pre>
+if (f !== f) { // test for NaN value
+  console.log(""f is NaN"");
+}
+
+var i = 1 &lt;&lt; 1; // Compliant
+var j = a &lt;&lt; a; // Noncompliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> {rule:javascript:S1656} - Implements a check on <code>=</code>. </li>
+</ul>",MAJOR,JavaScript,BUG,FALSE
+javascript:S5689,Disclosing fingerprints from web application technologies is security-sensitive,"<p>Disclosing technology fingerprints allows an attacker to gather information about the technologies used to develop the web application and to
+perform relevant security assessments more quickly (like the identification of known vulnerable components).</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> The <code>x-powered-by</code> HTTP header or similar is used by the application. </li>
+  <li> Technologies used by the application are confidential and should not be easily guessed. </li>
+</ul>
+<p>There is a risk if you answered yes to any of these questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Itâ€™s recommended to not disclose technologies used on a website, with <code>x-powered-by</code> HTTP header for example.</p>
+<p>In addition, itâ€™s better to completely disable this HTTP header rather than setting it a random value.</p>
+<h2>Sensitive Code Example</h2>
+<p><a href=""https://www.npmjs.com/package/express"">Express.js</a> name is disclosed by default into the <code>x-powered-by</code> HTTP header:</p>
+<pre>
+let express = require('express');
+let app = express(); // Sensitive
+
+app.get('/', function (req, res) {
+  res.send('hello')
+});
+</pre>
+<h2>Compliant Solution</h2>
+<p><code>x-powered-by</code> HTTP header should be disabled in <a href=""https://www.npmjs.com/package/express"">Express.js</a> with
+<code>app.disable</code> or with helmet <a href=""https://www.npmjs.com/package/helmet"">hidePoweredBy</a> middleware:</p>
+<pre>
+let express = require('express');
+
+let app1 = express();  // Compliant
+app1.disable(""x-powered-by"");
+
+let helmet = require(""helmet"");
+let app2 = express(); // Compliant
+app2.use(helmet.hidePoweredBy());
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a
+  href=""https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/01-Information_Gathering/08-Fingerprint_Web_Application_Framework.html"">OWASP Testing Guide - OTG-INFO-008</a> - Fingerprint Web Application Framework </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A6-Security_Misconfiguration"">OWASP Top 10 2017 Category A6</a> - Security
+  Misconfiguration </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/200.html"">MITRE, CWE-200</a> - Information Exposure </li>
+</ul>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S6080,"Mocha timeout should be disabled by setting it to ""0"".","<p>Starting from Mocha v3.0.0, calling <code>this.timeout(X)</code> with <code>X</code> greater than the <a
+href=""https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout#Maximum_delay_value"">maximum delay value</a>
+(2,147,483,647 ms) <a href=""https://mochajs.org/#hook-level"">will cause the timeout to be disabled</a>. This might not be what the developer intended.
+If the goal is really to disable the timeout, <code>this.timeout(0)</code> should be used instead.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+describe(""testing this.timeout"", function() {
+  it(""unexpectedly disables the timeout"", function(done) {
+    this.timeout(2147483648); // Noncompliant
+  });
+});
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+describe(""testing this.timeout"", function() {
+  it(""doesn't disable the timeout"", function(done) {
+    this.timeout(1000);
+  });
+});
+</pre>
+<p>Or if you meant to disable the timeout</p>
+<pre>
+describe(""testing this.timeout"", function() {
+  it(""disables the timeout as expected"", function(done) {
+    this.timeout(0);
+  });
+});
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://mochajs.org/#hook-level"">Mocha documentation</a> </li>
+</ul>",MAJOR,JavaScript,BUG,FALSE
+javascript:S1516,Multiline string literals should not be used,"<p>Continuing a string across a linebreak is supported in most script engines, but it is not a part of ECMAScript. Additionally, the whitespace at the
+beginning of each line canâ€™t be safely stripped at compile time, and any whitespace after the slash will result in tricky errors.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var myString = 'A rather long string of English text, an error message \
+                actually that just keeps going and going -- an error \
+                message to make the Energizer bunny blush (right through \
+                those Schwarzenegger shades)! Where was I? Oh yes, \
+                you\'ve got an error and all the extraneous whitespace is \
+                just gravy.  Have a nice day.';  // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var myString = 'A rather long string of English text, an error message ' +
+    'actually that just keeps going and going -- an error ' +
+    'message to make the Energizer bunny blush (right through ' +
+    'those Schwarzenegger shades)! Where was I? Oh yes, ' +
+    'you\'ve got an error and all the extraneous whitespace is ' +
+    'just gravy.  Have a nice day.';
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3499,Shorthand object properties should be grouped at the beginning or end of an object declaration,"<p>Grouping all the shorthand declarations together in an object makes the declaration as a whole more readable. This rule accepts shorthand
+declarations grouped at either the beginning or end of an object.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+let obj1 = {
+  foo,
+  a: 1,
+  color,  // Noncompliant
+  b: 2,
+  judyGarland  // Noncompliant
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+let obj1 = {
+  foo,
+  color,
+  judyGarland,
+  a: 1,
+  b: 2
+}
+</pre>
+<p>or</p>
+<pre>
+let obj1 = {
+  a: 1,
+  b: 2,
+  foo,
+  color,
+  judyGarland
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1874,Deprecated APIs should not be used,"<p>Once deprecated, classes, and interfaces, and their members should be avoided, rather than used, inherited or extended. Deprecation is a warning
+that the class or interface has been superseded, and will eventually be removed. The deprecation period allows you to make a smooth transition away
+from the aging, soon-to-be-retired technology.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+export interface LanguageService {
+  /**
+  * @deprecated Use getEncodedSyntacticClassifications instead.
+  */
+  getSyntacticClassifications(fileName: string, span: TextSpan): ClassifiedSpan[];
+}
+
+const syntacticClassifications = getLanguageService().getSyntacticClassifications(file, span); // Noncompliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/477.html"">MITRE, CWE-477</a> - Use of Obsolete Functions </li>
+</ul>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3723,Trailing commas should be used,"<p>Modern browsers ignore unneeded, trailing commas, so there are no negatives to having them unless youâ€™re supporting an IE 8 application. Since they
+make adding new properties simpler, their use is preferred. This rule raises an issue when the last item in a multiline construct (array or object
+literal, import or export statement, function declaration or call) does not end with a trailing comma and does not lie on the same line as the closing
+curly brace, bracket or parenthesis.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var joe = {
+  fname: ""Joe"",
+  lname: ""Smith""      // Noncompliant
+};
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var joe = {
+  fname: ""Joe"",
+  lname: ""Smith"",    // OK
+};
+
+var joe = {
+  fname: ""Joe"",
+  lname: ""Smith""};   // OK
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S2755,XML parsers should not be vulnerable to XXE attacks,"<p>XML standard allows the use of entities, declared in the DOCTYPE of the document, which can be <a
+href=""https://www.w3.org/TR/xml/#sec-internal-ent"">internal</a> or <a href=""https://www.w3.org/TR/xml/#sec-external-ent"">external</a>.</p>
+<p>When parsing the XML file, the content of the external entities is retrieved from an external storage such as the file system or network, which may
+lead, if no restrictions are put in place, to arbitrary file disclosures or <a
+href=""https://www.owasp.org/index.php/Server_Side_Request_Forgery"">server-side request forgery (SSRF)</a> vulnerabilities.</p>
+<pre>
+&lt;?xml version=""1.0"" encoding=""utf-8""?&gt;
+&lt;!DOCTYPE person [
+  &lt;!ENTITY file SYSTEM ""file:///etc/passwd""&gt;
+  &lt;!ENTITY ssrf SYSTEM ""https://internal.network/sensitive_information""&gt;
+]&gt;
+
+&lt;person&gt;
+  &lt;name&gt;&amp;file;&lt;/name&gt;
+  &lt;city&gt;&amp;ssrf;&lt;/city&gt;
+  &lt;age&gt;18&lt;/age&gt;
+&lt;/person&gt;
+</pre>
+<p>Itâ€™s recommended to limit resolution of external entities by using one of these solutions:</p>
+<ul>
+  <li> If DOCTYPE is not necessary, completely disable all DOCTYPE declarations. </li>
+  <li> If external entities are not necessary, completely disable their declarations. </li>
+  <li> If external entities are necessary then:
+    <ul>
+      <li> Use XML processor features, if available, to authorize only required protocols (eg: https). </li>
+      <li> And use an entity resolver (and optionally an XML Catalog) to resolve only trusted entities. </li>
+    </ul>  </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<p><a href=""https://github.com/libxmljs/libxmljs"">libxmljs</a> module:</p>
+<pre>
+const libxmljs = require(""libxmljs"");
+var fs = require('fs');
+
+var xml = fs.readFileSync('xxe.xml', 'utf8');
+
+var xmlDoc = libxmljs.parseXmlString(xml, { noblanks: true, noent: true, nocdata: true }); // Noncompliant: noent set to true
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://github.com/libxmljs/libxmljs"">libxmljs</a> module:</p>
+<pre>
+const libxmljs = require(""libxmljs"");
+var fs = require('fs');
+
+var xml = fs.readFileSync('xxe.xml', 'utf8');
+
+var xmlDoc = libxmljs.parseXmlString(xml); // Compliant: noent set to false by default
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A4-XML_External_Entities_(XXE)"">OWASP Top 10 2017 Category A4</a> - XML External Entities
+  (XXE) </li>
+  <li> <a href=""https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html"">OWASP XXE Prevention Cheat Sheet</a>
+  </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/611.html"">MITRE, CWE-611</a> - Information Exposure Through XML External Entity Reference </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/827.html"">MITRE, CWE-827</a> - Improper Control of Document Type Definition </li>
+</ul>",BLOCKER,JavaScript,VULNERABILITY,FALSE
+javascript:S4817,Executing XPath expressions is security-sensitive,"<p>Executing XPATH expressions is security-sensitive. It has led in the past to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-6272"">CVE-2016-6272</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-9149"">CVE-2016-9149</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4837"">CVE-2012-4837</a> </li>
+</ul>
+<p>User provided data such as URL parameters should always be considered as untrusted and tainted. Constructing XPath expressions directly from
+tainted data enables attackers to inject specially crafted values that changes the initial meaning of the expression itself. Successful XPath
+injections attacks can read sensitive information from the XML document.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> the XPATH expression might contain some unsafe input coming from a user. </li>
+</ul>
+<p>You are at risk if you answered yes to this question.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Sanitize any user input before using it in an XPATH expression.</p>
+<h2>Sensitive Code Example</h2>
+<pre>
+// === Server side ===
+
+var xpath = require('xpath');
+var xmldom = require('xmldom');
+
+var doc = new xmldom.DOMParser().parseFromString(xml);
+var nodes = xpath.select(userinput, doc); // Sensitive
+var node = xpath.select1(userinput, doc); // Sensitive
+</pre>
+<pre>
+// === Client side ===
+
+// Chrome, Firefox, Edge, Opera, and Safari use the evaluate() method to select nodes:
+var nodes = document.evaluate(userinput, xmlDoc, null, XPathResult.ANY_TYPE, null); // Sensitive
+
+// Internet Explorer uses its own methods to select nodes:
+var nodes = xmlDoc.selectNodes(userinput); // Sensitive
+var node = xmlDoc.SelectSingleNode(userinput); // Sensitive
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A1-Injection"">OWASP Top 10 2017 Category A1</a> - Injection </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/643"">MITRE, CWE-643</a> - Improper Neutralization of Data within XPath Expressions </li>
+</ul>
+<h2>Deprecated</h2>
+<p>This rule is deprecated, and will eventually be removed.</p>",CRITICAL,JavaScript,SECURITY_HOTSPOT,FALSE

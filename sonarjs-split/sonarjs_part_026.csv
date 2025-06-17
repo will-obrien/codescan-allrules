@@ -1,0 +1,210 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S2685,"""arguments.caller"" and ""arguments.callee"" should not be used","<p>Both <code>arguments.caller</code> and <code>arguments.callee</code> make quite a few optimizations impossible so they were deprecated in latest
+versions of JavaScript. In fact, EcmaScript 5 forbids the use of both in <code>strict</code> mode, according to the docs:</p>
+<blockquote>
+  <p>Arguments objects for strict mode functions define non-configurable accessor properties named ""caller"" and ""callee"" which throw a TypeError
+  exception on access.</p>
+</blockquote>
+<p>The same restriction applies to the functionâ€™s <code>caller</code> and <code>arguments</code> properties in <code>strict</code> mode.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function whoCalled() {
+   if (arguments.caller == null)   //Noncompliant
+      console.log('I was called from the global scope.');
+   else
+      console.log(arguments.caller + ' called me!');  // Noncompliant
+
+  console.log(whoCalled.caller);  // Noncompliant
+  console.log(whoCalled.arguments);  // Noncompliant
+}
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S2999,"""new"" operators should be used with functions","<p>The <code>new</code> keyword should only be used with objects that define a constructor function. Use it with anything else, and youâ€™ll get a
+<code>TypeError</code> because there wonâ€™t be a constructor function for the <code>new</code> keyword to invoke.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function MyClass() {
+  this.foo = 'bar';
+}
+
+var someClass = 1;
+
+var obj1 = new someClass;    // Noncompliant;
+var obj2 = new MyClass();    // Noncompliant if considerJSDoc parameter set to true. Compliant when considerJSDoc=false
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+/**
+ * @constructor
+ */
+function MyClass() {
+  this.foo = 'bar';
+}
+
+var someClass = function(){
+  this.prop = 1;
+}
+
+var obj1 = new someClass;  // Compliant
+var obj2 = new MyClass();  // Compliant regardless of considerJSDoc value
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S3735,"""void"" should not be used","<p>The <code>void</code> operator evaluates its argument and unconditionally returns <code>undefined</code>. It can be useful in pre-ECMAScript 5
+environments, where <code>undefined</code> could be reassigned, but generally, its use makes code harder to understand.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+void doSomething();
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+doSomething();
+</pre>
+<h2>Exceptions</h2>
+<p>No issue is raised when <code>void 0</code> is used in place of <code>undefined</code>.</p>
+<pre>
+if (parameter === void 0) {...}
+</pre>
+<p>No issue is also raised when <code>void</code> is used before immediately invoked function expressions.</p>
+<pre>
+void (function() {
+   ...
+}());
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S2138,"""undefined"" should not be assigned","<p><code>undefined</code> is the value you get for variables and properties which have not yet been created. Use the same value to reset an existing
+variable and you lose the ability to distinguish between a variable that exists but has no value and a variable that does not yet exist. Instead,
+<code>null</code> should be used, allowing you to tell the difference between a property that has been reset and one that was never created.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var myObject = {};
+
+// ...
+myObject.fname = undefined;  // Noncompliant
+// ...
+
+if (myObject.lname == undefined) {
+  // property not yet created
+}
+if (myObject.fname == undefined) {
+  // no real way of knowing the true state of myObject.fname
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var myObject = {};
+
+// ...
+myObject.fname = null;
+// ...
+
+if (myObject.lname == undefined) {
+  // property not yet created
+}
+if (myObject.fname == undefined) {
+  // no real way of knowing the true state of myObject.fname
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3834,"""Symbol"" should not be used as a constructor","<p><code>Symbol</code> is a primitive type introduced in ECMAScript2015. Its instances are mainly used as unique property keys.</p>
+<p>An instance can only be created by using <code>Symbol</code> as a function. Using <code>Symbol</code> with the <code>new</code> operator will raise
+a <code>TypeError</code>.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+const sym = new Symbol(""foo"");   // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const sym = Symbol(""foo"");
+</pre>",CRITICAL,JavaScript,BUG,FALSE
+javascript:S3973,A conditionally executed single line should be denoted by indentation,"<p>In the absence of enclosing curly braces, the line immediately after a conditional is the one that is conditionally executed. By both convention
+and good practice, such lines are indented. In the absence of both curly braces and indentation the intent of the original programmer is entirely
+unclear and perhaps not actually what is executed. Additionally, such code is highly likely to be confusing to maintainers.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (condition)  // Noncompliant
+doTheThing();
+
+doTheOtherThing();
+somethingElseEntirely();
+
+foo();
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (condition)
+  doTheThing();
+
+doTheOtherThing();
+somethingElseEntirely();
+
+foo();
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S3757,"Arithmetic operations should not result in ""NaN""","<p>The result of an expression with an arithmetic operator <code>/, *, %, ++, --, -, +=, -=, *=, /=, %=, +</code> or unary operator <code>+, -</code>
+when at least one operand is <code>Object</code> or <code>Undefined</code> will be always a <code>NaN</code> (Not a Number).</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+x = [1, 2];
+var y = x / 4;  //Noncompliant
+</pre>
+<h2>Exceptions</h2>
+<ul>
+  <li> <code>Date</code> operands: they are implicitly converted to numbers. </li>
+  <li> The binary <code>+</code> operator with <code>Object</code> operand (concatenation). </li>
+</ul>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S2424,Built-in objects should not be overridden,"<p>Overriding an object changes its behavior and could potentially impact all code using that object. Overriding standard, built-in objects could
+therefore have broad, potentially catastrophic effects on previously-working code.</p>
+<p>This rule detects overrides of the following native objects:</p>
+<ul>
+  <li> Fundamental objects - Object, Function, Boolean, Symbol, Error, EvalError, InternalError, RangeError, ReferenceError, SyntaxError, TypeError,
+  URIError </li>
+  <li> Numbers and dates - Number, Math, Date </li>
+  <li> Text processing - String, RegExp </li>
+  <li> Indexed collections - Array, Int8Array, Uint8Array, Uint8ClampedArray, Int16Array, Unit16Array, Int32Array, Uint32Array, Float32Array,
+  Float64Array </li>
+  <li> Keyed collections - Map, Set, WeakMap, WeakSet </li>
+  <li> Structured data - ArrayBuffer, DataView, JSON </li>
+  <li> Control abstraction objects - Promise </li>
+  <li> Reflection - Reflect, Proxy </li>
+  <li> Internationalization - Intl </li>
+  <li> Non-standard objects - Generator, Iterator, ParallelArray, StopIteration </li>
+</ul>",MAJOR,JavaScript,BUG,FALSE
+javascript:S4030,Collection and array contents should be used,"<p>When a collection is populated but its contents are never used, then it is surely some kind of mistake. Either refactoring has rendered the
+collection moot, or an access is missing.</p>
+<p>This rule raises an issue when no methods are called on a collection other than those that add or remove values.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function getLength(a, b, c) {
+  const strings = [];  // Noncompliant
+  strings.push(a);
+  strings.push(b);
+  strings.push(c);
+
+  return a.length + b.length + c.length;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function getLength(a, b, c) {
+  return a.length + b.length + c.length;
+}
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S2310,Loop counters should not be assigned to from within the loop body,"<p>Loop counters should not be modified in the body of the loop. However other loop control variables representing logical values may be modified in
+the loop, for example a flag to indicate that something has been completed, which is then tested in the for statement.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var names = [ ""Jack"", ""Jim"", """", ""John"" ];
+for (var i = 0; i &lt; names.length; i++) {
+  if (!names[i]) {
+    i = names.length;                                 // Non-Compliant
+  } else {
+    console.log(names[i]);
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var names = [ ""Jack"", ""Jim"", """", ""John"" ];
+for (var name of names) {
+  if (!name) {
+    break;                                 // Compliant
+  } else {
+    console.log(name);
+  }
+}
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE

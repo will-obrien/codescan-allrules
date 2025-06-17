@@ -1,0 +1,190 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+vf:AvoidLinkingToRecordIds,Check for Lightning Migration Issues for Hard Coded ID Links,"HREF may link directly to Salesforce record.  An anchor tag refers directly to a record ID on this page.
+Direct links to records aren't supported in Lightning Experience.
+To view, create, or edit records, use actions and functions rather than direct URLs. For example, use
+{!URLFOR($Action.Contact.Edit, recordId)}
+to edit a contact record in Visualforce markup, or navigateToSObject(recordId) in JavaScript.
+
+See <a href=""https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf"">https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf</a>
+    <BR><h2>Example:</h2><pre>
+
+
+&lt;a href=""/030000000123""&gtl;Click here&lt;/a&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+common-vf:InsufficientBranchCoverage,Branches should have sufficient coverage by tests,An issue is created on a file as soon as the branch coverage on this file is less than the required threshold. It gives the number of branches to be covered in order to reach the required threshold.,MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+common-vf:InsufficientLineCoverage,Lines should have sufficient coverage by tests,An issue is created on a file as soon as the line coverage on this file is less than the required threshold. It gives the number of lines to be covered in order to reach the required threshold.,MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+common-vf:InsufficientCommentDensity,Source files should have a sufficient density of comment lines,An issue is created on a file as soon as the density of comment lines on this file is less than the required threshold. The number of comment lines to be written in order to reach the required threshold is provided by each issue message.,MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+common-vf:DuplicatedBlocks,Source files should not have any duplicated blocks,An issue is created on a file as soon as there is at least one block of duplicated code on this file,MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+common-vf:SkippedUnitTests,Skipped unit tests should be either removed or fixed,Skipped unit tests are considered as dead code. Either they should be activated again (and updated) or they should be removed.,MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+common-vf:FailedUnitTests,Failed unit tests should be fixed,Test failures or errors generally indicate that regressions have been introduced. Those tests should be handled as soon as possible to reduce the cost to fix the corresponding regressions.,MAJOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-unused-expressions,disallow unused expressions,"<p>An unused expression which has no effect on the state of the program indicates a logic error.</p>
+<p>For example, <code>n + 1;</code> is not a syntax error, but it might be a typing mistake where a programmer meant an assignment statement <code>n += 1;</code> instead.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to eliminate unused expressions which have no effect on the state of the program.</p>
+<p>This rule does not apply to function calls or constructor calls with the <code>new</code> operator, because they could have <em>side effects</em> on the state of the program.</p>
+<pre><code class=""js language-js"">var i = 0;
+function increment() { i += 1; }
+increment(); // return value is unused, but i changed as a side effect
+
+var nThings = 0;
+function Thing() { nThings += 1; }
+new Thing(); // constructed object is unused, but nThings changed as a side effect
+</code></pre>
+<p>This rule does not apply to directives (which are in the form of literal string expressions such as <code>""use strict"";</code> at the beginning of a script, module, or function).</p>
+<p>Sequence expressions (those using a comma, such as <code>a = 1, b = 2</code>) are always considered unused unless their return value is assigned or used in a condition evaluation, or a function call is made with the sequence expression value.</p>
+<h2 id=""options"">Options</h2>
+<p>This rule, in its default state, does not require any arguments. If you would like to enable one or more of the following you may pass an object with the options set as follows:</p>
+<ul>
+<li><code>allowShortCircuit</code> set to <code>true</code> will allow you to use short circuit evaluations in your expressions (Default: <code>false</code>).</li>
+<li><code>allowTernary</code> set to <code>true</code> will enable you to use ternary operators in your expressions similarly to short circuit evaluations (Default: <code>false</code>).</li>
+<li><code>allowTaggedTemplates</code> set to <code>true</code> will enable you to use tagged template literals in your expressions (Default: <code>false</code>).</li>
+</ul>
+<p>These options allow unused expressions <em>only if all</em> of the code paths either directly change the state (for example, assignment statement) or could have <em>side effects</em> (for example, function call).</p>
+<p>Examples of <strong>incorrect</strong> code for the default <code>{ ""allowShortCircuit"": false, ""allowTernary"": false }</code> options:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: ""error""*/
+
+0
+
+if(0) 0
+
+{0}
+
+f(0), {}
+
+a &amp;&amp; b()
+
+a, b()
+
+c = a, b;
+
+a() &amp;&amp; function namedFunctionInExpressionContext () {f();}
+
+(function anIncompleteIIFE () {});
+
+injectGlobal`body{ color: red; }`
+</code></pre>
+<p>Note that one or more string expression statements (with or without semi-colons) will only be considered as unused if they are not in the beginning of a script, module, or function (alone and uninterrupted by other statements). Otherwise, they will be treated as part of a ""directive prologue"", a section potentially usable by JavaScript engines. This includes ""strict mode"" directives.</p>
+<pre><code class=""js language-js"">""use strict"";
+""use asm""
+""use stricter"";
+""use babel""
+""any other strings like this in the prologue"";
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the default <code>{ ""allowShortCircuit"": false, ""allowTernary"": false }</code> options:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: ""error""*/
+
+{} // In this context, this is a block statement, not an object literal
+
+{myLabel: someVar} // In this context, this is a block statement with a label and expression, not an object literal
+
+function namedFunctionDeclaration () {}
+
+(function aGenuineIIFE () {}());
+
+f()
+
+a = 0
+
+new C
+
+delete a.b
+
+void a
+</code></pre>
+<h3 id=""allowshortcircuit"">allowShortCircuit</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""allowShortCircuit"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowShortCircuit"": true }]*/
+
+a || b
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""allowShortCircuit"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowShortCircuit"": true }]*/
+
+a &amp;&amp; b()
+a() || (b = c)
+</code></pre>
+<h3 id=""allowternary"">allowTernary</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""allowTernary"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowTernary"": true }]*/
+
+a ? b : 0
+a ? b : c()
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""allowTernary"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowTernary"": true }]*/
+
+a ? b() : c()
+a ? (b = c) : d()
+</code></pre>
+<h3 id=""allowshortcircuitandallowternary"">allowShortCircuit and allowTernary</h3>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""allowShortCircuit"": true, ""allowTernary"": true }</code> options:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowShortCircuit"": true, ""allowTernary"": true }]*/
+
+a ? b() || (c = d) : e()
+</code></pre>
+<h3 id=""allowtaggedtemplates"">allowTaggedTemplates</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""allowTaggedTemplates"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowTaggedTemplates"": true }]*/
+
+`some untagged template string`;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""allowTaggedTemplates"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-unused-expressions: [""error"", { ""allowTaggedTemplates"": true }]*/
+
+tag`some tagged template string`;
+</code></pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:UnescapedAttributes,Unescaped Value Could Cause XSS,"Reflected Cross-site Scripting (XSS) occur when an attacker injects browser executable code within a single HTTP response.<br/>
+<br/>
+Using unescaped parameters can be a security risk.
+<br/>
+c:* and apex:* attributes are not checked unless they are known to cause problems. You can check other attributes by adding them to the configuration for this rule.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_security_tips_scontrols.htm"">Unescaped Output and Formulas in Visualforce Pages</a></li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/95.html"">MITRE CWE-95</a> - Improper Neutralization of Directives in Dynamically Evaluated Code
+  ('Eval Injection') </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/470.html"">MITRE CWE-470</a> - Use of Externally-Controlled Input to Select Classes or Code
+  ('Unsafe Reflection') </li>
+  <li> OWASP Top 10 2021 Category A03 - Injection </li>
+  
+</ul>
+      <BR><h2>Example:</h2><pre>
+
+&lt;apex:includeScript value=""{!$CurrentPage.parameters.userInput}"" /&gt; //Bad: not recommended.
+&lt;apex:outputText value=""{! data }"" escape=""false"" /&gt; //Bad: not recommended.
+
+&lt;div onclick = ""console.log('{!$CurrentPage.parameters.userInput}')""&gt;Click me!&lt;/div&gt; //Bad: not recommended.
+&lt;div onclick = ""console.log('{!JSENCODE($CurrentPage.parameters.userInput)}')""&gt;Click me!&lt;/div&gt; //Good: this is better.
+
+
+    </pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:UnencodedScript,Unencoded Formulas in Script Tags XSS,"Makes sure that all values obtained from URL parameters are properly escaped / sanitized to avoid XSS attacks.<br/>
+Input can be sanitized JSENCODE().<br/>
+<br/>
+Using unescaped parameters can be a security risk. 
+
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_security_tips_scontrols.htm"">Unescaped Output and Formulas in Visualforce Pages</a></li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/95.html"">MITRE CWE-95</a> - Improper Neutralization of Directives in Dynamically Evaluated Code
+  ('Eval Injection') </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/470.html"">MITRE CWE-470</a> - Use of Externally-Controlled Input to Select Classes or Code
+  ('Unsafe Reflection') </li>
+  <li> OWASP Top 10 2021 Category A03 - Injection </li>
+  
+</ul>
+
+
+      <BR><h2>Example:</h2><pre>
+
+&lt;script&gt;
+	var value = {!$CurrentPage.parameters.username}'; //Bad: not recommended.
+	var value = {!JSONENCODE($CurrentPage.parameters.username)}'; //Good: this is preferred.
+&lt;/script&gt;
+
+    </pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE

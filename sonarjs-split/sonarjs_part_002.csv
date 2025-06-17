@@ -1,0 +1,121 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S1438,Statements should end with semicolons,"<p>In JavaScript, the semicolon (<code>;</code>) is optional as a statement separator, but omitting semicolons can be confusing, and lead to
+unexpected results because a semicolon is implicitly inserted at the end of each line.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function fun() {
+  return  // Noncompliant. ';' implicitly inserted at end of line
+       5   // Noncompliant. ';' implicitly inserted at end of line
+}
+print(fun());  // prints ""undefined"", not ""5""
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function fun() {
+  return 5;
+}
+print(fun());
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1441,Quotes for string literals should be used consistently,"<p>This rule checks that all string literals use the same kind of quotes.</p>
+<h2>Noncompliant Code Example</h2>
+<p>Using the parameter default (forcing single quotes):</p>
+<pre>
+var firstParameter = ""something""; // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var firstParameter = 'something';
+</pre>
+<h2>Exceptions</h2>
+<p>Strings that contain quotes are ignored.</p>
+<pre>
+let heSaid = ""Then he said 'What?'.""  // ignored
+let sheSaid = '""Whatever!"" she replied.'  // ignored
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3812,"Results of ""in"" and ""instanceof"" should be negated rather than operands","<p>Mixing up the order of operations will almost always yield unexpected results.</p>
+<p>Similarly, mis-applied negation will also yield bad results. For instance consider the difference between <code>!key in dict</code> and <code>!(key
+in dict)</code>. The first looks for a boolean value (<code>!key</code>) in <code>dict</code>, and the other looks for a string and inverts the
+result. <code>!obj instanceof SomeClass</code> has the same problem.</p>
+<p>This rule raises an issue when the left operand of an <code>in</code> or <code>instanceof</code> operator is negated.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (!""prop"" in myObj) {  // Noncompliant;  ""in"" operator is checking property ""false""
+  doTheThing();  // this block will be never executed
+}
+
+if (!foo instanceof MyClass) {  // Noncompliant; ""!foo"" returns a boolean, which is not an instance of anything
+  doTheOtherThing();  // this block is never executed
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (!(""prop"" in myObj)) {
+  doTheThing();
+}
+
+if (!(foo instanceof MyClass)) {
+  doTheOtherThing();
+}
+</pre>",CRITICAL,JavaScript,BUG,FALSE
+javascript:S1539,"""strict"" mode should be used with caution","<p>Even though it may be a good practice to enforce JavaScript strict mode, doing so could result in unexpected behaviors on browsers that do not
+support it yet. Using this feature should therefore be done with caution and with full knowledge of the potential consequences on browsers that do not
+support it.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function strict() {
+  'use strict';
+}
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S3686,"Functions should not be called both with and without ""new""","<p>Constructor functions, which create new object instances, must only be called with <code>new</code>. Non-constructor functions must not. Mixing
+these two usages could lead to unexpected results at runtime.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function getNum() {
+  return 5;
+}
+
+function Num(numeric, alphabetic) {
+  this.numeric = numeric;
+  this.alphabetic = alphabetic;
+}
+
+var myFirstNum = getNum();
+var my2ndNum = new getNum();  // Noncompliant. An empty object is returned, NOT 5
+
+var myNumObj1 = new Num();
+var myNumObj2 = Num();  // Noncompliant. undefined is returned, NOT an object
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S113,Files should contain an empty newline at the end,"<p>Some tools work better when files end with an empty line.</p>
+<p>This rule simply generates an issue if it is missing.</p>
+<p>For example, a Git diff looks like this if the empty line is missing at the end of the file:</p>
+<pre>
++class Test {
++}
+\ No newline at end of file
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1541,Cyclomatic Complexity of functions should not be too high,"<p>The Cyclomatic Complexity of functions should not exceed a defined threshold. Complex code may perform poorly and can be difficult to test
+thoroughly.</p>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S100,Function and method names should comply with a naming convention,"<p>Shared naming conventions allow teams to collaborate efficiently. This rule checks that all function names match a provided regular expression.</p>
+<h2>Noncompliant Code Example</h2>
+<p>With the default regular expression <code>^[a-z][a-zA-Z0-9]*$</code>:</p>
+<pre>
+function DoSomething(){...}  // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function doSomething(){...}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S105,Tabulation characters should not be used,"<p>Developers should not need to configure the tab width of their text editors in order to be able to read source code.</p>
+<p>So the use of the tabulation character must be banned.</p>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3786,Template literal placeholder syntax should not be used in regular strings,"<p>Template strings allow developers to embed variables or expressions in strings using template literals, instead of string concatenation. This is
+done by using expressions like <code>${variable} </code> in a string between two back-ticks (<code>`</code>). However, when used in a regular string
+literal (between double or single quotes) the template will not be evaluated and will be used as a literal, which is probably not what was
+intended.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+console.log(""Today is ${date}""); // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+console.log(`Today is ${date}`);
+</pre>",MAJOR,JavaScript,BUG,FALSE

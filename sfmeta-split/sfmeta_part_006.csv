@@ -1,0 +1,140 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sfmeta:SystemBypassLogicValidation,System Bypass Logic - Validation Rules,"System bypass logic is required for custom validation rules for integration Users.
+      <br/><br/>
+      This rule is specifically for nCino implementations and is not relevant outside of that.
+      If you are not using nCino in your Org, do not activate this rule.
+      nCino specific rules can be determined by the tag ncino-specific.",MINOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:SystemBypassLogicWorkflow,System Bypass Logic - Workflow Rules,"System bypass logic is required in custom workflow rules for integration Users.
+      <br/><br/>
+      This rule is specifically for nCino implementations and is not relevant outside of that.
+      If you are not using nCino in your Org, do not activate this rule.
+      nCino specific rules can be determined by the tag ncino-specific.",MINOR,Salesforce Metadata,CODE_SMELL,TRUE
+sfmeta:RequireDescriptionComponent,Custom Metadata components must have a description field,"Custom Metadata components should have a description of their functionality making it easy
+for others to understand the purpose and functionality of the component as it may not always
+be understandable from the name.
+<br/><br/>
+If you have a project namespace, then it's recommended to include this namespace into
+the description of your shared components. You can configure this rule to verify this by setting
+additional property 'requireProjectNamespace' of this rule to true value.
+<br/><br/>
+Please Note: Checking projects namespace inside component description will work only with the Salesforce
+integration type in CodeScan Cloud. It requires execution of extra Metadata APIs to retrieve the
+properties of Metadata components in your project.
+<br/><br/>
+Alternatively you may manually create the required 'component-properties.json' file which includes results
+of executing 'sfdx force:mdapi:listmetadata' properties and put it inside root of your project. In this case
+the rule will also be able to verify project namespace in the shared components of your project.
+     <BR><h2>Example:</h2><pre>
+ 
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomObject xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+    &lt;fields&gt;
+        &lt;fullName>Price__c&lt;/fullName&gt;       //Bad: This custom field does not have a description.
+        &lt;externalId>false&lt;/externalId&gt;
+        &lt;label&gt;Price&lt;/label&gt;
+        &lt;type>Currency&lt;/type&gt;
+    &lt;/fields&gt;
+  ..........
+&lt;/CustomObject&gt;
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomObject xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+    &lt;fields>
+        &lt;fullName>Price__c&lt;/fullName&gt;
+        &lt;description&gt;This is a description of price&lt;/description&gt;   //Good: A description is recommended.
+        &lt;externalId&gt;false&lt;/externalId&gt;
+        &lt;label&gt;Price&lt;/label&gt;
+        &lt;type&gt;Currency&lt;/type&gt;
+    &lt;/fields&gt;
+  ..........
+&lt;/CustomObject&gt;
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomField xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+      &lt;fullName>Price__c&lt;/fullName&gt;       //Bad: This custom field does not have a description.
+      &lt;externalId>false&lt;/externalId&gt;
+      &lt;label&gt;Price&lt;/label&gt;
+      &lt;type>Currency&lt;/type&gt;
+  ..........
+&lt;/CustomField&gt;
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomField xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+      &lt;fullName>Price__c&lt;/fullName&gt;
+      &lt;description&gt;This is a description of price&lt;/description&gt;   //Good: A description is recommended.
+      &lt;externalId&gt;false&lt;/externalId&gt;
+      &lt;label&gt;Price&lt;/label&gt;
+      &lt;type&gt;Currency&lt;/type&gt;
+  ..........
+&lt;/CustomField&gt;
+     </pre>",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+common-sfmeta:FailedUnitTests,Failed unit tests should be fixed,Test failures or errors generally indicate that regressions have been introduced. Those tests should be handled as soon as possible to reduce the cost to fix the corresponding regressions.,MAJOR,Salesforce Metadata,BUG,FALSE
+sfmeta:SecuritySettings,Enforce Org Security Settings,"Enforce various org security settings. Default settings can be modified and any password policy or session setting configured.
+
+This rule requires .settings file using
+&lt;types&gt;
+	&lt;members&gt;Security&lt;/members&gt;
+    &lt;name&gt;Settings&lt;/name&gt;
+&lt;/types&gt;",CRITICAL,Salesforce Metadata,VULNERABILITY,FALSE
+sfmeta:RequireDescriptionField,Custom fields must have a description field,"Custom fields should have a description of their function to avoid confusion.
+
+This rule requires .object or .field-meta.xml metadata files to be downloaded.
+<br/><br/>
+This rule has been deprecated and all functionality added to sfmeta:RequireDescriptionComponent.
+Please remove this deprecated rule from your custom Quality Profile and add sfmeta:RequireDescriptionComponent.
+     <BR><h2>Example:</h2><pre>
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomObject xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+    &lt;fields&gt;
+        &lt;fullName>Price__c&lt;/fullName&gt;       //Bad: This custom field does not have a description.
+        &lt;externalId>false&lt;/externalId&gt;
+        &lt;label&gt;Price&lt;/label&gt;
+        &lt;type>Currency&lt;/type&gt;
+    &lt;/fields&gt;
+  ..........
+&lt;/CustomObject&gt;
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomObject xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+    &lt;fields>
+        &lt;fullName>Price__c&lt;/fullName&gt;
+        &lt;description&gt;This is a description of price&lt;/description&gt;   //Good: A description is recommended.
+        &lt;externalId&gt;false&lt;/externalId&gt;
+        &lt;label&gt;Price&lt;/label&gt;
+        &lt;type&gt;Currency&lt;/type&gt;
+    &lt;/fields&gt;
+  ..........
+&lt;/CustomObject&gt;
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomField xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+      &lt;fullName>Price__c&lt;/fullName&gt;       //Bad: This custom field does not have a description.
+      &lt;externalId>false&lt;/externalId&gt;
+      &lt;label&gt;Price&lt;/label&gt;
+      &lt;type>Currency&lt;/type&gt;
+  ..........
+&lt;/CustomField&gt;
+
+&lt;?xml version=""1.0"" encoding=""UTF-8""?&gt;
+&lt;CustomField xmlns=""http://soap.sforce.com/2006/04/metadata""&gt;
+	........
+      &lt;fullName>Price__c&lt;/fullName&gt;
+      &lt;description&gt;This is a description of price&lt;/description&gt;   //Good: A description is recommended.
+      &lt;externalId&gt;false&lt;/externalId&gt;
+      &lt;label&gt;Price&lt;/label&gt;
+      &lt;type&gt;Currency&lt;/type&gt;
+  ..........
+&lt;/CustomField&gt;
+     </pre>",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:HardCodedFlowValue,Avoid Hard Coded Values in Flows,"Hard coded values in flows can lead to unexpected output and make maintenance difficult. Instead, Get Records can be used for the respective object using the DeveloperName. If you’re creating criteria in an entry condition, you can reference DeveloperName (API Name) fields with a formula.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:AvoidLargeFlows,Avoid Large Flows,Too many nodes can cause your Flow to become complex and unmanageable. Consider using Subflows to make your Flow logic reusable and scalable.,MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:AvoidNestedFlowLoops,Avoid Nested Loops In Flows,"Nested loops within your Flows can cause them to become unreadable, inefficient and complex. Consider using Invoked Actions to clean up complex Flows.",MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:DmlInFlowLoop,DML Should Not Be Called In Loops,Using DML in loops can cause Governor Limit Exceptions.,CRITICAL,Salesforce Metadata,CODE_SMELL,FALSE

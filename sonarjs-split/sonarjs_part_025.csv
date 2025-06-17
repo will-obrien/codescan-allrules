@@ -1,0 +1,278 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S1135,"Track uses of ""TODO"" tags","<p><code>TODO</code> tags are commonly used to mark places where some more code is required, but which the developer wants to implement later.</p>
+<p>Sometimes the developer will not have the time or will simply forget to get back to that tag.</p>
+<p>This rule is meant to track those tags and to ensure that they do not go unnoticed.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function doSomething() {
+  // TODO
+}
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/546.html"">MITRE, CWE-546</a> - Suspicious Comment </li>
+</ul>",INFO,JavaScript,CODE_SMELL,FALSE
+javascript:S5732,Disabling content security policy frame-ancestors directive is security-sensitive,"<p><a href=""https://en.wikipedia.org/wiki/Clickjacking"">Clickjacking</a> attacks occur when an attacker try to trick an user to click on certain
+buttons/links of a legit website. This attack can take place with malicious HTML frames well hidden in an attacker website.</p>
+<p>For instance, suppose a safe and authentic page of a social network (https://socialnetworkexample.com/makemyprofilpublic) which allows an user to
+change the visibility of his profile by clicking on a button. This is a critical feature with high privacy concerns. Users are generally well informed
+on the social network of the consequences of this action. An attacker can trick users, without their consent, to do this action with the below
+embedded code added on a malicious website:</p>
+<pre>
+&lt;html&gt;
+&lt;b&gt;Click on the button below to win 5000$&lt;/b&gt;
+&lt;br&gt;
+&lt;iframe src=""https://socialnetworkexample.com/makemyprofilpublic"" width=""200"" height=""200""&gt;&lt;/iframe&gt;
+&lt;/html&gt;
+</pre>
+<p>Playing with the size of the iframe itâ€™s sometimes possible to display only the critical parts of a page, in this case the button of the
+<em>makemyprofilpublic</em> page.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> <a href=""https://en.wikipedia.org/wiki/Clickjacking#Clickjacking_categories"">Critical actions</a> of the application are prone to clickjacking
+  attacks because a simple click on a link or a button can trigger them. </li>
+</ul>
+<p>There is a risk if you answered yes to this question.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Implement content security policy <em>frame-ancestors</em> directive which is supported by all modern browsers and will specify the origins of
+frame allowed to be loaded by the browser (this directive deprecates <a
+href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options"">X-Frame-Options</a>).</p>
+<h2>Sensitive Code Example</h2>
+<p>In Express.js application the code is sensitive if the <a href=""https://www.npmjs.com/package/helmet-csp"">helmet-csp</a> or <a
+href=""https://www.npmjs.com/package/helmet"">helmet</a> middleware is used without the <code>frameAncestors</code> directive (or if
+<code>frameAncestors</code> is set to <code>'none'</code>):</p>
+<pre>
+const express = require('express');
+const helmet = require('helmet');
+
+let app = express();
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      // other directives
+      frameAncestors: [""'none'""] // Sensitive: frameAncestors  is set to none
+    }
+  })
+);
+</pre>
+<h2>Compliant Solution</h2>
+<p>In Express.js application a standard way to implement CSP frame-ancestors directive is the <a
+href=""https://www.npmjs.com/package/helmet-csp"">helmet-csp</a> or <a href=""https://www.npmjs.com/package/helmet"">helmet</a> middleware:</p>
+<pre>
+const express = require('express');
+const helmet = require('helmet');
+
+let app = express();
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      // other directives
+      frameAncestors: [""'example.com'""] // Compliant
+    }
+  })
+);
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A6-Security_Misconfiguration"">OWASP Top 10 2017 Category A6</a> -
+  Security Misconfiguration </li>
+  <li> <a href=""https://cheatsheetseries.owasp.org/cheatsheets/Clickjacking_Defense_Cheat_Sheet.html"">OWASP Cheat Sheets</a> - Clickjacking Defense
+  Cheat Sheet </li>
+  <li> <a href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors"">developer.mozilla.org</a> -
+  Frame-ancestors </li>
+  <li> <a href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP"">developer.mozilla.org</a> - Content Security Policy (CSP) </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/451.html"">MITRE, CWE-451</a> - User Interface (UI) Misrepresentation of Critical Information
+  </li>
+  <li> <a href=""https://www.w3.org/TR/CSP3/"">w3.org</a> - Content Security Policy Level 3 </li>
+</ul>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S2589,Boolean expressions should not be gratuitous,"<p>If a boolean expression doesnâ€™t change the evaluation of the condition, then it is entirely unnecessary, and can be removed. If it is gratuitous
+because it does not match the programmerâ€™s intent, then itâ€™s a bug and the expression should be fixed.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (a) {
+  if (a) { // Noncompliant
+    doSomething();
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (a) {
+  if (b) {
+    doSomething();
+  }
+}
+
+// or
+if (a) {
+  doSomething();
+}
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/571"">MITRE, CWE-571</a> - Expression is Always True </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/570"">MITRE, CWE-570</a> - Expression is Always False </li>
+</ul>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3798,Variables and functions should not be declared in the global scope,"<p>Any variable or function declared in the global scope implicitly becomes attached to the global object (the <code>window</code> object in a browser
+environment). To make it explicit this variable or function should be a property of <code>window</code>. When it is meant to be used just locally, it
+should be declared with the <code>const</code> or <code>let</code> keywords (since ECMAScript 2015) or within an Immediately-Invoked Function
+Expression (IIFE).</p>
+<p>This rule should not be activated when modules are used.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var myVar = 42;       // Noncompliant
+function myFunc() { } // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+window.myVar = 42;
+window.myFunc = function() { };
+</pre>
+<p>or</p>
+<pre>
+let myVar = 42;
+let myFunc = function() { }
+</pre>
+<p>or</p>
+<pre>
+// IIFE
+(function() {
+  var myVar = 42;
+  function myFunc() { }
+})();
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S4721,Using shell interpreter when executing OS commands is security-sensitive,"<p>Arbitrary OS command injection vulnerabilities are more likely when a shell is spawned rather than a new process, indeed shell meta-chars can be
+used (when parameters are user-controlled for instance) to inject OS commands.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> OS command name or parameters are user-controlled. </li>
+</ul>
+<p>There is a risk if you answered yes to this question.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Use functions that donâ€™t spawn a shell.</p>
+<h2>Sensitive Code Example</h2>
+<pre>
+const cp = require('child_process');
+
+// A shell will be spawn in these following cases:
+cp.exec(cmd); // Sensitive
+cp.execSync(cmd); // Sensitive
+
+cp.spawn(cmd, { shell: true }); // Sensitive
+cp.spawnSync(cmd, { shell: true }); // Sensitive
+cp.execFile(cmd, { shell: true }); // Sensitive
+cp.execFileSync(cmd, { shell: true }); // Sensitive
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const cp = require('child_process');
+
+cp.spawnSync(""/usr/bin/file.exe"", { shell: false }); // Compliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A1-Injection"">OWASP Top 10 2017 Category A1</a> - Injection </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/78"">MITRE, CWE-78</a> - Improper Neutralization of Special Elements used in an OS Command </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat1"">SANS Top 25</a> - Insecure Interaction Between Components </li>
+</ul>",MAJOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S4143,Collection elements should not be replaced unconditionally,"<p>It is highly suspicious when a value is saved for a key or index and then unconditionally overwritten. Such replacements are likely in error.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+ fruits[1] = ""banana"";
+ fruits[1] = ""apple"";  // Noncompliant - value on index 1 is overwritten
+
+ myMap.set(""key"", 1);
+ myMap.set(""key"", 2); // Noncompliant - value for key ""key"" is replaced
+
+ mySet.add(1);
+ mySet.add(1); // Noncompliant - element is already in the set
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S3863,Imports from the same modules should be merged,"<p>Multiple imports from the same module should be merged together to improve readability.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+import { B1 } from 'b';
+import { B2 } from 'b'; // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+import { B1, B2 } from 'b';
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S4144,Functions should not have identical implementations,"<p>When two functions have the same implementation, either it was a mistake - something else was intended - or the duplication was intentional, but
+may be confusing to maintainers. In the latter case, the code should be refactored.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function calculateCode() {
+  doTheThing();
+  doOtherThing();
+  return code;
+}
+
+function getName() {  // Noncompliant
+  doTheThing();
+  doOtherThing();
+  return code;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function calculateCode() {
+  doTheThing();
+  doOtherThing();
+  return code;
+}
+
+function getName() {
+  return calculateCode();
+}
+</pre>
+<h2>Exceptions</h2>
+<p>Functions with fewer than 3 lines are ignored.</p>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S2870,"""delete"" should not be used on arrays","<p>The <code>delete</code> operator can be used to remove a property from any object. Arrays are objects, so the <code>delete</code> operator can be
+used here too, but if it is, a hole will be left in the array because the indexes/keys wonâ€™t be shifted to reflect the deletion.</p>
+<p>The proper method for removing an element at a certain index would be:</p>
+<ul>
+  <li> <code>Array.prototype.splice</code> - add/remove elements from the array </li>
+  <li> <code>Array.prototype.pop</code> - add/remove elements from the end of the array </li>
+  <li> <code>Array.prototype.shift</code> - add/remove elements from the beginning of the array </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var myArray = ['a', 'b', 'c', 'd'];
+
+delete myArray[2];  // Noncompliant. myArray =&gt; ['a', 'b', undefined, 'd']
+console.log(myArray[2]); // expected value was 'd' but output is undefined
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var myArray = ['a', 'b', 'c', 'd'];
+
+// removes 1 element from index 2
+removed = myArray.splice(2, 1);  // myArray =&gt; ['a', 'b', 'd']
+console.log(myArray[2]); // outputs 'd'
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3001,"""delete"" should be used only with object properties","<p>The semantics of the <code>delete</code> operator are a bit tricky, and it can only be reliably used to remove properties from objects. Pass
+anything else to it, and you may or may not get the desired result.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var x  = 1;
+delete x;       // Noncompliant
+
+function foo(){
+..
+}
+
+delete foo;  // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var obj = {
+  x:1,
+  foo: function(){
+  ...
+  }
+};
+delete obj.x;
+delete obj.foo;
+</pre>",MINOR,JavaScript,BUG,FALSE

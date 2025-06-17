@@ -1,0 +1,272 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S4823,Using command line arguments is security-sensitive,"<p>Using command line arguments is security-sensitive. It has led in the past to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-7281"">CVE-2018-7281</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-12326"">CVE-2018-12326</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-3198"">CVE-2011-3198</a> </li>
+</ul>
+<p>Command line arguments can be dangerous just like any other user input. They should never be used without being first validated and sanitized.</p>
+<p>Remember also that any user can retrieve the list of processes running on a system, which makes the arguments provided to them visible. Thus
+passing sensitive information via command line arguments should be considered as insecure.</p>
+<p>This rule raises an issue when on every program entry points (<code>main</code> methods) when command line arguments are used. The goal is to guide
+security code reviews.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> any of the command line arguments are used without being sanitized first. </li>
+  <li> your application accepts sensitive information via command line arguments. </li>
+</ul>
+<p>If you answered yes to any of these questions you are at risk.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p><a href=""https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet"">Sanitize</a> all command line arguments before using them.</p>
+<p>Any user or application can list running processes and see the command line arguments they were started with. There are safer ways of providing
+sensitive information to an application than exposing them in the command line. It is common to write them on the process' standard input, or give the
+path to a file containing the information.</p>
+<h2>Sensitive Code Example</h2>
+<pre>
+// The process object is a global that provides information about, and control over, the current Node.js process
+var param = process.argv[2]; // Sensitive: check how the argument is used
+console.log('Param: ' + param);
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A1-Injection"">OWASP Top 10 2017 Category A1</a> - Injection </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/88.html"">MITRE, CWE-88</a> - Argument Injection or Modification </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/214.html"">MITRE, CWE-214</a> - Information Exposure Through Process Environment </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat1"">SANS Top 25</a> - Insecure Interaction Between Components </li>
+</ul>
+<h2>Deprecated</h2>
+<p>This rule is deprecated, and will eventually be removed.</p>",CRITICAL,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S6324,Regular expressions should not contain control characters,"<p>Entries in the ASCII table below code 32 are known as control characters or non-printing characters. As they are not common in JavaScript strings,
+using these invisible characters in regular expressions is most likely a mistake.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+const pattern1 = /\x1a/;
+const pattern2 = new RegExp('\x1a');
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const pattern1 = /\x20/;
+const pattern2 = new RegExp('\x20');
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S6325,Regular expression literals should be used when possible,"<p>Regular expression literals should be preferred over the <code>RegExp</code> constructor calls when the pattern is a literal. Simply using a
+regular expression literal is more concise and easier to read and does not require escaping like a string literal does.</p>
+<p>Using the <code>RegExp</code> constructor is suitable when the pattern is computed dynamically, e.g. when it is provided by the user.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+new RegExp(/foo/);
+new RegExp('bar');
+new RegExp('baz', 'i');
+new RegExp(""\\d+"");
+new RegExp(`qux|quuz`);
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+/foo/;
+/bar/;
+/baz/i;
+/\d+/;
+/qux|quuz/;
+new RegExp(`Dear ${title},`);
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S6323,Alternation in regular expressions should not contain empty alternatives,"<p>Alternation is used to match a single regular expression out of several possible regular expressions. If one of the alternatives is empty it would
+match any input, which is most probably a mistake.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+/Jack|Peter|/.test('John'); // Noncompliant - returns 'true'
+/Jack||Peter/.test('John'); // Noncompliant - returns 'true'
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+/Jack|Peter/.test('John'); // returns 'false'
+</pre>
+<h2>Exceptions</h2>
+<p>One could use an empty alternation to make a regular expression group optional. Rule will not report on such cases.</p>
+<pre>
+/mandatory(-optional|)/.test('mandatory'); // returns 'true'
+/mandatory(-optional|)/.test('mandatory-optional'); // returns 'true'
+</pre>
+<p>However, if there is a quantifier after the group the issue will be reported as using both <code>|</code> and quantifier is redundant.</p>
+<pre>
+/mandatory(-optional|)?/.test('mandatory'); // Noncompliant - using both `|` inside the group and `?` for the group.
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S6328,Replacement strings should reference existing regular expression groups,"<p>If the first parameter of <code>String.replace</code> is a regular expression, a special syntax can be used in the replacement string to reference
+capturing groups. Use <code>$n</code> to reference the group by number and <code>$&lt;Name&gt;</code> to reference the group by name. Because
+replacements strings in <code>String.replace</code> are interpreted at runtime, nothing prevents you to reference nonexisting group, with nonexisting
+index or bad name, then the resulting string will be wrong. This rule statically validates that all referenced groups exist when replacing with
+<code>String.replace</code> or <code>String.replaceAll</code> methods.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+const str = 'James Bond';
+console.log(str.replace(/(\w+)\s(\w+)/, '$1, $0 $1')); // Noncompliant, index is 1-based, '$0' does not exist, prints 'James, $0 James'
+console.log(str.replace(/(?&lt;firstName&gt;\w+)\s(?&lt;lastName&gt;\w+)/, '$&lt;surname&gt;, $&lt;firstName&gt; $&lt;surname&gt;')); // Noncompliant &nbsp;'$&lt;surname&gt;' does not exist, prints ', James '
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const str = 'James Bond';
+console.log(str.replace(/(\w+)\s(\w+)/, '$2, $1 $2'));
+console.log(str.replace(/(?&lt;firstName&gt;\w+)\s(?&lt;lastName&gt;\w+)/, '$&lt;lastName&gt;, $&lt;firstName&gt; $&lt;lastName&gt;'));
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S4822,Promise rejections should not be caught by 'try' block,"<p>An exception (including <code>reject</code>) thrown by a promise will not be caught by a nesting <code>try</code> block, due to the asynchronous
+nature of execution. Instead, use <code>catch</code> method of <code>Promise</code> or wrap it inside <code>await</code> expression.</p>
+<p>This rule reports <code>try-catch</code> statements containing nothing else but call(s) to a function returning a <code>Promise</code> (thus itâ€™s
+less likely that <code>catch</code> is intended to catch something else than <code>Promise</code> rejection).</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function runPromise() {
+  return Promise.reject(""rejection reason"");
+}
+
+function foo() {
+  try { // Noncompliant, the catch clause of the 'try' will not be executed for the code inside promise
+    runPromise();
+  } catch (e) {
+    console.log(""Failed to run promise"", e);
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function foo() {
+  runPromise().catch(e =&gt; console.log(""Failed to run promise"", e));
+}
+
+// or
+async function foo() {
+  try {
+    await runPromise();
+  } catch (e) {
+    console.log(""Failed to run promise"", e);
+  }
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S6326,Regular expressions should not contain multiple spaces,"<p>Multiple spaces in a regular expression can make it hard to tell how many spaces should be matched. Itâ€™s more readable to use only one space and
+then indicate with a quantifier how many spaces are expected.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+const pattern = /Hello,   world!/;
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const pattern = /Hello, {3}world!/;
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1313,Using hardcoded IP addresses is security-sensitive,"<p>Hardcoding IP addresses is security-sensitive. It has led in the past to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2006-5901"">CVE-2006-5901</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2005-3725"">CVE-2005-3725</a> </li>
+</ul>
+<p>Todayâ€™s services have an ever-changing architecture due to their scaling and redundancy needs. It is a mistake to think that a service will always
+have the same IP address. When it does change, the hardcoded IP will have to be modified too. This will have an impact on the product development,
+delivery, and deployment:</p>
+<ul>
+  <li> The developers will have to do a rapid fix every time this happens, instead of having an operation team change a configuration file. </li>
+  <li> It misleads to use the same address in every environment (dev, sys, qa, prod). </li>
+</ul>
+<p>Last but not least it has an effect on application security. Attackers might be able to decompile the code and thereby discover a potentially
+sensitive address. They can perform a Denial of Service attack on the service, try to get access to the system, or try to spoof the IP address to
+bypass security checks. Such attacks can always be possible, but in the case of a hardcoded IP address solving the issue will take more time, which
+will increase an attackâ€™s impact.</p>
+<h2>Ask Yourself Whether</h2>
+<p>The disclosed IP address is sensitive, e.g.:</p>
+<ul>
+  <li> Can give information to an attacker about the network topology. </li>
+  <li> Itâ€™s a personal (assigned to an identifiable person) IP address. </li>
+</ul>
+<p>There is a risk if you answered yes to any of these questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Donâ€™t hard-code the IP address in the source code, instead make it configurable with environment variables, configuration files, or a similar
+approach. Alternatively, if confidentially is not required a domain name can be used since it allows to change the destination quickly without having
+to rebuild the software.</p>
+<h2>Sensitive Code Example</h2>
+<pre>
+ip = ""192.168.12.42""; // Sensitive
+
+const net = require('net');
+var client = new net.Socket();
+client.connect(80, ip, function() {
+  // ...
+});
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+ip = process.env.IP_ADDRESS; // Compliant
+
+const net = require('net');
+var client = new net.Socket();
+client.connect(80, ip, function() {
+  // ...
+});
+</pre>
+<h2>Exceptions</h2>
+<p>No issue is reported for the following cases because they are not considered sensitive:</p>
+<ul>
+  <li> Loopback addresses 127.0.0.0/8 in CIDR notation (from 127.0.0.0 to 127.255.255.255) </li>
+  <li> Broadcast address 255.255.255.255 </li>
+  <li> Non routable address 0.0.0.0 </li>
+  <li> Strings of the form <code>2.5.&lt;number&gt;.&lt;number&gt;</code> as they <a href=""http://www.oid-info.com/introduction.htm"">often match
+  Object Identifiers</a> (OID). </li>
+</ul>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+</ul>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S6353,Regular expression quantifiers and character classes should be used concisely,"<p>With regular expressions syntax, itâ€™s possible to express the same thing in many ways. For example, to match a two-digit number, one could write
+<code>[0-9]{2,2}</code> or <code>\d{2}</code>. Latter is not only shorter in terms of expression length, but also easier to read and thus to maintain.
+This rule recommends to replace some bulky quantifiers and character classes with more concise equivalents:</p>
+<ul>
+  <li> <code>\d</code> for <code>[0-9]</code> and <code>\D</code> for <code>[^0-9]</code> </li>
+  <li> <code>\w</code> for <code>[A-Za-z0-9_]</code> and <code>\W</code> for <code>[^A-Za-z0-9_]</code> </li>
+  <li> <code>.</code> for character classes matching everything (e.g. <code>[\w\W]</code>, <code>[\d\D]</code>, or <code>[\s\S]</code> with
+  <code>s</code> flag) </li>
+  <li> <code>x?</code> for <code>x{0,1}</code>, <code>x*</code> for <code>x{0,}</code>, <code>x+</code> for <code>x{1,}</code>, <code>x{N}</code> for
+  <code>x{N,N}</code> </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<pre>
+/a{1,}/; // Noncompliant, '{1,}' quantifier is the same as '+'
+/[A-Za-z0-9_]/; // Noncompliant, '\w' is equivalent
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+/a+/;
+/\w/;
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S6351,Regular expressions with the global flag should be used with caution,"<p>Regular expressions with the global flag turned on can be a source of tricky bugs for uninformed users, and should therefore be used with caution.
+Such regular expressions are stateful, that is, they maintain an internal state through the <code>lastIndex</code> property, which is updated and used
+as starting point on every call to <code>RegExp.prototype.test()</code> and <code>RegExp.prototype.exec()</code>, even when testing a different
+string. The <code>lastIndex</code> property is eventually reset when these functions return <code>false</code> and <code>null</code> respectively.</p>
+<p>This rule raises an issue when:</p>
+<ul>
+  <li> a regular expression is tested against different inputs with <code>RegExp.prototype.test()</code> or <code>RegExp.prototype.exec()</code> </li>
+  <li> a regular expression is defined within a loop condition while used with <code>RegExp.prototype.exec()</code> </li>
+  <li> a regular expression turns on both global <code>g</code> and sticky <code>y</code> flags </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<pre>
+const datePattern = /\d{4}-\d{2}-\d{2}/g;
+datePattern.test('2020-08-06');
+datePattern.test('2019-10-10'); // Noncompliant: the regex will return ""false"" despite the date being well-formed
+
+const str = 'foodie fooled football';
+while ((result = /foo*/g.exec(str)) !== null) { // Noncompliant: a regex is defined at each iteration causing an infinite loop
+  /* ... */
+}
+
+const stickyPattern = /abc/gy; // Noncompliant: a regex defined as both sticky and global ignores the global flag
+stickyPattern.test(/* ... */);
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const datePattern = /\d{4}-\d{2}-\d{2}/;
+datePattern.test('2020-08-06');
+datePattern.test('2019-10-10'); // Compliant
+
+const reg = /foo*/g;
+const str = 'foodie fooled football';
+while ((result = reg.exec(str)) !== null) { // Compliant
+  /* ... */
+}
+
+const stickyPattern = /abc/y; // Compliant
+stickyPattern.test(/* ... */);
+</pre>",MAJOR,JavaScript,BUG,FALSE

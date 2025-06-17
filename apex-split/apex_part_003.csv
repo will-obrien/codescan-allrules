@@ -1,0 +1,87 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+common-sf:InsufficientLineCoverage,Lines should have sufficient coverage by tests,An issue is created on a file as soon as the line coverage on this file is less than the required threshold. It gives the number of lines to be covered in order to reach the required threshold.,MAJOR,APEX,CODE_SMELL,FALSE
+common-sf:InsufficientCommentDensity,Source files should have a sufficient density of comment lines,An issue is created on a file as soon as the density of comment lines on this file is less than the required threshold. The number of comment lines to be written in order to reach the required threshold is provided by each issue message.,MAJOR,APEX,CODE_SMELL,FALSE
+common-sf:DuplicatedBlocks,Source files should not have any duplicated blocks,An issue is created on a file as soon as there is at least one block of duplicated code on this file,MAJOR,APEX,CODE_SMELL,FALSE
+common-sf:SkippedUnitTests,Skipped unit tests should be either removed or fixed,Skipped unit tests are considered as dead code. Either they should be activated again (and updated) or they should be removed.,MAJOR,APEX,CODE_SMELL,FALSE
+common-sf:FailedUnitTests,Failed unit tests should be fixed,Test failures or errors generally indicate that regressions have been introduced. Those tests should be handled as soon as possible to reduce the cost to fix the corresponding regressions.,MAJOR,APEX,BUG,FALSE
+sf:AvoidSizeOfSoql,Avoid Calling sizeOf on a SOQL Statement.,"It's better to use an aggregate call like select COUNT() from table. This rule is not applied to test methods.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	public static void main( String as[] ) {  
+		integer size = [ select id from table ].size();  //Bad: this is not recommended.
+		
+		integer size = [ select count() from table ]; 	//Good: this is preferred.
+	}
+}
+
+    </pre>",MAJOR,APEX,BUG,FALSE
+sf:AbstractClassWithoutAnyMethod,Abstract Class without any Methods,"If an abstract class does not provide any methods, it may be acting as a simple data container 
+that is not meant to be instantiated. In this case, it is probably better to use a private or 
+protected constructor in order to prevent instantiation than make the class misleadingly abstract.
+	   <BR><h2>Example:</h2><pre>
+
+//Bad: data only container?
+public class abstract Example {
+	String field;
+	Integer otherField;
+}
+
+//Good: data container class is protected against instantiation.
+public class Example {
+	String field;
+	Integer otherField;
+	
+	protected Example(){	
+		//protected so that instantiation is not possible
+	}
+}
+            
+        </pre>",BLOCKER,APEX,CODE_SMELL,FALSE
+sf:AvoidMethodsBeforeInitializers,Avoid Calling Methods before Initializers in Constructors,"Local variables should be initialized before calling other methods in the class. Since the constructor may not be fully initialized, the methods may fail due to the state of the object.
+    	<br/>
+    	If you need to run a method, try to initialize all variables first.
+    	<br/>
+    	Note that an implemented accessors (e.g. integer a { get { ... return something } }) is counted as a method as it can also rely on other variables
+		
+      <BR><h2>Example:</h2><pre>
+
+public class Foo {
+  private String status;
+  public Foo(String status){
+	if ( getStatus() == 'something' ){		//Bad: this would fail, as the constructor has not completely initialized the object yet.
+		// ...
+	}
+	this.status = status;
+  }
+  public String getStatus(){
+  	return this.status;
+  }
+}
+
+    </pre>",MAJOR,APEX,BUG,FALSE
+sf:AvoidSoqlWithNegativeLogic,Avoid Calling SOQL with Negative Expressions.,"When working with very large amounts of data, SOQL calls using negative expressions cannot use an index and may be slow.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	public static void main( String as[] ) {  
+		Account[] accs = [ select id from account where field__c != 123 ];  //Bad: this is not recommended.
+	}
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AbstractClassWithoutAbstractMethod,Abstract Class Without Abstract Method,"The abstract class does not contain any abstract methods. An abstract class suggests
+an incomplete implementation, which is to be completed by subclasses implementing the
+abstract methods. If the class is intended to be used as a base class only (not to be instantiated
+directly) a protected constructor can be provided prevent direct instantiation.
+      <BR><h2>Example:</h2><pre>
+
+
+public abstract class Foo {			//Bad: Consider using abstract methods or removing
+  									// the abstract modifier and adding protected constructors
+  void Integer method1() { ... }
+  void Integer method2() { ... }
+
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE

@@ -1,0 +1,222 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S101,Class names should comply with a naming convention,"<p>Shared coding conventions allow teams to collaborate effectively. This rule allows to check that all class names (and interfaces for TypeScript)
+match a provided regular expression.</p>
+<h2>Noncompliant Code Example</h2>
+<p>With default provided regular expression <code>^[A-Z][a-zA-Z0-9]*$</code>:</p>
+<pre>
+class my_class {...}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+class MyClass {...}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3801,"Functions should use ""return"" consistently","<p>Unlike strongly typed languages, JavaScript does not enforce a return type on a function. This means that different paths through a function can
+return different types of values, which can be very confusing to the user and significantly harder to maintain.</p>
+<p>In particular a function, in JavaScript, will return <code>undefined</code> in any of the following cases:</p>
+<ul>
+  <li> It exits without a <code>return</code> statement. </li>
+  <li> It executes a <code>return</code> with no value. </li>
+</ul>
+<p>This rule verifies that return values are either always or never specified for each path through a function.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function foo(a) { // Noncompliant, function exits without ""return""
+  if (a == 1) {
+    return true;
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function foo(a) {
+  if (a == 1) {
+    return true;
+  }
+  return false;
+}
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1192,String literals should not be duplicated,"<p>Duplicated string literals make the process of refactoring error-prone, since you must be sure to update all occurrences.</p>
+<p>On the other hand, constants can be referenced from many places, but only need to be updated in a single place.</p>
+<h2>Exceptions</h2>
+<p>To prevent generating some false-positives, literals having less than 10 characters are excluded as well as literals matching <code>/^\w*$/</code>.
+String literals inside import/export statements and JSX attributes are also ignored. The same goes for statement-like string literals, e.g. <code>'use
+strict';</code>.</p>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S1515,Functions should not be defined inside loops,"<p>Defining a function inside of a loop can yield unexpected results. Such a function keeps references to the variables which are defined in outer
+scopes. All function instances created inside the loop therefore see the same values for these variables, which is probably not expected.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var funs = [];
+for (var i = 0; i &lt; 13; i++) {
+  funs[i] = function() { // Non-Compliant
+    return i;
+  };
+}
+console.log(funs[0]()); // 13 instead of 0
+console.log(funs[1]()); // 13 instead of 1
+console.log(funs[2]()); // 13 instead of 2
+console.log(funs[3]()); // 13 instead of 3
+...
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1751,Loops with at most one iteration should be refactored,"<p>A loop with at most one iteration is equivalent to the use of an <code>if</code> statement to conditionally execute one piece of code. No developer
+expects to find such a use of a loop statement. If the initial intention of the author was really to conditionally execute one piece of code, an
+<code>if</code> statement should be used instead.</p>
+<p>At worst that was not the initial intention of the author and so the body of the loop should be fixed to use the nested <code>return</code>,
+<code>break</code> or <code>throw</code> statements in a more appropriate way.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+for (let i = 0; i &lt; 10; i++) { // noncompliant, loop only executes once
+  console.log(""i is "" + i);
+  break;
+}
+...
+for (let i = 0; i &lt; 10; i++) { // noncompliant, loop only executes once
+  if (i == x) {
+    break;
+  } else {
+    console.log(""i is "" + i);
+    return;
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+for (let i = 0; i &lt; 10; i++) {
+  console.log(""i is "" + i);
+}
+...
+for (let i = 0; i &lt; 10; i++) {
+  if (i == x) {
+    break;
+  } else {
+    console.log(""i is "" + i);
+  }
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S117,"Variable, property and parameter names should comply with a naming convention","<p>Sharing some naming conventions is a key point to make it possible for a team to efficiently collaborate. This rule checks that all variable,
+property and parameter names match a provided regular expression.</p>
+<h2>Noncompliant Code Example</h2>
+<p>With the default regular expression <code>^[_$A-Za-z][$A-Za-z0-9]*$|^[_$A-Z][_$A-Z0-9]+$</code>:</p>
+<pre>
+const foo_bar = 1;
+const baz_ = 2;
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const fooBar = 1;
+const _baz = 2;
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S2189,Loops should not be infinite,"<p>An infinite loop is one that will never end while the program is running, i.e., you have to kill the program to get out of the loop. Whether it is
+by meeting the loopâ€™s end condition or via a <code>break</code>, every loop should have an end condition.</p>
+<h3>Known Limitations</h3>
+<ul>
+  <li> False positives: when <code>yield</code> is used - <a href=""https://github.com/SonarSource/SonarJS/issues/674"">Issue #674</a>. </li>
+  <li> False positives: when an exception is raised by a function invoked within the loop. </li>
+  <li> False negatives: when a loop condition is based on an element of an array or object. </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<pre>
+for (;;) {  // Noncompliant; end condition omitted
+  // ...
+}
+
+var j = 0;
+while (true) { // Noncompliant; constant end condition
+  j++;
+}
+
+var k;
+var b = true;
+while (b) { // Noncompliant; constant end condition
+  k++;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+while (true) { // break will potentially allow leaving the loop
+  if (someCondition) {
+    break;
+  }
+}
+
+var k;
+var b = true;
+while (b) {
+  k++;
+  b = k &lt; 10;
+}
+
+outer:
+while(true) {
+  while(true) {
+    break outer;
+  }
+}
+</pre>",BLOCKER,JavaScript,BUG,FALSE
+javascript:S1301,"""switch"" statements should have at least 3 ""case"" clauses","<p><code>switch</code> statements are useful when there are many different cases depending on the value of the same expression.</p>
+<p>For just one or two cases however, the code will be more readable with <code>if</code> statements.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+switch (variable) {
+  case 0:
+    doSomething();
+    break;
+  default:
+    doSomethingElse();
+    break;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (variable == 0) {
+  doSomething();
+} else {
+  doSomethingElse();
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S108,Nested blocks of code should not be left empty,"<p>Most of the time a block of code is empty when a piece of code is really missing. So such empty block must be either filled or removed.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+for (var i = 0; i &lt; length; i++) {}  // Empty on purpose or missing piece of code ?
+</pre>
+<h2>Exceptions</h2>
+<p>When a block contains a comment, this block is not considered to be empty. Moreover <code>catch</code> blocks are ignored.</p>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S4829,Reading the Standard Input is security-sensitive,"<p>Reading Standard Input is security-sensitive. It has led in the past to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2005-2337"">CVE-2005-2337</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-11449"">CVE-2017-11449</a> </li>
+</ul>
+<p>It is common for attackers to craft inputs enabling them to exploit software vulnerabilities. Thus any data read from the standard input (stdin)
+can be dangerous and should be validated.</p>
+<p>This rule flags code that reads from the standard input.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> data read from the standard input is not sanitized before being used. </li>
+</ul>
+<p>You are at risk if you answered yes to this question.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p><a href=""https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet"">Sanitize</a> all data read from the standard input before using it.</p>
+<h2>Sensitive Code Example</h2>
+<pre>
+// The process object is a global that provides information about, and control over, the current Node.js process
+// All uses of process.stdin are security-sensitive and should be reviewed
+
+process.stdin.on('readable', () =&gt; {
+	const chunk = process.stdin.read(); // Sensitive
+	if (chunk !== null) {
+		dosomething(chunk);
+	}
+});
+
+const readline = require('readline');
+readline.createInterface({
+	input: process.stdin // Sensitive
+}).on('line', (input) =&gt; {
+	dosomething(input);
+});
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/20.html"">MITRE, CWE-20</a> - Improper Input Validation </li>
+</ul>
+<h2>Deprecated</h2>
+<p>This rule is deprecated, and will eventually be removed.</p>",CRITICAL,JavaScript,SECURITY_HOTSPOT,FALSE

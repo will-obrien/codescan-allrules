@@ -1,0 +1,139 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:RightBracesLinePositions,Right Braces Positioning Should Be Consistent,"The line positioning of closing braces should remain consistent throughout the project. 
+
+       <BR><h2>Example:</h2><pre>
+      
+public class Foo {
+	public void test1() {
+		if ( true )
+		{				// This is an example of the closing brace on the next line. (blockBracesPosition parameter set to Next)
+		}
+	}
+}
+
+public class Foo {
+	public void test1() {
+		try{
+		}catch(Exception e){     // This is an example of the closing brace on the same line. (blockBracesPosition parameter set to Ignore)
+		}finally{
+		}
+	}
+}
+
+
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:RightBracesSpacingPositions,Right Braces Spacing Should Be Consistent,"The space between a closing brace and the next statement should remain consistent throughout the project.
+       <BR><h2>Example:</h2><pre>
+public class Foo{
+	public void example1(){
+		if ( true ){
+		}else{			// This is an example of no spaces. (Rule set to None)
+		}
+	}
+}
+
+public class Bar{
+	public void example2(){
+		if ( true ){
+		} else{			// This is an example of a single space. (Rule set to Single)
+		}
+	}
+}
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:ThrowFromFinallyBlock,Throw from Finally Block,"Avoid throwing from a finally block, this can discard any previous exceptions.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/584.html"">MITRE, CWE-584</a> - Return Inside Finally Block </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/mIEbAQ"">CERT, ERR04-J.</a> - Do not complete abruptly from a finally block </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class Bar {
+	public String foo() {
+		try {
+			...
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			throw new Exception('My Exception');  		//Bad: Throwing an exception is not recommended here.
+		}
+	}
+}
+
+      </pre>",CRITICAL,APEX,BUG,FALSE
+sf:ClassNamedException,Exception Classes Should Extend an Exception,"A Class name that ends in ""Exception"" should extend an exception.
+		<BR><h2>Example:</h2><pre>
+
+public class MyException { //Bad: we would expect this class to be an exception
+}
+
+public class MyException extends Exception { //Good: this class is an exception after all.
+}
+
+		</pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:AvoidInstantiatingObjectsInLoops,Avoid instantiating objects in loops,"New objects created within loops should be checked to see if they can created outside and reused.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	public static void main( String as[] ) {  
+		for (Integer i = 0; i < 10; i++) {
+		
+			Foo f = new Foo(); 			//Bad: avoid this whenever you can, it's really expensive.
+		}
+	}
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:StringInstantiation,String Instantiation,"Avoid instantiating String objects; this is usually unnecessary since they are immutable and can be safely shared.
+    <BR><h2>Example:</h2><pre>
+
+private String bar = new String('bar'); //Bad: this is not recommended.
+
+private String bar = 'bar';				//Good: this is preferred.
+
+    </pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:exception,Tracks CodeScan Parser Problems,"An exception occurred while parsing this file. Please send a description of this problem to support@code-scan.com.<BR>
+<BR>
+WARNING: No violation can be detected on this file due this error.",MAJOR,APEX,CODE_SMELL,FALSE
+sf:MethodNamingConventions,Method Naming Conventions,"Method names should always begin with a lower case character, and should not contain underscores.
+          <BR><h2>Example:</h2><pre>
+
+public class Foo {
+	public void fooStuff() {  //Good: camel-case is preferred.
+	}
+	
+	public void Foo_Bar(){    //Bad: not recommended.
+	}
+}
+
+          </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidUsingHardCodedId,Avoid Using Hard Coded Salesforce Id,"Application with hard-coded Salesforce Ids can become impossible to deploy in some cases. 
+Using Custom Settings for Salesforce Ids is preferable.
+	    	
+	    <BR><h2>Example:</h2><pre>
+	    
+public class Foo {
+	private String RecordTypeId = '906F00000008msrIAA'; 	//Bad: Salesforce Id should not be hard-coded.
+	
+	public String GetId(){
+		return ServerSettings__c.getInstance().MyId__c;  //Good: Salesforce Id is fetched from custom settings. 
+	}
+	
+}
+	    
+	    </pre>",MAJOR,APEX,BUG,FALSE
+sf:ShortVariable,Short Variable Name,"Fields, local variables, or parameter names that are very short are not helpful to the reader.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	private Integer q = 15; 						//Bad: the field name is too short.
+	public static void main( String as[] ) {  	//Bad: parameter name is too short.
+		Integer r = 20 + q; 						//Bad: local variable name is too short.
+		for (Integer i = 0; i < 10; i++) { 			//Good: this is not a violation (inside 'for' loop).
+			//do stuff
+		}
+	}
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE

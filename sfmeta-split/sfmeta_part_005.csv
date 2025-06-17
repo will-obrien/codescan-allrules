@@ -1,0 +1,58 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sfmeta:ExcessiveWorkflowsOrgWide,Avoid Excess Workflow Rules in Org,"This rule helps to limit the number of workflow rules in your salesforce org. This ensures that the workflow rules will not be overloading the system by doing extensive calculations
+ whenever a record is created or updated.
+ <br/>
+ As per the <a href=""https://help.salesforce.com/s/articleView?id=sf.workflow_limits.htm&type=5"">
+ Salesforce documentation</a>, the limit for workflow rules per org is 2000.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:CustomFieldSecurityInStandardObject,Use Page Layout or FLS to mark CustomField as required,The custom fields should be marked as required on standard/shared objects through page layout or field level security rather than at system level.,CRITICAL,Salesforce Metadata,VULNERABILITY,FALSE
+sfmeta:LimitCustomFields,Limit number of Custom Fields per object,"Having a large number of custom fields per object impacts the performance of queries.
+This rule gives the flexibility to configure a limit on the number of fields that can be associated with an object.
+ <br/>
+ <a href=""https://help.salesforce.com/s/articleView?id=sf.custom_field_allocations.htm&type=5"">
+ Salesforce Custom Field limits across editions</a>",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:FlowDecisionLimit,Flow Decision Limits,"Flows which contain too many decisions are complex and difficult to maintain.
+ Consider reducing the number of decisions or utilizing Apex.",MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:ObjectLookupsOveruse,Potential Overuse - Object Lookups,Salesforce does not allow more than 25 Lookup relationships on a single custom object.,MINOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:ExceedsMaxAllowedComponentsPerType,Avoid Excess Components for Objects,"This rule helps to limit the number of sharing, workflow and validation rules that can be created
+ on an object. This ensures that the components will not be overloading the system by doing extensive calculations
+ whenever a record is created or updated.
+<br/>
+<br/>
+Default Limits<br/>
+Sharing rules should not be more than specified limit per object.
+Default Limit: 19 per objects.
+<br/>
+Active validation rules should not be more than specified limit per object.
+Default Limit: 10 per objects.
+<br/>
+Active Workflow rules should not be more than specified limit per object.
+Default Limit: 10 per objects.
+<br/>
+Inactive Validation rules should not be more than specified limit per object.
+Default Limit: 3 per objects.
+<br/>
+Inactive Workflow rules should not be more than specified limit per object.
+Default Limit: 3 per objects.
+<br/>
+<br/>
+Steps to resolve
+<br/>
+Remove the rules which are redundant or obsolete.",CRITICAL,Salesforce Metadata,CODE_SMELL,FALSE
+common-sfmeta:InsufficientCommentDensity,Source files should have a sufficient density of comment lines,An issue is created on a file as soon as the density of comment lines on this file is less than the required threshold. The number of comment lines to be written in order to reach the required threshold is provided by each issue message.,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:XPathRule,XPath rule template,"CodeScan provides a very handy method for creating new rules by writing an XPath query. When the XPath query finds a match, a violation is created.
+    Let's take a simple example : assume we only want a single form on each metadata fle. 
+  See our <a href=""https://knowledgebase.autorabit.com/codescan/docs/creating-custom-rules-with-xpath-for-codescan-cloud/"">Custom Rules tutorial</a> for more information.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:CheckSystemAdministrator,Limit number of System Administrators,"This rules checks the number of System Administrators for a Salesforce org.
+    <br/>
+    Suggested Solution
+    <br/>
+    Leverage the delegate admin profile option or make custom profiles for these users and make sure
+     they can only access the data that is absolutely essential.",CRITICAL,Salesforce Metadata,VULNERABILITY,FALSE
+sfmeta:ValidationRuleWithoutProduct,Validation Rule Must Reference Product,"For general automation and validation best practices, associate actions in the system to a product line, product type,
+ or product feature. Depending on how widespread the automation is, this ensures that follow-on phases for new lines of
+  business have limited rework. This also ensures optimal performance on automation that runs on Objects, such as Loan,
+   that span many different lines of business.
+   <br/><br/>
+   This rule is specifically for nCino implementations and is not relevant outside of that.
+   If you are not using nCino in your Org, do not activate this rule.
+   nCino specific rules can be determined by the tag ncino-specific.",MAJOR,Salesforce Metadata,CODE_SMELL,TRUE

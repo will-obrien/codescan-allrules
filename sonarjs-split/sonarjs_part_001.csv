@@ -1,0 +1,205 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S1488,Local variables should not be declared and then immediately returned or thrown,"<p>Declaring a variable only to immediately return or throw it is a bad practice.</p>
+<p>Some developers argue that the practice improves code readability, because it enables them to explicitly name what is being returned. However, this
+variable is an internal implementation detail that is not exposed to the callers of the method. The method name should be sufficient for callers to
+know exactly what will be returned.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function computeDurationInMilliseconds() {
+  var duration = (((hours * 60) + minutes) * 60 + seconds ) * 1000 ;
+  return duration;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function computeDurationInMilliseconds() {
+  return (((hours * 60) + minutes) * 60 + seconds ) * 1000 ;
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1994,"""for"" loop increment clauses should modify the loops' counters","<p>It can be extremely confusing when a <code>for</code> loopâ€™s counter is incremented outside of its increment clause. In such cases, the increment
+should be moved to the loopâ€™s increment clause if at all possible.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+for (i = 0; i &lt; 10; j++) { // Noncompliant
+  // ...
+  i++;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+for (i = 0; i &lt; 10; i++, j++) {
+  // ...
+}
+</pre>
+<p>Or</p>
+<pre>
+for (i = 0; i &lt; 10; i++) {
+  // ...
+  j++;
+}
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S1774,The ternary operator should not be used,"<p>While the ternary operator is pleasingly compact, its use can make code more difficult to read. It should therefore be avoided in favor of the more
+verbose <code>if</code>/<code>else</code> structure.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function foo(a) {
+  var b = (a === 'A') ? 'is A' : 'is not A'; // Noncompliant
+  // ...
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function foo(a) {
+  var b;
+  if (a === 'A') {
+    b = 'is A';
+  }
+  else {
+    b = 'is not A';
+  }
+  // ...
+}
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S139,Comments should not be located at the end of lines of code,"<p>This rule verifies that single-line comments are not located at the ends of lines of code. The main idea behind this rule is that in order to be
+really readable, trailing comments would have to be properly written and formatted (correct alignment, no interference with the visual structure of
+the code, not too long to be visible) but most often, automatic code formatters would not handle this correctly: the code would end up less readable.
+Comments are far better placed on the previous empty line of code, where they will always be visible and properly formatted.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var a1 = b + c; // This is a trailing comment that can be very very long
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+// This very long comment is better placed before the line of code
+var a2 = b + c;
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3760,Arithmetic operators should only have numbers as operands,"<p>Expressions with arithmetic (<code>/, *, %, ++, --, -, -=, *=, /=, %=, +=, +</code>), unary (<code>-</code>), or comparison operators (<code>&gt;,
+&lt;, &gt;=, &lt;=</code>) where one, or both, of the operands is a String, Boolean or Date value rely on implicit conversions. Both the
+maintainability and reliability levels of such a piece of code are questionable.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+str = ""80"";
+quarter = str / 4; // Noncompliant
+
+if (str &lt; 10) { // Noncompliant
+   // ...
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+str = ""80"";
+parsedStr = parseInt(str);
+quarter = parsedStr / 4;
+
+if (parsedStr &lt; 10) {
+  // ...
+}
+</pre>
+<h2>Exceptions</h2>
+<ul>
+  <li> Expressions using the binary <code>+</code> operator with at least one <code>String</code> operand are ignored because the <code>+</code>
+  operator will perform a concatenation in that case. </li>
+  <li> Comparisons where both operands are strings are ignored because a lexicographical comparison is performed in that case. </li>
+</ul>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1186,Functions should not be empty,"<p>There are several reasons for a function not to have a function body:</p>
+<ul>
+  <li> It is an unintentional omission, and should be fixed to prevent an unexpected behavior in production. </li>
+  <li> It is not yet, or never will be, supported. In this case an exception should be thrown in languages where that mechanism is available. </li>
+  <li> The method is an intentionally-blank override. In this case a nested comment should explain the reason for the blank override. </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function foo() {
+}
+
+var foo = () =&gt; {};
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function foo() {
+    // This is intentional
+}
+
+var foo = () =&gt; {
+    do_something();
+};
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S2432,Setters should not return values,"<p>Functions declared with the <code>set</code> keyword will automatically return the values they were passed. Thus any value explicitly returned from
+a setter will be ignored, and explicitly returning a value is an error.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var person = {
+  // ...
+  set name(name) {
+    this.name = name;
+    return 42;  // Noncompliant
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var person = {
+  // ...
+  set name(name) {
+    this.name = name;
+  }
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S3524,Braces and parentheses should be used consistently with arrow functions,"<p>Shared coding conventions allow teams to collaborate effectively. This rule raises an issue when the use of parentheses with an arrow function does
+not conform to the configured requirements.</p>
+<h2>Noncompliant Code Example</h2>
+<p>With the configured defaults forbidding parentheses</p>
+<pre>
+var foo = (a) =&gt; { /* ... */ };  // Noncompliant; remove parens from arg
+var bar = (a, b) =&gt; { return 0; };  // Noncompliant; remove curly braces from body
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var foo = a =&gt; { /* ... */ };
+var bar = (a, b) =&gt; 0;
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3403,Strict equality operators should not be used with dissimilar types,"<p>Comparing dissimilar types using the strict equality operators <code>===</code> and <code>!==</code> will always return the same value,
+respectively <code>false</code> and <code>true</code>, because no type conversion is done before the comparison. Thus, such comparisons can only be
+bugs.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var a = 8;
+var b = ""8"";
+
+if (a === b) {  // Noncompliant; always false
+  // ...
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var a = 8;
+var b = ""8"";
+
+if (a == b) {
+  // ...
+}
+</pre>
+<p>or</p>
+<pre>
+var a = 8;
+var b = ""8"";
+
+if (a === Number(b)) {
+  // ...
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S107,Functions should not have too many parameters,"<p>A long parameter list can indicate that a new structure should be created to wrap the numerous parameters or that the function is doing too many
+things.</p>
+<h2>Noncompliant Code Example</h2>
+<p>With a maximum number of 4 parameters:</p>
+<pre>
+function doSomething(param1, param2, param3, param4, param5) {
+...
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function doSomething(param1, param2, param3, param4) {
+...
+}
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE

@@ -1,0 +1,221 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:UnusedNullCheckInEquals,Unused Null Check in Equals,"After checking an object reference for null, you should invoke equals() on that object rather than passing it to another object's equals() method.
+    <BR><h2>Example:</h2><pre>
+		
+public class Test {
+
+  public String method1() { return 'ok';}
+  public String method2() { return null;}
+  
+  public void method(String a) {
+    String b;
+	// I don't know if method1() can be 'null'
+	// but I know 'a' is not null..
+	// I'd better write a.equals(method1())
+	
+	if (a != null && method1().equals(a)) { //Bad: will trigger the rule.
+		//whatever
+	}
+	
+	if (method1().equals(a) && a != null) { //Good: won't trigger the rule.
+		//whatever
+	}
+	
+	if (a != null && method1().equals(b)) { //Good: won't trigger the rule.
+		//whatever
+	}
+	
+	if (a != null && 'LITERAL'.equals(a)) { //Good: won't trigger the rule.
+		//whatever
+	}
+	
+	if (a != null && !a.equals('go')) { //Good: won't trigger the rule.
+		a=method2();
+		if (method1().equals(a)) {
+			//whatever
+		}
+  	}
+  }
+}
+				
+			</pre>",MINOR,APEX,BUG,FALSE
+sf:UnusedFormalParameter,Unused Formal Parameter,"Avoid passing parameters to methods or constructors without actually referencing them in the method body.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+	<li>MISRA C++:2008, 0-1-11 - There shall be no unused parameters (named or unnamed) in nonvirtual functions.</li>
+	<li>MISRA C:2012, 2.7 - There should be no unused parameters in functions</li>
+	<li><a href=""https://wiki.sei.cmu.edu/confluence/display/c/MSC12-C.+Detect+and+remove+code+that+has+no+effect+or+is+never+executed"">CERT, MSC12-C.</a> - Detect and remove code that has no effect or is never executed</li>
+</ul>
+    <BR><h2>Example:</h2><pre>
+
+public class Foo {
+	private void bar(String howdy) {
+		//Bad: howdy is not used.
+	}
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:OpenRedirect,URL Redirection to Untrusted Site,"Checks against redirects to user-controlled locations. 
+Untrusted input could cause an attacker to redirect the user to a malicious site and
+an attacker may be able to launch a phishing scam and steal a users credentials.<br/>
+<br/>
+See <a href=""http://cwe.mitre.org/data/definitions/601.html"">MITRE, CWE-601</a> - URL Redirection to Untrusted Site ('Open Redirect')
+<br/>
+Apex recommendations - <a href=""https://developer.salesforce.com/page/Secure_Coding_Arbitrary_Redirect"">developer.salesforce.com</a> - Secure Coding, Arbitrary Redirect
+<BR/>
+Using the retURL, startURL, saveURL, cancelURL parameters are protected by Salesforce.
+This protection is designed to safely redirect only to domains located within the *.salesforce.com, *.visual.force.com, and *.content.force.com space.
+Anything else returns an error message.
+      <BR><h2>Example:</h2><pre>
+public class without sharing Foo {
+    String unsafeLocation = ApexPages.currentPage().getParameters().get('url_param'); //Bad: this is not recommended.
+    
+    PageReference unsafePage() {
+      if (unsafeLocation )
+       return new PageReference(unsafeLocation);
+    }
+    
+    PageReference safePage() {
+      String retURL = ApexPages.currentPage().getParameters().get('retURL'); //Good: retURL uses internal Salesforce protection mechanism
+      return new PageReference(retURL);
+    }
+    
+    PageReference safePage() {
+      if ( unsafeLocation == 'something ) {                      //Good: this is one possibility for a safer redirect.
+        return new PageReference('/somewhere')
+      } else { 
+        return new pageReference('/somewhere-else')
+      }
+    }
+
+    
+}
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:SwitchStmtsShouldHaveDefault,Switch Statements Should Have a When Else Case,"Switch statements should always use a 'when else' case to account for all values and avoid unexpected functionality.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+	<li>MISRA C:2004, 15.0 - The MISRA C switch syntax shall be used.
+	<li>MISRA C:2004, 15.3 - The final clause of a switch statement shall be the default clause
+	<li>MISRA C++:2008, 6-4-3 - A switch statement shall be a well-formed switch statement.
+	<li>MISRA C++:2008, 6-4-6 - The final clause of a switch statement shall be the default-clause
+	<li>MISRA C:2012, 16.1 - All switch statements shall be well-formed
+	<li>MISRA C:2012, 16.4 - Every switch statement shall have a default label
+	<li>MISRA C:2012, 16.5 - A default label shall appear as either the first or the last switch label of a switch statement
+	<li><a href=""http://cwe.mitre.org/data/definitions/478.html"">MITRE, CWE-478</a> - Missing Default Case in Switch Statement
+	<li><a href=""https://www.securecoding.cert.org/confluence/x/YgE"">CERT, MSC01-C.</a> - Strive for logical completeness
+</ul>
+      <BR><h2>Example:</h2><pre>
+public void bar() {
+    Integer x = 2;
+    switch on x {
+      when 1 { 
+        Integer j = 6;
+      }
+      when 2 { 
+        Integer j = 8;
+      }
+          //Bad: Missing a default.
+    }
+    
+    switch on x {
+      when 1 { 
+        Integer j = 6;
+      }
+      when 2 { 
+        Integer j = 8;
+      }
+      when else {
+        Integer j = 100;  //Good: a default case is specified.
+      }
+    }
+}
+      </pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:UseObjectForClearerAPI,Use Object for Clearer API,"When you write a public method, you should be thinking in terms of an API. If your method is public, it means other class
+will use it, therefore, you want (or need) to offer a comprehensive and evolutive API. If you pass a lot of information
+as a simple series of Strings, you may think of using an Object to represent all those information. You'll get a simplier 
+API (such as doWork(Workload workload), rather than a tedious series of Strings) and more importantly, if you need at some
+point to pass extra data, you'll be able to do so by simply modifying or extending Workload without any modification to
+your API.
+    <BR><h2>Example:</h2><pre>
+
+public class MyClass {
+  public void connect(String username,
+    String pssd, 
+    String databaseName, 
+    String databaseAdress) { ... }  //Bad: Not recommended.
+  
+  public void connectTwo(UserData data) { ... }  //Good: This is preferred. Makes for cleaner code.
+	
+  
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:ForLoopShouldBeWhileLoop,For Loop Should Be While Loop,"Some For loops can be simplified to While loops, this makes them more concise.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+	void bar() {
+		for (;true;) true;		//Bad: The for loop contains no Initialiser or Update.
+		
+			while(true){		//Good: Use while loop instead.
+			
+			}   			
+	}
+}
+ 
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:OldApiVersion,API Version is too old,"This rule identifies classes which are using older versions of the API. Change the API Version of this class.
+  <BR><h2>Example:</h2><pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>
+&lt;ApexClass xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot; >
+    &lt;apiVersion>19.0&lt;/apiVersion>
+    &lt;status>Active&lt;/status>
+&lt;/ApexClass>
+</pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmptyIfStmt,Empty If Statement,"Avoid 'if' statements where a condition is checked but nothing is done about it.
+    <BR><h2>Example:</h2><pre>
+    
+public class Foo {
+ void bar(Integer x) {
+  if (x == 0) {
+  					//Bad: Nothing is done here.
+  }
+ }
+}
+ 
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:MissingStaticMethodInNonInstantiatableClass,Missing Static Method in Non Instantiatable Class,"A class that has private constructors and does not have any static methods or fields cannot be used.
+      <BR><h2>Example:</h2><pre>
+
+//Bad: This class is unusable, since it cannot be
+// instantiated (private constructor),
+// and no static method can be called.
+
+public class Foo {
+  private Foo() {}
+  void foo() {}
+}
+
+
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:AvoidLiteralsInIfCondition,Avoid Literals in If Condition,"Avoid using hard-coded literals in conditional statements. By declaring them as static variables
+or private members with descriptive names maintainability is enhanced. By default, the literals ""-1"" and ""0"" are ignored.
+More exceptions can be defined with the property ""ignoreMagicNumbers"".
+    <BR><h2>Example:</h2><pre>
+
+private static final Integer TEN = 10;
+
+public void downCastPrimitiveType() {
+	
+    if (i == 10) {		//Bad: this is a magic number, buried in a method.
+    	doSomething();
+    }
+    
+    if (i == TEN) {		//Good: preferred approach.
+    	doSomething();
+    }
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE

@@ -1,0 +1,12 @@
+<apex:page controller="failedUnitTestsTriggerController">
+    <apex:form>
+        <h1>VF Rule Trigger: common-vf:FailedUnitTests</h1>
+        <p>This page is designed to trigger the rule: Failed unit tests should be fixed</p>
+        <p>Rule Description: common-vf:FailedUnitTests</p>
+        
+        <apex:pageBlock title="Test Block">
+            <apex:inputText value="{!testValue}" label="Test Input"/>
+            <apex:commandButton value="Test Action" action="{!testAction}"/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,12 @@
+<apex:page controller="inputImgWithoutWidthOrHeightCheckTriggerController">
+    <apex:form>
+        <h1>VF Rule Trigger: vf:InputImgWithoutWidthOrHeightCheck</h1>
+        <p>This page triggers the rule: Image buttons should always have a "width" and a "height" attribute</p>
+        
+        <!-- Triggers vf:InputImgWithoutWidthOrHeightCheck - Image input without alt attribute -->
+        <input type="image" src="{!URLFOR($Resource.SampleImage, 'button.png')}" />
+        
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Submit" action="{!save}" />
+    </apex:form>
+</apex:page>

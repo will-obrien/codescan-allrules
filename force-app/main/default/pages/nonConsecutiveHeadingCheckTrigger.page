@@ -1,0 +1,12 @@
+<apex:page controller="nonConsecutiveHeadingCheckTriggerController">
+    <apex:form>
+        <h1>VF Rule Trigger: vf:NonConsecutiveHeadingCheck</h1>
+        <p>This page is designed to trigger the rule: Avoid Non Consecutive Heading Tags</p>
+        <p>Rule Description: vf:NonConsecutiveHeadingCheck</p>
+        
+        <apex:pageBlock title="Test Block">
+            <apex:inputText value="{!testValue}" label="Test Input"/>
+            <apex:commandButton value="Test Action" action="{!testAction}"/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

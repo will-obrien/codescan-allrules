@@ -1,0 +1,338 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S3785,"""in"" should not be used with primitive types","<p>The <code>in</code> operator tests whether the specified property is in the specified object.</p>
+<p>If the right operand is a of primitive type (i.e., not an object) the <code>in</code> operator raises a <code>TypeError</code>.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var x = ""Foo"";
+""length"" in x; // Noncompliant: TypeError
+0 in x;        // Noncompliant: TypeError
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var x = new String(""Foo"");
+""length"" in x;    // true
+0 in x;           // true
+""foobar"" in x;    // false
+</pre>",CRITICAL,JavaScript,BUG,FALSE
+javascript:S3854,"""super()"" should be invoked appropriately","<p>There are situations where <code>super()</code> must be invoked and situations where <code>super()</code> cannot be invoked.</p>
+<p>The basic rule is: a constructor in a non-derived class cannot invoke <code>super()</code>; a constructor in a derived class must invoke
+<code>super()</code>.</p>
+<p>Furthermore:</p>
+<ul>
+  <li> <code>super()</code> must be invoked before the <code>this</code> and <code>super</code> keywords can be used. </li>
+  <li> <code>super()</code> must be invoked with the same number of arguments as the base class' constructor. </li>
+  <li> <code>super()</code> can only be invoked in a constructor - not in any other method. </li>
+  <li> <code>super()</code> cannot be invoked multiple times in the same constructor. </li>
+</ul>
+<h3>Known Limitations</h3>
+<ul>
+  <li> False negatives: some issues are not raised if the base class is not defined in the same file as the current class. </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<pre>
+class Dog extends Animal {
+  constructor(name) {
+    super();
+    this.name = name;
+    super();         // Noncompliant
+    super.doSomething();
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+class Dog extends Animal {
+  constructor(name) {
+    super();
+    this.name = name;
+    super.doSomething();
+  }
+}
+</pre>",CRITICAL,JavaScript,BUG,FALSE
+javascript:S1219,"""switch"" statements should not contain non-case labels","<p>Even if it is legal, mixing case and non-case labels in the body of a switch statement is very confusing and can even be the result of a typing
+error.</p>
+<h2>Noncompliant Code Example</h2>
+<p>Case 1, the code is syntactically correct but the behavior is not the expected one</p>
+<pre>
+switch (day) {
+  case MONDAY:
+  case TUESDAY:
+  WEDNESDAY:   // instead of ""case WEDNESDAY""
+    doSomething();
+    break;
+  ...
+}
+</pre>
+<p>Case 2, the code is correct and behaves as expected but is hardly readable</p>
+<pre>
+switch (day) {
+  case MONDAY:
+    break;
+  case TUESDAY:
+    foo:for(i = 0 ; i &lt; X ; i++) {
+         /* ... */
+        break foo;  // this break statement doesn't relate to the nesting case TUESDAY
+         /* ... */
+    }
+    break;
+    /* ... */
+}
+</pre>
+<h2>Compliant Solution</h2>
+<p>Case 1</p>
+<pre>
+switch (day) {
+  case MONDAY:
+  case TUESDAY:
+  case WEDNESDAY:
+    doSomething();
+    break;
+  ...
+}
+</pre>
+<p>Case 2</p>
+<pre>
+switch (day) {
+  case MONDAY:
+    break;
+  case TUESDAY:
+    compute(args); // put the content of the labelled ""for"" statement in a dedicated method
+    break;
+
+    /* ... */
+}
+</pre>",BLOCKER,JavaScript,CODE_SMELL,FALSE
+javascript:S1321,"""with"" statements should not be used","<p>The use of the <code>with</code> keyword produces an error in JavaScript strict mode code. However, thatâ€™s not the worst that can be said against
+<code>with</code>.</p>
+<p>Using <code>with</code> allows a short-hand access to an objectâ€™s properties - assuming theyâ€™re already set. But use <code>with</code> to access
+some property not already set in the object, and suddenly youâ€™re catapulted out of the object scope and into the global scope, creating or overwriting
+variables there. Since the effects of <code>with</code> are entirely dependent on the object passed to it, <code>with</code> can be dangerously
+unpredictable, and should never be used.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var x = 'a';
+
+var foo = {
+  y: 1
+}
+
+with (foo) {  // Noncompliant
+  y = 4;  // updates foo.y
+  x = 3;  // does NOT add a foo.x property; updates x var in outer scope
+}
+print(foo.x + "" "" + x); // shows: undefined 3
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var x = 'a';
+
+var foo = {
+  y: 1
+}
+
+foo.y = 4;
+foo.x = 3;
+
+print(foo.x + "" "" + x); // shows: 3 a
+</pre>",MINOR,JavaScript,BUG,FALSE
+javascript:S3782,Arguments to built-in functions should match documented types,"<p>The types of the arguments to built-in functions are specified in the JavaScript language specifications. Calls to these functions should conform
+to the documented types, otherwise the result will most likely not be what was expected (e.g.: the call would always return <code>false</code>).</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+const isTooSmall = Math.abs(x &lt; 0.0042);
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const isTooSmall = Math.abs(x) &lt; 0.0042;
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3923,All branches in a conditional structure should not have exactly the same implementation,"<p>Having all branches in a <code>switch</code> or <code>if</code> chain with the same implementation is an error. Either a copy-paste error was made
+and something different should be executed, or there shouldnâ€™t be a <code>switch</code>/<code>if</code> chain at all.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (b == 0) {  // Noncompliant
+  doOneMoreThing();
+}
+else {
+  doOneMoreThing();
+}
+
+let a = (b == 0) ? getValue() : getValue();   // Noncompliant
+
+switch (i) {  // Noncompliant
+  case 1:
+    doSomething();
+    break;
+  case 2:
+    doSomething();
+    break;
+  case 3:
+    doSomething();
+    break;
+  default:
+    doSomething();
+}
+</pre>
+<h2>Exceptions</h2>
+<p>This rule does not apply to <code>if</code> chains without <code>else</code>-s, or to <code>switch</code>-es without <code>default</code>
+clauses.</p>
+<pre>
+if(b == 0) {    //no issue, this could have been done on purpose to make the code more readable
+  doSomething();
+} else if(b == 1) {
+  doSomething();
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S131,"""switch"" statements should have ""default"" clauses","<p>The requirement for a final <code>default</code> clause is defensive programming. The clause should either take appropriate action, or contain a
+suitable comment as to why no action is taken.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+switch (param) {  //missing default clause
+  case 0:
+    doSomething();
+    break;
+  case 1:
+    doSomethingElse();
+    break;
+}
+
+switch (param) {
+  default: // default clause should be the last one
+    error();
+    break;
+  case 0:
+    doSomething();
+    break;
+  case 1:
+    doSomethingElse();
+    break;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+switch (param) {
+  case 0:
+    doSomething();
+    break;
+  case 1:
+    doSomethingElse();
+    break;
+  default:
+    error();
+    break;
+}
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/478.html"">MITRE, CWE-478</a> - Missing Default Case in Switch Statement </li>
+</ul>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S1125,Boolean literals should not be used in comparisons,"<p>Boolean literals should be avoided in comparison expressions <code>==</code> and <code>!=</code> to improve code readability.</p>
+<p>This rule also reports on redundant boolean operations.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+let someValue = ""0"";
+// ...
+
+if (someValue == true) { /* ... */ }
+if (someBooleanValue != true) { /* ... */ }
+doSomething(!false);
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (someValue &amp;&amp; someValue != ""0"") { /* ... */ }
+if (!someBooleanValue) { /* ... */ }
+doSomething(true);
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S4507,Delivering code in production with debug features activated is security-sensitive,"<p>Delivering code in production with debug features activated is security-sensitive. It has led in the past to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1999007"">CVE-2018-1999007</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-5306"">CVE-2015-5306</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-2006"">CVE-2013-2006</a> </li>
+</ul>
+<p>An applicationâ€™s debug features enable developers to find bugs more easily and thus facilitate also the work of attackers. It often gives access to
+detailed information on both the system running the application and users.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> the code or configuration enabling the application debug features is deployed on production servers or distributed to end users. </li>
+  <li> the application runs by default with debug features activated. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Do not enable debug features on production servers or applications distributed to end users.</p>
+<h2>Sensitive Code Example</h2>
+<p><a href=""https://www.npmjs.com/package/errorhandler"">errorhandler Express.js middleware</a> should not be used in production:</p>
+<pre>
+const express = require('express');
+const errorhandler = require('errorhandler');
+
+let app = express();
+app.use(errorhandler()); // Sensitive
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://www.npmjs.com/package/errorhandler"">errorhandler Express.js middleware</a> used only in development mode:</p>
+<pre>
+const express = require('express');
+const errorhandler = require('errorhandler');
+
+let app = express();
+
+if (process.env.NODE_ENV === 'development') {  // Compliant
+  app.use(errorhandler());  // Compliant
+}
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/489.html"">MITRE, CWE-489</a> - Leftover Debug Code </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/215.html"">MITRE, CWE-215</a> - Information Exposure Through Debug Information </li>
+</ul>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S1528,Array constructors should not be used,"<p>Array literals should always be preferred to Array constructors.</p>
+<p>Array constructors are error-prone due to the way their arguments are interpreted. If more than one argument is used, the array length will be
+equal to the number of arguments. However, using a single argument will have one of three consequences:</p>
+<ul>
+  <li> If the argument is a number and it is a natural number the length will be equal to the value of the argument. </li>
+</ul>
+<pre>
+let arr = new Array(3); // [empty Ã— 3]
+</pre>
+<ul>
+  <li> If the argument is a number, but not a natural number an exception will be thrown. </li>
+</ul>
+<pre>
+let arr = new Array(3.14);  // RangeError: Invalid array length
+</pre>
+<ul>
+  <li> Otherwise the array will have one element with the argument as its value. </li>
+</ul>
+<pre>
+let arr = new Array(""3"");  // [""3""]
+</pre>
+<p>Note that even if you set the length of an array, it will be empty. That is, it will have the number of elements you declared, but they wonâ€™t
+contain anything, so no callbacks will be applied to the array elements.</p>
+<p>For these reasons, if someone changes the code to pass 1 argument instead of 2 arguments, the array might not have the expected length. To avoid
+these kinds of weird cases, always use the more readable array literal initialization format.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+let myArray = new Array(x1, x2, x3);   // Noncompliant. Results in 3-element array.
+let emptyArray = new Array();          // Noncompliant. Results in 0-element array.
+
+let unstableArray = new Array(n);      // Noncompliant. Variable in results.
+
+let arr = new Array(3); // Noncompliant; empty array of length 3
+arr.foreach((x) =&gt; alert(""Hello "" + x)); // callback is not executed because there's nothing in arr
+let anotherArr = arr.map(() =&gt; 42); // anotherArr is also empty because callback didn't execute
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+let myArray = [x1, x2, x3];
+let emptyArray = [];
+
+// if ""n"" is the only array element
+let unstableArray = [n];
+// or,  if ""n"" is the array length (since ES 2015)
+let unstableArray = Array.from({length: n});
+
+let arr = [""Elena"", ""Mike"", ""Sarah""];
+arr.foreach((x) =&gt; alert(""Hello "" + x));
+let anotherArr = arr.map(() =&gt; 42);  // anotherArr now holds 42 in each element
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE

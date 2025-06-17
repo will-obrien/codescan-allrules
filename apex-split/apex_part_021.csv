@@ -1,0 +1,178 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:AvoidInsecureMessageDigests,Avoid Insecure Digest Algorithms,"MD5 and SHA-1 algorithms are no longer considered secure because it's too easy to create a hash collision between to message contents.<br/>
+  	<br/>
+  	This allows an attacker to craft content which produces the same hash.<br/>
+  	<br/>
+  	The SHA256 and SHA512 are considered secure alternatives<br/>
+  	<br/>
+	<h2>See</h2>
+	<ul>
+	  <li> <a href=""http://cwe.mitre.org/data/definitions/328"">MITRE, CWE-328</a> - Reversible One-Way Hash </li>
+	  <li> <a href=""http://cwe.mitre.org/data/definitions/327"">MITRE, CWE-327</a> - Use of a Broken or Risky Cryptographic Algorithm </li>
+	  <li> OWASP Top 10 2021 Category A5 - Security Misconfiguration </li>
+	  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+	  <li> <a href=""http://shattered.io/"">SHAttered</a> - The first concrete collision attack against SHA-1. </li>
+	</ul>
+  <BR><h2>Example:</h2><pre>
+
+Crypto.generateDigest('MD5', blob); //Bad: This is not secure.
+
+Crypto.generateDigest('SHA1', blob); //Bad: This is not secure.
+
+Crypto.generateDigest('SHA-256', blob); //Good: This is considered secure.
+
+  </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:BadCrypto,Apex Classes should use Random IV/Key,"The rule makes sure you are using randomly generated IVs and keys for `Crypto` calls.
+Hard-wiring these values greatly compromises the security of encrypted data.<br/>
+<br/>
+Read <a href=""https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_restful_crypto.htm"">here</a> for more information.<br/>
+<h2>See</h2>
+<ul>
+    <li>OWASP Top 10 2017 Category A5 - Security Misconfiguration</li>
+	<li><a href=""https://cwe.mitre.org/data/definitions/329.html"">MITRE,CWE-329</a> - Not Using a Random IV with CBC Mode</li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+  
+  public void cryptoExamples(){
+    Blob hardCodedKey = Blob.valueOf('0000000000000000');
+    Blob hardCodedIV = Blob.valueOf('Hardcoded IV 123');
+    Blob data = Blob.valueOf('Data to be encrypted');
+    
+    //Bad: use of hard coded key/iv.
+    Blob encrypted = Crypto.encrypt('AES128', hardCodedKey, hardCodedIV, data);
+    
+    //Good: this is preferred.
+    Blob key = Crypto.generateAesKey(128);
+    Blob data = Blob.valueOf('Data to be encrypted');
+    Blob encrypted = Crypto.encryptWithManagedIV('AES128', key, data);
+  }
+  
+}
+      </pre>",CRITICAL,APEX,VULNERABILITY,FALSE
+sf:AssertEqualsOrder,Assert Argument Order,"If the arguments provided to the assertEquals or assertNotEquals method are reversed, the test will have unexpected results.
+      <BR><h2>Example:</h2><pre>
+
+@isTest
+public class MyClassTest{
+
+    static testMethod void BadTest(){
+      //test code 
+      System.assertEquals(es.size(), 0); //Bad: This is backwards.  Will show 'unit test failed: System.AssertException: Assertion Failed: Expected: 4, Actual: 0'
+    }    
+    
+    static testMethod void GoodTest(){
+      //test code 
+      System.assertEquals(0, es.size()); //Good: This is the correct order.
+    }  
+    
+}
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:InsufficientCommentDensity,Source files should have a sufficient density of comment lines,"An issue is created on a file as soon as the density of comment lines on this file is less than the required threshold.
+
+The number of comment lines to be written in order to reach the required threshold is provided by each issue message.
+
+Note. This rule is an alternative to existing common-rule:InsufficientCommentDensity and intended to be used only in Sonarlint
+environment and/or with CodeScan IDE Plugins.",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidTabCharacter,Avoid using Tab Characters Check,"Checks that there are no tab characters ('\t') in the source code.
+      <BR><h2>Example:</h2><pre>
+
+public String bar(String string) {
+ if (string != null) {	//Bad: Should not use tab indent
+		return string;
+	}
+
+
+	if (string != null) {
+		return  string;  	//Bad: Should not use tab separator.
+	}
+}
+        </pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:StaticCanNotBeUsedInInnerClass,Static can not be used in inner classes,"Static can only be used on fields, properties and methods of top level classes only.
+    <BR><h2>Example:</h2><pre>
+public class BasicClass {
+
+    public class AnInnerClass {
+        public static String thing;
+        public static String pubicString { get; set; }
+        public static String getMessage() {
+            return 'Hello World!';
+        }
+    }
+}
+	
+    </pre>",MAJOR,APEX,BUG,FALSE
+sf:MethodReturnsInternalArray,Method Returns Internal Array,"Exposing internal arrays directly allows the user to modify some code that could be critical.<br/>
+It is safer to return a copy of the array.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/375"">MITRE, CWE-375</a> - Returning a Mutable Object to an Untrusted Caller </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/zQCuAQ"">CERT, OBJ05-J.</a> - Do not return references to private mutable class members
+  </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/QIEVAQ"">CERT, OBJ06-J.</a> - Defensively copy mutable inputs and mutable internal
+  components </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/JQLEAw"">CERT, OBJ13-J.</a> - Ensure that references to mutable objects are not exposed
+  </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class SecureSystem {
+  String [] ud;
+  public SecureSystem(){
+  	this.ud = new String[]{'standard', 'second'};
+  }
+  public String [] getUserData() {
+      return ud; //Bad: don't return the internal array directly, return a copy.
+  }
+  public String [] getUserDataSecure() {
+      return ud.clone(); //Good: user can't unexpectedly modify content
+  }
+}
+
+SecureSystem s = new SecureSystem();
+s.getUserData()[0] = 'secure'; //Secure system now has an unexpected value
+  
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:EmptySwitchLabel,Empty Switch Label,"Avoid 'switch' statements where a label is defined but nothing is in it
+    <BR><h2>Example:</h2><pre>
+    trigger leadDuplicatePreventer on Lead (before insert,before update) {
+	  switch on triggerEvent {
+	      when AFTER_INSERT {
+	      	//BAD: this should not be empty
+	      }
+	  }
+	}
+ }
+}
+ 
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:CommentedOutCode,Avoid Commented Out Code,"Avoid leaving commented out code in the codebase.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+	<li>MISRA C:2004, 2.4 - Sections of code should not be ""commented out"".</li>
+	<li>MISRA C++:2008, 2-7-2 - Sections of code shall not be ""commented out"" using C-style comments.</li>
+	<li>MISRA C++:2008, 2-7-3 - Sections of code should not be ""commented out"" using C++ comments.</li>
+	<li>MISRA C:2012, Dir. 4.4 - Sections of code should not be ""commented out""</li>
+</ul>
+  <BR><h2>Example:</h2><pre>
+/* 
+void somethingCool(){
+	//one day we should do this...     //Bad: remove this.
+	if ( cool ) ...
+}
+*/     
+
+
+  </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:LeftBracesSpacingPositions,Left Braces Spacing Should Be Consistent,"The space between a statement or class and an opening brace should remain consistent throughout the project.  
+The rule has separate parameters for classes, triggers, methods, blocks and enums.
+       <BR><h2>Example:</h2><pre>
+public class Foo{		// This is an example of no spaces. (Class parameter set to None)
+}
+
+public class Foo {		// This is an example of a single space. (Class parameter set to Single)
+}
+
+
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE

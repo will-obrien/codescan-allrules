@@ -1,0 +1,160 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:ReturnEmptyArrayRatherThanNull,"Return Empty Array, Not Null","For any method that returns an array, it is a better to return an empty array rather than a 
+null reference. This removes the need for null checking all results and avoids inadvertent
+NullPointerExceptions.
+        <BR><h2>Example:</h2><pre>
+public class Example {
+
+    public Integer[] badBehavior() {		//Bad: Not recommended.
+                   // ...
+        return null;
+    }
+
+    public String[] bonnePratique() {		//Good: Preferred.
+      //...
+     return new String[0];
+    }
+}
+            </pre>",MINOR,APEX,BUG,FALSE
+sf:ExcessiveMethodLength,Excessive Method Length,"When methods are excessively long this usually indicates that the method is doing more than its
+name/signature might suggest. They also become challenging for others to digest since excessive 
+scrolling causes readers to lose focus.
+Try to reduce the method length by creating helper methods and removing any copy/pasted code.
+   <BR><h2>Example:</h2><pre>
+
+public void doSomething() {
+	system.debug('Hello world!');
+	system.debug('Hello world!');
+		// 98 copies omitted for brevity.
+}
+
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnitTestsShouldIncludeAssert,Unit Test Method should include an assertion,"Unit tests should include at least one assertion.  This makes the tests more robust, and using assert 
+with messages provide the developer a clearer idea of what the test does.
+        <BR><h2>Example:</h2><pre>
+    
+@IsTest
+public class Foo  {
+    public static testmethod void testSomething() {
+        Integer result = 1 + 2;
+        Assert.areEqual(3, result);    //Good: result is checked with an assertion.
+   }
+}
+
+
+@IsTest
+public class Foo  {
+   public static testmethod void testSomething() {
+   	  Integer result = 3 + 4;						//Bad: result is not checked.
+   }
+}
+    
+        </pre>",MAJOR,APEX,BUG,FALSE
+sf:IdempotentOperations,Assignment Has No Effect,"Avoid idempotent operations. There is no affect when assigning a variable to itself, this may indicate a bug.<br/><br/>
+
+<h2>See</h2>
+<ul>
+<li><a href=""https://www.securecoding.cert.org/confluence/x/NYA5"">CERT, MSC12-C.</a> - Detect and remove code that has no effect or is never executed.</li>
+</ul>
+
+      <BR><h2>Example:</h2><pre>
+      
+public class Foo {
+  public void bar() {
+    Integer x = 2;
+    x = x;			//Bad: Avoid this.
+  }
+}
+      
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:MethodWithSameNameAsEnclosingClass,Method with Same Name as Enclosing Class,"Non-constructor methods should not have the same name as the enclosing class.
+       <BR><h2>Example:</h2><pre>
+    
+public class MyClass {
+
+	public MyClass() {}			//Good: this is OK because it is a constructor.
+	
+	public void MyClass() {}	//Bad: this is a method.
+}
+    
+       </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:VariableCouldBeTransient,Controller Variable Could Be Declared Transient,"Consider marking this variable as transient as transient variables are not stored in a page's view-state. 
+Most non-transient data members of a controller which has an apex:form is stored in a page's view-state. 
+Salesforce pages have a limit on view-state size.
+
+This rule checks controllers classes whose pages have an apex:forms (therefore view-state can exist). 
+This rule flags non-transient array and object fields, which are more likely to large amounts of view-state.
+Care must be taken when marking a field as transient as this field will need to be recreated on every request.
+ 
+      <BR><h2>Example:</h2><pre>
+  
+public class BarController {
+	List<Account> accounts; 		//Bad: the amount of data may exceed the view-state limit.
+	transient List<Account> accounts; //Good: accounts are not stored in view-state.
+}
+  
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:EmptyStatementNotInLoop,Empty Statement Not in Loop,"An empty statement (or a semicolon by itself) that is not used as the sole body of a 'for' 
+or 'while' loop is probably a bug.  It could also be a double semicolon, which has no purpose
+and should be removed.
+       <BR><h2>Example:</h2><pre>
+
+public void doit() {
+      					
+      system.debug('look at the extra semicolon');; //Bad: This semicolon has no purpose.
+
+}
+
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UncommentedEmptyMethod,Uncommented Empty Method,"Uncommented Empty Method finds instances where a method does not contain
+statements, but there is no comment. By explicitly commenting empty methods
+it is easier to distinguish between intentional (commented) and unintentional
+empty methods.
+
+Comments can be added inside the method or a formal comment (/** comment */) above the method is also valid
+      <BR><h2>Example:</h2><pre>
+  
+public void doSomething() {		//Bad: Consider commenting this method.
+	
+}
+ 
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:LogicInversion,Logic Inversion,"Use opposite operator instead of negating the whole expression with a logic complement operator.
+	<BR><h2>Example:</h2><pre>
+    
+public boolean bar(Integer a, Integer b) {
+
+	if (!(a == b)){ 		//Bad: Use '!=' instead.
+         return false;
+    }
+
+	if (!(a < b)){		//Bad: Use '>=' instead.
+         return false;
+    }
+
+	return true;
+}
+    
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ArrayIsStoredDirectly,Array is Stored Directly,"Constructors and methods receiving arrays should clone objects and store the copy.<br/>
+This prevents future changes from the user affecting the internal functionality.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/374"">MITRE, CWE-374</a> - Passing Mutable Objects to an Untrusted Method</li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/QIEVAQ"">CERT, OBJ06-J.</a> - Defensively copy mutable inputs and mutable internal
+  components </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/JQLEAw"">CERT, OBJ13-J.</a> - Ensure that references to mutable objects are not exposed
+  </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+  private String [] x;
+    public void foo (String [] param) {
+      
+      this.x=param;		//Bad: don't do this, make a copy of the array at least.
+    }
+}
+  
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE

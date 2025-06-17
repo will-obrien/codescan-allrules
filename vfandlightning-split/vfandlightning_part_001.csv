@@ -1,0 +1,367 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+cs-vf:no-regex-spaces,disallow multiple spaces in regular expressions,"<p>Regular expressions can be very complex and difficult to understand, which is why it's important to keep them as simple as possible in order to avoid mistakes. One of the more error-prone things you can do with a regular expression is to use more than one space, such as:</p>
+<pre><code class=""js language-js"">var re = /foo   bar/;
+</code></pre>
+<p>In this regular expression, it's very hard to tell how many spaces are intended to be matched. It's better to use only one space and then specify how many spaces are expected, such as:</p>
+<pre><code class=""js language-js"">var re = /foo {3}bar/;
+</code></pre>
+<p>Now it is very clear that three spaces are expected to be matched.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows multiple spaces in regular expression literals.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-regex-spaces: ""error""*/
+
+var re = /foo   bar/;
+var re = new RegExp(""foo   bar"");
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-regex-spaces: ""error""*/
+
+var re = /foo {3}bar/;
+var re = new RegExp(""foo {3}bar"");
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow multiple spaces in a regular expression, then you can safely turn this rule off.</p>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-self-compare,disallow comparisons where both sides are exactly the same,"<p>Comparing a variable against itself is usually an error, either a typo or refactoring error. It is confusing to the reader and may potentially introduce a runtime error.</p>
+<p>The only time you would compare a variable against itself is when you are testing for <code>NaN</code>. However, it is far more appropriate to use <code>typeof x === 'number' &amp;&amp; isNaN(x)</code> or the <a href=""https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN"">Number.isNaN ES2015 function</a> for that use case rather than leaving the reader of the code to determine the intent of self comparison.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This error is raised to highlight a potentially confusing and potentially pointless piece of code. There are almost no situations in which you would need to compare something to itself.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-self-compare: ""error""*/
+
+var x = 10;
+if (x === x) {
+    x = 20;
+}
+</code></pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-return-assign,disallow assignment operators in `return` statements,"<p>One of the interesting, and sometimes confusing, aspects of JavaScript is that assignment can happen at almost any point. Because of this, an errant equals sign can end up causing assignment when the true intent was to do a comparison. This is especially true when using a <code>return</code> statement. For example:</p>
+<pre><code class=""js language-js"">function doSomething() {
+    return foo = bar + 2;
+}
+</code></pre>
+<p>It is difficult to tell the intent of the <code>return</code> statement here. It's possible that the function is meant to return the result of <code>bar + 2</code>, but then why is it assigning to <code>foo</code>? It's also possible that the intent was to use a comparison operator such as <code>==</code> and that this code is an error.</p>
+<p>Because of this ambiguity, it's considered a best practice to not use assignment in <code>return</code> statements.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to eliminate assignments from <code>return</code> statements. As such, it will warn whenever an assignment is found as part of <code>return</code>.</p>
+<h2 id=""options"">Options</h2>
+<p>The rule takes one option, a string, which must contain one of the following values:</p>
+<ul>
+<li><code>except-parens</code> (default): Disallow assignments unless they are enclosed in parentheses.</li>
+<li><code>always</code>: Disallow all assignments.</li>
+</ul>
+<h3 id=""exceptparens"">except-parens</h3>
+<p>This is the default option.
+It disallows assignments unless they are enclosed in parentheses.</p>
+<p>Examples of <strong>incorrect</strong> code for the default <code>""except-parens""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-return-assign: ""error""*/
+
+function doSomething() {
+    return foo = bar + 2;
+}
+
+function doSomething() {
+    return foo += 2;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the default <code>""except-parens""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-return-assign: ""error""*/
+
+function doSomething() {
+    return foo == bar + 2;
+}
+
+function doSomething() {
+    return foo === bar + 2;
+}
+
+function doSomething() {
+    return (foo = bar + 2);
+}
+</code></pre>
+<h3 id=""always"">always</h3>
+<p>This option disallows all assignments in <code>return</code> statements.
+All assignments are treated as problems.</p>
+<p>Examples of <strong>incorrect</strong> code for the <code>""always""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-return-assign: [""error"", ""always""]*/
+
+function doSomething() {
+    return foo = bar + 2;
+}
+
+function doSomething() {
+    return foo += 2;
+}
+
+function doSomething() {
+    return (foo = bar + 2);
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""always""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-return-assign: [""error"", ""always""]*/
+
+function doSomething() {
+    return foo == bar + 2;
+}
+
+function doSomething() {
+    return foo === bar + 2;
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow the use of assignment operators in a <code>return</code> statement, then you can safely disable this rule.</p>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-implied-eval,disallow the use of `eval()`-like methods,"<p>It's considered a good practice to avoid using <code>eval()</code> in JavaScript. There are security and performance implications involved with doing so, which is why many linters recommend disallowing <code>eval()</code>. However, there are some other ways to pass a string and have it interpreted as JavaScript code that have similar concerns.</p>
+<p>The first is using <code>setTimeout()</code>, <code>setInterval()</code> or <code>execScript()</code> (Internet Explorer only), both of which can accept a string of JavaScript code as their first argument. For example:</p>
+<pre><code class=""js language-js"">setTimeout(""alert('Hi!');"", 100);
+</code></pre>
+<p>This is considered an implied <code>eval()</code> because a string of JavaScript code is
+ passed in to be interpreted. The same can be done with <code>setInterval()</code> and <code>execScript()</code>. Both interpret the JavaScript code in  the global scope. For  both <code>setTimeout()</code> and <code>setInterval()</code>, the first argument can also be a function, and that is considered safer and is more performant:</p>
+<pre><code class=""js language-js"">setTimeout(function() {
+    alert(""Hi!"");
+}, 100);
+</code></pre>
+<p>The best practice is to always use a function for the first argument of <code>setTimeout()</code> and <code>setInterval()</code> (and avoid <code>execScript()</code>).</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to eliminate implied <code>eval()</code> through the use of <code>setTimeout()</code>, <code>setInterval()</code> or <code>execScript()</code>. As such, it will warn when either function is used with a string as the first argument.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-implied-eval: ""error""*/
+
+setTimeout(""alert('Hi!');"", 100);
+
+setInterval(""alert('Hi!');"", 100);
+
+execScript(""alert('Hi!')"");
+
+window.setTimeout(""count = 5"", 10);
+
+window.setInterval(""foo = bar"", 10);
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-implied-eval: ""error""*/
+
+setTimeout(function() {
+    alert(""Hi!"");
+}, 100);
+
+setInterval(function() {
+    alert(""Hi!"");
+}, 100);
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow <code>setTimeout()</code> and <code>setInterval()</code> with string arguments, then you can safely disable this rule.</p>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+cs-vf:wrap-iife,require parentheses around immediate `function` invocations,"<p>You can immediately invoke function expressions, but not function declarations. A common technique to create an immediately-invoked function expression (IIFE) is to wrap a function declaration in parentheses. The opening parentheses causes the contained function to be parsed as an expression, rather than a declaration.</p>
+<pre><code class=""js language-js"">// function expression could be unwrapped
+var x = function () { return { y: 1 };}();
+
+// function declaration must be wrapped
+function () { /* side effects */ }(); // SyntaxError
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule requires all immediately-invoked function expressions to be wrapped in parentheses.</p>
+<h2 id=""options"">Options</h2>
+<p>This rule has two options, a string option and an object option.</p>
+<p>String option:</p>
+<ul>
+<li><code>""outside""</code> enforces always wrapping the <em>call</em> expression. The default is <code>""outside""</code>.</li>
+<li><code>""inside""</code> enforces always wrapping the <em>function</em> expression.</li>
+<li><code>""any""</code> enforces always wrapping, but allows either style.</li>
+</ul>
+<p>Object option:</p>
+<ul>
+<li><code>""functionPrototypeMethods"": true</code> additionally enforces wrapping function expressions invoked using <code>.call</code> and <code>.apply</code>. The default is <code>false</code>.</li>
+</ul>
+<h3 id=""outside"">outside</h3>
+<p>Examples of <strong>incorrect</strong> code for the default <code>""outside""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""outside""]*/
+
+var x = function () { return { y: 1 };}(); // unwrapped
+var x = (function () { return { y: 1 };})(); // wrapped function expression
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the default <code>""outside""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""outside""]*/
+
+var x = (function () { return { y: 1 };}()); // wrapped call expression
+</code></pre>
+<h3 id=""inside"">inside</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>""inside""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""inside""]*/
+
+var x = function () { return { y: 1 };}(); // unwrapped
+var x = (function () { return { y: 1 };}()); // wrapped call expression
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""inside""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""inside""]*/
+
+var x = (function () { return { y: 1 };})(); // wrapped function expression
+</code></pre>
+<h3 id=""any"">any</h3>
+<p>Examples of <strong>incorrect</strong> code for the <code>""any""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""any""]*/
+
+var x = function () { return { y: 1 };}(); // unwrapped
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""any""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint wrap-iife: [""error"", ""any""]*/
+
+var x = (function () { return { y: 1 };}()); // wrapped call expression
+var x = (function () { return { y: 1 };})(); // wrapped function expression
+</code></pre>
+<h3 id=""functionprototypemethods"">functionPrototypeMethods</h3>
+<p>Examples of <strong>incorrect</strong> code for this rule with the <code>""inside"", { ""functionPrototypeMethods"": true }</code> options:</p>
+<pre><code class=""js language-js"">/* eslint wrap-iife: [2, ""inside"", { functionPrototypeMethods: true }] */
+
+var x = function(){ foo(); }()
+var x = (function(){ foo(); }())
+var x = function(){ foo(); }.call(bar)
+var x = (function(){ foo(); }.call(bar))
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>""inside"", { ""functionPrototypeMethods"": true }</code> options:</p>
+<pre><code class=""js language-js"">/* eslint wrap-iife: [2, ""inside"", { functionPrototypeMethods: true }] */
+
+var x = (function(){ foo(); })()
+var x = (function(){ foo(); }).call(bar)
+</code></pre>",MINOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:ecma-intrinsics,validate javascript APIs,"<p>This rule makes sure that intrinsic Javascript APIs are used according to the documentation. It disallows deprecated, non-standard and removed features.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Intrinsic APIs are those found in the <a href=""https://tc39.github.io/ecma262/"">ECMAScript Language Specification</a>.</p>
+<p>When the rule is enabled, unsupported calls or API objects are disallowed.  Your Lightning components are permitted to use:</p>
+<ul>
+<li>Standard Lightning Component Framework features.</li>
+<li>Standard Javascript features.</li>
+<li>Standard Locker Service SecureObject object features. </li>
+</ul>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">String.doSomething = function(){}  //This is a violation, the intrinsic type String is modified.
+</code></pre>",MAJOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-floating-decimal,disallow leading or trailing decimal points in numeric literals,"<p>Float values in JavaScript contain a decimal point, and there is no requirement that the decimal point be preceded or followed by a number. For example, the following are all valid JavaScript numbers:</p>
+<pre><code class=""js language-js"">var num = .5;
+var num = 2.;
+var num = -.7;
+</code></pre>
+<p>Although not a syntax error, this format for numbers can make it difficult to distinguish between true decimal numbers and the dot operator. For this reason, some recommend that you should always include a number before and after a decimal point to make it clear the intent is to create a decimal number.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at eliminating floating decimal points and will warn whenever a numeric value has a decimal point but is missing a number either before or after it.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-floating-decimal: ""error""*/
+
+var num = .5;
+var num = 2.;
+var num = -.7;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-floating-decimal: ""error""*/
+
+var num = 0.5;
+var num = 2.0;
+var num = -0.7;
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you aren't concerned about misinterpreting floating decimal point values, then you can safely turn this rule off.</p>
+<h2 id=""compatibility"">Compatibility</h2>
+<ul>
+<li><strong>JSHint</strong>: W008</li>
+</ul>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-div-regex,disallow division operators explicitly at the beginning of regular expressions,"<p>Require regex literals to escape division operators.</p>
+<pre><code class=""js language-js"">function bar() { return /=foo/; }
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This is used to disambiguate the division operator to not confuse users. Without an escape character users may think that the regular expression is a division expression.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-div-regex: ""error""*/
+
+function bar() { return /=foo/; }
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-div-regex: ""error""*/
+
+function bar() { return /\=foo/; }
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-underscore-dangle,disallow dangling underscores in identifiers,"<p>As far as naming conventions for identifiers go, dangling underscores may be the most polarizing in JavaScript. Dangling underscores are underscores at either the beginning or end of an identifier, such as:</p>
+<pre><code class=""js language-js"">var _foo;
+</code></pre>
+<p>There is actually a long history of using dangling underscores to indicate ""private"" members of objects in JavaScript (though JavaScript doesn't have truly private members, this convention served as a warning). This began with SpiderMonkey adding nonstandard methods such as <code>__defineGetter__()</code>. The intent with the underscores was to make it obvious that this method was special in some way. Since that time, using a single underscore prefix has become popular as a way to indicate ""private"" members of objects.</p>
+<p>Whether or not you choose to allow dangling underscores in identifiers is purely a convention and has no effect on performance, readability, or complexity. It's purely a preference.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows dangling underscores in identifiers.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: ""error""*/
+
+var foo_;
+var __proto__ = {};
+foo._bar();
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: ""error""*/
+
+var _ = require('underscore');
+var obj = _.contains(items, item);
+obj.__proto__ = {};
+var file = __filename;
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option:</p>
+<ul>
+<li><code>""allow""</code> allows specified identifiers to have dangling underscores</li>
+<li><code>""allowAfterThis"": false</code> (default) disallows dangling underscores in members of the <code>this</code> object</li>
+<li><code>""allowAfterSuper"": false</code> (default) disallows dangling underscores in members of the <code>super</code> object</li>
+<li><code>""enforceInMethodNames"": false</code> (default) allows dangling underscores in method names</li>
+</ul>
+<h3 id=""allow"">allow</h3>
+<p>Examples of additional <strong>correct</strong> code for this rule with the <code>{ ""allow"": [""foo_"", ""_bar""] }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: [""error"", { ""allow"": [""foo_"", ""_bar""] }]*/
+
+var foo_;
+foo._bar();
+</code></pre>
+<h3 id=""allowafterthis"">allowAfterThis</h3>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>{ ""allowAfterThis"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: [""error"", { ""allowAfterThis"": true }]*/
+
+var a = this.foo_;
+this._bar();
+</code></pre>
+<h3 id=""allowaftersuper"">allowAfterSuper</h3>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>{ ""allowAfterSuper"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: [""error"", { ""allowAfterSuper"": true }]*/
+
+var a = super.foo_;
+super._bar();
+</code></pre>
+<h3 id=""enforceinmethodnames"">enforceInMethodNames</h3>
+<p>Examples of incorrect code for this rule with the <code>{ ""enforceInMethodNames"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: [""error"", { ""enforceInMethodNames"": true }]*/
+
+class Foo {
+  _bar() {}
+}
+
+class Foo {
+  bar_() {}
+}
+
+const o = {
+  _bar() {}
+};
+
+const o = {
+  bar_() = {}
+};
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow dangling underscores in identifiers, then you can safely turn this rule off.</p>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:new-parens,require parentheses when invoking a constructor with no arguments,"<p>JavaScript allows the omission of parentheses when invoking a function via the <code>new</code> keyword and the constructor has no arguments. However, some coders believe that omitting the parentheses is inconsistent with the rest of the language and thus makes code less clear.</p>
+<pre><code class=""js language-js"">var person = new Person;
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule requires parentheses when invoking a constructor with no arguments using the <code>new</code> keyword in order to increase code clarity.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint new-parens: ""error""*/
+
+var person = new Person;
+var person = new (Person);
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint new-parens: ""error""*/
+
+var person = new Person();
+var person = new (Person)();
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE

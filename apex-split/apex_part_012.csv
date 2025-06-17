@@ -1,0 +1,130 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:CollapsibleIfStatements,Collapsible If Statements,"Sometimes two consecutive 'if' statements can be consolidated by separating their conditions with a boolean short-circuit operator.
+      <BR><h2>Example:</h2><pre>
+  
+void bar() {
+	if (x) {			//Bad: The nested 'if' statement isn't required.
+		if (y) {
+			// do stuff
+		}
+	}
+
+	if (x && y) {		//Good: The two previous 'if' statements can be combined with a boolean short-circuit operator.
+		// do stuff
+	}
+}
+ 
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidDeeplyNestedIfStmts,Avoid Deeply Nested If Statements,"Avoid creating deeply nested 'if..then' statements since they are error-prone, harder to read and harder to maintain.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo {
+  public void bar(Integer x, Integer y, Integer z) {
+    if (x>y) {
+      if (y>z) {
+        if (z==x) {
+         //Bad: This is too deep!
+        }
+      }
+    }
+  }
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:DirectAccessToTriggerArray,Trigger.new and Trigger.old array elements should not be accessed directly.,"The number of elements in a trigger can change so accessing the trigger array directly may suggests a bug.  
+  Updating more than one account may mean that your trigger may not perform correctly. It also may mean that your trigger code is not bulkified.
+  
+ <br/>
+Read more here:  <a href =""https://developer.salesforce.com/page/Trigger_Frameworks_and_Apex_Trigger_Best_Practices"">https://developer.salesforce.com/page/Trigger_Frameworks_and_Apex_Trigger_Best_Practices</a>
+  <BR><h2>Example:</h2><pre>
+
+trigger AccountTrigger on Account (before insert, before update) {
+   Account a = Trigger.new[0]; //Bad: Accessing the trigger array directly is not recommended.
+   
+   foreach ( Account a : Trigger.new ){   //Good: Iterate through the trigger.new array instead.
+   }
+}
+
+  </pre>",MAJOR,APEX,BUG,FALSE
+sf:UnusedLocalVariable,Unused Local Variable,"Detects when a local variable is declared and/or assigned, but not used.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo {
+	public void doSomething() {
+		Integer i = 5; //Bad: this variable is unused.
+	}
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UselessOperationOnImmutable,Useless Operation On Immutable,"An operation on an Immutable object (String, Date, DateTime or Time) won't change the object itself
+since the result of the operation is a new object. Therefore, ignoring the operation result is an error.
+      <BR><h2>Example:</h2><pre>
+    
+
+class Test {
+  void method1() {
+    String a=new String('a');
+    a.concat('b'); 		//Bad: String.concat is immutable and will not modify a.
+  }
+  void method2() {
+    String a=new String('a');
+    a = a.concat('b'); 		//Good: this is probably what you meant to do.
+  }
+}
+    
+      </pre>",CRITICAL,APEX,BUG,FALSE
+sf:DUDataflowAnomalyAnalysis,Potentially Unused Variable,"The dataflow analysis tracks local definitions, undefinitions and references to variables on different paths on the data flow.
+From those informations there can be found various problems.
+DU - Anomaly: A recently defined variable is undefined. These anomalies may appear in normal source text.
+          <BR><h2>Example:</h2><pre>
+
+public class Foo {
+ void bar() {
+  Integer buz = 0;		//Bad: buz is undefined when leaving scope, this is a DU-Anomaly.
+ }
+}
+
+          </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:FinalFieldCouldBeStatic,Final Field Could Be Static,"If a final field is assigned to a compile-time constant it could be made static, thus saving overhead 
+in each object at runtime.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+  public final Integer BAR = 42; //Bad: BAR could be static to save some memory.
+}
+  
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:SimplifyConditional,Unnecessary Null Check with instanceOf,"There is no need to check for 'null' before an 'instanceof'. The 'instanceof' keyword will return 'false' when given a 'null' argument.
+          <BR><h2>Example:</h2><pre>
+      
+class Foo {
+  void bar(Object x) {
+    if (x != null && x instanceof Bar) { 	//Bad: The 'x != null' check is not needed.
+		doStuff();
+    }
+  }
+}      
+           </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UseAnnotationOnTestClass,Use the @IsTest annotation,"Classes containing only test methods should be annotated with @isTest
+      <BR><h2>Example:</h2><pre>
+
+public class CarTest {						//Bad: needs to be annotated with @isTest
+	public static testmethod void testX(){}
+	public static testmethod void testY(){}
+   // code
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidThrowingNewInstanceOfSameException,Avoid Throwing New Instance of Same Exception,"Catch blocks that merely rethrow a caught exception wrapped inside a new instance of the same type only add to
+code size and runtime complexity.
+    <BR><h2>Example:</h2><pre>  
+public void bar() {
+      try {
+       // do something
+      }  catch (SomeException se) {
+         // harmless comment      
+           throw new SomeException(se);  //Bad: this is not recommended.
+      }
+}
+  
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE

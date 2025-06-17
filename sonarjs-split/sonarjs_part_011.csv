@@ -1,0 +1,181 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S1128,Unnecessary imports should be removed,"<p>Thereâ€™s no reason to import modules you donâ€™t use; and every reason not to: doing so needlessly increases the load.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+import A from 'a';      // Noncompliant, A isn't used
+import { B1 } from 'b';
+
+console.log(B1);
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+import { B1 } from 'b';
+
+console.log(B1);
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1479,"""switch"" statements should not have too many ""case"" clauses","<p>When <code>switch</code> statements have large sets of <code>case</code> clauses, it is usually an attempt to map two sets of data. A real map
+structure would be more readable and maintainable, and should be used instead.</p>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S878,Comma operator should not be used,"<p>The comma operator takes two expressions, executes them from left to right and returns the result of the second one. Use of this operator is
+generally detrimental to the readability and reliability of code, and the same effect can be achieved by other means.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+i = a += 2, a + b;  // What's the value of i ?
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+a +=  2;
+i = a + b;
+</pre>
+<h2>Exceptions</h2>
+<p>Use of comma operator is tolerated:</p>
+<ul>
+  <li> in initialization and increment expressions of <code>for</code> loops. </li>
+</ul>
+<pre>
+for(i = 0, j = 5; i &lt; 6; i++, j++) { ... }
+</pre>
+<ul>
+  <li> If the expression sequence is explicitly wrapped in parentheses. </li>
+</ul>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1110,Redundant pairs of parentheses should be removed,"<p>The use of parentheses, even those not required to enforce a desired order of operations, can clarify the intent behind a piece of code. But
+redundant pairs of parentheses could be misleading, and should be removed.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+let x = (y / 2 + 1);   //Compliant even if those parenthesis are useless for the compiler
+
+if (a &amp;&amp; ((x+y &gt; 0))) {  // Noncompliant
+  //...
+}
+
+return ((x + 1));  // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+let x = (y / 2 + 1);
+
+if (a &amp;&amp; (x+y &gt; 0)) {
+  //...
+}
+
+return (x + 1);
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1821,"""switch"" statements should not be nested","<p>Nested <code>switch</code> structures are difficult to understand because you can easily confuse the cases of an inner <code>switch</code> as
+belonging to an outer statement. Therefore nested <code>switch</code> statements should be avoided.</p>
+<p>Specifically, you should structure your code to avoid the need for nested <code>switch</code> statements, but if you cannot, then consider moving
+the inner <code>switch</code> to another function.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function foo(n, m) {
+  switch (n) {
+    case 0:
+      switch (m) {  // Noncompliant; nested switch
+        // ...
+      }
+    case 1:
+      // ...
+    default:
+      // ...
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function foo(n, m) {
+  switch (n) {
+    case 0:
+      bar(m);
+    case 1:
+      // ...
+    default:
+      // ...
+  }
+}
+
+function bar(m) {
+  switch(m) {
+    // ...
+  }
+}
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S1940,Boolean checks should not be inverted,"<p>It is needlessly complex to invert the result of a boolean comparison. The opposite comparison should be made instead.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (!(a === 2)) { ... }  // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (a !== 2) { ... }
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3317,Default export names and file names should match,"<p>By convention, a file that exports only one class, function, or constant should be named for that class, function or constant. Anything else may
+confuse maintainers.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+// file path: myclass.js  -- Noncompliant
+class MyClass {
+  // ...
+}
+export default MyClass;
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+// file path: MyClass.js
+class MyClass {
+  // ...
+}
+export default MyClass;
+</pre>
+<h2>Exceptions</h2>
+<p>Case, underscores ( <code>_</code> ) and dashes (<code>-</code>) are ignored from the name comparison.</p>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1131,Lines should not end with trailing whitespaces,"<p>Trailing whitespaces are simply useless and should not stay in code. They may generate noise when comparing different versions of the same
+file.</p>
+<p>If you encounter issues from this rule, this probably means that you are not using an automated code formatter - which you should if you have the
+opportunity to do so.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+// The following string will error if there is a whitespace after '\'
+var str = ""Hello \
+World"";
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S4524,"""default"" clauses should be last","<p><code>switch</code> can contain a <code>default</code> clause for various reasons: to handle unexpected values, to show that all the cases were
+properly considered.</p>
+<p>For readability purpose, to help a developer to quickly find the default behavior of a <code>switch</code> statement, it is recommended to put the
+<code>default</code> clause at the end of the <code>switch</code> statement. This rule raises an issue if the <code>default</code> clause is not the
+first or the last one of the <code>switch</code>'s cases.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+switch (param) {
+  case 0:
+    doSomething();
+    break;
+  default: // default clause should be the first or last one
+    error();
+    break;
+  case 1:
+    doSomethingElse();
+    break;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+switch (param) {
+  case 0:
+    doSomething();
+    break;
+  case 1:
+    doSomethingElse();
+    break;
+  default:
+    error();
+    break;
+}
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S122,Statements should be on separate lines,"<p>For better readability, do not put more than one statement on a single line.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+foo(); bar(); // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+foo();
+bar();
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE

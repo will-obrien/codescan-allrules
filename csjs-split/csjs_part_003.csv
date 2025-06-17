@@ -1,0 +1,346 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+cs-js:no-underscore-dangle,disallow dangling underscores in identifiers,"<p>As far as naming conventions for identifiers go, dangling underscores may be the most polarizing in JavaScript. Dangling underscores are underscores at either the beginning or end of an identifier, such as:</p>
+<pre><code class=""js language-js"">var _foo;
+</code></pre>
+<p>There is actually a long history of using dangling underscores to indicate ""private"" members of objects in JavaScript (though JavaScript doesn't have truly private members, this convention served as a warning). This began with SpiderMonkey adding nonstandard methods such as <code>__defineGetter__()</code>. The intent with the underscores was to make it obvious that this method was special in some way. Since that time, using a single underscore prefix has become popular as a way to indicate ""private"" members of objects.</p>
+<p>Whether or not you choose to allow dangling underscores in identifiers is purely a convention and has no effect on performance, readability, or complexity. It's purely a preference.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows dangling underscores in identifiers.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: ""error""*/
+
+var foo_;
+var __proto__ = {};
+foo._bar();
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: ""error""*/
+
+var _ = require('underscore');
+var obj = _.contains(items, item);
+obj.__proto__ = {};
+var file = __filename;
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option:</p>
+<ul>
+<li><code>""allow""</code> allows specified identifiers to have dangling underscores</li>
+<li><code>""allowAfterThis"": false</code> (default) disallows dangling underscores in members of the <code>this</code> object</li>
+<li><code>""allowAfterSuper"": false</code> (default) disallows dangling underscores in members of the <code>super</code> object</li>
+<li><code>""enforceInMethodNames"": false</code> (default) allows dangling underscores in method names</li>
+</ul>
+<h3 id=""allow"">allow</h3>
+<p>Examples of additional <strong>correct</strong> code for this rule with the <code>{ ""allow"": [""foo_"", ""_bar""] }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: [""error"", { ""allow"": [""foo_"", ""_bar""] }]*/
+
+var foo_;
+foo._bar();
+</code></pre>
+<h3 id=""allowafterthis"">allowAfterThis</h3>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>{ ""allowAfterThis"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: [""error"", { ""allowAfterThis"": true }]*/
+
+var a = this.foo_;
+this._bar();
+</code></pre>
+<h3 id=""allowaftersuper"">allowAfterSuper</h3>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>{ ""allowAfterSuper"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: [""error"", { ""allowAfterSuper"": true }]*/
+
+var a = super.foo_;
+super._bar();
+</code></pre>
+<h3 id=""enforceinmethodnames"">enforceInMethodNames</h3>
+<p>Examples of incorrect code for this rule with the <code>{ ""enforceInMethodNames"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-underscore-dangle: [""error"", { ""enforceInMethodNames"": true }]*/
+
+class Foo {
+  _bar() {}
+}
+
+class Foo {
+  bar_() {}
+}
+
+const o = {
+  _bar() {}
+};
+
+const o = {
+  bar_() = {}
+};
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow dangling underscores in identifiers, then you can safely turn this rule off.</p>",MINOR,JavaScript,CODE_SMELL,FALSE
+cs-js:new-parens,require parentheses when invoking a constructor with no arguments,"<p>JavaScript allows the omission of parentheses when invoking a function via the <code>new</code> keyword and the constructor has no arguments. However, some coders believe that omitting the parentheses is inconsistent with the rest of the language and thus makes code less clear.</p>
+<pre><code class=""js language-js"">var person = new Person;
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule requires parentheses when invoking a constructor with no arguments using the <code>new</code> keyword in order to increase code clarity.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint new-parens: ""error""*/
+
+var person = new Person;
+var person = new (Person);
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint new-parens: ""error""*/
+
+var person = new Person();
+var person = new (Person)();
+</code></pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+cs-js:aura-api,validate Aura API,"<p>This rule makes sure that the Aura API is used according to the documentation. It disallows private and undocumented features.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>When the rule is enabled, unsupported calls or API objects are disallowed.  Your Lightning components are permitted to use:</p>
+<ul>
+<li><p>Standard Lightning Component Framework features.</p></li>
+<li><p>Standard Javascript features.</p></li>
+<li><p>Standard Locker Service SecureObject object features. </p>
+<p>For details of all of the permitted methods in the framework, including $A, see the JavaScript API at https://myDomain.lightning.force.com/auradocs/reference.app, where myDomain is the name of your custom Salesforce domain.</p></li>
+</ul>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">Aura.notGreat(); // Use $A instead of Aura
+$A.util.notUtil(); // $A.util does not contain notUtil
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">$A.createComponent(""aura:text"",{value:'Hello World'}, function(auraTextComponent, status, statusMessagesList){
+     // auraTextComponent is an instance of aura:text containing the value Hello World
+});
+</code></pre>",BLOCKER,JavaScript,BUG,FALSE
+cs-js:no-sparse-arrays,disallow sparse arrays,"<p>Sparse arrays contain empty slots, most frequently due to multiple commas being used in an array literal, such as:</p>
+<pre><code class=""js language-js"">var items = [,,];
+</code></pre>
+<p>While the <code>items</code> array in this example has a <code>length</code> of 2, there are actually no values in <code>items[0]</code> or <code>items[1]</code>. The fact that the array literal is valid with only commas inside, coupled with the <code>length</code> being set and actual item values not being set, make sparse arrays confusing for many developers. Consider the following:</p>
+<pre><code class=""js language-js"">var colors = [ ""red"",, ""blue"" ];
+</code></pre>
+<p>In this example, the <code>colors</code> array has a <code>length</code> of 3. But did the developer intend for there to be an empty spot in the middle of the array? Or is it a typo?</p>
+<p>The confusion around sparse arrays defined in this manner is enough that it's recommended to avoid using them unless you are certain that they are useful in your code.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows sparse array literals which have ""holes"" where commas are not preceded by elements. It does not apply to a trailing comma following the last element.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-sparse-arrays: ""error""*/
+
+var items = [,];
+var colors = [ ""red"",, ""blue"" ];
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-sparse-arrays: ""error""*/
+
+var items = [];
+var items = new Array(23);
+
+// trailing comma (after the last element) is not a problem
+var colors = [ ""red"", ""blue"", ];
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to use sparse arrays, then it is safe to disable this rule.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://www.nczonline.net/blog/2007/09/09/inconsistent-array-literals/"">Inconsistent array literals</a></li>
+</ul>",MAJOR,JavaScript,BUG,FALSE
+cs-js:no-plusplus,disallow the unary operators `++` and `--`,"<p>Because the unary <code>++</code> and <code>--</code> operators are subject to automatic semicolon insertion, differences in whitespace can change semantics of source code.</p>
+<pre><code class=""js language-js"">var i = 10;
+var j = 20;
+
+i ++
+j
+// i = 11, j = 20
+</code></pre>
+<pre><code class=""js language-js"">var i = 10;
+var j = 20;
+
+i
+++
+j
+// i = 10, j = 21
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows the unary operators <code>++</code> and <code>--</code>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-plusplus: ""error""*/
+
+var foo = 0;
+foo++;
+
+var bar = 42;
+bar--;
+
+for (i = 0; i &lt; l; i++) {
+    return;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-plusplus: ""error""*/
+
+var foo = 0;
+foo += 1;
+
+var bar = 42;
+bar -= 1;
+
+for (i = 0; i &lt; l; i += 1) {
+    return;
+}
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option.</p>
+<ul>
+<li><code>""allowForLoopAfterthoughts"": true</code> allows unary operators <code>++</code> and <code>--</code> in the afterthought (final expression) of a <code>for</code> loop.</li>
+</ul>
+<h3 id=""allowforloopafterthoughts"">allowForLoopAfterthoughts</h3>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>{ ""allowForLoopAfterthoughts"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-plusplus: [""error"", { ""allowForLoopAfterthoughts"": true }]*/
+
+for (i = 0; i &lt; l; i++) {
+    return;
+}
+
+for (i = 0; i &lt; l; i--) {
+    return;
+}
+</code></pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-ex-assign,disallow reassigning exceptions in `catch` clauses,"<p>If a <code>catch</code> clause in a <code>try</code> statement accidentally (or purposely) assigns another value to the exception parameter, it impossible to refer to the error from that point on.
+Since there is no <code>arguments</code> object to offer alternative access to this data, assignment of the parameter is absolutely destructive.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows reassigning exceptions in <code>catch</code> clauses.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-ex-assign: ""error""*/
+
+try {
+    // code
+} catch (e) {
+    e = 10;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-ex-assign: ""error""*/
+
+try {
+    // code
+} catch (e) {
+    var foo = 10;
+}
+</code></pre>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://bocoup.com/blog/the-catch-with-try-catch"">The ""catch"" with tryâ€¦catch</a> by Ben Alman explains how the exception identifier can leak into the outer scope in IE 6-8</li>
+</ul>",MAJOR,JavaScript,BUG,FALSE
+cs-js:no-invalid-regexp,disallow invalid regular expression strings in `RegExp` constructors,"<p>An invalid pattern in a regular expression literal is a <code>SyntaxError</code> when the code is parsed, but an invalid string in <code>RegExp</code> constructors throws a <code>SyntaxError</code> only when the code is executed.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows invalid regular expression strings in <code>RegExp</code> constructors.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-invalid-regexp: ""error""*/
+
+RegExp('[')
+
+RegExp('.', 'z')
+
+new RegExp('\\')
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-invalid-regexp: ""error""*/
+
+RegExp('.')
+
+new RegExp
+
+this.RegExp('[')
+</code></pre>
+<h2 id=""environments"">Environments</h2>
+<p>ECMAScript 6 adds the following flag arguments to the <code>RegExp</code> constructor:</p>
+<ul>
+<li><code>""u""</code> (<a href=""https://people.mozilla.org/~jorendorff/es6-draft.html#sec-get-regexp.prototype.unicode"">unicode</a>)</li>
+<li><code>""y""</code> (<a href=""https://people.mozilla.org/~jorendorff/es6-draft.html#sec-get-regexp.prototype.sticky"">sticky</a>)</li>
+</ul>
+<p>You can enable these to be recognized as valid by setting the ECMAScript version to 6 in your <a href=""../user-guide/configuring"">ESLint configuration</a>.</p>
+<p>If you want to allow additional constructor flags for any reason, you can specify them using an <code>allowConstructorFlags</code> option in <code>.eslintrc</code>. These flags will then be ignored by the rule regardless of the <code>ecmaVersion</code> setting.</p>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option for exceptions:</p>
+<ul>
+<li><code>""allowConstructorFlags""</code> is an array of flags</li>
+</ul>
+<h3 id=""allowconstructorflags"">allowConstructorFlags</h3>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>{ ""allowConstructorFlags"": [""u"", ""y""] }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-invalid-regexp: [""error"", { ""allowConstructorFlags"": [""u"", ""y""] }]*/
+
+new RegExp('.', 'y')
+
+new RegExp('.', 'yu')
+</code></pre>
+<p>A list of valid flags for regular expressions is available <a href=""https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp"">here</a>.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://es5.github.io/#x7.8.5"">Annotated ES5 Â§7.8.5 - Regular Expression Literals</a></li>
+</ul>",MINOR,JavaScript,BUG,FALSE
+cs-js:secure-window,validate window global access,"<p>This rule makes sure that only supported properties and functions are used to access the window global.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>When the rule is enabled, unsupported calls or API objects are disallowed.  Your Lightning components are permitted to use:</p>
+<ul>
+<li>Standard Lightning Component Framework features.</li>
+<li>Standard Javascript features.</li>
+<li>Standard Locker Service SecureObject object features. </li>
+</ul>
+<p>All disallowed uses are shown in red on this <a href=""http://documentation.auraframework.org/lockerApiTest/index.app?aura.mode=DEV"">Window vs SecureWindow Compatibility Table</a>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">window.top;  //The use of window.top is disallowed.
+window.setImmediate(); //The use of window.setImmediate() is disallowed.
+</code></pre>",BLOCKER,JavaScript,CODE_SMELL,FALSE
+cs-js:unknown,CodeScan Other Rules,<p>This is reserved for future rules and expansion of the plugin. Do not turn this off.</p>,MAJOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-extra-boolean-cast,disallow unnecessary boolean casts,"<p>In contexts such as an <code>if</code> statement's test where the result of the expression will already be coerced to a Boolean, casting to a Boolean via double negation (<code>!!</code>) or a <code>Boolean</code> call is unnecessary. For example, these <code>if</code> statements are equivalent:</p>
+<pre><code class=""js language-js"">if (!!foo) {
+    // ...
+}
+
+if (Boolean(foo)) {
+    // ...
+}
+
+if (foo) {
+    // ...
+}
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows unnecessary boolean casts.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extra-boolean-cast: ""error""*/
+
+var foo = !!!bar;
+
+var foo = !!bar ? baz : bat;
+
+var foo = Boolean(!!bar);
+
+var foo = new Boolean(!!bar);
+
+if (!!foo) {
+    // ...
+}
+
+if (Boolean(foo)) {
+    // ...
+}
+
+while (!!foo) {
+    // ...
+}
+
+do {
+    // ...
+} while (Boolean(foo));
+
+for (; !!foo; ) {
+    // ...
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extra-boolean-cast: ""error""*/
+
+var foo = !!bar;
+var foo = Boolean(bar);
+
+function foo() {
+    return !!bar;
+}
+
+var foo = bar ? !!baz : !!bat;
+</code></pre>",MINOR,JavaScript,CODE_SMELL,FALSE

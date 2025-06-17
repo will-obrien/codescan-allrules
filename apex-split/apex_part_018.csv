@@ -1,0 +1,156 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:BooleanGetMethodName,Boolean Get Method Name,"Methods that return boolean results should be named as predicate statements to denote this.
+I.e, 'isReady()', 'hasValues()', 'canCommit()', 'willFail()', etc.   Avoid the use of the 'get'
+prefix for these methods.
+        <BR><h2>Example:</h2><pre>
+            
+public boolean getFoo(); 	//Bad: not recommended.
+
+public boolean isFoo(); 	//Good: this is preferred.
+
+public boolean getFoo(boolean bar); //This is OK, unless checkParameterizedMethods=true
+     </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnusedPrivateMethod,Unused Private Method,"Unused Private Method detects when a private method is declared but is unused.  
+
+A potential 'false postive' can occur: private methods can still be used in a child class. However, it's best practise to declare these methods as protected to demonstrate that this class can be used in child classes.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	private void foo() {} //Bad: this method is unused.
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AddEmptyString,Add Empty String,"The conversion of literals to strings by concatenating them with empty strings is inefficient.
+It is much better to use one of the type-specific toString() methods instead.
+        <BR><h2>Example:</h2><pre>
+             
+String s = '' + 123; 				//Bad: this is inefficient. 
+String t = Integer.toString(456); 	//Good: this is the preferred approach.
+            
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmptyStaticInitializer,Empty Static Initializer,"An empty static initializer serve no purpose and should be removed.
+       <BR><h2>Example:</h2><pre>
+   
+public class Foo {
+	static {		//Bad: This should be removed.
+	// empty
+	}
+}
+
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:GodClass,God Class Rule,"The God Class rule detects the God Class design flaw using metrics. God classes do too many things,
+are very big and overly complex. They should be split apart to be more object-oriented.<br/>
+The rule uses the detection strategy described in ""Object-Oriented Metrics in Practice"".<br/>
+<br/>
+Every violation will include three metrics:<br/>
+<ul>
+  <li>WMC = Weighted Methods Count</li>
+  <li>ATFD = Access To Foreign Data</li>
+  <li>TCC = Tight Class Cohesion</li>
+</ul
+<br/>
+The violations are reported against the entire class. See also the references:<br/>
+Michele Lanza and Radu Marinescu. Object-Oriented Metrics in Practice:<br/>
+Using Software Metrics to Characterize, Evaluate, and Improve the Design<br/>
+of Object-Oriented Systems. Springer, Berlin, 1 edition, October 2006. Page 80.<br/>
+        <BR><h2>Example:</h2><pre>
+
+global class GodEngine {
+  
+  void GodEngine() {}
+  
+  public void doGodStuff {
+    OutsideClassOne.doStuff();
+    OutsideClassTwo.doStuff();
+    if(doingStuff) {                         //Bad: This class accesses too many outside classes/data and is overly complex.
+    	OutsideClassThree.doStuff();
+    } else if (OutsideClass.isdoingOtherStuff()) {
+      OutsideClassFour.doStuff();
+    }
+    OutsideClassFive.doStuff();
+    OutsideClassSix.doStuff();
+    OutsideClassSeven.doStuff();
+    
+    //...and more and more lines...
+  }
+
+  //..and more and more methods...
+
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ExceptionAsFlowControl,Exception as Flow Control,"Using Exceptions as form of flow control is not recommended as they obscure true exceptions when debugging.
+Either add the necessary validation or use an alternate control structure.
+      <BR><h2>Example:</h2><pre>
+  
+public void bar() {
+    try {
+      try {
+      } catch (Exception e) {
+        throw new WrapperException(e); //Bad: this is essentially a GOTO to the WrapperException catch block.	
+       }
+     } catch (WrapperException e) {
+     // do some more stuff
+    }
+  }
+  
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:MisleadingVariableName,Misleading Variable Name,"Detects when a non-field has a name starting with 'm_'.  This usually denotes a field and could be confusing.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+    private Integer m_foo; 			//Good: this is OK.
+    
+    public void bar(String m_baz) { //Bad: this is not recommended...
+      Integer m_boz = 42; 			//...and neither is this.
+    }
+}
+  
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:TrackNoSonar,Track Usage of //NOSONAR,"Overuse of the //NOSONAR rule suppression can mean issues in your code are not picked up.  This rule flags each usage to make sure it is needed.
+  See <a href=""https://docs.codescan.io/hc/en-us/articles/360012109711-Ignoring-violations"">docs.codescan.io</a> for more information.
+  <BR><h2>Example:</h2><pre>
+
+
+public class Foo {
+  // The following line will be ignored
+  integer unusedValue = 1; //NOSONAR
+
+}
+
+
+  </pre>",INFO,APEX,CODE_SMELL,FALSE
+sf:UnitTestContainsTooManyAsserts,Unit Test Method Contains Too Many Asserts,"Unit tests should not contain too many asserts.  Many asserts are indicative of a complex test, for which 
+it is harder to verify correctness.  Consider breaking the test scenario into multiple, shorter test scenarios.  
+Customize the maximum number of assertions used by this Rule to suit your needs.
+		<BR><h2>Example:</h2><pre>
+
+public class MyTestCase  {
+	public testmethod void testMyCaseWithOneAssert() {	//Good: only one assert is used.
+		boolean myVar = false;		
+		system.assert(myVar);
+	}
+
+	@IsTest
+	public void testMyCaseWithMoreAsserts() {	//Bad: too many asserts. Consider breaking the test into smaller parts.
+		boolean myVar = false;		
+		system.assert(myVar);
+		system.assertEquals(false, myVar);
+	}
+}
+
+		</pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryFinalModifier,Unnecessary Final Modifier,"When a class has the final modifier, all the methods are automatically final and do not need to be
+tagged as such.
+      <BR><h2>Example:</h2><pre>
+
+public final class Foo {
+    
+    private final void foo() {
+    	// This final modifier is not necessary, since the class is final
+    	// and thus, all methods are final
+    }
+}
+
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE

@@ -1,0 +1,301 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S2077,Formatting SQL queries is security-sensitive,"<p>Formatted SQL queries can be difficult to maintain, debug and can increase the risk of SQL injection when concatenating untrusted values into the
+query. However, this rule doesnâ€™t detect SQL injections (unlike rule {rule:javascript:S3649}), the goal is only to highlight complex/formatted
+queries.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> Some parts of the query come from untrusted values (like user inputs). </li>
+  <li> The query is repeated/duplicated in other parts of the code. </li>
+  <li> The application must support different types of relational databases. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> Use <a href=""https://www.owasp.org/index.php/Query_Parameterization_Cheat_Sheet"">parameterized queries, prepared statements, or stored
+  procedures</a> and bind variables to SQL query parameters. </li>
+  <li> Consider using ORM frameworks if there is a need to have an abstract layer to access data. </li>
+</ul>
+<h2>Sensitive Code Example</h2>
+<pre>
+// === MySQL ===
+const mysql = require('mysql');
+const mycon = mysql.createConnection({ host: host, user: user, password: pass, database: db });
+mycon.connect(function(err) {
+  mycon.query('SELECT * FROM users WHERE id = ' + userinput, (err, res) =&gt; {}); // Sensitive
+});
+
+// === PostgreSQL ===
+const pg = require('pg');
+const pgcon = new pg.Client({ host: host, user: user, password: pass, database: db });
+pgcon.connect();
+pgcon.query('SELECT * FROM users WHERE id = ' + userinput, (err, res) =&gt; {}); // Sensitive
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+// === MySQL ===
+const mysql = require('mysql');
+const mycon = mysql.createConnection({ host: host, user: user, password: pass, database: db });
+mycon.connect(function(err) {
+  mycon.query('SELECT name FROM users WHERE id = ?', [userinput], (err, res) =&gt; {});
+});
+
+// === PostgreSQL ===
+const pg = require('pg');
+const pgcon = new pg.Client({ host: host, user: user, password: pass, database: db });
+pgcon.connect();
+pgcon.query('SELECT name FROM users WHERE id = $1', [userinput], (err, res) =&gt; {});
+</pre>
+<h2>Exceptions</h2>
+<p>This ruleâ€™s current implementation does not follow variables. It will only detect SQL queries which are formatted directly in the function
+call.</p>
+<pre>
+const sql = 'SELECT * FROM users WHERE id = ' + userinput;
+mycon.query(sql, (err, res) =&gt; {}); // Sensitive but no issue is raised.
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A1-Injection"">OWASP Top 10 2017 Category A1</a> - Injection </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/89"">MITRE, CWE-89</a> - Improper Neutralization of Special Elements used in an SQL Command
+  </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/564.html"">MITRE, CWE-564</a> - SQL Injection: Hibernate </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/20.html"">MITRE, CWE-20</a> - Improper Input Validation </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/943.html"">MITRE, CWE-943</a> - Improper Neutralization of Special Elements in Data Query Logic
+  </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat1"">SANS Top 25</a> - Insecure Interaction Between Components </li>
+  <li> Derived from FindSecBugs rules <a href=""https://h3xstream.github.io/find-sec-bugs/bugs.htm#SQL_INJECTION_JPA"">Potential SQL/JPQL Injection
+  (JPA)</a>, <a href=""https://h3xstream.github.io/find-sec-bugs/bugs.htm#SQL_INJECTION_JDO"">Potential SQL/JDOQL Injection (JDO)</a>, <a
+  href=""https://h3xstream.github.io/find-sec-bugs/bugs.htm#SQL_INJECTION_HIBERNATE"">Potential SQL/HQL Injection (Hibernate)</a> </li>
+</ul>",MAJOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S2871,"A compare function should be provided when using ""Array.prototype.sort()""","<p>The default sort order is alphabetic, rather than numeric, regardless of the types in the array. Specifically, even if an array contains only
+numbers, all values in it will be converted to strings and sorted lexicographically, for an order like this: 1, 15, 2, 20, 5.</p>
+<p>Fortunately the <code>sort</code> method allows you to pass an optional compare function to specify the sort order. When a compare function is
+supplied, the returned order depends on the return value of the compare function.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var myarray = [80, 3, 9, 34, 23, 5, 1];
+
+myarray.sort();
+console.log(myarray); // outputs: [1, 23, 3, 34, 5, 80, 9]
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var myarray = [80, 3, 9, 34, 23, 5, 1];
+
+myarray.sort((a, b) =&gt; (a - b));
+console.log(myarray); // outputs: [1, 3,  5, 9, 23, 34, 80]
+</pre>",CRITICAL,JavaScript,BUG,FALSE
+javascript:S121,Control structures should use curly braces,"<p>While not technically incorrect, the omission of curly braces can be misleading, and may lead to the introduction of errors during maintenance.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (condition)  // Noncompliant
+  executeSomething();
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (condition) {
+  executeSomething();
+}
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S4139,"""for in"" should not be used with iterables","<p>If you have an iterable, such as an array, set, or list, your best option for looping through its values is the <code>for of</code> syntax. Use
+<code>for in</code> and youâ€™ll iterate the properties, rather than the values.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+const arr = [4, 3, 2, 1];
+
+for (let value in arr) {  // Noncompliant
+  console.log(value);  // logs 0, 1, 2, 3
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const arr = [4, 3, 2, 1];
+
+for (let value of arr) {
+  console.log(value);
+}
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S4138,"""for of"" should be used with Iterables","<p>If you have an iterable, such as an array, set, or list, your best option for looping through its values is the <code>for of</code> syntax. Use a
+counter, and â€¦â€‹ well youâ€™ll get the right behavior, but your code just isnâ€™t as clean or clear.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+const arr = [4, 3, 2, 1];
+
+for (let i = 0; i &lt; arr.length; i++) {  // Noncompliant
+  console.log(arr[i]);
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const arr = [4, 3, 2, 1];
+
+for (let value of arr) {
+  console.log(value);
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S109,Magic numbers should not be used,"<p>A magic number is a number that comes out of nowhere, and is directly used in a statement. Magic numbers are often used, for instance to limit the
+number of iterations of a loop, to test the value of a property, etc.</p>
+<p>Using magic numbers may seem obvious and straightforward when youâ€™re writing a piece of code, but they are much less obvious and straightforward at
+debugging time.</p>
+<p>That is why magic numbers must be demystified by first being assigned to clearly named variables before being used.</p>
+<p>-1, 0 and 1 are not considered magic numbers.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function doSomething() {
+  for (let i = 0; i &lt; 4; i++) {    // Noncompliant, 4 is a magic number
+    // ...
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function doSomething() {
+  const numberOfCycles = 4;
+  for (let i = 0; i &lt; numberOfCycles; i++) {
+    // ...
+  }
+}
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S5693,Allowing requests with excessive content length is security-sensitive,"<p>Rejecting requests with significant content length is a good practice to control the network traffic intensity and thus resource consumption in
+order to prevents DoS attacks.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> size limits are not defined for the different resources of the web application. </li>
+  <li> the web application is not protected by <a href=""https://en.wikipedia.org/wiki/Rate_limiting"">rate limiting</a> features. </li>
+  <li> the web application infrastructure has limited resources. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> For most of the features of an application, it is recommended to limit the size of requests to:
+    <ul>
+      <li> lower or equal to 8mb for file uploads. </li>
+      <li> lower or equal to 2mb for other requests. </li>
+    </ul>  </li>
+</ul>
+<p>It is recommended to customize the rule with the limit values that correspond to the web application.</p>
+<h2>Sensitive Code Example</h2>
+<p><a href=""https://www.npmjs.com/package/formidable"">formidable</a> file upload module:</p>
+<pre>
+const form = new Formidable();
+form.maxFileSize = 10000000; // Sensitive: 10MB is more than the recommended limit of 8MB
+
+const formDefault = new Formidable(); // Sensitive, the default value is 200MB
+</pre>
+<p><a href=""https://www.npmjs.com/package/multer"">multer</a> (Express.js middleware) file upload module:</p>
+<pre>
+let diskUpload = multer({
+  storage: diskStorage,
+  limits: {
+    fileSize: 10000000; // Sensitive: 10MB is more than the recommended limit of 8MB
+  }
+});
+
+let diskUploadUnlimited = multer({ // Sensitive: the default value is no limit
+  storage: diskStorage,
+});
+</pre>
+<p><a href=""https://www.npmjs.com/package/body-parser"">body-parser</a> module:</p>
+<pre>
+// 4MB is more than the recommended limit of 2MB for non-file-upload requests
+let jsonParser = bodyParser.json({ limit: ""4mb"" }); // Sensitive
+let urlencodedParser = bodyParser.urlencoded({ extended: false, limit: ""4mb"" }); // Sensitive
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://www.npmjs.com/package/formidable"">formidable</a> file upload module:</p>
+<pre>
+const form = new Formidable();
+form.maxFileSize = 8000000; // Compliant: 8MB
+</pre>
+<p><a href=""https://www.npmjs.com/package/multer"">multer</a> (Express.js middleware) file upload module:</p>
+<pre>
+let diskUpload = multer({
+  storage: diskStorage,
+  limits: {
+     fileSize: 8000000 // Compliant: 8MB
+  }
+});
+</pre>
+<p><a href=""https://www.npmjs.com/package/body-parser"">body-parser</a> module:</p>
+<pre>
+let jsonParser = bodyParser.json(); // Compliant, when the limit is not defined, the default value is set to 100kb
+let urlencodedParser = bodyParser.urlencoded({ extended: false, limit: ""2mb"" }); // Compliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cheatsheetseries.owasp.org/cheatsheets/Denial_of_Service_Cheat_Sheet.html"">Owasp Cheat Sheet</a> - Owasp Denial of Service
+  Cheat Sheet </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A6-Security_Misconfiguration"">OWASP Top 10 2017 Category A6</a> - Security
+  Misconfiguration </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/770.html"">CWE-770</a> - Allocation of Resources Without Limits or Throttling </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/400.html"">CWE-400</a> - Uncontrolled Resource Consumption </li>
+</ul>",MAJOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S5691,Statically serving hidden files is security-sensitive,"<p>Hidden files are created automatically by many tools to save user-preferences, well-known examples are <code>.profile</code>, <code>.bashrc</code>,
+<code>.bash_history</code> or .<code>git</code>. To simplify the view these files are not displayed by default using operating system commands like
+<code>ls</code>.</p>
+<p>Outside of the user environment, hidden files are sensitive because they are used to store privacy-related information or even hard-coded
+secrets.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> Hidden files may have been inadvertently uploaded to the static serverâ€™s public directory and it accepts requests to hidden files. </li>
+  <li> There is no business use cases linked to serve files in <code>.name</code> format but the server is not configured to reject requests to this
+  type of files. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> Disable the serving of hidden files. </li>
+</ul>
+<h2>Sensitive Code Example</h2>
+<p><a href=""https://www.npmjs.com/package/serve-static"">Express.js serve-static</a> middleware:</p>
+<pre>
+let serveStatic = require(""serve-static"");
+let app = express();
+let serveStaticMiddleware = serveStatic('public', { 'index': false, 'dotfiles': 'allow'});   // Sensitive
+app.use(serveStaticMiddleware);
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://www.npmjs.com/package/serve-static"">Express.js serve-static</a> middleware:</p>
+<pre>
+let serveStatic = require(""serve-static"");
+let app = express();
+let serveStaticMiddleware = serveStatic('public', { 'index': false, 'dotfiles': 'ignore'});   // Compliant: ignore or deny are recommended values
+let serveStaticDefault = serveStatic('public', { 'index': false});   // Compliant: by default, ""dotfiles"" (file or directory that begins with a dot) are not served (with the exception that files within a directory that begins with a dot are not ignored), see serve-static module documentation
+app.use(serveStaticMiddleware);
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://github.com/mtojek/go-url-fuzzer"">github.com/mtojek/go-url-fuzzer</a> - Discover hidden files and directories on a web server.
+  </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A6-Security_Misconfiguration"">OWASP Web Top 10 2017 Category A6</a> - Security
+  Misconfiguration. </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/538.html"">CWE-538</a> - File and Directory Information Exposure </li>
+</ul>",MAJOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S1656,Variables should not be self-assigned,"<p>There is no reason to re-assign a variable to itself. Either this statement is redundant and should be removed, or the re-assignment is a mistake
+and some other value or variable was intended for the assignment instead.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function setName(name) {
+    name = name;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function setName(name) {
+    this.name = name;
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S1536,Function argument names should be unique,"<p>Function arguments should all have different names to prevent any ambiguity. Indeed, if arguments have the same name, the last duplicated argument
+hides all the previous arguments with the same name (those previous arguments remain available through arguments[i], so theyâ€™re not completely
+inaccessible).</p>
+<p>This hiding makes no sense, reduces understandability and maintainability, and obviously can be error prone. Furthermore, in strict mode, declaring
+arguments with the same name produces an error.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function compute(a, a, c) { // Noncompliant
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function compute(a, b, c) { // Compliant
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE

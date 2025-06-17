@@ -1,0 +1,187 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S3003,Comparison operators should not be used with strings,"<p>The use of comparison operators (<code>&lt;</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>&gt;</code>) with strings is not likely to yield
+the expected results. Make sure the intention was to compare strings and not numbers.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var appleNumber = ""123"";
+var orangeNumber = ""45"";
+if (appleNumber &lt; orangeNumber) {  // Noncompliant, this condition is true
+  alert(""There are more oranges"");
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var appleNumber = ""123"";
+var orangeNumber = ""45"";
+if (Number(appleNumber) &lt; Number(orangeNumber)) {
+  alert(""There are more oranges"");
+}
+</pre>
+<h2>Exceptions</h2>
+<p>The rule ignores string comparisons occurring in the callback of a sort invocation, e.g.:</p>
+<pre>
+const fruits = ['orange', 'apple', 'banana'];
+fruits.sort((a, b) =&gt; a &lt; b);
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3800,Functions should always return the same type,"<p>Unlike strongly typed languages, JavaScript does not enforce a return type on a function. This means that different paths through a function can
+return different types of values, which can be very confusing to the user and significantly harder to maintain.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function foo(a) {  // Noncompliant
+  if (a === 1) {
+    return true;
+  }
+  return 3;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function foo(a) {
+  if (a === 1) {
+    return true;
+  }
+  return false;
+}
+</pre>
+<h2>Exceptions</h2>
+<p>Functions returning <code>this</code> are ignored.</p>
+<pre>
+function foo() {
+  // ...
+  return this;
+}
+</pre>
+<p>Functions returning expressions having type <code>any</code> are ignored.</p>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1862,"Related ""if/else if"" statements should not have the same condition","<p>A chain of <code>if</code>/<code>else if</code> statements is evaluated from top to bottom. At most, only one branch will be executed: the first
+one with a condition that evaluates to <code>true</code>.</p>
+<p>Therefore, duplicating a condition automatically leads to dead code. Usually, this is due to a copy/paste error. At best, itâ€™s simply dead code and
+at worst, itâ€™s a bug that is likely to induce further bugs as the code is maintained, and obviously it could lead to unexpected behavior.</p>
+<p>&nbsp;</p>
+<p><em>Note that this rule requires Node.js to be available during analysis.</em></p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (param == 1)
+  openWindow();
+else if (param == 2)
+  closeWindow();
+else if (param == 1)  // Noncompliant
+  moveWindowToTheBackground();
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (param == 1)
+  openWindow();
+else if (param == 2)
+  closeWindow();
+else if (param == 3)
+  moveWindowToTheBackground();
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S3981,Collection sizes and array length comparisons should make sense,"<p>The size of a collection and the length of an array are always greater than or equal to zero. So testing that a size or length is greater than or
+equal to zero doesnâ€™t make sense, since the result is always <code>true</code>. Similarly testing that it is less than zero will always return
+<code>false</code>. Perhaps the intent was to check the non-emptiness of the collection or array instead.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (someSet.size &gt;= 0) {...} // Noncompliant
+
+if (someMap.size &lt; 0) {...} // Noncompliant
+
+const result = someArray.length &gt;= 0;  // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (someSet.size &gt; 0) {...}
+
+if (someMap.size == 0) {...}
+
+const result = someArray.length &gt; 0;
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S3579,Array indexes should be numeric,"<p>Associative arrays allow you to store values in an array with either numeric or named indexes. But creating and populating an object is just as
+easy as an array, and more reliable if you need named members.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+let arr = [];
+arr[0] = 'a';
+arr['name'] = 'bob';  // Noncompliant
+arr[1] = 'foo';
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+let obj = {
+  name: 'bob',
+  arr: ['a', 'foo']
+};
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1788,Function parameters with default values should be last,"<p>The ability to define default values for function parameters can make a function easier to use. Default parameter values allow callers to specify
+as many or as few arguments as they want while getting the same functionality and minimizing boilerplate, wrapper code.</p>
+<p>But all function parameters with default values should be declared after the function parameters without default values. Otherwise, it makes it
+impossible for callers to take advantage of defaults; they must re-specify the defaulted values or pass <code>undefined</code> in order to ""get to""
+the non-default parameters.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function multiply(a = 1, b) {  // Noncompliant
+  return a*b;
+}
+
+var x = multiply(42);  // returns NaN as b is undefined
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function multiply(b, a = 1) {
+  return a*b;
+}
+
+var x = multiply(42);  // returns 42 as expected
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S2817,Web SQL databases should not be used,"<p>The Web SQL Database standard never saw the light of day. It was first formulated, then deprecated by the W3C and was only implemented in some
+browsers. (It is not supported in Firefox or IE.)</p>
+<p>Further, the use of a Web SQL Database poses security concerns, since you only need its name to access such a database.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var db = window.openDatabase(""myDb"", ""1.0"", ""Personal secrets stored here"", 2*1024*1024);  // Noncompliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A9-Using_Components_with_Known_Vulnerabilities"">OWASP Top 10 2017 Category A9</a> - Using
+  Components with Known Vulnerabilities </li>
+</ul>
+<h2>Deprecated</h2>
+<p>This rule is deprecated, and will eventually be removed.</p>",BLOCKER,JavaScript,VULNERABILITY,FALSE
+javascript:S2692,"""indexOf"" checks should not be for positive numbers","<p>Most checks against an <code>indexOf</code> call against an array compare it with -1 because 0 is a valid index. Any checks which look for values
+&gt;0 ignore the first element, which is likely a bug. If youâ€™re merely checking the presence of the element, consider using <code>includes</code>
+instead. Before using&nbsp;<code>includes</code> method make sure that your browser version is supporting it.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var color = ""blue"";
+var name = ""ishmael"";
+
+var arr = [color, name];
+
+if (arr.indexOf(""blue"") &gt; 0) { // Noncompliant
+  // ...
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var color = ""blue"";
+var name = ""ishmael"";
+
+var arr = [color, name];
+
+if (arr.indexOf(""blue"") &gt;= 0) {
+  // ...
+}
+if (arr.includes(""blue"")) {
+  // ...
+}
+</pre>
+<h2>See</h2>
+<p><a href=""https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes"">Array.prototype.includes()</a>
+documentation at MDN</p>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3776,Cognitive Complexity of functions should not be too high,"<p>Cognitive Complexity is a measure of how hard the control flow of a function is to understand. Functions with high Cognitive Complexity will be
+difficult to maintain.</p>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://redirect.sonarsource.com/doc/cognitive-complexity.html"">Cognitive Complexity</a> </li>
+</ul>",CRITICAL,JavaScript,CODE_SMELL,FALSE

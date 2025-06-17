@@ -1,0 +1,243 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S1105,An open curly brace should be located at the end of a line,"<p>Shared naming conventions allow teams to collaborate effectively. This rule raises an issue when the brace-style is not respecting the convention
+setup in parameter:</p>
+<ul>
+  <li> <a href=""https://en.wikipedia.org/wiki/Indentation_style#K&amp;R_style"">1tbs</a> (default) </li>
+  <li> <a href=""https://en.wikipedia.org/wiki/Indentation_style#Allman_style"">allman</a> </li>
+  <li> <a href=""https://en.wikipedia.org/wiki/Indentation_style#Variant:_Stroustrup"">stroustrup</a> </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<p>Using the parameter default (1tbs):</p>
+<pre>
+if (condition)
+{                                                      //Noncompliant
+  doSomething();
+}                                                      //Noncompliant
+else {
+  doSomethingElse();
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (condition) {                                   //Compliant
+  doSomething();
+} else {                                           //Compliant
+  doSomethingElse();
+}
+</pre>
+<h2>Exceptions</h2>
+<ul>
+  <li> Object literals appearing as arguments can start on their own line. </li>
+</ul>
+<pre>
+functionWithObject(
+   {                                                 //Compliant
+        g: ""someValue""
+   }
+);
+</pre>
+<ul>
+  <li> When blocks are inlined (left and right curly braces on the same line), no issue is triggered. </li>
+</ul>
+<pre>
+if(condition) {doSomething();}                       //Compliant
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1226,"Function parameters, caught exceptions and foreach variables' initial values should not be ignored","<p>While it is technically correct to assign to parameters from within function bodies, it reduces code readability because developers wonâ€™t be able
+to tell whether the original parameter or some temporary variable is being accessed without going through the whole function. Moreover, some
+developers might also expect assignments of function parameters to be visible to callers, which is not the case, and this lack of visibility could
+confuse them. Instead, all parameters, caught exceptions, and foreach parameters should be treated as constants.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function MyClass(name, strings) {
+  name = foo;                    // Noncompliant
+
+  for (var str of strings) {
+    str = """";  // Noncompliant
+  }
+}
+</pre>",MINOR,JavaScript,BUG,FALSE
+javascript:S3525,"Class methods should be used instead of ""prototype"" assignments","<p>Originally JavaScript didnâ€™t support <code>class</code>es, and class-like behavior had to be kludged using things like <code>prototype</code>
+assignments for ""class"" functions. Fortunately, ECMAScript 2015 added classes, so any lingering <code>prototype</code> uses should be converted to
+true <code>class</code>es. The new syntax is more expressive and clearer, especially to those with experience in other languages.</p>
+<p>Specifically, with ES2015, you should simply declare a <code>class</code> and define its methods inside the class declaration.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function MyNonClass(initializerArgs = []) {
+  this._values = [...initializerArgs];
+}
+
+MyNonClass.prototype.doSomething = function () {  // Noncompliant
+  // ...
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+class MyClass {
+  constructor(initializerArgs = []) {
+    this._values = [...initializerArgs];
+  }
+
+  doSomething() {
+    //...
+  }
+}
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S4619,"""in"" should not be used on arrays","<p>The <code>in</code> operator used on an array is valid but the code will likely not have the expected behavior. The <code>in</code> operator deals
+with the indexes of the array, not with the values.</p>
+<p>If checking for an array slot is indeed desired, using <code>hasOwnProperty</code> makes the code intention clearer.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function func1() {
+    let arr = [""a"", ""b"", ""c""];
+
+    let expectedValue = ""b"";
+    if (expectedValue in arr) { // Noncompliant, will be always false
+        return expectedValue + "" found in the array"";
+    } else {
+        return expectedValue + "" not found"";
+    }
+}
+
+function func2() {
+    let arr = [""a"", ""b"", ""c""];
+
+    let expectedValue = ""1""; // index #1 is corresponding to the value ""b""
+    if (expectedValue in arr) { // Noncompliant, will be always true because the array is made of 3 elements and the #1 is always there whatever its value
+        return expectedValue + "" found in the array"";
+    } else {
+        return expectedValue + "" not found"";
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function func() {
+    let arr = [""a"", ""b"", ""c""];
+
+    let expectedValue = ""b"";
+    if (arr.includes(expectedValue)) {
+        return expectedValue + "" was found in the array"";
+    } else {
+        return expectedValue + "" not found"";
+    }
+}
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3523,Function constructors should not be used,"<p>In addition to being obtuse from a syntax perspective, function constructors are also dangerous: their execution evaluates the constructorâ€™s string
+arguments similar to the way <code>eval</code> works, which could expose your program to random, unintended code which can be both slow and a security
+risk.</p>
+<p>In general it is better to avoid it altogether, particularly when used to parse JSON data. You should use ECMAScript 5â€™s built-in JSON functions or
+a dedicated library.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var obj =  new Function(""return "" + data)();  // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var obj = JSON.parse(data);
+</pre>
+<h2>Exceptions</h2>
+<p>Function calls where the argument is a string literal (e.g. <code>(Function('return this'))()</code>) are ignored.</p>
+<h2>See</h2>
+<ul>
+  <li> OWASP Top 10 2017 Category A1 - Injection </li>
+</ul>
+<h2>Deprecated</h2>
+<p>This rule is deprecated; use {rule:javascript:S1523} instead.</p>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S3402,Strings and non-strings should not be added,"<p>Use a <code>+</code> with two numbers and youâ€™ll get addition. But use it with a string and anything else, and youâ€™ll get concatenation. This could
+be confusing, especially if itâ€™s not obvious that one of the operands is a string. It is recommended to explicitly convert the non-string component to
+make it easier to understand to future maintainers.</p>
+<p>This rule raises an issue when <code>+</code> is used with a string and a non-string.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function foo() {
+  let x = 5 + 8;  // okay
+  let z = ""8""
+  return x + z;  // Noncompliant; yields string ""138""
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function foo() {
+  let x = 5 + 8;
+  let z = ""8""
+  return x + Number(z);
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S4165,Assignments should not be redundant,"<p>The transitive property says that if <code>a == b</code> and <code>b == c</code>, then <code>a == c</code>. In such cases, thereâ€™s no point in
+assigning <code>a</code> to <code>c</code> or vice versa because theyâ€™re already equivalent.</p>
+<p>This rule raises an issue when an assignment is useless because the assigned-to variable already holds the value on all execution paths.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+a = b;
+c = a;
+b = c; // Noncompliant: c and b are already the same
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+a = b;
+c = a;
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S4043,Array-mutating methods should not be used misleadingly,"<p>Many of JavaScriptâ€™s <code>Array</code> methods return an altered version of the array while leaving the source array intact. <code>reverse</code>
+and <code>sort</code> do not fall into this category. Instead, they alter the source array <em>in addition to</em> returning the altered version,
+which is likely not what was intended.</p>
+<p>This rule raises an issue when the return values of these methods are assigned, which could lead maintainers to overlook the fact that the original
+value is altered.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var b = a.reverse(); // Noncompliant
+var d = c.sort(); // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var b = [...a].reverse();  // de-structure and create a new array, so reverse doesn't impact 'a'
+a.reverse();
+
+c.sort(); // this sorts array in place
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3514,Destructuring syntax should be used for assignments,"<p>ECMAScript 2015 introduced the ability to extract and assign multiple data points from an object or array simultaneously. This is called
+""destructuring"", and it allows you to condense boilerplate code so you can concentrate on logic.</p>
+<p>This rule raises an issue when multiple pieces of data are extracted out of the same object or array and assigned to variables.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function foo (obj1, obj2, array) {
+  var a = obj1.a;  // Noncompliant
+  var b = obj1.b;
+
+  var name = obj2.name;  // ignored; there's only one extraction-and-assignment
+
+  var zero = array[0];  // Noncompliant
+  var one = array[1];
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function foo (obj1, obj2, array) {
+  var {a, b} = obj1;
+
+  var {name} = obj2;  // this syntax works because var name and property name are the same
+
+  var [zero, one] = array;
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S2428,Object literal syntax should be used,"<p>Object literal syntax, which initializes an objectâ€™s properties inside the object declaration is cleaner and clearer than the alternative: creating
+an empty object, and then giving it properties one by one.</p>
+<p>An issue is raised when the following pattern is met:</p>
+<ul>
+  <li> An empty object is created. </li>
+  <li> A consecutive single-line statement adds a property to the created object. </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<pre>
+let person = {};  // Noncompliant
+person.firstName = ""John"";
+person.middleInitial = ""Q"";
+person.lastName = ""Public"";
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+let person = {
+  firstName: ""John"",
+  middleInitial: ""Q"",
+  lastName: ""Public"",
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE

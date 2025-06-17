@@ -1,0 +1,462 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+cs-js:no-global-assign,disallow assignment to native objects,"<h1 id=""disallowassignmenttonativeobjectsorreadonlyglobalvariablesnoglobalassign"">Disallow assignment to native objects or read-only global variables (no-global-assign)</h1>
+<p>JavaScript environments contain a number of built-in global variables, such as <code>window</code> in browsers and <code>process</code> in Node.js. In almost all cases, you don't want to assign a value to these global variables as doing so could result in losing access to important functionality. For example, you probably don't want to do this in browser code:</p>
+<pre><code class=""js language-js"">window = {};
+</code></pre>
+<p>While examples such as <code>window</code> are obvious, there are often hundreds of built-in global objects provided by JavaScript environments. It can be hard to know if you're assigning to a global variable or not.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows modifications to read-only global variables.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+
+Object = null
+undefined = 1
+</code></pre>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+/*eslint-env browser*/
+
+window = {}
+length = 1
+top = 1
+</code></pre>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+/*globals a:false*/
+
+a = 1
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+
+a = 1
+var b = 1
+b = 2
+</code></pre>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+/*eslint-env browser*/
+
+onload = function() {}
+</code></pre>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+/*globals a:true*/
+
+a = 1
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule accepts an <code>exceptions</code> option, which can be used to specify a list of builtins for which reassignments will be allowed:</p>
+<pre><code class=""json language-json"">{
+    ""rules"": {
+        ""no-global-assign"": [""error"", {""exceptions"": [""Object""]}]
+    }
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you are trying to override one of the native objects.</p>",MAJOR,JavaScript,BUG,FALSE
+cs-js:unsecure-js-dependency,Auditing js dependencies for security vulnerabilities,"<p>There is a plethora of JavaScript libraries for use on the Web and in Node.JS apps.
+This greatly simplifies development, but you need to stay up-to-date on security fixes.</p>
+<p>According to <a href=""https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project"">OWASP Top 10 Most Critical Web Application Security Risks</a>, using Components (ie. dependencies) with known vulnerabilities is ranked 9th, and there are many known stories of security breaches provided by (malicious or not) third-party dependencies.</p>
+<p>This rule identifies the open source JS components inside your project and evaluates if there are any known Common Vulnerabilities and Exposures (CVE) for their versions.</p>",MAJOR,JavaScript,SECURITY_HOTSPOT,FALSE
+cs-js:npm-audit,Auditing npm dependencies for security vulnerabilities,"<p>There is a plethora of JavaScript libraries for use on the Web and in Node.JS apps.
+This greatly simplifies development, but you need to stay up-to-date on security fixes.</p>
+<p>According to <a href=""https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project"">OWASP Top 10 Most Critical Web Application Security Risks</a>, using Components (ie. dependencies) with known vulnerabilities is ranked 9th, and there are many known stories of security breaches provided by (malicious or not) third-party dependencies.</p>
+<p>This rule inspects package-lock.json file inside your project and identifies if used npm dependencies have any known Common Vulnerabilities and Exposures (CVE).
+The rule relies on <a href=""https://github.com/advisories?query=ecosystem%3Anpm"">GitHub Advisory Database</a>.</p>",MAJOR,JavaScript,SECURITY_HOTSPOT,FALSE
+cs-js:eqeqeq,require the use of `===` and `!==`,"<p>It is considered good practice to use the type-safe equality operators <code>===</code> and <code>!==</code> instead of their regular counterparts <code>==</code> and <code>!=</code>.</p>
+<p>The reason for this is that <code>==</code> and <code>!=</code> do type coercion which follows the rather obscure <a href=""https://www.ecma-international.org/ecma-262/5.1/#sec-11.9.3"">Abstract Equality Comparison Algorithm</a>.
+For instance, the following statements are all considered <code>true</code>:</p>
+<ul>
+<li><code>[] == false</code></li>
+<li><code>[] == ![]</code></li>
+<li><code>3 == ""03""</code></li>
+</ul>
+<p>If one of those occurs in an innocent-looking statement such as <code>a == b</code> the actual problem is very difficult to spot.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at eliminating the type-unsafe equality operators.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: ""error""*/
+
+if (x == 42) { }
+
+if ("""" == text) { }
+
+if (obj.getStuff() != undefined) { }
+</code></pre>
+<p>The <code>--fix</code> option on the command line automatically fixes some problems reported by this rule. A problem is only fixed if one of the operands is a <code>typeof</code> expression, or if both operands are literals with the same type.</p>
+<h2 id=""options"">Options</h2>
+<h3 id=""always"">always</h3>
+<p>The <code>""always""</code> option (default) enforces the use of <code>===</code> and <code>!==</code> in every situation (except when you opt-in to more specific handling of <code>null</code> [see below]).</p>
+<p>Examples of <strong>incorrect</strong> code for the <code>""always""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: [""error"", ""always""]*/
+
+a == b
+foo == true
+bananas != 1
+value == undefined
+typeof foo == 'undefined'
+'hello' != 'world'
+0 == 0
+true == true
+foo == null
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""always""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: [""error"", ""always""]*/
+
+a === b
+foo === true
+bananas !== 1
+value === undefined
+typeof foo === 'undefined'
+'hello' !== 'world'
+0 === 0
+true === true
+foo === null
+</code></pre>
+<p>This rule optionally takes a second argument, which should be an object with the following supported properties:</p>
+<ul>
+<li><code>""null""</code>: Customize how this rule treats <code>null</code> literals. Possible values:<ul>
+<li><code>always</code> (default) - Always use === or !==.</li>
+<li><code>never</code> - Never use === or !== with <code>null</code>.</li>
+<li><code>ignore</code> - Do not apply this rule to <code>null</code>.</li></ul></li>
+</ul>
+<h3 id=""smart"">smart</h3>
+<p>The <code>""smart""</code> option enforces the use of <code>===</code> and <code>!==</code> except for these cases:</p>
+<ul>
+<li>Comparing two literal values</li>
+<li>Evaluating the value of <code>typeof</code></li>
+<li>Comparing against <code>null</code></li>
+</ul>
+<p>Examples of <strong>incorrect</strong> code for the <code>""smart""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: [""error"", ""smart""]*/
+
+// comparing two variables requires ===
+a == b
+
+// only one side is a literal
+foo == true
+bananas != 1
+
+// comparing to undefined requires ===
+value == undefined
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""smart""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: [""error"", ""smart""]*/
+
+typeof foo == 'undefined'
+'hello' != 'world'
+0 == 0
+true == true
+foo == null
+</code></pre>
+<h3 id=""allownull"">allow-null</h3>
+<p><strong>Deprecated:</strong> Instead of using this option use ""always"" and pass a ""null"" option property with value ""ignore"". This will tell ESLint to always enforce strict equality except when comparing with the <code>null</code> literal.</p>
+<pre><code class=""js language-js"">[""error"", ""always"", {""null"": ""ignore""}]
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you don't want to enforce a style for using equality operators, then it's safe to disable this rule.</p>",MINOR,JavaScript,CODE_SMELL,FALSE
+cs-js:exception,Tracks CodeScan Eslint Exceptions,<p>Violations of this rule may occur due to parsing errors and other exceptions thrown by the Javascript rule set.  Do not turn this off.</p>,BLOCKER,JavaScript,BUG,FALSE
+cs-js:no-else-return,disallow `else` blocks after `return` statements in `if` statements,"<p>If an <code>if</code> block contains a <code>return</code> statement, the <code>else</code> block becomes unnecessary. Its contents can be placed outside of the block.</p>
+<pre><code class=""js language-js"">function foo() {
+    if (x) {
+        return y;
+    } else {
+        return z;
+    }
+}
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at highlighting an unnecessary block of code following an <code>if</code> containing a return statement. As such, it will warn when it encounters an <code>else</code> following a chain of <code>if</code>s, all of them containing a <code>return</code> statement.</p>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option:</p>
+<pre><code class=""json language-json"">{
+    ""no-else-return"": [""error"", { ""allowElseIf"": true }],
+    // or
+    ""no-else-return"": [""error"", { ""allowElseIf"": false }]
+}
+</code></pre>
+<ul>
+<li><code>allowElseIf: true</code> (default) allows <code>else if</code> blocks after a return</li>
+<li><code>allowElseIf: false</code> disallows <code>else if</code> blocks after a return</li>
+</ul>
+<h3 id=""allowelseiftrue""><code>allowElseIf: true</code></h3>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-else-return: ""error""*/
+
+function foo() {
+    if (x) {
+        return y;
+    } else {
+        return z;
+    }
+}
+
+function foo() {
+    if (x) {
+        return y;
+    } else if (z) {
+        return w;
+    } else {
+        return t;
+    }
+}
+
+function foo() {
+    if (x) {
+        return y;
+    } else {
+        var t = ""foo"";
+    }
+
+    return t;
+}
+
+function foo() {
+    if (error) {
+        return 'It failed';
+    } else {
+        if (loading) {
+            return ""It's still loading"";
+        }
+    }
+}
+
+// Two warnings for nested occurrences
+function foo() {
+    if (x) {
+        if (y) {
+            return y;
+        } else {
+            return x;
+        }
+    } else {
+        return z;
+    }
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-else-return: ""error""*/
+
+function foo() {
+    if (x) {
+        return y;
+    }
+
+    return z;
+}
+
+function foo() {
+    if (x) {
+        return y;
+    } else if (z) {
+        var t = ""foo"";
+    } else {
+        return w;
+    }
+}
+
+function foo() {
+    if (x) {
+        if (z) {
+            return y;
+        }
+    } else {
+        return z;
+    }
+}
+
+function foo() {
+    if (error) {
+        return 'It failed';
+    } else if (loading) {
+        return ""It's still loading"";
+    }
+}
+</code></pre>
+<h3 id=""allowelseiffalse""><code>allowElseIf: false</code></h3>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-else-return: [""error"", {allowElseIf: false}]*/
+
+function foo() {
+    if (error) {
+        return 'It failed';
+    } else if (loading) {
+        return ""It's still loading"";
+    }
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-else-return: [""error"", {allowElseIf: false}]*/
+
+function foo() {
+    if (error) {
+        return 'It failed';
+    }
+
+    if (loading) {
+        return ""It's still loading"";
+    }
+}
+</code></pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-self-compare,disallow comparisons where both sides are exactly the same,"<p>Comparing a variable against itself is usually an error, either a typo or refactoring error. It is confusing to the reader and may potentially introduce a runtime error.</p>
+<p>The only time you would compare a variable against itself is when you are testing for <code>NaN</code>. However, it is far more appropriate to use <code>typeof x === 'number' &amp;&amp; isNaN(x)</code> or the <a href=""https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN"">Number.isNaN ES2015 function</a> for that use case rather than leaving the reader of the code to determine the intent of self comparison.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This error is raised to highlight a potentially confusing and potentially pointless piece of code. There are almost no situations in which you would need to compare something to itself.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-self-compare: ""error""*/
+
+var x = 10;
+if (x === x) {
+    x = 20;
+}
+</code></pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-script-url,disallow `javascript:` urls,"<p>Using <code>javascript:</code> URLs is considered by some as a form of <code>eval</code>. Code passed in <code>javascript:</code> URLs has to be parsed and evaluated by the browser in the same way that <code>eval</code> is processed.   Code should be written to work with a CSP policy that bans 'eval' as well as unsafe-inline scripts such as <code>javascript:</code>.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-script-url: ""error""*/
+
+location.href = ""javascript:void(0)"";
+</code></pre>
+<h2 id=""compatibility"">Compatibility</h2>
+<ul>
+<li><strong>JSHint</strong>: This rule corresponds to <code>scripturl</code> rule of JSHint.</li>
+</ul>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://stackoverflow.com/questions/13497971/what-is-the-matter-with-script-targeted-urls"">What is the matter with script-targeted URLs?</a></li>
+</ul>",MAJOR,JavaScript,VULNERABILITY,FALSE
+cs-js:no-return-assign,disallow assignment operators in `return` statements,"<p>One of the interesting, and sometimes confusing, aspects of JavaScript is that assignment can happen at almost any point. Because of this, an errant equals sign can end up causing assignment when the true intent was to do a comparison. This is especially true when using a <code>return</code> statement. For example:</p>
+<pre><code class=""js language-js"">function doSomething() {
+    return foo = bar + 2;
+}
+</code></pre>
+<p>It is difficult to tell the intent of the <code>return</code> statement here. It's possible that the function is meant to return the result of <code>bar + 2</code>, but then why is it assigning to <code>foo</code>? It's also possible that the intent was to use a comparison operator such as <code>==</code> and that this code is an error.</p>
+<p>Because of this ambiguity, it's considered a best practice to not use assignment in <code>return</code> statements.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to eliminate assignments from <code>return</code> statements. As such, it will warn whenever an assignment is found as part of <code>return</code>.</p>
+<h2 id=""options"">Options</h2>
+<p>The rule takes one option, a string, which must contain one of the following values:</p>
+<ul>
+<li><code>except-parens</code> (default): Disallow assignments unless they are enclosed in parentheses.</li>
+<li><code>always</code>: Disallow all assignments.</li>
+</ul>
+<h3 id=""exceptparens"">except-parens</h3>
+<p>This is the default option.
+It disallows assignments unless they are enclosed in parentheses.</p>
+<p>Examples of <strong>incorrect</strong> code for the default <code>""except-parens""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-return-assign: ""error""*/
+
+function doSomething() {
+    return foo = bar + 2;
+}
+
+function doSomething() {
+    return foo += 2;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the default <code>""except-parens""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-return-assign: ""error""*/
+
+function doSomething() {
+    return foo == bar + 2;
+}
+
+function doSomething() {
+    return foo === bar + 2;
+}
+
+function doSomething() {
+    return (foo = bar + 2);
+}
+</code></pre>
+<h3 id=""always"">always</h3>
+<p>This option disallows all assignments in <code>return</code> statements.
+All assignments are treated as problems.</p>
+<p>Examples of <strong>incorrect</strong> code for the <code>""always""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-return-assign: [""error"", ""always""]*/
+
+function doSomething() {
+    return foo = bar + 2;
+}
+
+function doSomething() {
+    return foo += 2;
+}
+
+function doSomething() {
+    return (foo = bar + 2);
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""always""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-return-assign: [""error"", ""always""]*/
+
+function doSomething() {
+    return foo == bar + 2;
+}
+
+function doSomething() {
+    return foo === bar + 2;
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow the use of assignment operators in a <code>return</code> statement, then you can safely disable this rule.</p>",MAJOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-unreachable,"disallow unreachable code after `return`, `throw`, `continue`, and `break` statements","<p>Because the <code>return</code>, <code>throw</code>, <code>break</code>, and <code>continue</code> statements unconditionally exit a block of code, any statements after them cannot be executed. Unreachable statements are usually a mistake.</p>
+<pre><code class=""js language-js"">function fn() {
+    x = 1;
+    return x;
+    x = 3; // this will never execute
+}
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows unreachable code after <code>return</code>, <code>throw</code>, <code>continue</code>, and <code>break</code> statements.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-unreachable: ""error""*/
+
+function foo() {
+    return true;
+    console.log(""done"");
+}
+
+function bar() {
+    throw new Error(""Oops!"");
+    console.log(""done"");
+}
+
+while(value) {
+    break;
+    console.log(""done"");
+}
+
+throw new Error(""Oops!"");
+console.log(""done"");
+
+function baz() {
+    if (Math.random() &lt; 0.5) {
+        return;
+    } else {
+        throw new Error();
+    }
+    console.log(""done"");
+}
+
+for (;;) {}
+console.log(""done"");
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule, because of JavaScript function and variable hoisting:</p>
+<pre><code class=""js language-js"">/*eslint no-unreachable: ""error""*/
+
+function foo() {
+    return bar();
+    function bar() {
+        return 1;
+    }
+}
+
+function bar() {
+    return x;
+    var x;
+}
+
+switch (foo) {
+    case 1:
+        break;
+        var x;
+}
+</code></pre>",MAJOR,JavaScript,BUG,FALSE

@@ -1,0 +1,194 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:AvoidBranchingStatementAsLastInLoop,Avoid Branching Statement As Last In Loop,"Using a branching statement as the last part of a loop may be a bug, and/or is confusing.
+Ensure that the usage is not a bug, or consider using another approach.
+            
+        <BR><h2>Example:</h2><pre>
+            
+for (Integer i = 0; i < 10; i++) {
+	/*
+	*do stuff
+	*/
+	if (i*i <= 25) {    //Bad: This is a confusing implementation.
+		continue;
+	}
+	break;
+}
+
+for (Integer i = 0; i < 10; i++) {
+	/*
+	* do stuff
+	*/
+	
+	if (i*i > 25) {    //Good: This is clearer.
+		break;
+	}
+}
+            
+        </pre>",MAJOR,APEX,BUG,FALSE
+sf:TestClassWithoutTestCases,Test Class without Test Methods,"Class is flagged as a Test Class but it doesn't contain any tests. Consider removing the class if it is no longer used, 
+or removing the test flag if it is not a test class. 
+      <BR><h2>Example:</h2><pre>
+
+@IsTest						//Bad: class doesn't contain any tests.
+public class CarTest {
+   public static void otherMethod(){
+   }
+   // code
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidSoqlWithoutLimits,Avoid Calling SOQL Without a Where Clause or Limit Statement,"When working with very large amounts of data, unfiltered SOQL queries can quickly cause governer limit exceptions
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	public static void main( String as[] ) {  
+		Account[] accs = [ select id from account ];  //Bad: if the amount of accounts grow beyond governor limits this may become a problem in the future.
+	}
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:LawOfDemeter,Law of Demeter,"The Law of Demeter is a simple rule, that says ""only talk to friends"". It helps to reduce coupling between classes
+or objects.
+<br/>
+See also the references:
+<br/>
+*   Andrew Hunt, David Thomas, and Ward Cunningham. The Pragmatic Programmer. From Journeyman to Master. Addison-Wesley Longman, Amsterdam, October 1999.;<br/>
+*   K.J. Lieberherr and I.M. Holland. Assuring good style for object-oriented programs. Software, IEEE, 6(5):38â€“48, 1989.;<br/>
+*   <a href=""http://www.ccs.neu.edu/home/lieber/LoD.html"">http://www.ccs.neu.edu/home/lieber/LoD.html</a><br/>
+*	<a href=""http://en.wikipedia.org/wiki/Law_of_Demeter"">http://en.wikipedia.org/wiki/Law_of_Demeter</a>
+
+        <BR><h2>Example:</h2><pre>
+
+public class Foo {
+    /**
+     * This example will result in two violations.
+     */
+    public void example(Bar b) {
+        //Good: This method call is ok, as b is a parameter of 'example'
+        C c = b.getC();
+
+        //Bad: This method call is a violation, as we are using c, which we got from B.
+        // We should ask b directly instead, e.g. 'b.doItOnC();'
+        c.doIt();
+
+        //Bad: This is also a violation, just expressed differently as a method chain without temporary variables.
+        b.getC().doIt();
+
+        // a constructor call, not a method call.
+        D d = new D();
+        //Good: This method call is ok, because we have create the new instance of D locally.
+        d.doSomethingElse(); 
+    }
+}
+
+        </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:NcssConstructorCount,NCSS Constructor Count,"This rule uses the NCSS (Non-Commenting Source Statements) algorithm to determine the number of lines
+of code for a given constructor. NCSS ignores comments, and counts actual statements. Using this algorithm,
+lines of code that are split are counted as one.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo extends Bar {
+ public Foo() {			//this constructor only has 1 NCSS lines
+     super();
+
+
+      super.foo();
+ }
+}
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ForLoopsMustUseBraces,For Loops Must Use Braces,"Avoid using 'for' statements without using curly braces. If the code formatting or 
+indentation is lost then it becomes difficult to separate the code being controlled 
+from the rest.
+       <BR><h2>Example:</h2><pre>
+
+for (Integer i = 0; i < 42; i++)   //Bad: Not recommended.
+   foo();
+   
+for (Integer i = 0; i < 42; i++){  //Good: This is preferred.
+   foo();
+}
+   
+   
+
+       </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:DoNotThrowExceptionInFinally,Do Not Throw Exception in Finally,"Throwing exceptions within a 'finally' block is confusing since they may mask other exceptions 
+or code defects.
+		<BR><h2>Example:</h2><pre>
+    		
+public class Foo {
+	public void bar() {
+		try {
+			// Here do some stuff
+		} catch( Exception e) {
+			// Handling the issue
+		} finally {
+			throw new Exception(); //Bad: this is not recommended.
+		}
+	}
+}
+	    	
+    	</pre>",CRITICAL,APEX,BUG,FALSE
+sf:CallSuperInConstructor,Call Super In Constructor,"It is a good practice to call super() in a constructor. If super() is not called but
+another constructor (such as an overloaded constructor) is called, this rule will not report it.
+      <BR><h2>Example:</h2><pre>
+
+public class Foo extends Bar{
+  public Foo() {
+    //do something...		//Bad: super is not called, this is not recommended.
+  }
+
+public class Foo extends Bar{
+  public Foo() {
+   super();					//Good: this is good practice.
+  }
+  
+ public Foo(Integer code) {
+  // do something with code
+   this();					//Good: this is also OK.
+  }
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryWrapperObjectCreation,Unnecessary Wrapper Object Creation,"Most wrapper classes provide static conversion methods that avoid the need to create intermediate objects
+just to create the primitive forms. Using these may avoid the cost of creating new objects.
+      <BR><h2>Example:</h2><pre>
+
+public Integer convert(String s) {
+  Integer i, i2;
+
+  i = Integer.valueOf(s).intValue(); //Bad: this wastes an object.
+  i = Integer.parseInt(s); 			 //Good: this is preferred.
+
+  i2 = Integer.valueOf(i).intValue(); //Bad: this wastes an object.
+  i2 = i; 							  //Good: this is preferred.
+
+  String s3 = Integer.valueOf(i2).toString(); //Bad: this wastes an object.
+  s3 = Integer.toString(i2); 				  //Good: this is preferred.
+  return i2;
+}
+
+          </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UseSingleton,Use Singleton,"For classes that only have static methods, consider making them Singletons.
+Note that this doesn't apply to abstract classes, since their subclasses may
+well include non-static methods.  Also, if you want this class to be a Singleton,
+remember to add a private constructor to prevent instantiation.
+This rule doesn't apply to classes having static methods with REST annotations.
+		
+    <BR><h2>Example:</h2><pre>
+
+public class MaybeASingleton {  //Bad: Not recommended.
+  public static void foo() {}
+  public static void bar() {}
+}
+
+
+public class MaybeASingleton {  //Good: A private constructor is prevents instantiation.
+  private MaybeASingleton(){
+	// ...
+  }
+  public static void foo() {}
+  public static void bar() {}
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE

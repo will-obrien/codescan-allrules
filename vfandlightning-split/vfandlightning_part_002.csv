@@ -1,0 +1,341 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+cs-vf:aura-api,validate Aura API,"<p>This rule makes sure that the Aura API is used according to the documentation. It disallows private and undocumented features.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>When the rule is enabled, unsupported calls or API objects are disallowed.  Your Lightning components are permitted to use:</p>
+<ul>
+<li><p>Standard Lightning Component Framework features.</p></li>
+<li><p>Standard Javascript features.</p></li>
+<li><p>Standard Locker Service SecureObject object features. </p>
+<p>For details of all of the permitted methods in the framework, including $A, see the JavaScript API at https://myDomain.lightning.force.com/auradocs/reference.app, where myDomain is the name of your custom Salesforce domain.</p></li>
+</ul>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">Aura.notGreat(); // Use $A instead of Aura
+$A.util.notUtil(); // $A.util does not contain notUtil
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">$A.createComponent(""aura:text"",{value:'Hello World'}, function(auraTextComponent, status, statusMessagesList){
+     // auraTextComponent is an instance of aura:text containing the value Hello World
+});
+</code></pre>",BLOCKER,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-octal-escape,disallow octal escape sequences in string literals,"<p>As of the ECMAScript 5 specification, octal escape sequences in string literals are deprecated and should not be used. Unicode escape sequences should be used instead.</p>
+<pre><code class=""js language-js"">var foo = ""Copyright \251"";
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows octal escape sequences in string literals.</p>
+<p>If ESLint parses code in strict mode, the parser (instead of this rule) reports the error.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-octal-escape: ""error""*/
+
+var foo = ""Copyright \251"";
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-octal-escape: ""error""*/
+
+var foo = ""Copyright \u00A9"";   // unicode
+
+var foo = ""Copyright \xA9"";     // hexadecimal
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-sparse-arrays,disallow sparse arrays,"<p>Sparse arrays contain empty slots, most frequently due to multiple commas being used in an array literal, such as:</p>
+<pre><code class=""js language-js"">var items = [,,];
+</code></pre>
+<p>While the <code>items</code> array in this example has a <code>length</code> of 2, there are actually no values in <code>items[0]</code> or <code>items[1]</code>. The fact that the array literal is valid with only commas inside, coupled with the <code>length</code> being set and actual item values not being set, make sparse arrays confusing for many developers. Consider the following:</p>
+<pre><code class=""js language-js"">var colors = [ ""red"",, ""blue"" ];
+</code></pre>
+<p>In this example, the <code>colors</code> array has a <code>length</code> of 3. But did the developer intend for there to be an empty spot in the middle of the array? Or is it a typo?</p>
+<p>The confusion around sparse arrays defined in this manner is enough that it's recommended to avoid using them unless you are certain that they are useful in your code.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows sparse array literals which have ""holes"" where commas are not preceded by elements. It does not apply to a trailing comma following the last element.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-sparse-arrays: ""error""*/
+
+var items = [,];
+var colors = [ ""red"",, ""blue"" ];
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-sparse-arrays: ""error""*/
+
+var items = [];
+var items = new Array(23);
+
+// trailing comma (after the last element) is not a problem
+var colors = [ ""red"", ""blue"", ];
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to use sparse arrays, then it is safe to disable this rule.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://www.nczonline.net/blog/2007/09/09/inconsistent-array-literals/"">Inconsistent array literals</a></li>
+</ul>",MAJOR,Visual Force & Lightning,BUG,FALSE
+vf:exception,Tracks CodeScan Parser Problems,"An exception occurred while parsing this file. Please send a description of this problem to support@code-scan.com.<BR>
+<BR>
+WARNING: No violation can be detected on this file due this error.",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-plusplus,disallow the unary operators `++` and `--`,"<p>Because the unary <code>++</code> and <code>--</code> operators are subject to automatic semicolon insertion, differences in whitespace can change semantics of source code.</p>
+<pre><code class=""js language-js"">var i = 10;
+var j = 20;
+
+i ++
+j
+// i = 11, j = 20
+</code></pre>
+<pre><code class=""js language-js"">var i = 10;
+var j = 20;
+
+i
+++
+j
+// i = 10, j = 21
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows the unary operators <code>++</code> and <code>--</code>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-plusplus: ""error""*/
+
+var foo = 0;
+foo++;
+
+var bar = 42;
+bar--;
+
+for (i = 0; i &lt; l; i++) {
+    return;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-plusplus: ""error""*/
+
+var foo = 0;
+foo += 1;
+
+var bar = 42;
+bar -= 1;
+
+for (i = 0; i &lt; l; i += 1) {
+    return;
+}
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option.</p>
+<ul>
+<li><code>""allowForLoopAfterthoughts"": true</code> allows unary operators <code>++</code> and <code>--</code> in the afterthought (final expression) of a <code>for</code> loop.</li>
+</ul>
+<h3 id=""allowforloopafterthoughts"">allowForLoopAfterthoughts</h3>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>{ ""allowForLoopAfterthoughts"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-plusplus: [""error"", { ""allowForLoopAfterthoughts"": true }]*/
+
+for (i = 0; i &lt; l; i++) {
+    return;
+}
+
+for (i = 0; i &lt; l; i--) {
+    return;
+}
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-script-url,disallow `javascript:` urls,"<p>Using <code>javascript:</code> URLs is considered by some as a form of <code>eval</code>. Code passed in <code>javascript:</code> URLs has to be parsed and evaluated by the browser in the same way that <code>eval</code> is processed.   Code should be written to work with a CSP policy that bans 'eval' as well as unsafe-inline scripts such as <code>javascript:</code>.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-script-url: ""error""*/
+
+location.href = ""javascript:void(0)"";
+</code></pre>
+<h2 id=""compatibility"">Compatibility</h2>
+<ul>
+<li><strong>JSHint</strong>: This rule corresponds to <code>scripturl</code> rule of JSHint.</li>
+</ul>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://stackoverflow.com/questions/13497971/what-is-the-matter-with-script-targeted-urls"">What is the matter with script-targeted URLs?</a></li>
+</ul>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:InputImgWithoutAltCheck,"Image Buttons Should Have an ""alt"" Attribute","<p>
+The <code>alt</code> attribute provides a textual alternative to an image.
+It is used whenever the actual image cannot be rendered.
+Common reasons for that include:
+</p>
+
+<ul>
+  <li>The image can no longer be found</li>
+  <li>Slow internet connections, while waiting for the image to download</li>
+  <li>Visually impaired users using a screen reader software</li>
+  <li>Images loading is disabled, e.g. to reduce data consumption on mobile phones</li>
+</ul>
+
+<p>The following code illustrates this rule:</p>
+
+<pre>
+
+  
+<pre>
+&lt;input type=""image"" src=""foo.png"" /&gt;                            //Bad: this is not recommended.
+&lt;input type=""image"" src=""foo.png"" alt=""..."" /&gt;                  //Good: this is preferred.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:XPathRule,XPath rule template,"CodeScan provides a very handy method for creating new rules by writing an XPath query. When the XPath query finds a match, a violation is created.
+    Let's take a simple example : assume we only want a single form on each Visualforce page. 
+    We'd like to report a violation for every form after the first. Consider the following page:
+<pre>
+&lt;apex:page&gt;
+  &lt;apex:form&gt;
+  &lt;/apex:form&gt;
+  &lt;apex:form&gt; 
+  &lt;/apex:form&gt;
+&lt;/apex:page&gt;
+</pre>
+  The following expression does the magic we need:
+<pre>
+ (//Element [@Name='apex:form'])[position()> 1]
+</pre>
+  See our <a href=""https://knowledgebase.autorabit.com/codescan/docs/creating-custom-rules-with-xpath-for-codescan-cloud/"">Custom Rules tutorial</a> for more information.",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:eqeqeq,require the use of `===` and `!==`,"<p>It is considered good practice to use the type-safe equality operators <code>===</code> and <code>!==</code> instead of their regular counterparts <code>==</code> and <code>!=</code>.</p>
+<p>The reason for this is that <code>==</code> and <code>!=</code> do type coercion which follows the rather obscure <a href=""https://www.ecma-international.org/ecma-262/5.1/#sec-11.9.3"">Abstract Equality Comparison Algorithm</a>.
+For instance, the following statements are all considered <code>true</code>:</p>
+<ul>
+<li><code>[] == false</code></li>
+<li><code>[] == ![]</code></li>
+<li><code>3 == ""03""</code></li>
+</ul>
+<p>If one of those occurs in an innocent-looking statement such as <code>a == b</code> the actual problem is very difficult to spot.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at eliminating the type-unsafe equality operators.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: ""error""*/
+
+if (x == 42) { }
+
+if ("""" == text) { }
+
+if (obj.getStuff() != undefined) { }
+</code></pre>
+<p>The <code>--fix</code> option on the command line automatically fixes some problems reported by this rule. A problem is only fixed if one of the operands is a <code>typeof</code> expression, or if both operands are literals with the same type.</p>
+<h2 id=""options"">Options</h2>
+<h3 id=""always"">always</h3>
+<p>The <code>""always""</code> option (default) enforces the use of <code>===</code> and <code>!==</code> in every situation (except when you opt-in to more specific handling of <code>null</code> [see below]).</p>
+<p>Examples of <strong>incorrect</strong> code for the <code>""always""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: [""error"", ""always""]*/
+
+a == b
+foo == true
+bananas != 1
+value == undefined
+typeof foo == 'undefined'
+'hello' != 'world'
+0 == 0
+true == true
+foo == null
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""always""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: [""error"", ""always""]*/
+
+a === b
+foo === true
+bananas !== 1
+value === undefined
+typeof foo === 'undefined'
+'hello' !== 'world'
+0 === 0
+true === true
+foo === null
+</code></pre>
+<p>This rule optionally takes a second argument, which should be an object with the following supported properties:</p>
+<ul>
+<li><code>""null""</code>: Customize how this rule treats <code>null</code> literals. Possible values:<ul>
+<li><code>always</code> (default) - Always use === or !==.</li>
+<li><code>never</code> - Never use === or !== with <code>null</code>.</li>
+<li><code>ignore</code> - Do not apply this rule to <code>null</code>.</li></ul></li>
+</ul>
+<h3 id=""smart"">smart</h3>
+<p>The <code>""smart""</code> option enforces the use of <code>===</code> and <code>!==</code> except for these cases:</p>
+<ul>
+<li>Comparing two literal values</li>
+<li>Evaluating the value of <code>typeof</code></li>
+<li>Comparing against <code>null</code></li>
+</ul>
+<p>Examples of <strong>incorrect</strong> code for the <code>""smart""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: [""error"", ""smart""]*/
+
+// comparing two variables requires ===
+a == b
+
+// only one side is a literal
+foo == true
+bananas != 1
+
+// comparing to undefined requires ===
+value == undefined
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>""smart""</code> option:</p>
+<pre><code class=""js language-js"">/*eslint eqeqeq: [""error"", ""smart""]*/
+
+typeof foo == 'undefined'
+'hello' != 'world'
+0 == 0
+true == true
+foo == null
+</code></pre>
+<h3 id=""allownull"">allow-null</h3>
+<p><strong>Deprecated:</strong> Instead of using this option use ""always"" and pass a ""null"" option property with value ""ignore"". This will tell ESLint to always enforce strict equality except when comparing with the <code>null</code> literal.</p>
+<pre><code class=""js language-js"">[""error"", ""always"", {""null"": ""ignore""}]
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you don't want to enforce a style for using equality operators, then it's safe to disable this rule.</p>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-console,disallow the use of `console`,"<p>In JavaScript that is designed to be executed in the browser, it's considered a best practice to avoid using methods on <code>console</code>. Such messages are considered to be for debugging purposes and therefore not suitable to ship to the client. In general, calls using <code>console</code> should be stripped before being pushed to production.</p>
+<pre><code class=""js language-js"">console.log(""Made it here."");
+console.error(""That shouldn't have happened."");
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows calls to methods of the <code>console</code> object.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-console: ""error""*/
+
+console.log(""Log a debug level message."");
+console.warn(""Log a warn level message."");
+console.error(""Log an error level message."");
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-console: ""error""*/
+
+// custom console
+Console.log(""Hello world!"");
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option for exceptions:</p>
+<ul>
+<li><code>""allow""</code> has an array of strings which are allowed methods of the <code>console</code> object</li>
+</ul>
+<p>Examples of additional <strong>correct</strong> code for this rule with a sample <code>{ ""allow"": [""warn"", ""error""] }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-console: [""error"", { allow: [""warn"", ""error""] }] */
+
+console.warn(""Log a warn level message."");
+console.error(""Log an error level message."");
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you're using Node.js, however, <code>console</code> is used to output information to the user and so is not strictly used for debugging purposes. If you are developing for Node.js then you most likely do not want this rule enabled.</p>
+<p>Another case where you might not use this rule is if you want to enforce console calls and not console overwrites. For example:</p>
+<pre><code class=""js language-js"">/*eslint no-console: [""error"", { allow: [""warn""] }] */
+console.error = function (message) {
+  throw new Error(message);
+};
+</code></pre>
+<p>With the <code>no-console</code> rule in the above example, ESLint will report an error. For the above example, you can disable the rule:</p>
+<pre><code class=""js language-js"">// eslint-disable-next-line no-console
+console.error = function (message) {
+  throw new Error(message);
+};
+
+// or
+
+console.error = function (message) {  // eslint-disable-line no-console
+  throw new Error(message);
+};
+</code></pre>
+<p>However, you might not want to manually add <code>eslint-disable-next-line</code> or <code>eslint-disable-line</code>. You can achieve the effect of only receiving errors for console calls with the <code>no-restricted-syntax</code> rule:</p>
+<pre><code class=""json language-json"">{
+    ""rules"": {
+        ""no-console"": ""off"",
+        ""no-restricted-syntax"": [
+            ""error"",
+            {
+                ""selector"": ""CallExpression[callee.object.name='console'][callee.property.name!=/^(log|warn|error|info|trace)$/]"",
+                ""message"": ""Unexpected property on console object was called""
+            }
+        ]
+    }
+}
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE

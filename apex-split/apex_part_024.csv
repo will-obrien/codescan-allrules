@@ -1,0 +1,181 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:AvoidGetSetMethods,Avoid Get and Set Methods,"Accessor methods should be defined with the field.  If the get or set method does not relate to a field, consider renaming the method.
+    <BR><h2>Example:</h2><pre>
+public class Foo {					
+	private Boolean rightWay{
+		get{
+		  return rightWay;
+		} 
+		set {					//Good: Accessors are defined with the field.
+		  rightWay = value;
+		}
+    }  
+	
+	private Boolean wrongWay = 'true';
+					
+	public Boolean getWrongWay() {		//Bad: This is not recommended.
+		return wrongWay;
+	}
+}
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidReversedOperators,Avoid Reversed Operators,"Reversing operators may be a bug, or at the very least make it hard to read.
+
+Although += and =+ may at first seem like a small difference, the result is very different.  
+      <BR><h2>Example:</h2><pre>
+
+Integer target = 7
+integer x = 4;
+
+target =- num; //Bad: Target is now -4, not 3. Was this expected?
+target = -num; //Good: This is looks like you'd expect and will return -4.
+
+target =+ num; //Bad: Target would be 4, not 11.
+target += num; //Good: This looks correct and will return 11.
+  
+      </pre>",MAJOR,APEX,BUG,FALSE
+sf:PossibleIncrementerBug,Suspicious For Loop Incrementer,"Incrementers which do not match the body of the for loop could be a bug.
+  <BR><h2>Example:</h2><pre>
+
+
+for (X=? ; X > N ; X ++ ) //Bad: Looks like the incrementer or the check is wrong.
+for (X=? ; X < N ; X ++ ) //Good: Incrementing up should check that X is less than N.
+for (X=? ; X > N ; X -- ) //Good: Decrementing should check that X is more than N.
+
+
+  </pre>",MAJOR,APEX,BUG,FALSE
+sf:AvoidSalesforceSystemClassNames,Avoid Salesforce System Class Names,"Classes with names that already exist as Salesforce System classes will take precedence due to namespacing.  This can cause problems when trying to access the original Salesforce classes.
+  <BR><h2>Example:</h2><pre>
+        
+public class Database {
+	//Bad: The Salesforce class Database class will not be accessible by default.
+}
+
+
+  </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:StatementsShouldBeOnSeparateLines,Statements Should Be On Separate Lines,"Statements should be on separate lines to increase readability and maintainability.
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+
+  public void foo(Integer i){
+    statement(); i++;   //Bad: Statements should be on separate lines.
+  }
+
+}
+      </pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:SwitchDensity,Switch Statement is Too Dense,"A high ratio of statements to labels in a switch statement implies that the switch statement
+is overloaded.  Consider moving the statements into new methods or creating subclasses based
+on the switch variable.
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+
+  public void bar(int x) {
+    switch on x {
+      when 1 {
+        System.err.println('I am a fish.');
+        System.err.println('I am a fish.');
+        System.err.println('I am a fish.');
+        System.err.println('I am a fish.');
+        System.err.println('I am a fish.');	  //Bad: The switch statement is too dense.
+      } 
+      when 2 {
+        doLotsOfStuff();    //Good: A large amount of logic is contained in a separate method.
+       	break;
+      }
+    }
+  }
+
+}
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:TooFewBranchesForASwitchStatement,Too Few Branches for a Switch Statement,"Switch statements are intended to be used to support complex branching behaviour. Using a switch for only a few
+cases is ill-advised, since switches are not as easy to understand as if-else statements. In these cases use the
+if-else statement to increase code readability.
+        <BR><h2>Example:</h2><pre>
+             
+public class TinySwitch {
+
+	public void foo(int i) {
+		switch on i {			//Bad: Two branches is not enough to require a switch statement.
+			when 0 {
+				//do stuff
+			}
+			when 1 {
+				// do things
+			}
+		}
+	}
+	
+	public void bar(int i) {
+		switch on i {			//Good: Large numbers or branches are better handled by a switch statement.
+			when 0 {
+				//do stuff
+			}
+			when 1 {
+				// do things
+			}
+			when 2 {
+				// do other stuff
+			}
+			when 3 {
+				// do a few more things
+			}
+			when 4 {
+				// do different things
+			}
+			when 5 {
+				// do junk
+			}
+		}
+	}
+}
+            
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmptySwitchStatements,Switch Statements Should Not Be Empty,"Empty switch statements serve no purpose and should be removed.
+       <BR><h2>Example:</h2><pre>
+   
+public void bar() {
+    Integer x = 2;
+    switch on x {
+        // once there was code here
+        // but it's been commented out or something
+    }
+}
+
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidHttpReferer,Avoid Using HTTP Referer Headers,"HTTP Referer headers can be modified by attackers. Making a decision based on the value of the referer can be dangerous.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/807"">MITRE, CWE-807</a> - Reliance on Untrusted Inputs in a Security Decision </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/293"">MITRE, CWE-293</a> - Using Referer Field for Authentication </li>
+  <li> OWASP Top 10 2021 Category A7 - Broken Authentication </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+	public static void foo() {
+		String referer = ApexPages.currentPage().getHeaders().get('Referer');    //Bad: Do not rely on Referer headers.
+		// Do stuff with 'referer'...
+	}	
+}
+      </pre>",CRITICAL,APEX,VULNERABILITY,FALSE
+sf:DivisionByZeroPossible,Division by Zero,"Division by zero exception may occur when zero could be the denominator to a division or modulo operation.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/369.html"">MITRE, CWE-369</a> - Divide by zero </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/KAGyAw"">CERT, NUM02-J.</a> - Ensure that division and remainder operations do not
+  result in divide-by-zero errors </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/cAI"">CERT, INT33-C.</a> - Ensure that division and remainder operations do not result
+  in divide-by-zero errors </li>
+</ul>
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+  public int i1 = 1 / Float.valueOf(ApexPages.currentPage().getParameters().get('value'));    //Bad: This may cause a division by zero.
+
+  pubic getI1(){
+    float value = Float.valueOf(ApexPages.currentPage().getParameters().get('value'));
+      if ( value > 0 )
+        int i1 = 1 / value;   //Good: Division by zero is checked for.
+  }
+}
+      </pre>",MAJOR,APEX,BUG,FALSE

@@ -1,0 +1,161 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S106,Standard outputs should not be used directly to log anything,"<p>Debug statements are always useful during development. But include them in production code - particularly in code that runs client-side - and you
+run the risk of inadvertently exposing sensitive information, slowing down the browser, or even erroring-out the site for some users.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+console.log(password_entered); // Noncompliant
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S104,Files should not have too many lines of code,"<p>A source file that grows too much tends to aggregate too many responsibilities and inevitably becomes harder to understand and therefore to
+maintain. Above a specific threshold, it is strongly advised to refactor it into smaller pieces of code which focus on well defined tasks. Those
+smaller files will not only be easier to understand but also probably easier to test.</p>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S909,"""continue"" should not be used","<p><code>continue</code> is an unstructured control flow statement. It makes code less testable, less readable and less maintainable. Structured
+control flow statements such as <code>if</code> should be used instead.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+  for (i = 0; i &lt; 10; i++) {
+    if (i == 5) {
+      continue;  /* Noncompliant */
+    }
+    alert(""i = "" + i);
+  }
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+  for (i = 0; i &lt; 10; i++) {
+    if (i != 5) {  /* Compliant */
+      alert(""i = "" + i);
+    }
+  }
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S905,Non-empty statements should change control flow or have at least one side-effect,"<p>Any statement (other than a null statement, which means a statement containing only a semicolon <code>;</code>) which has no side effect and does
+not result in a change of control flow will normally indicate a programming error, and therefore should be refactored.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+a == 1; // Noncompliant; was assignment intended?
+var msg = ""Hello, ""
+  ""World!""; // Noncompliant; have we forgotten '+' operator on previous line?
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/482"">MITRE, CWE-482</a> - Comparing instead of Assigning </li>
+</ul>",MAJOR,JavaScript,BUG,FALSE
+javascript:S1534,Property names should not be duplicated within a class or object literal,"<p>JavaScript allows duplicate property names in classes and object literals, but only the last instance of a duplicated name determines the actual
+value that will be used for it. Therefore, changing values of other occurrences of a duplicated name will have no effect and may cause
+misunderstandings and bugs.</p>
+<p>Defining a <code>class</code> with a duplicated <code>constructor</code> will generate an error.</p>
+<p>Before ECMAScript 2015, using duplicate names will generate an error in JavaScript strict mode code.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var data = {
+  ""key"": ""value"",
+  ""1"": ""value"",
+  ""key"": ""value"", // Noncompliant - duplicate of ""key""
+  'key': ""value"", // Noncompliant - duplicate of ""key""
+  key: ""value"", // Noncompliant - duplicate of ""key""
+  \u006bey: ""value"", // Noncompliant - duplicate of ""key""
+  ""\u006bey"": ""value"", // Noncompliant - duplicate of ""key""
+  ""\x6bey"": ""value"", // Noncompliant - duplicate of ""key""
+  1: ""value"" // Noncompliant - duplicate of ""1""
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var data = {
+  ""key"": ""value"",
+  ""1"": ""value"",
+  ""key2"": ""value"",
+  'key3': ""value"",
+  key4: ""value"",
+  \u006bey5: ""value"",
+  ""\u006bey6"": ""value"",
+  ""\x6bey7"": ""value"",
+  1b: ""value""
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S1530,Function declarations should not be made within blocks,"<p>While most script engines support function declarations within blocks, from browser to browser, the implementations are inconsistent with each
+other.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (x) {
+  function foo() {} //foo is hoisted in Chrome, Firefox and Safari, but not in Edge.
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (x) {
+  const foo = function() {}
+}
+</pre>",MINOR,JavaScript,BUG,FALSE
+javascript:S1533,Wrapper objects should not be used for primitive types,"<p>The use of wrapper objects for primitive types is gratuitous, confusing and dangerous. If you use a wrapper object constructor for type conversion,
+just remove the <code>new</code> keyword, and youâ€™ll get a primitive value automatically. If you use a wrapper object as a way to add properties to a
+primitive, you should re-think the design. Such uses are considered bad practice, and should be refactored.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+let x = new Number(""0"");
+if (x) {
+  alert('hi');  // Shows 'hi'.
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+let x = Number(""0"");
+if (x) {
+  alert('hi');
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S2251,"A ""for"" loop update clause should move the counter in the right direction","<p>A <code>for</code> loop with a stop condition that can never be reached, such as one with a counter that moves in the wrong direction, will run
+infinitely. While there are occasions when an infinite loop is intended, the convention is to construct such loops as <code>while</code> loops. More
+typically, an infinite <code>for</code> loop is a bug.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+for (var i = 0; i &lt; strings.length; i--) { // Noncompliant;
+  //...
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+for (var i = 0; i &lt; strings.length; i++) {
+  //...
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S135,"Loops should not contain more than a single ""break"" or ""continue"" statement","<p>Restricting the number of <code>break</code> and <code>continue</code> statements in a loop is done in the interest of good structured
+programming.</p>
+<p>Only one <code>break</code> or one <code>continue</code> statement is acceptable in a loop, since it facilitates optimal coding. If there is more
+than one, the code should be refactored to increase readability.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+for (var i = 1; i &lt;= 10; i++) {  // Noncompliant - 2 continue - one might be tempted to add some logic in between
+  if (i % 2 == 0) {
+    continue;
+  }
+
+  if (i % 3 == 0) {
+    continue;
+  }
+
+  alert(""i = "" + i);
+}
+</pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+javascript:S126,"""if ... else if"" constructs should end with ""else"" clauses","<p>This rule applies whenever an <code>if</code> statement is followed by one or more <code>else if</code> statements; the final <code>else if</code>
+should be followed by an <code>else</code> statement.</p>
+<p>The requirement for a final <code>else</code> statement is defensive programming.</p>
+<p>The <code>else</code> statement should either take appropriate action or contain a suitable comment as to why no action is taken. This is
+consistent with the requirement to have a final <code>default</code> clause in a <code>switch</code> statement.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (x == 0) {
+  doSomething();
+} else if (x == 1) {
+  doSomethingElse();
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (x == 0) {
+  doSomething();
+} else if (x == 1) {
+  doSomethingElse();
+} else {
+  throw ""Unexpected value for x"";
+}
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE

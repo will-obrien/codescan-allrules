@@ -1,0 +1,440 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S2092,"Creating cookies without the ""secure"" flag is security-sensitive","<p>When a cookie is protected with the <code>secure</code> attribute set to <em>true</em> it will not be send by the browser over an unencrypted HTTP
+request and thus cannot be observed by an unauthorized person during a man-in-the-middle attack.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> the cookie is for instance a <em>session-cookie</em> not designed to be sent over non-HTTPS communication. </li>
+  <li> itâ€™s not sure that the website contains <a href=""https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content"">mixed content</a> or not
+  (ie HTTPS everywhere or not) </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> It is recommended to use <code>HTTPs</code> everywhere so setting the <code>secure</code> flag to <em>true</em> should be the default behaviour
+  when creating cookies. </li>
+  <li> Set the <code>secure</code> flag to <em>true</em> for session-cookies. </li>
+</ul>
+<h2>Sensitive Code Example</h2>
+<p><a href=""https://www.npmjs.com/package/cookie-session"">cookie-session</a> module:</p>
+<pre>
+let session = cookieSession({
+  secure: false,// Sensitive
+});  // Sensitive
+</pre>
+<p><a href=""https://www.npmjs.com/package/express-session"">express-session</a> module:</p>
+<pre>
+const express = require('express');
+const session = require('express-session');
+
+let app = express();
+app.use(session({
+  cookie:
+  {
+    secure: false // Sensitive
+  }
+}));
+</pre>
+<p><a href=""https://www.npmjs.com/package/cookies"">cookies</a> module:</p>
+<pre>
+let cookies = new Cookies(req, res, { keys: keys });
+
+cookies.set('LastVisit', new Date().toISOString(), {
+  secure: false // Sensitive
+}); // Sensitive
+</pre>
+<p><a href=""https://www.npmjs.com/package/csurf"">csurf</a> module:</p>
+<pre>
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
+const express = require('express');
+
+let csrfProtection = csrf({ cookie: { secure: false }}); // Sensitive
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://www.npmjs.com/package/cookie-session"">cookie-session</a> module:</p>
+<pre>
+let session = cookieSession({
+  secure: true,// Compliant
+});  // Compliant
+</pre>
+<p><a href=""https://www.npmjs.com/package/express-session"">express-session</a> module:</p>
+<pre>
+const express = require('express');
+const session = require('express-session');
+
+let app = express();
+app.use(session({
+  cookie:
+  {
+    secure: true // Compliant
+  }
+}));
+</pre>
+<p><a href=""https://www.npmjs.com/package/cookies"">cookies</a> module:</p>
+<pre>
+let cookies = new Cookies(req, res, { keys: keys });
+
+cookies.set('LastVisit', new Date().toISOString(), {
+  secure: true // Compliant
+}); // Compliant
+</pre>
+<p><a href=""https://www.npmjs.com/package/csurf"">csurf</a> module:</p>
+<pre>
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
+const express = require('express');
+
+let csrfProtection = csrf({ cookie: { secure: true }}); // Compliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/311"">MITRE, CWE-311</a> - Missing Encryption of Sensitive Data </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/315"">MITRE, CWE-315</a> - Cleartext Storage of Sensitive Information in a Cookie </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/614"">MITRE, CWE-614</a> - Sensitive Cookie in HTTPS Session Without 'Secure' Attribute </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+</ul>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S6331,Regular expressions should not contain empty groups,"<p>There are several reasons to use a group in a regular expression:</p>
+<ul>
+  <li> to change the precedence (e.g. <code>/do(g|or)/</code> will match 'dog' and 'door') </li>
+  <li> to remember parenthesised part of the match in the case of capturing group </li>
+  <li> to improve readability </li>
+</ul>
+<p>In any case, having an empty group is most probably a mistake. Either it is a leftover after refactoring and should be removed, or the actual
+parentheses were intended and were not escaped.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+const dateRegex = /^(?:0[1-9]|[12][0-9]|3[01])[- /.](?:0[1-9]|1[012])[- /.](?:19|20)\d\d(?:)$/; // Noncompliant, useless group at the end
+const methodCallRegex = /foo()/;  // Noncompliant, will match only 'foo'
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const dateRegex = /^(?:0[1-9]|[12][0-9]|3[01])[- /.](?:0[1-9]|1[012])[- /.](?:19|20)\d\d$/;
+const methodCallRegex = /foo\(\)/; // OK, matches 'foo()'
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S5247,Disabling auto-escaping in template engines is security-sensitive,"<p>To reduce the risk of cross-site scripting attacks, templating systems, such as <code>Twig</code>, <code>Django</code>, <code>Smarty</code>,
+<code>Groovy's template engine</code>, allow configuration of automatic variable escaping before rendering templates. When escape occurs, characters
+that make sense to the browser (eg: &lt;a&gt;) will be transformed/replaced with escaped/sanitized values (eg: &amp; lt;a&amp; gt; ).</p>
+<p>Auto-escaping is not a magic feature to annihilate all cross-site scripting attacks, it depends on <a
+href=""https://twig.symfony.com/doc/3.x/filters/escape.html"">the strategy applied</a> and the context, for example a ""html auto-escaping"" strategy
+(which only transforms html characters into <a href=""https://developer.mozilla.org/en-US/docs/Glossary/Entity"">html entities</a>) will not be relevant
+when variables are used in a <a href=""https://en.wikipedia.org/wiki/HTML_attribute"">html attribute</a> because '<code>:</code>' character is not
+escaped and thus an attack as below is possible:</p>
+<pre>
+&lt;a href=""{{ myLink }}""&gt;link&lt;/a&gt; // myLink = javascript:alert(document.cookie)
+&lt;a href=""javascript:alert(document.cookie)""&gt;link&lt;/a&gt; // JS injection (XSS attack)
+</pre>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> Templates are used to render web content and
+    <ul>
+      <li> dynamic variables in templates come from untrusted locations or are user-controlled inputs </li>
+      <li> there is no local mechanism in place to sanitize or validate the inputs. </li>
+    </ul>  </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Enable auto-escaping by default and continue to review the use of inputs in order to be sure that the chosen auto-escaping strategy is the right
+one.</p>
+<h2>Sensitive Code Example</h2>
+<p><a href=""https://www.npmjs.com/package/mustache"">mustache.js</a> template engine:</p>
+<pre>
+let Mustache = require(""mustache"");
+
+Mustache.escape = function(text) {return text;}; // Sensitive
+
+let rendered = Mustache.render(template, { name: inputName });
+</pre>
+<p><a href=""https://www.npmjs.com/package/handlebars"">handlebars.js</a> template engine:</p>
+<pre>
+const Handlebars = require('handlebars');
+
+let source = ""&lt;p&gt;attack {{name}}&lt;/p&gt;"";
+
+let template = Handlebars.compile(source, { noEscape: true }); // Sensitive
+</pre>
+<p><a href=""https://www.npmjs.com/package/markdown-it"">markdown-it</a> markup language parser:</p>
+<pre>
+const markdownIt = require('markdown-it');
+let md = markdownIt({
+  html: true // Sensitive
+});
+
+let result = md.render('# &lt;b&gt;attack&lt;/b&gt;');
+</pre>
+<p><a href=""https://www.npmjs.com/package/marked"">marked</a> markup language parser:</p>
+<pre>
+const marked = require('marked');
+
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  sanitize: false // Sensitive
+});
+
+console.log(marked(""# test &lt;b&gt;attack/b&gt;""));
+</pre>
+<p><a href=""https://www.npmjs.com/package/kramed"">kramed</a> markup language parser:</p>
+<pre>
+let kramed = require('kramed');
+
+var options = {
+  renderer: new kramed.Renderer({
+    sanitize: false // Sensitive
+  })
+};
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://www.npmjs.com/package/mustache"">mustache.js</a> template engine:</p>
+<pre>
+let Mustache = require(""mustache"");
+
+let rendered = Mustache.render(template, { name: inputName }); // Compliant autoescaping is on by default
+</pre>
+<p><a href=""https://www.npmjs.com/package/handlebars"">handlebars.js</a> template engine:</p>
+<pre>
+const Handlebars = require('handlebars');
+
+let source = ""&lt;p&gt;attack {{name}}&lt;/p&gt;"";
+let data = { ""name"": ""&lt;b&gt;Alan&lt;/b&gt;"" };
+
+let template = Handlebars.compile(source); // Compliant by default noEscape is set to false
+</pre>
+<p><a href=""https://www.npmjs.com/package/markdown-it"">markdown-it</a> markup language parser:</p>
+<pre>
+let md = require('markdown-it')(); // Compliant by default html is set to false
+
+let result = md.render('# &lt;b&gt;attack&lt;/b&gt;');
+</pre>
+<p><a href=""https://www.npmjs.com/package/marked"">marked</a> markup language parser:</p>
+<pre>
+const marked = require('marked');
+
+marked.setOptions({
+  renderer: new marked.Renderer()
+}); // Compliant by default sanitize is set to true
+
+console.log(marked(""# test &lt;b&gt;attack/b&gt;""));
+</pre>
+<p><a href=""https://www.npmjs.com/package/kramed"">kramed</a> markup language parser:</p>
+<pre>
+let kramed = require('kramed');
+
+let options = {
+  renderer: new kramed.Renderer({
+    sanitize: true // Compliant
+  })
+};
+
+console.log(kramed('Attack [xss?](javascript:alert(""xss"")).', options));
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md"">OWASP Cheat
+  Sheet</a> - XSS Prevention Cheat Sheet </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A7-Cross-Site_Scripting_(XSS)"">OWASP Top 10 2017 Category A7</a> - Cross-Site Scripting
+  (XSS) </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/79.html"">MITRE, CWE-79</a> - Improper Neutralization of Input During Web Page Generation
+  ('Cross-site Scripting') </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/80.html"">MITRE, CWE-80</a> - Improper Neutralization of Script-Related HTML Tags in a Web Page
+  (Basic XSS) </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/83.html"">MITRE, CWE-83</a> - Improper Neutralization of Script in Attributes in a Web Page
+  </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/84.html"">MITRE, CWE-84</a> - Improper Neutralization of Encoded URI Schemes in a Web Page </li>
+</ul>",MAJOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S4158,Empty collections should not be accessed or iterated,"<p>When a collection is empty it makes no sense to access or iterate it. Doing so anyway is surely an error; either population was accidentally
+omitted or the developer doesnâ€™t understand the situation.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+let strings = [];
+
+if (strings.includes(""foo"")) {}  // Noncompliant
+
+for (str of strings) {}  // Noncompliant
+
+strings.forEach(str =&gt; doSomething(str)); // Noncompliant
+</pre>",MINOR,JavaScript,BUG,FALSE
+javascript:S1440,"""==="" and ""!=="" should be used instead of ""=="" and ""!=""","<p>The <code>==</code> and <code>!=</code> operators do type coercion before comparing values. This is bad because it can mask type errors. For
+example, it evaluates <code>' \t\r\n' == 0</code> as <code>true</code>.</p>
+<p>It is best to always use the side-effect-less <code>===</code> and <code>!==</code> operators instead.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (var == 'howdy') {...} // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+if (var === 'howdy') {...}
+</pre>
+<h2>Exceptions</h2>
+<p>Even if testing the equality of a variable against null doesnâ€™t do exactly what most JavaScript developers believe, usage of <code>==</code> or
+<code>!=</code> is tolerated in such context. In the following case, if <code>foo</code> hasnâ€™t been initialized, its default value is not
+<code>null</code> but <code>undefined</code>. Nevertheless <code>undefined == null</code>, so JavaScript developers get the expected behavior.</p>
+<pre>
+if(foo == null) {...}
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S3500,"Attempts should not be made to update ""const"" variables","<p>Variables declared with <code>const</code> cannot be modified. Unfortunately, attempts to do so donâ€™t always raise an error; in a non-ES2015
+environment, such an attempt might simply be ignored.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+const pi = ""yes, please"";
+pi = 3.14;  // Noncompliant
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S4830,Server certificates should be verified during SSL/TLS connections,"<p>Validation of X.509 certificates is essential to create secure SSL/TLS sessions not vulnerable to man-in-the-middle attacks.</p>
+<p>The certificate chain validation includes these steps:</p>
+<ul>
+  <li> The certificate is issued by its parent Certificate Authority or the root CA trusted by the system. </li>
+  <li> Each CA is allowed to issue certificates. </li>
+  <li> Each certificate in the chain is not expired. </li>
+</ul>
+<p>Itâ€™s not recommended to reinvent the wheel by implementing custom certificate chain validation.</p>
+<p>TLS libraries provide built-in certificate validation functions that should be used.</p>
+<h2>Noncompliant Code Example</h2>
+<p>There is no way to disable certificate verification in tls, https and request modules but it is possible to not reject request when verification
+fails.</p>
+<p><a href=""https://nodejs.org/api/https.html"">https</a> built-in module:</p>
+<pre>
+let options = {
+  hostname: 'www.example.com',
+  port: 443,
+  path: '/',
+  method: 'GET',
+  secureProtocol: 'TLSv1_2_method',
+  rejectUnauthorized: false ; // Noncompliant
+};
+
+let req = https.request(options, (res) =&gt; {
+  res.on('data', (d) =&gt; {
+    process.stdout.write(d);
+  });
+}); // Noncompliant
+</pre>
+<p><a href=""https://nodejs.org/api/tls.html"">tls</a> built-in module:</p>
+<pre>
+let options = {
+    secureProtocol: 'TLSv1_2_method',
+    rejectUnauthorized: false ; // Noncompliant
+};
+
+let socket = tls.connect(443, ""www.example.com"", options, () =&gt; {
+  process.stdin.pipe(socket);
+  process.stdin.resume();
+});  // Noncompliant
+</pre>
+<p><a href=""https://www.npmjs.com/package/request"">request</a> module:</p>
+<pre>
+let socket = request.get({
+    url: 'www.example.com',
+    secureProtocol: 'TLSv1_2_method',
+    rejectUnauthorized: false ; // Noncompliant
+});
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://nodejs.org/api/https.html"">https</a> built-in module:</p>
+<pre>
+let options = {
+  hostname: 'www.example.com',
+  port: 443,
+  path: '/',
+  method: 'GET',
+  secureProtocol: 'TLSv1_2_method'
+};
+
+let req = https.request(options, (res) =&gt; {
+  res.on('data', (d) =&gt; {
+    process.stdout.write(d);
+  });
+}); // Compliant: by default rejectUnauthorized  is set to true
+</pre>
+<p><a href=""https://nodejs.org/api/tls.html"">tls</a> built-in module:</p>
+<pre>
+let options = {
+    secureProtocol: 'TLSv1_2_method'
+};
+
+let socket = tls.connect(443, ""www.example.com"", options, () =&gt; {
+  process.stdin.pipe(socket);
+  process.stdin.resume();
+}); // Compliant: by default rejectUnauthorized  is set to true
+</pre>
+<p><a href=""https://www.npmjs.com/package/request"">request</a> module:</p>
+<pre>
+let socket = request.get({
+    url: 'https://www.example.com/',
+    secureProtocol: 'TLSv1_2_method' // Compliant
+}); // Compliant: by default rejectUnauthorized  is set to true
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A6-Security_Misconfiguration"">OWASP Top 10 2017 Category A6</a> - Security
+  Misconfiguration </li>
+  <li> <a href=""https://mobile-security.gitbook.io/masvs/security-requirements/0x10-v5-network_communication_requirements"">Mobile AppSec Verification
+  Standard</a> - Network Communication Requirements </li>
+  <li> <a href=""https://owasp.org/www-project-mobile-top-10/2016-risks/m3-insecure-communication"">OWASP Mobile Top 10 2016 Category M3</a> - Insecure
+  Communication </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/295.html"">MITRE, CWE-295</a> - Improper Certificate Validation </li>
+</ul>",CRITICAL,JavaScript,VULNERABILITY,FALSE
+javascript:S1439,"Only ""while"", ""do"", ""for"" and ""switch"" statements should be labelled","<p>Any statement or block of statements can be identified by a label, but those labels should be used only on <code>while</code>,
+<code>do-while</code>, <code>for</code> and <code>switch</code> statements. Using labels in any other context leads to unstructured, confusing
+code.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+myLabel: if (i % 2 == 0) {  // Noncompliant
+  if (i == 12) {
+    console.log(""12"");
+    break myLabel;
+  }
+  console.log(""Odd number, but not 12"");
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+myLabel: for (i = 0; i &lt; 10; i++) {   // Compliant
+  console.log(""Loop"");
+  break myLabel;
+}
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1314,Octal values should not be used,"<p>Integer literals starting with a zero are octal rather than decimal values. While using octal values is fully supported, most developers do not
+have experience with them. They may not recognize octal values as such, mistaking them instead for decimal values.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var myNumber = 010;   // Noncompliant. myNumber will hold 8, not 10 - was this really expected?
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var myNumber = 8;
+</pre>",BLOCKER,JavaScript,CODE_SMELL,FALSE
+javascript:S3616,Comma and logical OR operators should not be used in switch cases,"<p>The comma operator (<code>,</code>) evaluates its operands, from left to right, and returns the second one. Thatâ€™s useful in some situations, but
+just wrong in a <code>switch</code> <code>case</code>. You may think youâ€™re compactly handling multiple values in the case, but only the last one in
+the comma-list will ever be handled. The rest will fall through to the default.</p>
+<p>Similarly the logical OR operator (<code>||</code>) will not work in a <code>switch</code> <code>case</code>, only the first argument will be
+considered at execution time.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+switch a {
+  case 1,2:  // Noncompliant; only 2 is ever handled by this case
+    doTheThing(a);
+  case 3 || 4: // Noncompliant; only '3' is handled
+    doThatThing(a);
+  case 5:
+    doTheOtherThing(a);
+  default:
+    console.log(""Neener, neener!"");  // this happens when a==1 or a == 4
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+switch a {
+  case 1:
+  case 2:
+    doTheThing(a);
+  case 3:
+  case 4:
+    doThatThing(a);
+  case 5:
+    doTheOtherThing(a);
+  default:
+    console.log(""Neener, neener!"");
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE

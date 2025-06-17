@@ -1,0 +1,167 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:AvoidCatchingGenericException,Avoid Catching Generic Exceptions,"Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/396.html"">MITRE, CWE-396</a> - Declaration of Catch for Generic Exception </li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/BIB3AQ"">CERT, ERR08-J.</a> - Do not catch NullPointerException or any of its ancestors
+  </li>
+</ul>
+    <BR><h2>Example:</h2><pre>
+    
+public class PrimitiveType {
+    
+  public void downCastPrimitiveType() {
+    try {
+      system.debug(' i [' + i + ']');
+    } catch(Exception e) {    //Bad: this is not recommended.
+      System.debug(e.getMessage());
+    } catch(RuntimeException e) { //Bad: this is not recommended.
+      System.debug(e.getMessage());
+    } catch(NullPointerException e) { //Bad: this is not recommended.
+      System.debug(e.getMessage());
+    }
+  } 
+}
+    
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:HotspotUserInfoGetSessionIdUsage,Using UserInfo.GetSessionId() Is Security-Sensitive,"The use of UserInfo.GetSessionId() is security-sensitive. Ensure that you need to do this.
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/807"">MITRE, CWE-807</a> - Reliance on Untrusted Inputs in a Security Decision </li>
+  <li> OWASP Top 10 2021 Category A7 - Identification and Authentication Failures </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+</ul>
+
+      <BR><h2>Example:</h2><pre>
+//Make sure you need to call the UserInfo.getSessionId() method.      
+
+//....
+HttpRequest req = new HttpRequest();
+req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());   //There may be a workaround for this.
+//....
+      </pre>",CRITICAL,APEX,SECURITY_HOTSPOT,FALSE
+sf:VariableNamingConventions,Variable Naming Conventions,"A variable naming conventions rule - customize this to your liking.  Currently, it
+checks for final variables that should be fully capitalized and non-final variables
+that should not include underscores.
+        <BR><h2>Example:</h2><pre>
+
+public class Foo {
+   public static final Integer MY_NUM = 0;  //Good: 'final' variable is fully capitalised.
+   public String myTest = '';				//Good: 'non-final' variable has no underscores.
+   DataModule dmTest = new DataModule();
+   
+   public static final Integer newNum = 2;  //Bad: 'final' variable is named in camel-case.
+   public String NEW_TEST = '';				//Bad: 'non-final' variable has underscores and is captalised.
+}
+
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidSOQLInControllerGetter,Avoid SOQL in Controller Getter Methods,"Lazy loading of objects is recommended. This will help to reduce page load times.
+
+See <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_best_practices_performance.htm"">Best Practices for Improving Visualforce Performance</a>
+        <BR><h2>Example:</h2><pre>
+             
+class MyController {
+
+	public function getLines(){
+		return [ select ... ]; //BAD -
+	}
+	
+	private transient List<Account> accounts;
+	public function getLines(){
+		if ( accounts == null ){
+			accounts = [ select .. ]; //GOOD - lazy fetching once
+		}
+		return accounts;
+	}
+
+}
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AssignmentToNonFinalStatic,Assignment To Non Final Static,"Identifies a possible unsafe usage of a static field.
+       <BR><h2>Example:</h2><pre>
+   
+public class StaticField {
+   static Integer x;
+   public FinalFields(Integer y) {
+   
+    x = y; 		//Bad: This is unsafe. x is assigned to an unknown parameter.
+   }
+}
+   
+       </pre>",MAJOR,APEX,BUG,FALSE
+sf:ControllerNaming,Controller Naming Convention,"Controller class names should end with ""Controller"". Only classes linked to a page as a controller or extension are considered.
+    <BR><h2>Example:</h2><pre>
+public class Foo {  //Bad: not recommended.
+  //....
+}
+
+public class FooController{  //Good: Purpose of the class is clear.
+  //....
+}
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidInstanceofChecksInCatchClause,Avoid Instanceof Checks in Catch Clause,"Each caught exception type should be handled in its own catch clause.
+      <BR><h2>Example:</h2><pre>
+
+try { 						//Bad: Avoid this.
+ // do something
+} catch (Exception ee) {
+ if (ee instanceof IOException) {
+  cleanup();
+ }
+}
+
+try {  						//Good: This is preferred.
+ // do something
+} catch (IOException ee) {
+ cleanup();
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UseAssertInsteadOfAssertEquals,Use System.Assert instead of System.assertEquals,"When asserting a value is the same as a boolean literal, use System.assert, instead of System.assertEquals.
+		<BR><h2>Example:</h2><pre>
+
+public class MyTestCase  {
+	public static testMethod void testMyCase() {
+		boolean myVar = true;
+	
+		System.assert(myVar, 'myVar is true'); 		//Good: this is preferred.
+		
+		System.assertEquals(true, myVar, 'myVar is true');  //Bad: this is not recommended.
+	}
+}
+
+		</pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:MethodCouldBeStatic,Method Could Be Static,"Methods that make sense to call outside an object being created can be converted to static.
+      <BR><h2>Example:</h2><pre>
+public class MyHelper{
+  
+ private boolean newBool= true;
+
+ public MyHelper(){}
+
+  public Contact convertLead(Lead newLead){    // This method could be static. 
+    //do stuff ...
+    return newContact;		
+  }
+  
+  public boolean getNewBool(){ 				//This method needs instantiation of an object.
+    return newBool;
+  }
+  
+}
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UseAssertEqualsInsteadOfAssert,Use System.assertEquals instead of System.assert,"This rule detects Unit test assertions in object references equality. 
+Instead of using System.assert combined with "".equals()"" as an equality check, these assertions should be made 
+by more specific methods, like assertEquals.
+      <BR><h2>Example:</h2><pre>
+
+public class FooTest extends TestCase {
+ void testCode() {
+  Object a, b;
+  System.assert(a.equals(b)); //Bad: not recommended.
+  System.assertEquals(a, b);  //Good: this is preferred.
+ }
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE

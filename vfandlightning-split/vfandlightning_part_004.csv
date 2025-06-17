@@ -1,0 +1,440 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+cs-vf:no-new-object,disallow `Object` constructors,"<p>The <code>Object</code> constructor is used to create new generic objects in JavaScript, such as:</p>
+<pre><code class=""js language-js"">var myObject = new Object();
+</code></pre>
+<p>However, this is no different from using the more concise object literal syntax:</p>
+<pre><code class=""js language-js"">var myObject = {};
+</code></pre>
+<p>For this reason, many prefer to always use the object literal syntax and never use the <code>Object</code> constructor.</p>
+<p>While there are no performance differences between the two approaches, the byte savings and conciseness of the object literal form is what has made it the de facto way of creating new objects.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows <code>Object</code> constructors.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new-object: ""error""*/
+
+var myObject = new Object();
+
+var myObject = new Object;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new-object: ""error""*/
+
+var myObject = new CustomObject();
+
+var myObject = {};
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you wish to allow the use of the <code>Object</code> constructor, you can safely turn this rule off.</p>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-else-return,disallow `else` blocks after `return` statements in `if` statements,"<p>If an <code>if</code> block contains a <code>return</code> statement, the <code>else</code> block becomes unnecessary. Its contents can be placed outside of the block.</p>
+<pre><code class=""js language-js"">function foo() {
+    if (x) {
+        return y;
+    } else {
+        return z;
+    }
+}
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at highlighting an unnecessary block of code following an <code>if</code> containing a return statement. As such, it will warn when it encounters an <code>else</code> following a chain of <code>if</code>s, all of them containing a <code>return</code> statement.</p>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option:</p>
+<pre><code class=""json language-json"">{
+    ""no-else-return"": [""error"", { ""allowElseIf"": true }],
+    // or
+    ""no-else-return"": [""error"", { ""allowElseIf"": false }]
+}
+</code></pre>
+<ul>
+<li><code>allowElseIf: true</code> (default) allows <code>else if</code> blocks after a return</li>
+<li><code>allowElseIf: false</code> disallows <code>else if</code> blocks after a return</li>
+</ul>
+<h3 id=""allowelseiftrue""><code>allowElseIf: true</code></h3>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-else-return: ""error""*/
+
+function foo() {
+    if (x) {
+        return y;
+    } else {
+        return z;
+    }
+}
+
+function foo() {
+    if (x) {
+        return y;
+    } else if (z) {
+        return w;
+    } else {
+        return t;
+    }
+}
+
+function foo() {
+    if (x) {
+        return y;
+    } else {
+        var t = ""foo"";
+    }
+
+    return t;
+}
+
+function foo() {
+    if (error) {
+        return 'It failed';
+    } else {
+        if (loading) {
+            return ""It's still loading"";
+        }
+    }
+}
+
+// Two warnings for nested occurrences
+function foo() {
+    if (x) {
+        if (y) {
+            return y;
+        } else {
+            return x;
+        }
+    } else {
+        return z;
+    }
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-else-return: ""error""*/
+
+function foo() {
+    if (x) {
+        return y;
+    }
+
+    return z;
+}
+
+function foo() {
+    if (x) {
+        return y;
+    } else if (z) {
+        var t = ""foo"";
+    } else {
+        return w;
+    }
+}
+
+function foo() {
+    if (x) {
+        if (z) {
+            return y;
+        }
+    } else {
+        return z;
+    }
+}
+
+function foo() {
+    if (error) {
+        return 'It failed';
+    } else if (loading) {
+        return ""It's still loading"";
+    }
+}
+</code></pre>
+<h3 id=""allowelseiffalse""><code>allowElseIf: false</code></h3>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-else-return: [""error"", {allowElseIf: false}]*/
+
+function foo() {
+    if (error) {
+        return 'It failed';
+    } else if (loading) {
+        return ""It's still loading"";
+    }
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-else-return: [""error"", {allowElseIf: false}]*/
+
+function foo() {
+    if (error) {
+        return 'It failed';
+    }
+
+    if (loading) {
+        return ""It's still loading"";
+    }
+}
+</code></pre>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-new-wrappers,"disallow `new` operators with the `String`, `Number`, and `Boolean` objects","<p>There are three primitive types in JavaScript that have wrapper objects: string, number, and boolean. These are represented by the constructors <code>String</code>, <code>Number</code>, and <code>Boolean</code>, respectively. The primitive wrapper types are used whenever one of these primitive values is read, providing them with object-like capabilities such as methods. Behind the scenes, an object of the associated wrapper type is created and then destroyed, which is why you can call methods on primitive values, such as:</p>
+<pre><code class=""js language-js"">var text = ""Hello world"".substring(2);
+</code></pre>
+<p>Behind the scenes in this example, a <code>String</code> object is constructed. The <code>substring()</code> method exists on <code>String.prototype</code> and so is accessible to the string instance.</p>
+<p>It's also possible to manually create a new wrapper instance:</p>
+<pre><code class=""js language-js"">var stringObject = new String(""Hello world"");
+var numberObject = new Number(33);
+var booleanObject = new Boolean(false);
+</code></pre>
+<p>Although possible, there aren't any good reasons to use these primitive wrappers as constructors. They tend to confuse other developers more than anything else because they seem like they should act as primitives, but they do not. For example:</p>
+<pre><code class=""js language-js"">var stringObject = new String(""Hello world"");
+console.log(typeof stringObject);       // ""object""
+
+var text = ""Hello world"";
+console.log(typeof text);               // ""string""
+
+var booleanObject = new Boolean(false);
+if (booleanObject) {    // all objects are truthy!
+    console.log(""This executes"");
+}
+</code></pre>
+<p>The first problem is that primitive wrapper objects are, in fact, objects. That means <code>typeof</code> will return <code>""object""</code> instead of <code>""string""</code>, <code>""number""</code>, or <code>""boolean""</code>. The second problem comes with boolean objects. Every object is truthy, that means an instance of <code>Boolean</code> always resolves to <code>true</code> even when its actual value is <code>false</code>.</p>
+<p>For these reasons, it's considered a best practice to avoid using primitive wrapper types with <code>new</code>.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to eliminate the use of <code>String</code>, <code>Number</code>, and <code>Boolean</code> with the <code>new</code> operator. As such, it warns whenever it sees <code>new String</code>, <code>new Number</code>, or <code>new Boolean</code>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new-wrappers: ""error""*/
+
+var stringObject = new String(""Hello world"");
+var numberObject = new Number(33);
+var booleanObject = new Boolean(false);
+
+var stringObject = new String;
+var numberObject = new Number;
+var booleanObject = new Boolean;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new-wrappers: ""error""*/
+
+var text = String(someValue);
+var num = Number(someValue);
+
+var object = new MyString();
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow the use of primitive wrapper objects, then you can safely disable this rule.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://www.inkling.com/read/javascript-definitive-guide-david-flanagan-6th/chapter-3/wrapper-objects"">Wrapper objects</a></li>
+</ul>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-eq-null,disallow `null` comparisons without type-checking operators,"<p>Comparing to <code>null</code> without a type-checking operator (<code>==</code> or <code>!=</code>), can have unintended results as the comparison will evaluate to true when comparing to not just a <code>null</code>, but also an <code>undefined</code> value.</p>
+<pre><code class=""js language-js"">if (foo == null) {
+  bar();
+}
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>The <code>no-eq-null</code> rule aims reduce potential bug and unwanted behavior by ensuring that comparisons to <code>null</code> only match <code>null</code>, and not also <code>undefined</code>. As such it will flag comparisons to null when using <code>==</code> and <code>!=</code>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-eq-null: ""error""*/
+
+if (foo == null) {
+  bar();
+}
+
+while (qux != null) {
+  baz();
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-eq-null: ""error""*/
+
+if (foo === null) {
+  bar();
+}
+
+while (qux !== null) {
+  baz();
+}
+</code></pre>",MAJOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-new,disallow `new` operators outside of assignments or comparisons,"<p>The goal of using <code>new</code> with a constructor is typically to create an object of a particular type and store that object in a variable, such as:</p>
+<pre><code class=""js language-js"">var person = new Person();
+</code></pre>
+<p>It's less common to use <code>new</code> and not store the result, such as:</p>
+<pre><code class=""js language-js"">new Person();
+</code></pre>
+<p>In this case, the created object is thrown away because its reference isn't stored anywhere, and in many cases, this means that the constructor should be replaced with a function that doesn't require <code>new</code> to be used.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at maintaining consistency and convention by disallowing constructor calls using the <code>new</code> keyword that do not assign the resulting object to a variable.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new: ""error""*/
+
+new Thing();
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new: ""error""*/
+
+var thing = new Thing();
+
+Thing();
+</code></pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:ItalicTagsCheck,"""em"" Tags Should Be Used Instead of ""i""","<p>
+The &lt;strong&gt;/&lt;b&gt; and &lt;em&gt;/&lt;i&gt; tags have exactly the same effect in most web browsers, but there is a fundamental difference between them: &lt;strong&gt; and &lt;em&gt; have a semantic meaning whereas &lt;b&gt; and &lt;i&gt; only convey styling information like CSS.
+</p>
+
+<p>
+When &lt;b&gt; can have simply no effect on a Palm device with limited display or when a screen reader software is used by a blind person, &lt;strong&gt; will:
+</p>
+
+<ul>
+  <li>Underline the characters on a Palm Pilot</li>
+  <li>Speak with lower tone when using a screen reader such as Jaws</li>
+  <li>And display the text bold in normal browsers</li>
+</ul>
+
+<p>Consequently:</p>
+
+<ul>
+  <li>in order to convey semantics, the &lt;b&gt; and &lt;i&gt; tags shall never be used,</li>
+  <li>in order to convey styling information, the &lt;b&gt; and &lt;i&gt; should be avoided and CSS should be used instead.</li>
+</ul>
+
+
+
+     
+
+
+<h2>Noncompliant Code Example</h2>
+
+<pre>
+&lt;i&gt;car&lt;/i&gt;                 //Bad: this is not recommended.
+&lt;b&gt;train&lt;/b&gt;               //Bad: this is not recommended.
+</pre>
+
+<h2>Compliant Solution</h2>
+
+<pre>
+&lt;em&gt;car&lt;/em&gt;               //Good: this is preferred.
+&lt;strong&gt;train&lt;/strong&gt;     //Good: this is preferred.
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-param-reassign,disallow reassigning `function` parameters,"<h1 id=""disallowreassignmentoffunctionparametersnoparamreassign"">Disallow Reassignment of Function Parameters (no-param-reassign)</h1>
+<p>Assignment to variables declared as function parameters can be misleading and lead to confusing behavior, as modifying function parameters will also mutate the <code>arguments</code> object. Often, assignment to function parameters is unintended and indicative of a mistake or programmer error.</p>
+<p>This rule can be also configured to fail when function parameters are modified. Side effects on parameters can cause counter-intuitive execution flow and make errors difficult to track down.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to prevent unintended behavior caused by modification or reassignment of function parameters.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: ""error""*/
+
+function foo(bar) {
+    bar = 13;
+}
+
+function foo(bar) {
+    bar++;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: ""error""*/
+
+function foo(bar) {
+    var baz = bar;
+}
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule takes one option, an object, with a boolean property <code>""props""</code> and an array <code>""ignorePropertyModificationsFor""</code>. <code>""props""</code> is <code>false</code> by default. If <code>""props""</code> is set to <code>true</code>, this rule warns against the modification of parameter properties unless they're included in <code>""ignorePropertyModificationsFor""</code>, which is an empty array by default.</p>
+<h3 id=""props"">props</h3>
+<p>Examples of <strong>correct</strong> code for the default <code>{ ""props"": false }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: [""error"", { ""props"": false }]*/
+
+function foo(bar) {
+    bar.prop = ""value"";
+}
+
+function foo(bar) {
+    delete bar.aaa;
+}
+
+function foo(bar) {
+    bar.aaa++;
+}
+</code></pre>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""props"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: [""error"", { ""props"": true }]*/
+
+function foo(bar) {
+    bar.prop = ""value"";
+}
+
+function foo(bar) {
+    delete bar.aaa;
+}
+
+function foo(bar) {
+    bar.aaa++;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""props"": true }</code> option with <code>""ignorePropertyModificationsFor""</code> set:</p>
+<pre><code class=""js language-js"">/*eslint no-param-reassign: [""error"", { ""props"": true, ""ignorePropertyModificationsFor"": [""bar""] }]*/
+
+function foo(bar) {
+    bar.prop = ""value"";
+}
+
+function foo(bar) {
+    delete bar.aaa;
+}
+
+function foo(bar) {
+    bar.aaa++;
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow assignment to function parameters, then you can safely disable this rule.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://spin.atomicobject.com/2011/04/10/javascript-don-t-reassign-your-function-arguments/"">JavaScript: Donâ€™t Reassign Your Function Arguments</a></li>
+</ul>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:HeaderCheck,Files Should Have a Header Comment,"This rule verifies files have a comment matching a given regular expression before the very first tag.
+The header comment can be located before or after the <code>&lt;!DOCTYPE&gt;</code> declaration.
+    
+
+<p>For example, with the format <code>.*Copyright.*</code>, the following code:</p>
+
+<pre>
+&lt;html&gt;                                    //Bad: not recommended.
+...
+&lt;/html&gt;
+</pre>
+
+<p>should be refactored into:</p>
+
+<pre>
+&lt;!-- Copyright 2013 SonarSource SA --&gt;    //Good: preferred approach.
+&lt;html&gt;
+...
+&lt;/html&gt;
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidApexInScript,Avoid Apex Tags Within Script,"Avoid using &lt;apex:*&gt; tags within &lt;script&gt; tags. &lt;apex:&gt; tags should be avoided for the following reasons:<br/>
+<ul>
+	<li>The code is harder to read</li>
+	<li>CodeScan's javascript linter cannot parse the code properly</li> 
+	<li>&lt;apex:output&gt; cannot be controlled for security</li>
+</ul>  
+   <BR><h2>Example:</h2><pre>
+&lt;apex:page&gt;
+  &lt;script&gt;
+    &lt;apex:repeat value=""{! apexArray }"" var=""entry""&gt;      //Bad: Apex tag is used within Script to iterate through array.
+      document.write('{! JSENCODE(entry) }');
+    &lt;/apex:repeat&gt;
+  &lt;/script&gt;
+
+  &lt;script&gt;
+   var apexArray = JSON.parse('{! JSENCODE(apexArray) }');
+   if(Array.isArray(apexArray)) apexArray.forEach(function(entry){ document.write(entry) });  //Good: Iteration is provided without using Apex tags.
+  &lt;/script&gt;
+&lt;/apex:page&gt;
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:LongJavaScriptCheck,Avoid Large Javascript Scriptlets,"Javascript scriptlets should not have too many lines of code. Such long Javascript pieces of code should be located in dedicated *.js source files.
+    <BR><h2>Example:</h2><pre>
+   &lt;script type=""text/javascript""&gt;
+      Sfdc.onReady(function() {
+      var id = '{!$Component.myForm.myPageBlock.myField}';  //Bad: too many lines of javascript is not recommended.
+      var inputField = document.getElementById(id);
+      console.log(inputField.value);
+      //...
+      //...
+      //...
+    });
+  &lt;/script&gt;
+      
+      	
+      </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE

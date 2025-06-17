@@ -1,0 +1,151 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:EmptyWhileStmt,Empty While Statement,"Avoid instances where a while statement does nothing.  
+       <BR><h2>Example:</h2><pre>
+  
+void bar(Integer a, Integer b) {
+	while (a == b) {
+						//Bad: Nothing is done here.
+	}
+}
+ 
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:SingularField,Private Field Could Be Declared Locally,"Fields whose scopes are limited to just single methods do not rely on the containing
+object to provide them to other methods. They may be better implemented as local variables
+within those methods.
+			
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+    private Integer x;
+    
+    public void foo(Integer y) {			 
+     x = y + 5;			//Bad: x has no reason to exist at the Foo instance level.
+     return x;
+    }
+    
+    public void bar(Integer y) {			 
+     integer x = y + 5;			//Good: x is declared within the method.
+     return x;
+    }
+}
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UseCollectionIsEmpty,Use Collection isEmpty,"The isEmpty() method on Lists, Maps and Sets are provided to determine if a collection has any elements.
+Comparing the value of size() to 0 does not convey intent as well as the isEmpty() method.
+      <BR><h2>Example:</h2><pre>
+    
+public class Foo {
+  void good() {				//Good: Preferred.
+    List foo = getList();
+    if (foo.isEmpty()) {
+      doWork();
+    }
+  }
+
+  void bad() {				//Bad: Not recommended.
+    List foo = getList();
+    if (foo.size() == 0) {
+      doWork();
+    }
+  }
+}
+    
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnitTestsShouldIncludeStartTest,Unit Test Method should include Test.StartTest() and Test.StopTest(),"Unit tests should include Test.startTest() and Test.stopTest()
+        <BR><h2>Example:</h2><pre>
+    
+@IsTest
+public class Foo  {
+   public static testmethod void testSomething() {
+      Bar b = findBar();
+      Test.startTest();
+	  // System.assert(b.isX());
+	  b.work();
+      Test.stopTest();
+   }
+}
+    
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:IfElseStmtsMustUseBraces,If Else Statements Must Use Braces,"Avoid using 'if..else' statements without using surrounding braces. If the code formatting 
+or indentation is lost then it becomes difficult to separate the code being controlled 
+from the rest.
+       <BR><h2>Example:</h2><pre>
+
+   
+if (foo)			
+       x = x+1;
+   else            //Bad: Not recommended.
+       x = x-1;
+
+  
+if (foo){			
+	x++;
+} else {          //Good: This is preferred.
+	y++;
+}
+
+if (foo) x++;		//This is ignored. The rule doesn't check this statement.
+
+
+       </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnusedPrivateField,Unused Private Field,"Detects when a private field is declared and/or assigned a value, but not used.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+  private static Integer FOO = 2; //Bad: this field is unused.
+  private Integer i = 5; //Bad: this field is unused.
+  private Integer j = 6;
+  
+  public Integer addOne() {
+    return j++;
+  }
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryParentheses,Unnecessary Parentheses,"Sometimes expressions are wrapped in unnecessary parentheses, making them look like function calls.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+   boolean bar() {
+      return (true);
+      }
+}
+  
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmptyInitializer,Empty Initializer,"Empty initializers serve no purpose and should be removed.
+       <BR><h2>Example:</h2><pre>
+   
+public class Foo {
+
+   static {} //Bad: This serves no purpose...
+
+   {} 		//and neither does this.
+
+}
+    
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:MultipleTriggersOnObject,Avoid creating multiple triggers on the same object,"Avoid creating multiple triggers on the same object
+
+<pre>
+trigger AccountTriggerInsert on Account (before insert) {	//Bad: Multiple triggers on the same object should be avoided.
+}
+trigger AccountTriggerUpdate on Account (before update) {
+}
+</pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:SimplifyBooleanReturns,Simplify Boolean Returns,"Avoid unnecessary if-then-else statements when returning a boolean. The result of
+the conditional test can be returned instead.
+    <BR><h2>Example:</h2><pre>
+
+public boolean isBarEqualTo(Integer x) {
+   
+	if (bar == x) {		 //Bad: This bit of code...
+		return true;
+	} else {
+		return false;
+    }
+}
+
+public boolean isBarEqualTo(Integer x) {
+
+   	return bar == x;	//Good: ...can be replaced with this.
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE

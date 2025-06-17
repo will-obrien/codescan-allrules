@@ -1,0 +1,365 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S3504,"Variables should be declared with ""let"" or ""const""","<p>ECMAScript 2015 introduced the <code>let</code> and <code>const</code> keywords for block-scope variable declaration. Using <code>const</code>
+creates a read-only (constant) variable.</p>
+<p>The distinction between the variable types created by <code>var</code> and by <code>let</code> is significant, and a switch to <code>let</code>
+will help alleviate many of the variable scope issues which have caused confusion in the past.</p>
+<p>Because these new keywords create more precise variable types, they are preferred in environments that support ECMAScript 2015. However, some
+refactoring may be required by the switch from <code>var</code> to <code>let</code>, and you should be aware that they raise <code>SyntaxError</code>s
+in pre-ECMAScript 2015 environments.</p>
+<p>This rule raises an issue when <code>var</code> is used instead of <code>const</code> or <code>let</code>.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var color = ""blue"";
+var size = 4;
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const color = ""blue"";
+let size = 4;
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S3796,Callbacks of array methods should have return statements,"<p>Arrays in JavaScript have several methods for filtering, mapping, or folding that require a callback. Not having a return statement in such a
+callback function is most likely a mistake, because processing of the array uses the return value of the callback. If there is no return, callback
+will implicitly return <code>undefined</code>, which will likely fail.</p>
+<p>This rule applies for the following methods of an array:</p>
+<ul>
+  <li> <code>Array.from</code> </li>
+  <li> <code>Array.prototype.every</code> </li>
+  <li> <code>Array.prototype.filter</code> </li>
+  <li> <code>Array.prototype.find</code> </li>
+  <li> <code>Array.prototype.findIndex</code> </li>
+  <li> <code>Array.prototype.map</code> </li>
+  <li> <code>Array.prototype.reduce</code> </li>
+  <li> <code>Array.prototype.reduceRight</code> </li>
+  <li> <code>Array.prototype.some</code> </li>
+  <li> <code>Array.prototype.sort</code> </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<pre>
+let arr = [""a"", ""b"", ""c""];
+let merged = arr.reduce(function(a, b) {
+  a.concat(b);
+}); // Noncompliant: No return statement, will result in TypeError
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+let arr = [""a"", ""b"", ""c""];
+let merged = arr.reduce(function(a, b) {
+  return a.concat(b);
+}); // merged === ""abc""
+</pre>",BLOCKER,JavaScript,BUG,FALSE
+javascript:S3799,Destructuring patterns should not be empty,"<p>Destructuring is a convenient way of extracting multiple values from data stored in (possibly nested) objects and arrays. However, it is possible
+to create an empty pattern that has no effect. When empty curly braces or brackets are used to the right of a property name most of the time the
+intent was to use a default value instead.</p>
+<p>This rule raises an issue when empty destructuring pattern is used.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var {a: {}, b} = myObj; // Noncompliant
+function foo({first: [], second}) { // Noncompliant
+  // ...
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var {a = {}, b} = myObj;
+function foo({first = [], second}) {
+  // ...
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S3758,Values not convertible to numbers should not be used in numeric comparisons,"<p>In a Zen-like manner, <code>NaN</code> isnâ€™t equal to anything, even itself. So comparisons (<code>&gt;, &lt;, &gt;=, &lt;=</code>) where one
+operand is <code>NaN</code> or evaluates to <code>NaN</code> always return <code>false</code>. Specifically, <code>undefined</code> and objects that
+cannot be converted to numbers evaluate to <code>NaN</code> when used in numerical comparisons.</p>
+<p>This rule raises an issue when there is at least one path through the code where one of the operands to a comparison is <code>NaN</code>,
+<code>undefined</code> or an <code>Object</code> which cannot be converted to a number.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var x;  // x is currently ""undefined""
+if (someCondition()) {
+  x = 42;
+}
+
+if (42 &gt; x) {  // Noncompliant; ""x"" might still be ""undefined""
+  doSomething();
+}
+
+var obj = {prop: 42};
+if (obj &gt; 24) { // Noncompliant
+  doSomething();
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var x;
+if (someCondition()) {
+  x = 42;
+} else {
+  x = foo();
+}
+
+if (42 &gt; x) {
+  doSomething();
+}
+
+var obj = {prop: 42};
+if (obj.prop &gt; 24) {
+  doSomething();
+}
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S2703,Variables should be declared explicitly,"<p>JavaScript variable scope can be particularly difficult to understand and get right. The situation gets even worse when you consider the
+<em>accidental</em> creation of global variables, which is what happens when you declare a variable inside a function or the <code>for</code> clause
+of a for-loop without using the <code>let</code>, <code>const</code> or <code>var</code> keywords.</p>
+<p><code>let</code> and <code>const</code> were introduced in ECMAScript 2015, and are now the preferred keywords for variable declaration.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function f(){
+  i = 1;         // Noncompliant; i is global
+
+  for (j = 0; j &lt; array.length; j++) {  // Noncompliant; j is global now too
+    // ...
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+function f(){
+  var i = 1;
+
+  for (let j = 0; j &lt; array.length; j++) {
+    // ...
+  }
+}
+</pre>",BLOCKER,JavaScript,CODE_SMELL,FALSE
+javascript:S1526,"Variables declared with ""var"" should be declared before they are used","<p>Variables declared with <code>var</code> have the special property that regardless of where theyâ€™re declared in a function they ""float"" to the top
+of the function and are available for use even before theyâ€™re declared. That makes scoping confusing, especially for new coders.</p>
+<p>To keep confusion to a minimum, <code>var</code> declarations should happen before they are used for the first time.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var x = 1;
+
+function fun(){
+  alert(x); // Noncompliant as x is declared later in the same scope
+  if(something) {
+    var x = 42; // Declaration in function scope (not block scope!) shadows global variable
+  }
+}
+
+fun(); // Unexpectedly alerts ""undefined"" instead of ""1""
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var x = 1;
+
+function fun() {
+  print(x);
+  if (something) {
+    x = 42;
+  }
+}
+
+fun(); // Print ""1""
+</pre>",BLOCKER,JavaScript,CODE_SMELL,FALSE
+javascript:S2814,Variables and functions should not be redeclared,"<p>This rule checks that a declaration doesnâ€™t use a name that is already in use. Indeed, it is possible to use the same symbol multiple times as
+either a variable or a function, but doing so is likely to confuse maintainers. Further itâ€™s possible that such reassignments are made in error, with
+the developer not realizing that the value of the variable is overwritten by the new assignment.</p>
+<p>This rule also applies to function parameters.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var a = 'foo';
+function a() {}   // Noncompliant
+console.log(a);   // prints ""foo""
+
+function myFunc(arg) {
+  var arg = ""event""; // Noncompliant, argument value is lost
+}
+
+fun(); // prints ""bar""
+
+function fun() {
+  console.log(""foo"");
+}
+
+fun(); // prints ""bar""
+
+function fun() {  // Noncompliant
+  console.log(""bar"");
+}
+
+fun(); // prints ""bar""
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var a = 'foo';
+function otherName() {}
+console.log(a);
+
+function myFunc(arg) {
+  var newName = ""event"";
+}
+
+fun(); // prints ""foo""
+
+function fun() {
+  print(""foo"");
+}
+
+fun(); // prints ""foo""
+
+function printBar() {
+  print(""bar"");
+}
+
+printBar(); // prints ""bar""
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S4790,Using weak hashing algorithms is security-sensitive,"<p>Cryptographic hash algorithms such as <code>MD2</code>, <code>MD4</code>, <code>MD5</code>, <code>MD6</code>, <code>HAVAL-128</code>,
+<code>HMAC-MD5</code>, <code>DSA</code> (which uses <code>SHA-1</code>), <code>RIPEMD</code>, <code>RIPEMD-128</code>, <code>RIPEMD-160</code>,
+<code>HMACRIPEMD160</code> and <code>SHA-1</code> are no longer considered secure, because it is possible to have <code>collisions</code> (little
+computational effort is enough to find two or more different inputs that produce the same hash).</p>
+<h2>Ask Yourself Whether</h2>
+<p>The hashed value is used in a security context like:</p>
+<ul>
+  <li> User-password storage. </li>
+  <li> Security token generation (used to confirm e-mail when registering on a website, reset password, etc â€¦â€‹). </li>
+  <li> To compute some message integrity. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Safer alternatives, such as <code>SHA-256</code>, <code>SHA-512</code>, <code>SHA-3</code> are recommended, and for password hashing, itâ€™s even
+better to use algorithms that do not compute too ""quickly"", like <code>bcrypt</code>, <code>scrypt</code>, <code>argon2</code> or <code>pbkdf2</code>
+because it slows down <code>brute force attacks</code>.</p>
+<h2>Sensitive Code Example</h2>
+<pre>
+const crypto = require(""crypto"");
+
+const hash = crypto.createHash('sha1'); // Sensitive
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+const crypto = require(""crypto"");
+
+const hash = crypto.createHash('sha512'); // Compliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A6-Security_Misconfiguration"">OWASP Top 10 2017 Category A6</a> - Security
+  Misconfiguration </li>
+  <li> <a href=""https://mobile-security.gitbook.io/masvs/security-requirements/0x08-v3-cryptography_verification_requirements"">Mobile AppSec
+  Verification Standard</a> - Cryptography Requirements </li>
+  <li> <a href=""https://owasp.org/www-project-mobile-top-10/2016-risks/m5-insufficient-cryptography"">OWASP Mobile Top 10 2016 Category M5</a> -
+  Insufficient Cryptography </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/327.html"">MITRE, CWE-327</a> - Use of a Broken or Risky Cryptographic Algorithm </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/916.html"">MITRE, CWE-916</a> - Use of Password Hash With Insufficient Computational Effort
+  </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+</ul>",CRITICAL,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S4818,Using Sockets is security-sensitive,"<p>Using sockets is security-sensitive. It has led in the past to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-1785"">CVE-2011-178</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5645"">CVE-2017-5645</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-6597"">CVE-2018-6597</a> </li>
+</ul>
+<p>Sockets are vulnerable in multiple ways:</p>
+<ul>
+  <li> They enable a software to interact with the outside world. As this world is full of attackers it is necessary to check that they cannot receive
+  sensitive information or inject dangerous input. </li>
+  <li> The number of sockets is limited and can be exhausted. Which makes the application unresponsive to users who need additional sockets. </li>
+</ul>
+<p>This rules flags code that creates sockets. It matches only the direct use of sockets, not use through frameworks or high-level APIs such as the
+use of http connections.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> sockets are created without any limit every time a user performs an action. </li>
+  <li> input received from sockets is used without being sanitized. </li>
+  <li> sensitive data is sent via sockets without being encrypted. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> In many cases there is no need to open a socket yourself. Use instead libraries and existing protocols. </li>
+  <li> Encrypt all data sent if it is sensitive. Usually it is better to encrypt it even if the data is not sensitive as it might change later. </li>
+  <li> <a href=""https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet"">Sanitize</a> any input read from the socket. </li>
+  <li> Limit the number of sockets a given user can create. Close the sockets as soon as possible. </li>
+</ul>
+<h2>Sensitive Code Example</h2>
+<pre>
+const net = require('net');
+
+var socket = new net.Socket(); // Sensitive
+socket.connect(80, 'google.com');
+
+// net.createConnection creates a new net.Socket, initiates connection with socket.connect(), then returns the net.Socket that starts the connection
+net.createConnection({ port: port }, () =&gt; {}); // Sensitive
+
+// net.connect is an alias to net.createConnection
+net.connect({ port: port }, () =&gt; {}); // Sensitive
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/20"">MITRE, CWE-20</a> - Improper Input Validation </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/400"">MITRE, CWE-400</a> - Uncontrolled Resource Consumption ('Resource Exhaustion') </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/200"">MITRE, CWE-200</a> - Exposure of Sensitive Information to an Unauthorized Actor </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat2"">SANS Top 25</a> - Risky Resource Management </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat3"">SANS Top 25</a> - Porous Defenses </li>
+</ul>
+<h2>Deprecated</h2>
+<p>This rule is deprecated, and will eventually be removed.</p>",CRITICAL,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S2255,Writing cookies is security-sensitive,"<p>Using cookies is security-sensitive. It has led in the past to the following vulnerabilities:</p>
+<ul>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-11639"">CVE-2018-11639</a> </li>
+  <li> <a href=""http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-6537"">CVE-2016-6537</a> </li>
+</ul>
+<p>Attackers can use widely-available tools to read cookies. Any sensitive information they may contain will be exposed.</p>
+<p>This rule flags code that writes cookies.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> sensitive information is stored inside the cookie. </li>
+</ul>
+<p>You are at risk if you answered yes to this question.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Cookies should only be used to manage the user session. The best practice is to keep all user-related information server-side and link them to the
+user session, never sending them to the client. In a very few corner cases, cookies can be used for non-sensitive information that need to live longer
+than the user session.</p>
+<p>Do not try to encode sensitive information in a non human-readable format before writing them in a cookie. The encoding can be reverted and the
+original information will be exposed.</p>
+<p>Using cookies only for session IDs doesnâ€™t make them secure. Follow <a
+href=""https://www.owasp.org/index.php/Session_Management_Cheat_Sheet#Cookies"">OWASP best practices</a> when you configure your cookies.</p>
+<p>As a side note, every information read from a cookie should be <a
+href=""https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet"">Sanitized</a>.</p>
+<h2>Sensitive Code Example</h2>
+<pre>
+// === Built-in NodeJS modules ===
+const http = require('http');
+const https = require('https');
+
+http.createServer(function(req, res) {
+  res.setHeader('Set-Cookie', ['type=ninja', 'lang=js']); // Sensitive
+});
+https.createServer(function(req, res) {
+  res.setHeader('Set-Cookie', ['type=ninja', 'lang=js']); // Sensitive
+});
+</pre>
+<pre>
+// === ExpressJS ===
+const express = require('express');
+const app = express();
+app.use(function(req, res, next) {
+  res.cookie('name', 'John'); // Sensitive
+});
+</pre>
+<pre>
+// === In browser ===
+// Set cookie
+document.cookie = ""name=John""; // Sensitive
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/312.html"">MITRE, CWE-312</a> - Cleartext Storage of Sensitive Information </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/315.html"">MITRE, CWE-315</a> - Cleartext Storage of Sensitive Information in a Cookie </li>
+  <li> Derived from FindSecBugs rule <a href=""https://find-sec-bugs.github.io/bugs.htm#COOKIE_USAGE"">COOKIE_USAGE</a> </li>
+</ul>
+<h2>Deprecated</h2>
+<p>This rule is deprecated, and will eventually be removed.</p>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE

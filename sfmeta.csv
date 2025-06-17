@@ -1,5 +1,4 @@
-﻿SALESFORCE METADATA RULES,,,,,,
-rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
 sfmeta:AvoidAllRecordPermissions,Object Permissions should not be permissive,"'Allow Delete', 'Modify All Records' and 'View All Records' Should be ""false"" for Standard Object ""Account"" in Object Permissions
 
 This rule requires .profile metadata to be downloaded.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE

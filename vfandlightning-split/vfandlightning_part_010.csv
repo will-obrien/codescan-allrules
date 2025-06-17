@@ -1,0 +1,270 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+cs-vf:npm-audit,Auditing npm dependencies for security vulnerabilities,"<p>There is a plethora of JavaScript libraries for use on the Web and in Node.JS apps.
+This greatly simplifies development, but you need to stay up-to-date on security fixes.</p>
+<p>According to <a href=""https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project"">OWASP Top 10 Most Critical Web Application Security Risks</a>, using Components (ie. dependencies) with known vulnerabilities is ranked 9th, and there are many known stories of security breaches provided by (malicious or not) third-party dependencies.</p>
+<p>This rule inspects package-lock.json file inside your project and identifies if used npm dependencies have any known Common Vulnerabilities and Exposures (CVE).
+The rule relies on <a href=""https://github.com/advisories?query=ecosystem%3Anpm"">GitHub Advisory Database</a>.</p>",MAJOR,Visual Force & Lightning,SECURITY_HOTSPOT,FALSE
+cs-vf:unsecure-js-dependency,Auditing js dependencies for security vulnerabilities,"<p>There is a plethora of JavaScript libraries for use on the Web and in Node.JS apps.
+This greatly simplifies development, but you need to stay up-to-date on security fixes.</p>
+<p>According to <a href=""https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project"">OWASP Top 10 Most Critical Web Application Security Risks</a>, using Components (ie. dependencies) with known vulnerabilities is ranked 9th, and there are many known stories of security breaches provided by (malicious or not) third-party dependencies.</p>
+<p>This rule identifies the open source JS components inside your project and evaluates if there are any known Common Vulnerabilities and Exposures (CVE) for their versions.</p>",MAJOR,Visual Force & Lightning,SECURITY_HOTSPOT,FALSE
+vf:AvoidTabCharacter,Avoid using Tab Characters Check,"Checks that there are no tab characters ('\t') in the source code.
+    
+
+      <p>The code snippet illustrates this rule:</p>
+
+      <pre>
+      &lt;head&gt;
+      &lt;meta http-equiv=""refresh"" content=""5""&gt;   //Bad: this is not recommended.
+      &lt;meta name=""description"" content=""...""&gt;
+      &lt;/head&gt;
+      </pre>",CRITICAL,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-irregular-whitespace,disallow irregular whitespace outside of strings and comments,"<p>Invalid or irregular whitespace causes issues with ECMAScript 5 parsers and also makes code harder to debug in a similar nature to mixed tabs and spaces.</p>
+<p>Various whitespace characters can be inputted by programmers by mistake for example from copying or keyboard shortcuts. Pressing Alt + Space on macOS adds in a non breaking space character for example.</p>
+<p>Known issues these spaces cause:</p>
+<ul>
+<li>Zero Width Space<ul>
+<li>Is NOT considered a separator for tokens and is often parsed as an <code>Unexpected token ILLEGAL</code></li>
+<li>Is NOT shown in modern browsers making code repository software expected to resolve the visualization</li></ul></li>
+<li>Line Separator<ul>
+<li>Is NOT a valid character within JSON which would cause parse errors</li></ul></li>
+</ul>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at catching invalid whitespace that is not a normal tab and space. Some of these characters may cause issues in modern browsers and others will be a debugging issue to spot.</p>
+<p>This rule disallows the following characters except where the options allow:</p>
+<pre><code>\u000B - Line Tabulation (\v) - &lt;VT&gt;
+\u000C - Form Feed (\f) - &lt;FF&gt;
+\u00A0 - No-Break Space - &lt;NBSP&gt;
+\u0085 - Next Line
+\u1680 - Ogham Space Mark
+\u180E - Mongolian Vowel Separator - &lt;MVS&gt;
+\ufeff - Zero Width No-Break Space - &lt;BOM&gt;
+\u2000 - En Quad
+\u2001 - Em Quad
+\u2002 - En Space - &lt;ENSP&gt;
+\u2003 - Em Space - &lt;EMSP&gt;
+\u2004 - Tree-Per-Em
+\u2005 - Four-Per-Em
+\u2006 - Six-Per-Em
+\u2007 - Figure Space
+\u2008 - Punctuation Space - &lt;PUNCSP&gt;
+\u2009 - Thin Space
+\u200A - Hair Space
+\u200B - Zero Width Space - &lt;ZWSP&gt;
+\u2028 - Line Separator
+\u2029 - Paragraph Separator
+\u202F - Narrow No-Break Space
+\u205f - Medium Mathematical Space
+\u3000 - Ideographic Space
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option for exceptions:</p>
+<ul>
+<li><code>""skipStrings"": true</code> (default) allows any whitespace characters in string literals</li>
+<li><code>""skipComments"": true</code> allows any whitespace characters in comments</li>
+<li><code>""skipRegExps"": true</code> allows any whitespace characters in regular expression literals</li>
+<li><code>""skipTemplates"": true</code> allows any whitespace characters in template literals</li>
+</ul>
+<h3 id=""skipstrings"">skipStrings</h3>
+<p>Examples of <strong>incorrect</strong> code for this rule with the default <code>{ ""skipStrings"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: ""error""*/
+
+function thing()&amp;nbsp;/*&lt;NBSP&gt;*/{
+    return 'test';
+}
+
+function thing(&amp;nbsp;/*&lt;NBSP&gt;*/){
+    return 'test';
+}
+
+function thing&amp;nbsp;/*&lt;NBSP&gt;*/(){
+    return 'test';
+}
+
+function thingá Ž/*&lt;MVS&gt;*/(){
+    return 'test';
+}
+
+function thing() {
+    return 'test';â€‚/*&lt;ENSP&gt;*/
+}
+
+function thing() {
+    return 'test';&amp;nbsp;/*&lt;NBSP&gt;*/
+}
+
+function thing() {
+    // Description&amp;nbsp;&lt;NBSP&gt;: some descriptive text
+}
+
+/*
+Description&amp;nbsp;&lt;NBSP&gt;: some descriptive text
+*/
+
+function thing() {
+    return /&amp;nbsp;&lt;NBSP&gt;regexp/;
+}
+
+/*eslint-env es6*/
+function thing() {
+    return `templateâ€‚&lt;NBSP&gt;string`;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule with the default <code>{ ""skipStrings"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: ""error""*/
+
+function thing() {
+    return '&amp;nbsp;&lt;NBSP&gt;thing';
+}
+
+function thing() {
+    return 'â€‹&lt;ZWSP&gt;thing';
+}
+
+function thing() {
+    return 'th&amp;nbsp;&lt;NBSP&gt;ing';
+}
+</code></pre>
+<h3 id=""skipcomments"">skipComments</h3>
+<p>Examples of additional <strong>correct</strong> code for this rule with the <code>{ ""skipComments"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: [""error"", { ""skipComments"": true }]*/
+
+function thing() {
+    // Description&amp;nbsp;&lt;NBSP&gt;: some descriptive text
+}
+
+/*
+Description&amp;nbsp;&lt;NBSP&gt;: some descriptive text
+*/
+</code></pre>
+<h3 id=""skipregexps"">skipRegExps</h3>
+<p>Examples of additional <strong>correct</strong> code for this rule with the <code>{ ""skipRegExps"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: [""error"", { ""skipRegExps"": true }]*/
+
+function thing() {
+    return /&amp;nbsp;&lt;NBSP&gt;regexp/;
+}
+</code></pre>
+<h3 id=""skiptemplates"">skipTemplates</h3>
+<p>Examples of additional <strong>correct</strong> code for this rule with the <code>{ ""skipTemplates"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-irregular-whitespace: [""error"", { ""skipTemplates"": true }]*/
+/*eslint-env es6*/
+
+function thing() {
+    return `templateâ€‚&lt;NBSP&gt;string`;
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you decide that you wish to use whitespace other than tabs and spaces outside of strings in your application.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li>[ECMA whitespace](https://es5.github.io/#x7.2 \xA0)</li>
+<li><a href=""http://timelessrepo.com/json-isnt-a-javascript-subset"">JSON whitespace issues</a></li>
+</ul>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:AvoidHighActionPollerInterval,Avoid High apex:actionpoller Interval,"Action methods used by &lt;apex:actionPoller&gt; should be lightweight. Itâ€™s a best practice to avoid performing DML, external service calls, and other resource-intensive operations in action methods called by an &lt;apex:actionPoller&gt;. Carefully consider the effect of your action method being called repeatedly by an &lt;apex:actionPoller&gt; at the interval you specify, especially if itâ€™s used on a page that will be widely distributed, or open continuously.
+
+See <a href=""https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_best_practices_performance.htm"">Best Practices for Improving Visualforce Performance</a>
+  <BR><h2>Example:</h2><pre>
+
+&lt;apex:page controller=""ExampleController""&gt;
+    &lt;apex:form&gt;
+        &lt;apex:outputText value=""Watch this counter: {!count}"" id=""counter""/&gt;
+        &lt;apex:actionPoller action=""{!incrementCounter}"" reRender=""counter"" interval=""30""/&gt;  //Bad: An interval of 30 may be too high.
+    &lt;/apex:form&gt;
+&lt;/apex:page&gt;
+
+  </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:MetaRefreshCheck,Meta Tags Should Not Be Used to Refresh or Redirect,"<p>
+Use of <code>&lt;meta http-equiv=""refresh""&gt;</code> is discouraged by the World Wide Web Consortium (W3C).
+If a user clicks the 'Back' button, some browers will go back to the redirecting page, which will prevent the user from actually going back.
+</p>
+
+<p>
+To refresh the page, a better alternative is to use Ajax, to refresh only what needs to be refreshed and not the whole page.
+To redirect to another page, using the HTTP response status code 301 'Moved Permanently' and 302 'Found' is a better option.
+</p>
+
+  
+
+<p>The code snippet illustrates this rule:</p>
+
+<pre>
+&lt;head&gt;
+  &lt;meta http-equiv=""refresh"" content=""5""&gt;   //Bad: this is not recommended.
+  &lt;meta name=""description"" content=""...""&gt;
+&lt;/head&gt;
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:PasswordAutocompleteCheck,"""autocomplete"" Should Be Set to ""off"" on Input Elements of Type ""password""","<p>
+Most browsers automatically fill the content of input elements of type 'password' when this password has already been provided in the past.
+</p>
+
+<p>
+Imagine that user B takes control of a machine belonging to a user A.
+Accessing a secured web site as user A is trivial for user B if form input elements are automatically filled in by the browser on the site's login page.
+</p>
+
+To prevent browsers from storing credentials entered into HTML forms, include the attribute autocomplete=""off"" within the FORM tag
+
+  
+
+
+<pre>
+&lt;input type=""password"" /&gt;		//Bad: not recommended.
+</pre>
+
+
+<pre>
+&lt;input type=""password"" autocomplete=""off"" /&gt; 		//Good: autocomplete set to off is preferred.
+</pre>",MAJOR,Visual Force & Lightning,VULNERABILITY,FALSE
+vf:LightningAvoidUsingSession,Avoid using GETSESSIONID() and $API.Session_Id,"Lightning Experience does not have access to the API session token. Visualforce pages used within Lightning Experience, however, still have API access to the session ID.<br/>
+Test Visualforce pages that access the session ID within Lightning Experience.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://resources.docs.salesforce.com/198/latest/en-us/sfdc/pdf/lex_considerations.pdf"">Considerations Before Transitioning to Lightning Experience</a></li>
+</ul>
+
+    <BR><h2>Example:</h2><pre>
+
+
+//The below will need to be checked in lightning experience.
+
+&lt;apex:page&gt;
+
+&lt;script&gt;
+  var __sfdcSessionId = '{!GETSESSIONID()}';
+  var sr = new SOAPRequest({orgNameSpace: ""BKSL2"", sessionId : __sfdcSessionId, endPointName: ""SETUP_Organization_WS""});
+&lt;/script&gt;
+
+&lt;/apex:page&gt;
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:OldPageApiVersion,API Version is Too Old,"This rule identifies classes which are using older versions of the API. Change the API Version of this class.
+  <BR><h2>Example:</h2><pre>
+&lt;?xml version=""1.0"" encoding=""UTF-8""?>
+&lt;ApexClass xmlns=""http://soap.sforce.com/2006/04/metadata"">
+    &lt;apiVersion>19.0&lt;/apiVersion>
+    &lt;status>Active&lt;/status>
+&lt;/ApexClass>
+</pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+vf:DoubleQuotesCheck,Use Double Quotes to Define Attributes,"Double quotes should be used to define attributes in VisualForce.  
+    <BR><h2>Example:</h2><pre>
+
+
+&lt;apex:page&gt;
+  &lt;html&gt;
+    &lt;div class='foo'&gt;   //Bad: not recommended.
+    
+      &lt;div class=""bar""&gt;  //Good: double quotes are preferred.
+      &lt;/div&gt;
+      
+      
+    &lt;/div&gt;
+  &lt;/html&gt;
+&lt;/apex:page&gt;
+
+
+
+
+    </pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE

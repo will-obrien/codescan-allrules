@@ -1,0 +1,186 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:AvoidSoqlAggregate,Avoid Calling Aggregate Functions on Non-Grouped Query,"Calling aggregate functions can easily overrun governor limits that limit the total number of rows accessed.
+
+Instead of using Min/Max of a column, it's better to sort the query and return a limit of 1 to get the top/bottom item
+    <BR><h2>Example:</h2><pre>
+[ Select Max(LastModifiedDate) From Account ] // Bad: This query can cause a governor limit error if there are too many Accounts.
+
+[ Select LastModifiedDate From Account Order By LastModifiedDate Desc Limit 1 ] //Good: This query will not cause a governor limit error.
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:ClassWithoutTestCases,Test Methods in Non-Test Class,"Having test methods in non-test classes is not a good practice. Move the test methods into a separate test class.
+      <BR><h2>Example:</h2><pre>
+
+//Consider moving test methods to a separate test class
+public class Car {
+   public static testmethod () {		//Bad: consider moving to a separate test class.
+    // do something
+   }
+   // code
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidDMLInUnitTests,Avoid DML in Tests,"Avoid DML which creates data in unit test functions. These functions should be moved into helper functions and re-used.
+
+This rule specifically looks for 'insert' DML in test methods.
+      <BR><h2>Example:</h2><pre>
+
+public class SimpleTest {
+	public static testmethod void testX() {
+		Account a = new Account();
+		a.name = 'Test';
+		insert a;     //Bad: the account should be created in a helper function
+	}
+}
+
+          </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:TooManyMethods,Too Many Methods,"A class with too many methods is probably a good suspect for refactoring, in order to reduce its complexity and find a way to
+have more fine grained objects.  Get and set methods for class variables should be replaced where possible with an accessor. 
+
+<p>For example:</p>
+
+<pre>
+Account myAccount { 
+  get{ return [ select id ... ]; }
+}
+</pre>            
+        <BR><h2>Example:</h2><pre>
+
+public class Foo { 
+	private void doWork() {}
+	public void doPublicWork() {}
+	public void doWorkAgain() {}
+	private void soMuchWork(){}
+ // [... more and more methods ...]		//Bad: Too many methods, consider refactoring. 
+ 
+}
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:FutureMethodInLoop,Avoid Calling @Future Methods Inside Loops,"Avoid calling @Future Methods Inside Loops. Soql and DML calls within loops can cause governor limit exceptions.
+ 	  <BR><h2>Example:</h2><pre>
+    
+
+public class Something {
+   @future public void futureMethod(){  
+   }
+	public void badAction() {  
+		for (Integer i = 0; i < 10; i++) {
+		  futureMethod();			//Bad: this is not recommended.
+		}
+	} 
+}
+
+    
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:WhileLoopsMustUseBraces,While Loops Must Use Braces,"Avoid using 'while' statements without using braces to surround the code block. If the code 
+formatting or indentation is lost then it becomes difficult to separate the code being
+controlled from the rest.
+      <BR><h2>Example:</h2><pre>
+
+while (true)	//Bad: Not recommended.
+      x++;
+      
+while (true) {	//Good: Preferred approach.
+      x++;
+}
+
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidPrefixingMethodParameters,Avoid Prefixing Method Parameters,"Prefixing parameters by 'in' or 'out' pollutes the name of the parameters and reduces code readability. 
+To indicate whether or not a parameter will be modified in a method, its better to document method
+behavior with comments.
+            
+        <BR><h2>Example:</h2><pre>
+public class Foo {
+  public void bar(
+      Integer inLeftOperand,		//Bad: This is unclear and not recommended. 
+      Result outRightOperand) {
+      outRightOperand.setValue(inLeftOperand * outRightOperand.getValue());
+  }
+
+}
+
+public class Foo {
+	/**
+	 * 
+	 * @param leftOperand, (purpose), not modified by method.
+	 * @param rightOperand (purpose), will be modified by the method: contains the result.
+	 */
+	public void bar(				//Good: This is preferred.
+	      Integer leftOperand,
+	      Result rightOperand) {
+	      rightOperand.setValue(leftOperand * rightOperand.getValue());
+	}
+}
+        </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:SimplifiedTernary,Ternary Operators Can Be Simplified With || or &&,"Look for ternary operators with the form `condition ? literalBoolean : foo`
+or `condition ? foo : literalBoolean`.<br/>
+
+These expressions can be simplified respectively to:<br/>
+`condition || foo`  when the literalBoolean is true<br/>
+`!condition && foo` when the literalBoolean is false<br/><br/>
+or<br/><br/>
+`!condition || foo` when the literalBoolean is true<br/>
+`condition && foo`  when the literalBoolean is false<br/>
+        
+    <BR><h2>Example:</h2><pre>
+        
+public class Foo {
+    public boolean test() {
+        return condition ? true : something(); //Can be as simple as return condition || something();
+    }
+
+    public void test2() {
+        final boolean value = condition ? false : something(); //Can be as simple as value = !condition && something();
+    }
+
+    public boolean test3() {
+        return condition ? something() : true; //Can be as simple as return !condition || something();
+    }
+
+    public void test4() {
+        final boolean otherValue = condition ? something() : false; //Can be as simple as condition && something();
+    }
+}
+        
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AssignmentInOperand,Avoid Assignments in Operands,"Avoid assignments in operands; this can make code more complicated and harder to read.
+  <BR><h2>Example:</h2><pre>
+      
+public void babar() {
+ System.debug(a = 0);   	//Bad: assignment in a call is not recommended.
+}
+  
+public void bar() {
+    Integer x = 2;
+    if ((x = getX()) == 3) {  //Bad: assignment in an if conditional is not recommended.
+      system.debug('3!');
+    }
+}
+
+public void barber() {
+  Integer x = 2;
+  while ( (x = getX()) != 0 ) {}  //Bad: assignment in a while conditional is not recommended.
+ }
+
+public void better() {
+    Integer x = 2;
+    x = getX();
+    if (x == 3) {  			  //Good: the assignment is performed outside the operand.
+      system.debug('3!');
+    }
+}
+  
+  </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:LongVariable,Long Variable Name,"Fields, formal arguments, or local variable names that are too long can make the code difficult to follow.
+    <BR><h2>Example:</h2><pre>
+
+public class Something {
+	Integer reallyLongIntName = -3;  			//Bad: field name is too long.
+	public static void main( String argumentsList[] ) { //Bad: formal arg name is too long.
+		Integer otherReallyLongName = -5; 		//Bad: local variable name is too long
+		for (Integer interestingIntIndex = 0;	//Bad: 'for' loop index name is too long.
+             interestingIntIndex < 10;
+             interestingIntIndex ++ ) {
+    }
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE

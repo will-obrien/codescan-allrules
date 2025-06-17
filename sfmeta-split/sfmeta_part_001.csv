@@ -1,0 +1,52 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sfmeta:AvoidAllRecordPermissions,Object Permissions should not be permissive,"'Allow Delete', 'Modify All Records' and 'View All Records' Should be ""false"" for Standard Object ""Account"" in Object Permissions
+
+This rule requires .profile metadata to be downloaded.",MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+common-sfmeta:InsufficientBranchCoverage,Branches should have sufficient coverage by tests,An issue is created on a file as soon as the branch coverage on this file is less than the required threshold. It gives the number of branches to be covered in order to reach the required threshold.,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+common-sfmeta:InsufficientLineCoverage,Lines should have sufficient coverage by tests,An issue is created on a file as soon as the line coverage on this file is less than the required threshold. It gives the number of lines to be covered in order to reach the required threshold.,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+common-sfmeta:DuplicatedBlocks,Source files should not have any duplicated blocks,An issue is created on a file as soon as there is at least one block of duplicated code on this file,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+common-sfmeta:SkippedUnitTests,Skipped unit tests should be either removed or fixed,Skipped unit tests are considered as dead code. Either they should be activated again (and updated) or they should be removed.,MAJOR,Salesforce Metadata,CODE_SMELL,FALSE
+sfmeta:CustomProfilesPermission,Limit number of Custom Profiles with Modify All Data Permission,"Custom profiles with â€œModify All Dataâ€ permissions can be extremely risky and can open the door to user-inflicted data loss and corruption.
+    Limit the number of custom profiles with â€œModify All Dataâ€ permissions. Best practice is to have no custom profiles that can modify all of your Salesforce data.",CRITICAL,Salesforce Metadata,VULNERABILITY,FALSE
+codescan-policy:PermissionSetDeveloperPolicy,PermissionSet - Developer Policy,"PermissionSet - Developer Policy gives visibility on access permissions related to Author APEX, Import Custom Objects. <br/>
+<br/>
+This violation means that this Permission Set conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the configuration of this Permission Set. If it is acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/732"">MITRE, CWE-732</a> - Incorrect Permission Assignment for Critical Resource </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfileDataAdminPolicy,Profile - Data Admin Policy,"Profile - Data Admin Policy gives visibility on access permissions related to Manage Data Categories, View All Data, Manage Data Integrations, ModifyAllData , View Encrypted Data, Weekly Data Export, Edit Read Only Fields. <br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/668"">MITRE, CWE-668</a> - Exposure of Resource to Wrong Sphere </li>
+  <li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+codescan-policy:ProfilePlatformAdminPolicy,Profile - Platform Admin Policy,"Profile - Platform Admin Policy gives visibility on Platform Admin permissions.<br/>
+<br/>
+This violation means that this Profile conflicts with your policy for these settings.
+<br/>
+<h2>Compliant Solution</h2>
+Review the permissions for this Profileâ€™s configuration. If they are acceptable, you can change the status to Safe.<br/>
+When marked safe, this issue will only show up again if one of the other policy rules in this set are violated. You can review what has been marked as safe at any time using the filters at the top of the page.<br/>
+<h2>See</h2>
+<ul>
+<li> <a href=""https://cwe.mitre.org/data/definitions/522"">MITRE, CWE-522</a> - Insufficiently Protected Credentials </li>
+<li> OWASP Top 10 2021 Category A01 â€“ Broken Access Control </li>
+</ul>",CRITICAL,Salesforce Metadata,SECURITY_HOTSPOT,FALSE
+sfmeta:WorkflowWithoutProduct,Workflow Must Reference Product,"For general automation and validation best practices, associate actions in the system to a product line, product type,
+ or product feature.
+ <br/><br/>
+ This rule is specifically for nCino implementations and is not relevant outside of that.
+ If you are not using nCino in your Org, do not activate this rule.
+ nCino specific rules can be determined by the tag ncino-specific.",MAJOR,Salesforce Metadata,CODE_SMELL,TRUE

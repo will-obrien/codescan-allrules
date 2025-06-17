@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This metadata file is generated to trigger the rule: sfmeta:FlowNullHandler -->
+<!-- Rule: Missing Null Handler After Get Records in Flow -->
+<!-- This file triggers: sfmeta:FlowNullHandler -->

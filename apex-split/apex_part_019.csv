@@ -1,0 +1,140 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:ConfusingTernary,Confusing Ternary,"Avoid negation within an 'if' expression with an 'else' clause. Most 'if (x != y)' cases 
+without an ""else"" are often return cases, so consistent use of this rule makes the code 
+easier to read.  Also, this resolves trivial ordering problems, such as ""does the error 
+case go first?"" or ""does the common case go first?"".
+        <BR><h2>Example:</h2><pre>
+//Consider re-writing this...
+return (x != y) ? diff : same;
+
+//or this...
+if (x != y) diff(); else same(); 
+
+//like this:
+if (x == y) same(); else diff();
+
+
+          
+        </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidDuplicateLiterals,Avoid Duplicate Literals,"Code containing duplicate String literals can usually be improved by declaring the String as a constant field.
+    <BR><h2>Example:</h2><pre>
+
+private void bar() {
+     buz('Howdy');  //Bad: the String 'Howdy' could be declared as a constant field.
+     buz('Howdy');
+     buz('Howdy');
+     buz('Howdy');
+ }
+ 
+ private void buz(String x) {}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidRethrowingException,Avoid Re-Throwing Exception,"Catch blocks that merely rethrow a caught exception only add to code size and runtime complexity.
+    <BR><h2>Example:</h2><pre>  
+public void bar() {
+    try {
+    // do something
+    }  catch (SomeException se) {
+       throw se;					//Bad: this is not recommended.
+    }
+}
+  
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidConstantsInterface,Avoid Constants Interface,"An interface should be used only to characterize the external behaviour of an
+implementing class: using an interface as a container of constants is a poor 
+usage pattern and not recommended.
+      <BR><h2>Example:</h2><pre>
+    
+public interface ConstantsInterface {			//Bad: not recommended.
+   public static final Integer CONSTANT1 = 0;
+   public static final String CONSTANT2 = '1';
+}
+
+public final class ConstantsClass {					//Good: using a final class as a container for constants is preferred.
+   public static final Integer CONSTANT3 = 0;
+   public static final String CONSTANT4 = '1';
+}
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidNotFinalPublicStaticFields,Avoid Declaring Non-Final Public Static Fields,"There is no good reason to declare a field ""public"" and ""static"" without also declaring it ""final"". 
+      Most of the time this is a kludge to share a state among several objects. But with this approach, 
+      any object can do whatever it wants with the shared state, such as setting it toÂ null.
+    <BR><h2>Example:</h2><pre>
+      
+public class PrimitiveType {
+  
+  public static integer sharedStateVariable;				//Bad: Not recommended.
+  
+  
+  public static final integer aStaticFinalVariable = 123;	//Good: Preferred.
+}
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnescapedOutput,Unescaped Error Message XSS,"Reports on calls to `addError` with disabled escaping. The message passed to `addError`
+will be displayed directly to the user in the UI, making it prime ground for XSS
+attacks if unescaped.<br/>
+<br/>
+See <a href=""http://cwe.mitre.org/data/definitions/79.html"">MITRE, CWE-79</a> - Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+	public void triggerHandler(){
+    	Trigger.new[0].addError(html, false); //Bad: html could contain an XSS vulnerability.
+    	Trigger.new[0].addError(html, true); //Good: html is safely escaped.
+    }
+}
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:EmptyStatementBlock,Avoid Empty Statement Blocks,"Empty block statements serve no purpose and should be removed.
+	<BR><h2>Example:</h2><pre>
+    
+public class Foo {
+
+   private Integer _bar;
+
+   public void setBar(Integer bar) {
+      { _bar = bar; } 		//This is ok.
+      {} 					//Bad: This should be removed.
+   }
+
+}
+    
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryLocalBeforeReturn,Unnecessary Local Before Return,"Avoid the creation of unnecessary local variables.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+   public Integer foo() {
+     Integer x = doSomething();
+     return x;  				//Bad: Instead, just 'return doSomething();'.
+   }
+}
+  
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:NonUnitTestContainsAsserts,Non Test Method Contains Asserts,"Asserts should only be used in test methods.
+		<BR><h2>Example:</h2><pre>
+
+public class MyTestCase  {
+
+	public testmethod void testMyCaseWithOneAssert() {  //Good: assert is being used within a test method.
+		boolean myVar = false;		
+		system.assert(myVar);
+	}
+
+
+	public void aNonTestMethodWithAsserts() {
+		boolean myVar = false;		
+		system.assertEquals(false, myVar);			//Bad: assertions should not be used outside test methods.
+	}
+}
+
+		</pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:EqualsNull,Equals Null,"Tests for null should not use the equals() method. The '==' operator should be used instead.
+        <BR><h2>Example:</h2><pre>
+       
+String x = 'foo';
+
+if (x.equals(null)) { //Bad: Not recommended.
+   	doSomething();
+	}
+	
+if (x == null) { 	//Good: This is preferred.
+	}
+    
+        </pre>",BLOCKER,APEX,BUG,FALSE

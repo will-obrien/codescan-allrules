@@ -1,0 +1,128 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:InsecureEndpoint,Avoid Cleartext Transmission of Sensitive Information,"Checks against accessing endpoints under plain **http**. You should always use **https** for security.<br/>
+Many communication channels can be ""sniffed"" by attackers during data transmission. For example, network traffic can often be sniffed by any attacker who has access to a network interface. This significantly lowers the difficulty of exploitation by attackers.<br/>
+<br/>
+See <a href=""http://cwe.mitre.org/data/definitions/319.html"">MITRE, CWE-319</a> - Cleartext Transmission of Sensitive Information
+      <BR><h2>Example:</h2><pre>
+public class Foo {
+	void foo() {
+		String endpoint = 'http://localhost:3300';
+		HttpRequest req = new HttpRequest();
+		req.setEndpoint(endpoint);
+	}
+}
+      </pre>",CRITICAL,APEX,VULNERABILITY,FALSE
+sf:SystemDebug,Avoid calling System.debug(),"References to System.debug are usually intended for debugging purposes and can remain in
+the codebase even in production code.<br/>
+<br/>
+This is a potential privacy violation as usernames, passwords, names, contact information, opportunity information, PII and other sensitive data may be stored in unsecured locations or is accessible by unauthorized users.<br/>
+<br/>
+This rule can also be set to 'Strict' to disallow all use of System.debug.<br/>
+<br/>
+Debug logs may be downloaded and sent to a 3rd party by emails or other means as part of reporting possible errors.<br/>
+<br/>
+<h2>See</h2>
+<ul>
+<li><a href=""http://cwe.mitre.org/data/definitions/489.html"">MITRE, CWE-489</a> - Leftover Debug Code</li>
+<li>OWASP Top 10 2021 Category A2 - Cryptographic Failures</li>
+</ul>
+     <BR><h2>Example:</h2><pre>
+ 
+class Foo{
+    public void testA () {
+        System.debug('Entering test');   //Bad: Consider removing this.
+    }
+}
+
+     </pre>",CRITICAL,APEX,VULNERABILITY,FALSE
+sf:LongTriggerName,Long Trigger Name,"Trigger names that are too long can make the code difficult to follow.
+
+    <BR><h2>Example:</h2><pre>
+
+trigger AnExcessivelyLongTriggerNameAsNegativeExample on Account (before insert) { //Bad: this is not recommended.
+System.debug('Hello World!');
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:CommentedTodo,Avoid leaving TODO/FIXME comments in code,"TODO/FIXME's should either be resolved. 
+
+See also - <a href=""http://cwe.mitre.org/data/definitions/546.html"">MITRE, CWE-546</a>
+  <BR><h2>Example:</h2><pre>
+/*      
+* TODO: this would be much better if we did it without bugs...   		//Bad: Resolve this before committing!
+* FIXME: this would be much better if we did it without bugs...   		//Bad: Resolve this before committing!
+*/     
+
+  </pre>",INFO,APEX,CODE_SMELL,FALSE
+sf:CommentRequired,Comment is Required,"Denotes whether comments are required (or unwanted) for specific language elements.
+    <BR><h2>Example:</h2><pre>
+
+/**
+* 
+*
+* @author John Doe
+*/
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:Csrf,Avoid Making DML Operations in Controller Constructor/Action Method,"Check to avoid making DML operations in Apex class constructor/action method. This prevents
+modification of the database just by accessing a page.<br/>
+<br/>
+When a web server is designed to receive a request from a client without any mechanism for verifying that 
+it was intentionally sent, then it might be possible for an attacker to trick a client into making an unintentional 
+request to the web server which will be treated as an authentic request. This can be done via a URL, image load, 
+XMLHttpRequest, etc. and can result in exposure of data or unintended code execution.<br/>
+<br/>
+See <a href=""http://cwe.mitre.org/data/definitions/352.html"">MITRE, CWE-352</a> - Cross-Site Request Forgery (CSRF)
+      <BR><h2>Example:</h2><pre>
+public class FooController {
+	public FooController() {
+		Account data = new Account({'name': 'New data'});  //Bad: not recommended.
+		insert data;
+	}
+}
+      </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:EmptyCatchBlock,Empty Catch Block,"Empty Catch Block finds instances where an exception is caught, but nothing is done.  
+In most circumstances, this swallows an exception which should either be acted on 
+or reported.
+      <BR><h2>Example:</h2><pre>
+  
+public void doSomething() {
+  try {
+    doHeapsOfStuff();
+    
+  } catch (Exception e) {									//Bad: Not recommmended.
+
+  }
+}
+ 
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmailAddressInLiteral,Hard Coded Email Address,Avoid hardcoded email addresses.,BLOCKER,APEX,CODE_SMELL,FALSE
+sf:BrokenNullCheck,Broken Null Check,"The null check is broken since it will throw a NullPointerException itself.
+It is likely that you used || instead of && or vice versa.
+     <BR><h2>Example:</h2><pre>
+
+public String bar(String string) { 
+	if (string != null || !string.equals('')){	//Bad: Should be &&. The !string.equals statement will throw an exception if the string is null.
+		return string;
+	}
+		
+		
+	if (string == null && string.equals('')){	//Bad: Should be ||. The && operator will cause the string.equals('') to throw an exception.
+		return string;
+	}
+}
+        
+        </pre>",CRITICAL,APEX,BUG,FALSE
+sf:AvoidLosingExceptionInformation,Avoid Losing Exception Information,"Statements in a catch block that invoke accessors on the exception without using the information
+only add to code size.  Either remove the invocation, or use the return result.
+		<BR><h2>Example:</h2><pre>
+
+public void bar() {
+	try {
+		// do something
+	} catch (SomeException se) {
+		se.getMessage();  	//Bad: this is not recommended.
+	}
+}
+
+		</pre>",CRITICAL,APEX,BUG,FALSE

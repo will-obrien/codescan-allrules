@@ -1,0 +1,398 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+cs-vf:no-func-assign,disallow reassigning `function` declarations,"<p>JavaScript functions can be written as a FunctionDeclaration <code>function foo() { ... }</code> or as a FunctionExpression <code>var foo = function() { ... };</code>. While a JavaScript interpreter might tolerate it, overwriting/reassigning a function written as a FunctionDeclaration is often indicative of a mistake or issue.</p>
+<pre><code class=""js language-js"">function foo() {}
+foo = bar;
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows reassigning <code>function</code> declarations.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-func-assign: ""error""*/
+
+function foo() {}
+foo = bar;
+
+function foo() {
+    foo = bar;
+}
+</code></pre>
+<p>Examples of <strong>incorrect</strong> code for this rule, unlike the corresponding rule in JSHint:</p>
+<pre><code class=""js language-js"">/*eslint no-func-assign: ""error""*/
+
+foo = bar;
+function foo() {}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-func-assign: ""error""*/
+
+var foo = function () {}
+foo = bar;
+
+function foo(foo) { // `foo` is shadowed.
+    foo = bar;
+}
+
+function foo() {
+    var foo = bar;  // `foo` is shadowed.
+}
+</code></pre>",MAJOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-proto,disallow the use of the `__proto__` property,"<p><code>__proto__</code> property has been deprecated as of ECMAScript 3.1 and shouldn't be used in the code. Use <code>getPrototypeOf</code> method instead.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>When an object is created <code>__proto__</code> is set to the original prototype property of the objectâ€™s constructor function. <code>getPrototypeOf</code> is the preferred method of getting ""the prototype"".</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-proto: ""error""*/
+
+var a = obj.__proto__;
+
+var a = obj[""__proto__""];
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-proto: ""error""*/
+
+var a = Object.getPrototypeOf(obj);
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you need to support legacy browsers, you might want to turn this rule off, since support for <code>getPrototypeOf</code> is not yet universal.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""http://ejohn.org/blog/objectgetprototypeof/"">Object.getPrototypeOf</a></li>
+</ul>",CRITICAL,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-extra-bind,disallow unnecessary calls to `.bind()`,"<p>The <code>bind()</code> method is used to create functions with specific <code>this</code> values and, optionally, binds arguments to specific values. When used to specify the value of <code>this</code>, it's important that the function actually use <code>this</code> in its function body. For example:</p>
+<pre><code class=""js language-js"">var boundGetName = (function getName() {
+    return this.name;
+}).bind({ name: ""ESLint"" });
+
+console.log(boundGetName());      // ""ESLint""
+</code></pre>
+<p>This code is an example of a good use of <code>bind()</code> for setting the value of <code>this</code>.</p>
+<p>Sometimes during the course of code maintenance, the <code>this</code> value is removed from the function body. In that case, you can end up with a call to <code>bind()</code> that doesn't accomplish anything:</p>
+<pre><code class=""js language-js"">// useless bind
+var boundGetName = (function getName() {
+    return ""ESLint"";
+}).bind({ name: ""ESLint"" });
+
+console.log(boundGetName());      // ""ESLint""
+</code></pre>
+<p>In this code, the reference to <code>this</code> has been removed but <code>bind()</code> is still used. In this case, the <code>bind()</code> is unnecessary overhead (and a performance hit) and can be safely removed.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at avoiding the unnecessary use of <code>bind()</code> and as such will warn whenever an immediately-invoked function expression (IIFE) is using <code>bind()</code> and doesn't have an appropriate <code>this</code> value. This rule won't flag usage of <code>bind()</code> that includes function argument binding.</p>
+<p><strong>Note:</strong> Arrow functions can never have their <code>this</code> value set using <code>bind()</code>. This rule flags all uses of <code>bind()</code> with arrow functions as a problem</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extra-bind: ""error""*/
+/*eslint-env es6*/
+
+var x = function () {
+    foo();
+}.bind(bar);
+
+var x = (() =&gt; {
+    foo();
+}).bind(bar);
+
+var x = (() =&gt; {
+    this.foo();
+}).bind(bar);
+
+var x = function () {
+    (function () {
+      this.foo();
+    }());
+}.bind(bar);
+
+var x = function () {
+    function foo() {
+      this.bar();
+    }
+}.bind(baz);
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extra-bind: ""error""*/
+
+var x = function () {
+    this.foo();
+}.bind(bar);
+
+var x = function (a) {
+    return a + 1;
+}.bind(foo, bar);
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you are not concerned about unnecessary calls to <code>bind()</code>, you can safely disable this rule.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind"">Function.prototype.bind</a></li>
+<li><a href=""https://www.smashingmagazine.com/2014/01/understanding-javascript-function-prototype-bind/"">Understanding JavaScript's Function.prototype.bind</a></li>
+</ul>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-ex-assign,disallow reassigning exceptions in `catch` clauses,"<p>If a <code>catch</code> clause in a <code>try</code> statement accidentally (or purposely) assigns another value to the exception parameter, it impossible to refer to the error from that point on.
+Since there is no <code>arguments</code> object to offer alternative access to this data, assignment of the parameter is absolutely destructive.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows reassigning exceptions in <code>catch</code> clauses.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-ex-assign: ""error""*/
+
+try {
+    // code
+} catch (e) {
+    e = 10;
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-ex-assign: ""error""*/
+
+try {
+    // code
+} catch (e) {
+    var foo = 10;
+}
+</code></pre>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://bocoup.com/blog/the-catch-with-try-catch"">The ""catch"" with tryâ€¦catch</a> by Ben Alman explains how the exception identifier can leak into the outer scope in IE 6-8</li>
+</ul>",MAJOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-control-regex,disallow control characters in regular expressions,"<p>Control characters are special, invisible characters in the ASCII range 0-31. These characters are rarely used in JavaScript strings so a regular expression containing these characters is most likely a mistake.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows control characters in regular expressions.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-control-regex: ""error""*/
+
+var pattern1 = /\x1f/;
+var pattern2 = new RegExp(""\x1f"");
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-control-regex: ""error""*/
+
+var pattern1 = /\x20/;
+var pattern2 = new RegExp(""\x20"");
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you need to use control character pattern matching, then you should turn this rule off.</p>",MINOR,Visual Force & Lightning,CODE_SMELL,FALSE
+cs-vf:no-undef,disallow the use of undeclared variables unless mentioned in `/*global */` comments,"<p>This rule can help you locate potential ReferenceErrors resulting from misspellings of variable and parameter names, or accidental implicit globals (for example, from forgetting the <code>var</code> keyword in a <code>for</code> loop initializer).</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Any reference to an undeclared variable causes a warning, unless the variable is explicitly mentioned in a <code>/*global ...*/</code> comment, or specified in the <a href=""https://eslint.org/docs/user-guide/configuring#specifying-globals""><code>globals</code> key in the configuration file</a>. A common use case for these is if you intentionally use globals that are defined elsewhere (e.g. in a script sourced from HTML).</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: ""error""*/
+
+var a = someFunction();
+b = 10;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule with <code>global</code> declaration:</p>
+<pre><code class=""js language-js"">/*global someFunction b:true*/
+/*eslint no-undef: ""error""*/
+
+var a = someFunction();
+b = 10;
+</code></pre>
+<p>The <code>b:true</code> syntax in <code>/*global */</code> indicates that assignment to <code>b</code> is correct.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule with <code>global</code> declaration:</p>
+<pre><code class=""js language-js"">/*global b*/
+/*eslint no-undef: ""error""*/
+
+b = 10;
+</code></pre>
+<p>By default, variables declared in <code>/*global */</code> are read-only, therefore assignment is incorrect.</p>
+<h2 id=""options"">Options</h2>
+<ul>
+<li><code>typeof</code> set to true will warn for variables used inside typeof check (Default false).</li>
+</ul>
+<h3 id=""typeof"">typeof</h3>
+<p>Examples of <strong>correct</strong> code for the default <code>{ ""typeof"": false }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: ""error""*/
+
+if (typeof UndefinedIdentifier === ""undefined"") {
+    // do something ...
+}
+</code></pre>
+<p>You can use this option if you want to prevent <code>typeof</code> check on a variable which has not been declared.</p>
+<p>Examples of <strong>incorrect</strong> code for the <code>{ ""typeof"": true }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: [""error"", { ""typeof"": true }] */
+
+if(typeof a === ""string""){}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for the <code>{ ""typeof"": true }</code> option with <code>global</code> declaration:</p>
+<pre><code class=""js language-js"">/*global a*/
+/*eslint no-undef: [""error"", { ""typeof"": true }] */
+
+if(typeof a === ""string""){}
+</code></pre>
+<h2 id=""environments"">Environments</h2>
+<p>For convenience, ESLint provides shortcuts that pre-define global variables exposed by popular libraries and runtime environments. This rule supports these environments, as listed in <a href=""../user-guide/configuring.md#specifying-environments"">Specifying Environments</a>.  A few examples are given below.</p>
+<h3 id=""browser"">browser</h3>
+<p>Examples of <strong>correct</strong> code for this rule with <code>browser</code> environment:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: ""error""*/
+/*eslint-env browser*/
+
+setTimeout(function() {
+    alert(""Hello"");
+});
+</code></pre>
+<h3 id=""nodejs"">Node.js</h3>
+<p>Examples of <strong>correct</strong> code for this rule with <code>node</code> environment:</p>
+<pre><code class=""js language-js"">/*eslint no-undef: ""error""*/
+/*eslint-env node*/
+
+var fs = require(""fs"");
+module.exports = function() {
+    console.log(fs);
+};
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If explicit declaration of global variables is not to your taste.</p>
+<h2 id=""compatibility"">Compatibility</h2>
+<p>This rule provides compatibility with treatment of global variables in <a href=""http://jshint.com/"">JSHint</a> and <a href=""http://www.jslint.com"">JSLint</a>.</p>",MAJOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-shadow-restricted-names,disallow identifiers from shadowing restricted names,"<p>ES5 Â§15.1.1 Value Properties of the Global Object (<code>NaN</code>, <code>Infinity</code>, <code>undefined</code>) as well as strict mode restricted identifiers <code>eval</code> and <code>arguments</code> are considered to be restricted names in JavaScript. Defining them to mean something else can have unintended consequences and confuse others reading the code. For example, there's nothing prevent you from writing:</p>
+<pre><code class=""js language-js"">var undefined = ""foo"";
+</code></pre>
+<p>Then any code used within the same scope would not get the global <code>undefined</code>, but rather the local version with a very different meaning.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-shadow-restricted-names: ""error""*/
+
+function NaN(){}
+
+!function(Infinity){};
+
+var undefined;
+
+try {} catch(eval){}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-shadow-restricted-names: ""error""*/
+
+var Object;
+
+function f(a, b){}
+</code></pre>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://es5.github.io/#x15.1.1"">Annotated ES5 - Â§15.1.1</a></li>
+<li><a href=""https://es5.github.io/#C"">Annotated ES5 - Annex C</a></li>
+</ul>",CRITICAL,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-label-var,disallow labels that share a name with a variable,"<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to create clearer code by disallowing the bad practice of creating a label that shares a name with a variable that is in scope.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-label-var: ""error""*/
+
+var x = foo;
+function bar() {
+x:
+  for (;;) {
+    break x;
+  }
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-label-var: ""error""*/
+
+// The variable that has the same name as the label is not in scope.
+
+function foo() {
+  var q = t;
+}
+
+function bar() {
+q:
+  for(;;) {
+    break q;
+  }
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you don't want to be notified about usage of labels, then it's safe to disable this rule.</p>",MINOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-invalid-regexp,disallow invalid regular expression strings in `RegExp` constructors,"<p>An invalid pattern in a regular expression literal is a <code>SyntaxError</code> when the code is parsed, but an invalid string in <code>RegExp</code> constructors throws a <code>SyntaxError</code> only when the code is executed.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows invalid regular expression strings in <code>RegExp</code> constructors.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-invalid-regexp: ""error""*/
+
+RegExp('[')
+
+RegExp('.', 'z')
+
+new RegExp('\\')
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-invalid-regexp: ""error""*/
+
+RegExp('.')
+
+new RegExp
+
+this.RegExp('[')
+</code></pre>
+<h2 id=""environments"">Environments</h2>
+<p>ECMAScript 6 adds the following flag arguments to the <code>RegExp</code> constructor:</p>
+<ul>
+<li><code>""u""</code> (<a href=""https://people.mozilla.org/~jorendorff/es6-draft.html#sec-get-regexp.prototype.unicode"">unicode</a>)</li>
+<li><code>""y""</code> (<a href=""https://people.mozilla.org/~jorendorff/es6-draft.html#sec-get-regexp.prototype.sticky"">sticky</a>)</li>
+</ul>
+<p>You can enable these to be recognized as valid by setting the ECMAScript version to 6 in your <a href=""../user-guide/configuring"">ESLint configuration</a>.</p>
+<p>If you want to allow additional constructor flags for any reason, you can specify them using an <code>allowConstructorFlags</code> option in <code>.eslintrc</code>. These flags will then be ignored by the rule regardless of the <code>ecmaVersion</code> setting.</p>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option for exceptions:</p>
+<ul>
+<li><code>""allowConstructorFlags""</code> is an array of flags</li>
+</ul>
+<h3 id=""allowconstructorflags"">allowConstructorFlags</h3>
+<p>Examples of <strong>correct</strong> code for this rule with the <code>{ ""allowConstructorFlags"": [""u"", ""y""] }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-invalid-regexp: [""error"", { ""allowConstructorFlags"": [""u"", ""y""] }]*/
+
+new RegExp('.', 'y')
+
+new RegExp('.', 'yu')
+</code></pre>
+<p>A list of valid flags for regular expressions is available <a href=""https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp"">here</a>.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://es5.github.io/#x7.8.5"">Annotated ES5 Â§7.8.5 - Regular Expression Literals</a></li>
+</ul>",MINOR,Visual Force & Lightning,BUG,FALSE
+cs-vf:no-global-assign,disallow assignment to native objects,"<h1 id=""disallowassignmenttonativeobjectsorreadonlyglobalvariablesnoglobalassign"">Disallow assignment to native objects or read-only global variables (no-global-assign)</h1>
+<p>JavaScript environments contain a number of built-in global variables, such as <code>window</code> in browsers and <code>process</code> in Node.js. In almost all cases, you don't want to assign a value to these global variables as doing so could result in losing access to important functionality. For example, you probably don't want to do this in browser code:</p>
+<pre><code class=""js language-js"">window = {};
+</code></pre>
+<p>While examples such as <code>window</code> are obvious, there are often hundreds of built-in global objects provided by JavaScript environments. It can be hard to know if you're assigning to a global variable or not.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows modifications to read-only global variables.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+
+Object = null
+undefined = 1
+</code></pre>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+/*eslint-env browser*/
+
+window = {}
+length = 1
+top = 1
+</code></pre>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+/*globals a:false*/
+
+a = 1
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+
+a = 1
+var b = 1
+b = 2
+</code></pre>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+/*eslint-env browser*/
+
+onload = function() {}
+</code></pre>
+<pre><code class=""js language-js"">/*eslint no-global-assign: ""error""*/
+/*globals a:true*/
+
+a = 1
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule accepts an <code>exceptions</code> option, which can be used to specify a list of builtins for which reassignments will be allowed:</p>
+<pre><code class=""json language-json"">{
+    ""rules"": {
+        ""no-global-assign"": [""error"", {""exceptions"": [""Object""]}]
+    }
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you are trying to override one of the native objects.</p>",MAJOR,Visual Force & Lightning,BUG,FALSE

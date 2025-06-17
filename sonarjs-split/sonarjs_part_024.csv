@@ -1,0 +1,537 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S5743,Allowing browsers to perform DNS prefetching  is security-sensitive,"<p>By default, web browsers perform <a href=""https://developer.mozilla.org/en-US/docs/Web/Performance/dns-prefetch/"">DNS prefetching</a> to reduce
+latency due to DNS resolutions required when an user clicks links from a website page.</p>
+<p>For instance on example.com the hyperlink below contains a cross-origin domain name that must be resolved to an IP address by the web browser:</p>
+<pre>
+&lt;a href=""https://otherexample.com""&gt;go on our partner website&lt;/a&gt;
+</pre>
+<p>It can add significant latency during requests, especially if the page contains many links to cross-origin domains. DNS prefetch allows web
+browsers to perform DNS resolving in the background before the user clicks a link. This feature can cause privacy issues because DNS resolving from
+the userâ€™s computer is performed without his consent if he doesnâ€™t intent to go to the linked website.</p>
+<p>On a complex private webpage, a combination ""of unique links/DNS resolutions"" can indicate, to a eavesdropper for instance, that the user is
+visiting the private page.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> Links to cross-origin domains could result in leakage of confidential information about the userâ€™s navigation/behavior of the website. </li>
+</ul>
+<p>There is a risk if you answered yes to this question.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Implement <a href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-DNS-Prefetch-Control"">X-DNS-Prefetch-Control</a> header with an
+<em>off</em> value but this could significantly degrade website performances.</p>
+<h2>Sensitive Code Example</h2>
+<p>In Express.js application the code is sensitive if the <a href=""https://www.npmjs.com/package/dns-prefetch-control"">dns-prefetch-control</a>
+middleware is disabled or used without the recommended value:</p>
+<pre>
+const express = require('express');
+const helmet = require('helmet');
+
+let app = express();
+
+app.use(
+  helmet.dnsPrefetchControl({
+    allow: true // Sensitive: allowing DNS prefetching is security-sensitive
+  })
+);
+</pre>
+<h2>Compliant Solution</h2>
+<p>In Express.js application the <a href=""https://www.npmjs.com/package/dns-prefetch-control"">dns-prefetch-control</a> or <a
+href=""https://www.npmjs.com/package/helmet"">helmet</a> middleware is the standard way to implement <code>X-DNS-Prefetch-Control</code> header:</p>
+<pre>
+const express = require('express');
+const helmet = require('helmet');
+
+let app = express();
+
+app.use(
+  helmet.dnsPrefetchControl({
+    allow: false // Compliant
+  })
+);
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A3-Sensitive_Data_Exposure.html"">OWASP Top 10 2017 Category
+  A3</a> - Sensitive Data Exposure </li>
+  <li> <a href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-DNS-Prefetch-Control"">developer.mozilla.org</a> - X-DNS-Prefetch-Control
+  </li>
+  <li> <a href=""https://developer.mozilla.org/en-US/docs/Web/Performance/dns-prefetch"">developer.mozilla.org</a> - Using dns-prefetch </li>
+</ul>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S5739,Disabling Strict-Transport-Security policy is security-sensitive,"<p>When implementing the HTTPS protocol, the website mostly continue to support the HTTP protocol to redirect users to HTTPS when they request a HTTP
+version of the website. These redirects are not encrypted and are therefore vulnerable to man in the middle attacks. The <a
+href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security"">Strict-Transport-Security policy header</a> (HSTS) set by
+an application instructs the web browser to convert any HTTP request to HTTPS.</p>
+<p>Web browsers that see the Strict-Transport-Security policy header for the first time record information specified in the header:</p>
+<ul>
+  <li> the <code>max-age</code> directive which specify how long the policy should be kept on the web browser. </li>
+  <li> the <code>includeSubDomains</code> optional directive which specify if the policy should apply on all sub-domains or not. </li>
+  <li> the <code>preload</code> optional directive which is not part of the HSTS specification but supported on all modern web browsers. </li>
+</ul>
+<p>With the <code>preload</code> directive the web browser never connects in HTTP to the website and to use this directive, it is required <a
+href=""https://hstspreload.org/"">to submit</a> the concerned application to a preload service maintained by Google.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> The website is accessible with the unencrypted HTTP protocol. </li>
+</ul>
+<p>There is a risk if you answered yes to this question.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Implement Strict-Transport-Security policy header, it is recommended to apply this policy to all subdomains (<code>includeSubDomains</code>) and
+for at least 6 months (<code>max-age=15552000</code>) or even better for 1 year (<code>max-age=31536000</code>).</p>
+<h2>Sensitive Code Example</h2>
+<p>In Express.js application the code is sensitive if the <a href=""https://www.npmjs.com/package/helmet"">helmet</a> or <a
+href=""https://www.npmjs.com/package/hsts"">hsts</a> middleware are disabled or used without recommended values:</p>
+<pre>
+const express = require('express');
+const helmet = require('helmet');
+
+let app = express();
+
+app.use(helmet.hsts({
+  maxAge: 3153600, // Sensitive, recommended &gt;= 15552000
+  includeSubDomains: false // Sensitive, recommended 'true'
+}));
+</pre>
+<h2>Compliant Solution</h2>
+<p>In Express.js application a standard way to implement HSTS is with the <a href=""https://www.npmjs.com/package/helmet"">helmet</a> or <a
+href=""https://www.npmjs.com/package/hsts"">hsts</a> middleware:</p>
+<pre>
+const express = require('express');
+const helmet = require('helmet');
+
+let app = express();
+
+app.use(helmet.hsts({
+  maxAge: 31536000,
+  includeSubDomains: true
+})); // Compliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> -
+  Sensitive Data Exposure </li>
+  <li> <a href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security"">developer.mozilla.org</a> - Strict Transport
+  Security </li>
+</ul>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S5736,Disabling strict HTTP no-referrer policy is security-sensitive,"<p><a href=""https://en.wikipedia.org/wiki/HTTP_referer"">HTTP header referer</a> contains a URL set by web browsers and used by applications to track
+from where the user came from, itâ€™s for instance a relevant value for web analytic services, but it can cause <a
+href=""https://developer.mozilla.org/en-US/docs/Web/Security/Referer_header:_privacy_and_security_concerns"">serious privacy and security problems</a>
+if the URL contains confidential information. Note that Firefox for instance, to prevent data leaks, <a
+href=""https://blog.mozilla.org/security/2018/01/31/preventing-data-leaks-by-stripping-path-information-in-http-referrers/"">removes path
+information</a> in the Referer header while browsing privately.</p>
+<p>Suppose an e-commerce website asks the user his credit card number to purchase a product:</p>
+<pre>
+&lt;html&gt;
+&lt;body&gt;
+&lt;form action=""/valid_order"" method=""GET""&gt;
+Type your credit card number to purchase products:
+&lt;input type=text id=""cc"" value=""1111-2222-3333-4444""&gt;
+&lt;input type=submit&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+</pre>
+<p>When submitting the above HTML form, a HTTP GET request will be performed, the URL requested will be
+https://example.com/valid_order?cc=1111-2222-3333-4444 with credit card number inside and itâ€™s obviously not secure for these reasons:</p>
+<ul>
+  <li> URLs are stored in the history of browsers. </li>
+  <li> URLs could be accidentally shared when doing copy/paste actions. </li>
+  <li> URLs can be stolen if a malicious person looks at the computer screen of an user. </li>
+</ul>
+<p>In addition to these threats, when further requests will be performed from the ""valid_order"" page with a simple legitimate embedded script like
+that:</p>
+<pre>
+&lt;script src=""https://webanalyticservices_example.com/track""&gt;
+</pre>
+<p>The referer header which contains confidential information will be send to a third party web analytic service and cause privacy issue:</p>
+<pre>
+GET /track HTTP/2.0
+Host: webanalyticservices_example.com
+Referer: https://example.com/valid_order?cc=1111-2222-3333-4444
+</pre>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> Confidential information exists in URLs. </li>
+  <li> Semantic of HTTP methods is not respected (eg: use of a GET method instead of POST when the state of the application is changed). </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Confidential information should not be set inside URLs (GET requests) of the application and a safe (ie: different from <code>unsafe-url</code> or
+<code>no-referrer-when-downgrade</code>) <a href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy"">referrer-Policy</a>
+header, to control how much information is included in the referer header, should be used.</p>
+<h2>Sensitive Code Example</h2>
+<p>In Express.js application the code is sensitive if the <a href=""https://www.npmjs.com/package/helmet"">helmet</a> <code>referrerPolicy</code>
+middleware is disabled or used with <code>no-referrer-when-downgrade</code> or <code>unsafe-url</code>:</p>
+<pre>
+const express = require('express');
+const helmet = require('helmet');
+
+app.use(
+  helmet.referrerPolicy({
+    policy: 'no-referrer-when-downgrade' // Sensitive: no-referrer-when-downgrade is used
+  })
+);
+</pre>
+<h2>Compliant Solution</h2>
+<p>In Express.js application a secure solution is to user the <a href=""https://www.npmjs.com/package/helmet"">helmet</a> referrer policy middleware set
+to <code>no-referrer</code>:</p>
+<pre>
+const express = require('express');
+const helmet = require('helmet');
+
+let app = express();
+
+app.use(
+  helmet.referrerPolicy({
+    policy: 'no-referrer' // Compliant
+  })
+);
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> -
+  Sensitive Data Exposure </li>
+  <li> <a href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy"">developer.mozilla.org</a> - Referrer-Policy </li>
+  <li> <a href=""https://developer.mozilla.org/en-US/docs/Web/Security/Referer_header:_privacy_and_security_concerns"">developer.mozilla.org</a> -
+  Referer header: privacy and security concerns </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/200.html"">MITRE, CWE-200</a> - Exposure of Sensitive Information to an Unauthorized Actor </li>
+</ul>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S5730,Allowing mixed-content is security-sensitive,"<p>A mixed-content is when a resource is loaded with the HTTP protocol, from a website accessed with the HTTPs protocol, thus mixed-content are not
+encrypted and exposed to <a href=""https://en.wikipedia.org/wiki/Man-in-the-middle_attack"">MITM attacks</a> and could break the entire level of
+protection that was desired by implementing encryption with the HTTPs protocol.</p>
+<p>The main threat with mixed-content is not only the confidentiality of resources but the whole website integrity:</p>
+<ul>
+  <li> A passive mixed-content (eg: <em>&lt;img src=""http://example.com/picture.png""&gt;</em>) allows an attacker to access and replace only these
+  resources, like images, with malicious ones that could lead to successful phishing attacks. </li>
+  <li> With active mixed-content (eg: <em>&lt;script src=""http://example.com/library.js""&gt;</em>) an attacker can compromise the entire website by
+  injecting malicious javascript code for example (accessing and modifying the DOM, steal cookies, etc). </li>
+</ul>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> The HTTPS protocol is in place and external resources are fetched from the website pages. </li>
+</ul>
+<p>There is a risk if you answered yes to this question.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Implement content security policy <em>block-all-mixed-content</em> directive which is supported by all modern browsers and will block loading of
+mixed-contents.</p>
+<h2>Sensitive Code Example</h2>
+<p>In Express.js application the code is sensitive if the <a href=""https://www.npmjs.com/package/helmet-csp"">helmet-csp</a> or <a
+href=""https://www.npmjs.com/package/helmet"">helmet</a> middleware is used without the <code>blockAllMixedContent</code> directive:</p>
+<pre>
+const express = require('express');
+const helmet = require('helmet');
+
+let app = express();
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      ""default-src"": [""'self'"", 'example.com', 'code.jquery.com']
+    } // Sensitive: blockAllMixedContent directive is missing
+  })
+);
+</pre>
+<h2>Compliant Solution</h2>
+<p>In Express.js application a standard way to block mixed-content is to put in place the <a
+href=""https://www.npmjs.com/package/helmet-csp"">helmet-csp</a> or <a href=""https://www.npmjs.com/package/helmet"">helmet</a> middleware with the
+<code>blockAllMixedContent</code> directive:</p>
+<pre>
+const express = require('express');
+const helmet = require('helmet');
+
+let app = express();
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      ""default-src"": [""'self'"", 'example.com', 'code.jquery.com'],
+      blockAllMixedContent: [] // Compliant
+    }
+  })
+);
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> -
+  Sensitive Data Exposure </li>
+  <li> <a href=""https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content"">developer.mozilla.org</a> - Mixed-content </li>
+  <li> <a href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP"">developer.mozilla.org</a> - Content Security Policy (CSP) </li>
+  <li> <a href=""https://www.w3.org/TR/CSP3/"">w3.org</a> - Content Security Policy Level 3 </li>
+</ul>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S5852,Using slow regular expressions is security-sensitive,"<p>Most of the regular expression engines use backtracking to try all possible execution paths of the regular expression when evaluating an input, in
+some cases it can cause performance issues, called <strong>catastrophic backtracking</strong> situations. In the worst case, the complexity of the
+regular expression is exponential in the size of the input, this means that a small carefully-crafted input (like 20 chars) can trigger catastrophic
+backtracking and cause a denial of service of the application. Super-linear regex complexity can lead to the same impact too with, in this case, a
+large carefully-crafted input (thousands chars).</p>
+<p>This rule determines the runtime complexity of a regular expression and informs you if it is not linear.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> The input is user-controlled. </li>
+  <li> The input size is not restricted to a small number of characters. </li>
+  <li> There is no timeout in place to limit the regex evaluation time. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>To avoid catastrophic backtracking situations, make sure that none of the following conditions apply to your regular expression.</p>
+<p>In all of the following cases, catastrophic backtracking can only happen if the problematic part of the regex is followed by a pattern that can
+fail, causing the backtracking to actually happen.</p>
+<ul>
+  <li> If you have a repetition <code>r*</code> or <code>r*?</code>, such that the regex <code>r</code> could produce different possible matches (of
+  possibly different lengths) on the same input, the worst case matching time can be exponential. This can be the case if <code>r</code> contains
+  optional parts, alternations or additional repetitions (but not if the repetition is written in such a way that thereâ€™s only one way to match it).
+  </li>
+  <li> If you have multiple repetitions that can match the same contents and are consecutive or are only separated by an optional separator or a
+  separator that can be matched by both of the repetitions, the worst case matching time can be polynomial (O(n^c) where c is the number of
+  problematic repetitions). For example <code>a*b*</code> is not a problem because <code>a*</code> and <code>b*</code> match different things and
+  <code>a*_a*</code> is not a problem because the repetitions are separated by a <code>'_'</code> and canâ€™t match that <code>'_'</code>. However,
+  <code>a*a*</code> and <code>.*_.*</code> have quadratic runtime. </li>
+  <li> If the regex is not anchored to the beginning of the string, quadratic runtime is especially hard to avoid because whenever a match fails, the
+  regex engine will try again starting at the next index. This means that any unbounded repetition, if itâ€™s followed by a pattern that can fail, can
+  cause quadratic runtime on some inputs. For example <code>str.split(/\s*,/)</code> will run in quadratic time on strings that consist entirely of
+  spaces (or at least contain large sequences of spaces, not followed by a comma). </li>
+</ul>
+<p>In order to rewrite your regular expression without these patterns, consider the following strategies:</p>
+<ul>
+  <li> If applicable, define a maximum number of expected repetitions using the bounded quantifiers, like <code>{1,5}</code> instead of <code>+</code>
+  for instance. </li>
+  <li> Refactor nested quantifiers to limit the number of way the inner group can be matched by the outer quantifier, for instance this nested
+  quantifier situation <code>(ba+)+</code> doesnâ€™t cause performance issues, indeed, the inner group can be matched only if there exists exactly one
+  <code>b</code> char per repetition of the group. </li>
+  <li> Optimize regular expressions by emulating <em>possessive quantifiers</em> and <em>atomic grouping</em>. </li>
+  <li> Use negated character classes instead of <code>.</code> to exclude separators where applicable. For example the quadratic regex
+  <code>.*_.*</code> can be made linear by changing it to <code>[^_]*_.*</code> </li>
+</ul>
+<p>Sometimes itâ€™s not possible to rewrite the regex to be linear while still matching what you want it to match. Especially when the regex is not
+anchored to the beginning of the string, for which it is quite hard to avoid quadratic runtimes. In those cases consider the following approaches:</p>
+<ul>
+  <li> Solve the problem without regular expressions </li>
+  <li> Use an alternative non-backtracking regex implementations such as Googleâ€™s <a href=""https://github.com/google/re2"">RE2</a> or <a
+  href=""https://github.com/uhop/node-re2/"">node-re2</a>. </li>
+  <li> Use multiple passes. This could mean pre- and/or post-processing the string manually before/after applying the regular expression to it or
+  using multiple regular expressions. One example of this would be to replace <code>str.split(/\s*,\s*/)</code> with <code>str.split("","")</code> and
+  then trimming the spaces from the strings as a second step. </li>
+  <li> It is often possible to make the regex infallible by making all the parts that could fail optional, which will prevent backtracking. Of course
+  this means that youâ€™ll accept more strings than intended, but this can be handled by using capturing groups to check whether the optional parts were
+  matched or not and then ignoring the match if they werenâ€™t. For example the regex <code>x*y</code> could be replaced with <code>x*(y)?</code> and
+  then the call to <code>str.match(regex)</code> could be replaced with <code>matched = str.match(regex)</code> and <code>matched[1] !==
+  undefined</code>. </li>
+</ul>
+<h2>Sensitive Code Example</h2>
+<p>The regex evaluation will never end:</p>
+<pre>
+/(a+)+$/.test(
+""aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa""+
+""aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa""+
+""aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa""+
+""aaaaaaaaaaaaaaa!""
+); // Sensitive
+</pre>
+<h2>Compliant Solution</h2>
+<p>Possessive quantifiers do not keep backtracking positions, thus can be used, if possible, to avoid performance issues. Unfortunately, they are not
+supported in JavaScript, but one can still mimick them using lookahead assertions and backreferences:</p>
+<pre>
+/((?=(a+))\2)+$/.test(
+""aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa""+
+""aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa""+
+""aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa""+
+""aaaaaaaaaaaaaaa!""
+); // Compliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A1-Injection"">OWASP Top 10 2017 Category A1</a> - Injection </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/400.html"">MITRE, CWE-400</a> - Uncontrolled Resource Consumption </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/1333.html"">MITRE, CWE-1333</a> - Inefficient Regular Expression Complexity </li>
+  <li> <a href=""https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS"">owasp.org</a> - OWASP Regular expression Denial
+  of Service - ReDoS </li>
+  <li> <a href=""https://stackstatus.net/post/147710624694/outage-postmortem-july-20-2016"">stackstatus.net</a> - Outage Postmortem - July 20, 2016
+  </li>
+  <li> <a href=""https://www.regular-expressions.info/catastrophic.html"">regular-expressions.info</a> - Runaway Regular Expressions: Catastrophic
+  Backtracking </li>
+  <li> <a
+  href=""https://docs.microsoft.com/en-us/dotnet/standard/base-types/backtracking-in-regular-expressions#backtracking-with-nested-optional-quantifiers"">docs.microsoft.com</a> - Backtracking with Nested Optional Quantifiers </li>
+</ul>",CRITICAL,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S5850,Alternatives in regular expressions should be grouped when used with anchors,"<p>In regular expressions, anchors <code>^</code> and <code>$</code> have higher precedence than the <code>|</code> operator. So in a regular
+expression like <code>^alt1|alt2|alt3$</code>, <code>alt1</code> would be anchored to the beginning, <code>alt3</code> to the end and
+<code>alt2</code> wouldnâ€™t be anchored at all. Usually the intended behavior is that all alternatives are anchored at both ends. To achieve this, a
+non-capturing group should be used around the alternatives.</p>
+<p>In cases where it is intended that the anchors only apply to one alternative each, adding (non-capturing) groups around the anchors and the parts
+that they apply to will make it explicit which parts are anchored and avoid readers misunderstanding the precedence or changing it because they
+mistakenly assume the precedence was not intended.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+^a|b|c$
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+^(?:a|b|c)$
+</pre>
+<p>or</p>
+<pre>
+^a$|^b$|^c$
+</pre>
+<p>or, if you do want the anchors to only apply to <code>a</code> and <code>c</code> respectively:</p>
+<pre>
+(?:^a)|b|(?:c$)
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S6268,Disabling Angular built-in sanitization is security-sensitive,"<p>Angular prevents XSS vulnerabilities by treating all values as untrusted by default. Untrusted values are systematically sanitized by the framework
+before they are inserted into the DOM.</p>
+<p>Still, developers have the ability to manually mark a value as trusted if they are sure that the value is already sanitized. Accidentally trusting
+malicious data will introduce an XSS vulnerability in the application and enable a wide range of serious attacks like accessing/modifying sensitive
+information or impersonating other users.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> The value for which sanitization has been disabled is user controlled. </li>
+  <li> Itâ€™s difficult to understand how this value is constructed. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> Avoid including dynamic executable code and thus disabling Angularâ€™s built-in sanitization unless itâ€™s absolutely necessary. Try instead to
+  rely as much as possible on static templates and Angular built-in sanitization to define web page content. </li>
+  <li> Make sure to understand how the value to consider as trusted is constructed and never concatenate it with user controlled data. </li>
+  <li> Make sure to choose the correct <a href=""https://angular.io/api/platform-browser/DomSanitizer"">DomSanitizer</a> ""bypass"" method based on the
+  context. For instance, only use <code>bypassSecurityTrustUrl</code> to trust urls in an <code>href</code> attribute context. </li>
+</ul>
+<h2>Sensitive Code Example</h2>
+<pre>
+import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeHtml } from ""@angular/platform-browser"";
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  template: '&lt;div id=""hello"" [innerHTML]=""hello""&gt;&lt;/div&gt;'
+})
+export class HelloComponent implements OnInit {
+  hello: SafeHtml;
+
+  constructor(private sanitizer: DomSanitizer, private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    let name = this.route.snapshot.queryParams.name;
+    let html = ""&lt;h1&gt;Hello "" + name + ""&lt;/h1&gt;"";
+    this.hello = this.sanitizer.bypassSecurityTrustHtml(html); // Sensitive
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+import { Component, OnInit } from '@angular/core';
+import { DomSanitizer } from ""@angular/platform-browser"";
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  template: '&lt;div id=""hello""&gt;&lt;h1&gt;Hello {{name}}&lt;/h1&gt;&lt;/div&gt;',
+})
+export class HelloComponent implements OnInit {
+  name: string;
+
+  constructor(private sanitizer: DomSanitizer, private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    this.name = this.route.snapshot.queryParams.name;
+  }
+}
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://owasp.org/www-project-top-ten/2017/A7_2017-Cross-Site_Scripting_(XSS)"">OWASP Top 10 2017 Category A7</a> - Cross-Site
+  Scripting (XSS) </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/79.html"">MITRE, CWE-79</a> - Improper Neutralization of Input During Web Page Generation
+  ('Cross-site Scripting') </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/80.html"">MITRE, CWE-80</a> - Improper Neutralization of Script-Related HTML Tags in a Web Page
+  (Basic XSS) </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/83.html"">MITRE, CWE-83</a> - Improper Neutralization of Script in Attributes in a Web Page
+  </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/84.html"">MITRE, CWE-84</a> - Improper Neutralization of Encoded URI Schemes in a Web Page </li>
+  <li> <a href=""https://angular.io/guide/security"">Angular - Best Practices - Security</a> </li>
+</ul>",BLOCKER,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S1134,"Track uses of ""FIXME"" tags","<p><code>FIXME</code> tags are commonly used to mark places where a bug is suspected, but which the developer wants to deal with later.</p>
+<p>Sometimes the developer will not have the time or will simply forget to get back to that tag.</p>
+<p>This rule is meant to track those tags and to ensure that they do not go unnoticed.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+function divide(numerator, denominator) {
+  return numerator / denominator;              // FIXME denominator value might be  0
+}
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/546.html"">MITRE, CWE-546</a> - Suspicious Comment </li>
+</ul>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S5734,Allowing browsers to sniff MIME types is security-sensitive,"<p><a href=""https://blog.mozilla.org/security/2016/08/26/mitigating-mime-confusion-attacks-in-firefox/"">MIME confusion</a> attacks occur when an
+attacker successfully tricks a web-browser to interpret a resource as a different type than the one expected. To correctly interpret a resource
+(script, image, stylesheet â€¦â€‹) web browsers look for the <a href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type"">Content-Type
+header</a> defined in the HTTP response received from the server, but often this header is not set or is set with an incorrect value. To avoid
+content-type mismatch and to provide the best user experience, web browsers try to deduce the right content-type, generally by inspecting the content
+of the resources (the first bytes). This ""guess mechanism"" is called <a href=""https://en.wikipedia.org/wiki/Content_sniffing"">MIME type
+sniffing</a>.</p>
+<p>Attackers can take advantage of this feature when a website (""example.com"" here) allows to upload arbitrary files. In that case, an attacker can
+upload a malicious image <em>fakeimage.png</em> (containing malicious JavaScript code or <a
+href=""https://docs.microsoft.com/fr-fr/archive/blogs/ieinternals/script-polyglots"">a polyglot content</a> file) such as:</p>
+<pre>
+&lt;script&gt;alert(document.cookie)&lt;/script&gt;
+</pre>
+<p>When the victim will visit the website showing the uploaded image, the malicious script embedded into the image will be executed by web browsers
+performing MIME type sniffing.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> <a href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type"">Content-Type</a> header is not systematically set for all
+  resources. </li>
+  <li> Content of resources can be controlled by users. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Implement <a href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options"">X-Content-Type-Options</a> header with
+<em>nosniff</em> value (the only existing value for this header) which is supported by all modern browsers and will prevent browsers from performing
+MIME type sniffing, so that in case of Content-Type header mismatch, the resource is not interpreted. For example within a &lt;script&gt; object
+context, JavaScript MIME types are expected (like <em>application/javascript</em>) in the Content-Type header.</p>
+<h2>Sensitive Code Example</h2>
+<p>In Express.js application the code is sensitive if, when using <a href=""https://www.npmjs.com/package/helmet"">helmet</a>, the <code>noSniff</code>
+middleware is disabled:</p>
+<pre>
+const express = require('express');
+const helmet = require('helmet');
+
+let app = express();
+
+app.use(
+  helmet({
+    noSniff: false, // Sensitive
+  })
+);
+</pre>
+<h2>Compliant Solution</h2>
+<p>When using <code>helmet</code> in an Express.js application, the <code>noSniff</code> middleware should be enabled (it is also done by
+default):</p>
+<pre>
+const express = require('express');
+const helmet= require('helmet');
+
+let app = express();
+
+app.use(helmet.noSniff());
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A6-Security_Misconfiguration"">OWASP Top 10 2017 Category A6</a> -
+  Security Misconfiguration </li>
+  <li> <a href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options"">developer.mozilla.org</a> - X-Content-Type-Options
+  </li>
+  <li> <a href=""https://blog.mozilla.org/security/2016/08/26/mitigating-mime-confusion-attacks-in-firefox/"">blog.mozilla.org</a> - Mitigating MIME
+  Confusion Attacks in Firefox </li>
+</ul>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S5856,Regular expressions should be syntactically valid,"<p>Regular expressions have their own syntax that is understood by regular expression engines. Those engines will throw an exception at runtime if
+they are given a regular expression that does not conform to that syntax.</p>
+<p>To avoid syntax errors, special characters should be escaped with backslashes when they are intended to be matched literally and references to
+capturing groups should use the correctly spelled name or number of the group.</p>
+<p>To match a literal string, rather than a regular expression, either all special characters should be escaped or methods that donâ€™t use regular
+expressions should be used.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+new RegExp(""(["");
+str.match(""(["");
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+new RegExp(""\\(\\["");
+str.match(""\\(\\["");
+str.replace(""(["", ""{"");
+</pre>",CRITICAL,JavaScript,BUG,FALSE

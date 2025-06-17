@@ -1,0 +1,14 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:OptimizeParallelUnitTests,Utilizing Apex Unit Tests with @IsTest(IsParallel),"When writing Apex unit tests, ensure that the @IsTest(IsParallel) annotation is set, whether true or false.This keeps the option of running tests in parallel visible through development to optimize test execution times.",MINOR,APEX,CODE_SMELL,FALSE
+sf:IsBlankForNullChecks,Use IsBlank for Null Checks,Use the built-in isBlank and isNotBlank methods instead of the != and == operators to check for null or empty values.,MINOR,APEX,CODE_SMELL,FALSE
+sf:ClassExplicitSharing,Avoid Classes Without Explicit Sharing,"Enforce security best practices on classes by ensuring that sharing settings ('with sharing', 'without sharing', or 'inherited sharing') are explicitly declared. This prevents accidental data exposure and enhances code maintainability and compliance with security policies.",MAJOR,APEX,CODE_SMELL,FALSE
+sf:CognitiveComplexity,Cognitive Complexity,"Cognitive Complexity gauges the intricacy of a method's control flow, reflecting its level of comprehension difficulty. Methods exhibiting high Cognitive Complexity present maintenance challenges.",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:OuterClassExplicitSharing,Outer Class Explicit Sharing,"Enforce security best practices on classes by ensuring that sharing settings ('with sharing', 'without sharing', or 'inherited sharing') are explicitly declared. This prevents accidental data exposure and enhances code maintainability and compliance with security policies.",MAJOR,APEX,VULNERABILITY,FALSE
+sf:SystemBypassLogicTrigger,nCino - System Bypass Logic - Triggers,System bypass logic is required for custom triggers. Checking for the Exclude Trigger Permission Set allows the system to cease further processing of the Trigger if it is found at the outset. This improves the efficiency of Trigger execution and reduces unnecessary processing steps.,MINOR,APEX,CODE_SMELL,TRUE
+sf:NcinoTriggerHandler,nCino - Trigger Handler Framework,"The Trigger Handler Framework removes logic from Triggers and enforces consistency across the platform. There are many ways to create a Trigger Framework/Factory; however, the nCino Managed Package can save users time, money, and effort. By levering the nCino Trigger Framework, users can:
+Control the execution of Triggers at runtime.
+Simplify existing customizations and logic.
+Encourage best practice of a single Trigger per object.
+Build caching to reduce SOQL queries.
+Reduce CPU Time.
+Build in bulk.",MAJOR,APEX,CODE_SMELL,TRUE

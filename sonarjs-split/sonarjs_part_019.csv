@@ -1,0 +1,392 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+javascript:S2259,"Properties of variables with ""null"" or ""undefined"" values should not be accessed","<p>When a variable is assigned an <code>undefined</code> or <code>null</code> value, it has no properties. Trying to access properties of such a
+variable anyway results in a <code>TypeError</code>, causing abrupt termination of the script if the error is not caught in a <code>catch</code>
+block. But instead of <code>catch</code>-ing this condition, it is best to avoid it altogether.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+if (x === undefined) {
+  console.log(x.bar); // Noncompliant; TypeError will be thrown
+}
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/476.html"">MITRE, CWE-476</a> - NULL Pointer Dereference </li>
+</ul>",MAJOR,JavaScript,BUG,FALSE
+javascript:S2137,Special identifiers should not be bound or assigned,"<p>JavaScript has special identifiers that, while not reserved, still should not be used as identifiers. They include:</p>
+<ul>
+  <li> <code>eval</code> - evaluates a string as JavaScript code </li>
+  <li> <code>arguments</code> - used to access function arguments through indexed properties. </li>
+  <li> <code>undefined</code> - returned for values and properties that have not yet been assigned </li>
+  <li> <code>NaN</code> - Not a Number; returned when math functions fail. </li>
+  <li> <code>Infinity</code> - when a number exceeds the upper limit of the floating point numbers </li>
+</ul>
+<p>These words should not be bound or assigned, because doing so would overwrite the original definitions of these identifiers. Whatâ€™s more, assigning
+or binding some of these names will generate an error in JavaScript strict mode code.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+eval = 17; // Noncompliant
+arguments++; // Noncompliant
+++eval; // Noncompliant
+var obj = { set p(arguments) { } }; // Noncompliant
+var eval; // Noncompliant
+try { } catch (arguments) { } // Noncompliant
+function x(eval) { } // Noncompliant
+function arguments() { } // Noncompliant
+var y = function eval() { }; // Noncompliant
+var f = new Function(""arguments"", ""return 17;""); // Noncompliant
+
+function fun() {
+  if (arguments.length == 0) { // Compliant
+    // do something
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+result = 17;
+args++;
+++result;
+var obj = { set p(arg) { } };
+var result;
+try { } catch (args) { }
+function x(arg) { }
+function args() { }
+var y = function fun() { };
+var f = new Function(""args"", ""return 17;"");
+
+function fun() {
+  if (arguments.length == 0) {
+    // do something
+  }
+}
+</pre>",MAJOR,JavaScript,BUG,FALSE
+javascript:S124,Track comments matching a regular expression,"<p>This rule template can be used to create rules which will be triggered when a comment matches a given regular expression.</p>
+<p>For example, one can create a rule with the regular expression&nbsp;<code>.*REVIEW.*</code>&nbsp;to match all comment containing ""REVIEW"".</p>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S5759,Forwarding client IP address is security-sensitive,"<p>Users often connect to web servers through HTTP proxies.</p>
+<p>Proxy can be configured to forward the client IP address via the <code>X-Forwarded-For</code> or <code>Forwarded</code> HTTP headers.</p>
+<p>IP address is a personal information which can identify a single user and thus impact his privacy.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> The web application uses reverse proxies or similar but doesnâ€™t need to know the IP address of the user. </li>
+</ul>
+<p>There is a risk if you answered yes to this question.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>User IP address should not be forwarded unless the application needs it, as part of an authentication, authorization scheme or log management for
+examples.</p>
+<h2>Sensitive Code Example</h2>
+<p><a href=""https://github.com/http-party/node-http-proxy"">node-http-proxy</a></p>
+<pre>
+var httpProxy = require('http-proxy');
+
+httpProxy.createProxyServer({target:'http://localhost:9000', xfwd:true}) // Noncompliant
+  .listen(8000);
+</pre>
+<p><a href=""https://github.com/chimurai/http-proxy-middleware"">http-proxy-middleware</a></p>
+<pre>
+var express = require('express');
+
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
+const app = express();
+
+app.use('/proxy', createProxyMiddleware({ target: 'http://localhost:9000', changeOrigin: true, xfwd: true })); // Noncompliant
+app.listen(3000);
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://github.com/http-party/node-http-proxy"">node-http-proxy</a></p>
+<pre>
+var httpProxy = require('http-proxy');
+
+// By default xfwd option is false
+httpProxy.createProxyServer({target:'http://localhost:9000'}) // Compliant
+  .listen(8000);
+</pre>
+<p><a href=""https://github.com/chimurai/http-proxy-middleware"">http-proxy-middleware</a></p>
+<pre>
+var express = require('express');
+
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
+const app = express();
+
+// By default xfwd option is false
+app.use('/proxy', createProxyMiddleware({ target: 'http://localhost:9000', changeOrigin: true})); // Compliant
+app.listen(3000);
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A3-Sensitive_Data_Exposure.html"">OWASP Top 10 2017 Category
+  A3</a> - Sensitive Data Exposure </li>
+  <li> <a href=""https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For"">developer.mozilla.org</a> - X-Forwarded-For </li>
+</ul>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S3330,"Creating cookies without the ""HttpOnly"" flag is security-sensitive","<p>When a cookie is configured with the <code>HttpOnly</code> attribute set to <em>true</em>, the browser guaranties that no client-side script will
+be able to read it. In most cases, when a cookie is created, the default value of <code>HttpOnly</code> is <em>false</em> and itâ€™s up to the developer
+to decide whether or not the content of the cookie can be read by the client-side script. As a majority of Cross-Site Scripting (XSS) attacks target
+the theft of session-cookies, the <code>HttpOnly</code> attribute can help to reduce their impact as it wonâ€™t be possible to exploit the XSS
+vulnerability to steal session-cookies.</p>
+<h2>Ask Yourself Whether</h2>
+<ul>
+  <li> the cookie is sensitive, used to authenticate the user, for instance a <em>session-cookie</em> </li>
+  <li> the <code>HttpOnly</code> attribute offer an additional protection (not the case for an <em>XSRF-TOKEN cookie</em> / CSRF token for example)
+  </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<ul>
+  <li> By default the <code>HttpOnly</code> flag should be set to <em>true</em> for most of the cookies and itâ€™s mandatory for session /
+  sensitive-security cookies. </li>
+</ul>
+<h2>Sensitive Code Example</h2>
+<p><a href=""https://www.npmjs.com/package/cookie-session"">cookie-session</a> module:</p>
+<pre>
+let session = cookieSession({
+  httpOnly: false,// Sensitive
+});  // Sensitive
+</pre>
+<p><a href=""https://www.npmjs.com/package/express-session"">express-session</a> module:</p>
+<pre>
+const express = require('express'),
+const session = require('express-session'),
+
+let app = express()
+app.use(session({
+  cookie:
+  {
+    httpOnly: false // Sensitive
+  }
+})),
+</pre>
+<p><a href=""https://www.npmjs.com/package/cookies"">cookies</a> module:</p>
+<pre>
+let cookies = new Cookies(req, res, { keys: keys });
+
+cookies.set('LastVisit', new Date().toISOString(), {
+  httpOnly: false // Sensitive
+}); // Sensitive
+</pre>
+<p><a href=""https://www.npmjs.com/package/csurf"">csurf</a> module:</p>
+<pre>
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
+const express = require('express');
+
+let csrfProtection = csrf({ cookie: { httpOnly: false }}); // Sensitive
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://www.npmjs.com/package/cookie-session"">cookie-session</a> module:</p>
+<pre>
+let session = cookieSession({
+  httpOnly: true,// Compliant
+});  // Compliant
+</pre>
+<p><a href=""https://www.npmjs.com/package/express-session"">express-session</a> module:</p>
+<pre>
+const express = require('express');
+const session = require('express-session');
+
+let app = express();
+app.use(session({
+  cookie:
+  {
+    httpOnly: true // Compliant
+  }
+}));
+</pre>
+<p><a href=""https://www.npmjs.com/package/cookies"">cookies</a> module:</p>
+<pre>
+let cookies = new Cookies(req, res, { keys: keys });
+
+cookies.set('LastVisit', new Date().toISOString(), {
+  httpOnly: true // Compliant
+}); // Compliant
+</pre>
+<p><a href=""https://www.npmjs.com/package/csurf"">csurf</a> module:</p>
+<pre>
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
+const express = require('express');
+
+let csrfProtection = csrf({ cookie: { httpOnly: true }}); // Compliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/HttpOnly"">OWASP HttpOnly</a> </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A7-Cross-Site_Scripting_(XSS)"">OWASP Top 10 2017 Category A7</a> - Cross-Site Scripting
+  (XSS) </li>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/79.html"">CWE-79</a> - Improper Neutralization of Input During Web Page Generation ('Cross-site
+  Scripting') </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/1004.html"">CWE-1004</a> - Sensitive Cookie Without 'HttpOnly' Flag </li>
+  <li> <a href=""https://www.sans.org/top25-software-errors/#cat1"">SANS Top 25</a> - Insecure Interaction Between Components </li>
+  <li> Derived from FindSecBugs rule <a href=""https://find-sec-bugs.github.io/bugs.htm#HTTPONLY_COOKIE"">HTTPONLY_COOKIE</a> </li>
+</ul>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S134,"Control flow statements ""if"", ""for"", ""while"", ""switch"" and ""try"" should not be nested too deeply","<p>Nested <code>if</code>, <code>for</code>, <code>while</code>, <code>switch</code>, and <code>try</code> statements are key ingredients for making
+whatâ€™s known as ""Spaghetti code"".</p>
+<p>Such code is hard to read, refactor and therefore maintain.</p>
+<h2>Noncompliant Code Example</h2>
+<p>With the default threshold of 3:</p>
+<pre>
+  if (condition1) {                  // Compliant - depth = 1
+    /* ... */
+    if (condition2) {                // Compliant - depth = 2
+      /* ... */
+      for(let i = 0; i &lt; 10; i++) {  // Compliant - depth = 3, not exceeding the limit
+        /* ... */
+        if (condition4) {            // Non-Compliant - depth = 4
+          if (condition5) {          // Depth = 5, exceeding the limit, but issues are only reported on depth = 4
+            /* ... */
+          }
+          return;
+        }
+      }
+    }
+  }
+</pre>",CRITICAL,JavaScript,CODE_SMELL,FALSE
+javascript:S3696,Literals should not be thrown,"<p>It is a bad practice to <code>throw</code> something thatâ€™s not derived at some level from <code>Error</code>. If you canâ€™t find an existing
+<code>Error</code> type that suitably conveys what you need to convey, then you should extend <code>Error</code> to create one.</p>
+<p>Specifically, part of the point of throwing <code>Error</code>s is to communicate about the conditions of the error, but literals have far less
+ability to communicate meaningfully than <code>Error</code>s because they donâ€™t include stacktraces.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+throw 404;                              // Noncompliant
+throw ""Invalid negative index."";        // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+throw new Error(""Status: "" + 404);
+throw new Error(""Invalid negative index."");{code}
+</pre>",MAJOR,JavaScript,CODE_SMELL,FALSE
+javascript:S1154,Results of operations on strings should not be ignored,"<p>Doing an operation on a string without using the result of the operation is useless and is certainly due to a misunderstanding.</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+var str = ""...""
+str.toUpperCase(); // Noncompliant
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+var str = ""...""
+str = str.toUpperCase();
+</pre>
+<h2>Deprecated</h2>
+<p>This rule is deprecated; use {rule:javascript:S2201} instead.</p>",MAJOR,JavaScript,BUG,FALSE
+javascript:S5757,Allowing confidential information to be logged is security-sensitive,"<p>Log management is an important topic, especially for the security of a web application, to ensure user activity, including potential attackers, is
+recorded and available for an analyst to understand whatâ€™s happened on the web application in case of malicious activities.</p>
+<p>Retention of specific logs for a defined period of time is often necessary to comply with regulations such as GDPR, <a
+href=""https://www.pcisecuritystandards.org/documents/Effective-Daily-Log-Monitoring-Guidance.pdf"">PCI DSS</a> and others. However, to protect userâ€™s
+privacy, certain informations are forbidden or strongly discouraged from being logged, such as user passwords or credit card numbers, which obviously
+should not be stored or at least not in clear text.</p>
+<h2>Ask Yourself Whether</h2>
+<p>In a production environment:</p>
+<ul>
+  <li> The web application uses confidential information and logs a significant amount of data. </li>
+  <li> Logs are externalized to SIEM or Big Data repositories. </li>
+</ul>
+<p>There is a risk if you answered yes to any of those questions.</p>
+<h2>Recommended Secure Coding Practices</h2>
+<p>Loggers should be configured with a list of confidential, personal information that will be hidden/masked or removed from logs.</p>
+<h2>Sensitive Code Example</h2>
+<p>With <a href=""https://www.npmjs.com/package/signale"">Signale log management framework</a> the code is sensitive when an empty list of secrets is
+defined:</p>
+<pre>
+const { Signale } = require('signale');
+
+const CREDIT_CARD_NUMBERS = fetchFromWebForm()
+// here we suppose the credit card numbers are retrieved somewhere and CREDIT_CARD_NUMBERS looks like [1234-5678-0000-9999"", ""1234-5678-0000-8888""]; for instance
+
+const options = {
+  secrets: []         // empty list of secrets
+};
+
+const logger = new Signale(options); // Sensitive
+
+CREDIT_CARD_NUMBERS.forEach(function(CREDIT_CARD_NUMBER) {
+  logger.log('The customer ordered products with the credit card number = %s', CREDIT_CARD_NUMBER);
+});
+</pre>
+<h2>Compliant Solution</h2>
+<p>With <a href=""https://www.npmjs.com/package/signale"">Signale log management framework</a> it is possible to define a list of secrets that will be
+hidden in logs:</p>
+<pre>
+const { Signale } = require('signale');
+
+const CREDIT_CARD_NUMBERS = fetchFromWebForm()
+// here we suppose the credit card numbers are retrieved somewhere and CREDIT_CARD_NUMBERS looks like [1234-5678-0000-9999"", ""1234-5678-0000-8888""]; for instance
+
+const options = {
+  secrets: [""([0-9]{4}-?)+""]
+};
+
+const logger = new Signale(options); // Compliant
+
+CREDIT_CARD_NUMBERS.forEach(function(CREDIT_CARD_NUMBER) {
+  logger.log('The customer ordered products with the credit card number = %s', CREDIT_CARD_NUMBER);
+});
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/532.html"">CWE-532</a> - Insertion of Sensitive Information into Log File </li>
+  <li> <a href=""https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A3-Sensitive_Data_Exposure.html"">OWASP Top 10 2017 Category
+  A3</a> - Sensitive Data Exposure </li>
+</ul>",MINOR,JavaScript,SECURITY_HOTSPOT,FALSE
+javascript:S4426,Cryptographic keys should be robust,"<p>Most of cryptographic systems require a sufficient key size to be robust against brute-force attacks.</p>
+<p><a href=""https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf"">NIST recommendations</a> will be checked for these
+use-cases:</p>
+<p><strong>Digital Signature Generation</strong> and <strong>Verification:</strong></p>
+<ul>
+  <li> p â‰¥ 2048 AND q â‰¥ 224 for DSA (<code>p</code> is key length and <code>q</code> the modulus length) </li>
+  <li> n â‰¥ 2048 for RSA (<code>n</code> is the key length) </li>
+</ul>
+<p><strong>Key Agreement</strong>:</p>
+<ul>
+  <li> p â‰¥ 2048 AND q â‰¥ 224 for DH and MQV </li>
+  <li> n â‰¥ 224 for ECDH and ECMQV (Examples: <code>secp192r1</code> is a non-compliant curve (<code>n</code> &lt; 224) but <code>secp224k1</code> is
+  compliant (<code>n</code> &gt;= 224)) </li>
+</ul>
+<p><strong>Symmetric keys</strong>:</p>
+<ul>
+  <li> key length â‰¥ 128 bits </li>
+</ul>
+<p>This rule will not raise issues for ciphers that are considered weak (no matter the key size) like <code>DES</code>, <code>Blowfish</code>.</p>
+<h2>Noncompliant Code Example</h2>
+<p><a href=""https://nodejs.org/api/crypto.html"">crypto</a> built-in module:</p>
+<pre>
+var { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
+  modulusLength: 1024,  // Noncompliant
+  publicKeyEncoding:  { type: 'spki', format: 'pem' },
+  privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
+}); // Noncompliant: 1024 bits is too short for a RSA key pair
+
+crypto.generateKeyPair('ec', {
+  namedCurve: 'secp112r2',
+  publicKeyEncoding:  { type: 'spki', format: 'pem' },
+  privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
+}, callback); // Noncompliant: secp112r2 curve doesn't provide enough security
+</pre>
+<h2>Compliant Solution</h2>
+<p><a href=""https://nodejs.org/api/crypto.html"">crypto</a> built-in module:</p>
+<pre>
+crypto.generateKeyPair('rsa', {
+  modulusLength: 2048,  // Compliant
+  publicKeyEncoding:  { type: 'spki', format: 'pem' },
+  privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
+}, callback); // Compliant
+
+crypto.generateKeyPair('ec', {
+  namedCurve: 'secp224k1',
+  publicKeyEncoding:  { type: 'spki', format: 'pem' },
+  privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
+}, callback); // compliant
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A3-Sensitive_Data_Exposure"">OWASP Top 10 2017 Category A3</a> - Sensitive Data Exposure
+  </li>
+  <li> <a href=""https://www.owasp.org/index.php/Top_10-2017_A6-Security_Misconfiguration"">OWASP Top 10 2017 Category A6</a> - Security
+  Misconfiguration </li>
+  <li> <a href=""https://mobile-security.gitbook.io/masvs/security-requirements/0x08-v3-cryptography_verification_requirements"">Mobile AppSec
+  Verification Standard</a> - Cryptography Requirements </li>
+  <li> <a href=""https://owasp.org/www-project-mobile-top-10/2016-risks/m5-insufficient-cryptography"">OWASP Mobile Top 10 2016 Category M5</a> -
+  Insufficient Cryptography </li>
+  <li> <a href=""https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf"">NIST 800-131A</a> - Recommendation for Transitioning the
+  Use of Cryptographic Algorithms and Key Lengths </li>
+  <li> <a href=""https://cwe.mitre.org/data/definitions/326.html"">MITRE, CWE-326</a> - Inadequate Encryption Strength </li>
+</ul>",CRITICAL,JavaScript,VULNERABILITY,FALSE

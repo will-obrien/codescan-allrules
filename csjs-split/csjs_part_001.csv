@@ -1,0 +1,364 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+cs-js:no-console,disallow the use of `console`,"<p>In JavaScript that is designed to be executed in the browser, it's considered a best practice to avoid using methods on <code>console</code>. Such messages are considered to be for debugging purposes and therefore not suitable to ship to the client. In general, calls using <code>console</code> should be stripped before being pushed to production.</p>
+<pre><code class=""js language-js"">console.log(""Made it here."");
+console.error(""That shouldn't have happened."");
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows calls to methods of the <code>console</code> object.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-console: ""error""*/
+
+console.log(""Log a debug level message."");
+console.warn(""Log a warn level message."");
+console.error(""Log an error level message."");
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-console: ""error""*/
+
+// custom console
+Console.log(""Hello world!"");
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule has an object option for exceptions:</p>
+<ul>
+<li><code>""allow""</code> has an array of strings which are allowed methods of the <code>console</code> object</li>
+</ul>
+<p>Examples of additional <strong>correct</strong> code for this rule with a sample <code>{ ""allow"": [""warn"", ""error""] }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-console: [""error"", { allow: [""warn"", ""error""] }] */
+
+console.warn(""Log a warn level message."");
+console.error(""Log an error level message."");
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you're using Node.js, however, <code>console</code> is used to output information to the user and so is not strictly used for debugging purposes. If you are developing for Node.js then you most likely do not want this rule enabled.</p>
+<p>Another case where you might not use this rule is if you want to enforce console calls and not console overwrites. For example:</p>
+<pre><code class=""js language-js"">/*eslint no-console: [""error"", { allow: [""warn""] }] */
+console.error = function (message) {
+  throw new Error(message);
+};
+</code></pre>
+<p>With the <code>no-console</code> rule in the above example, ESLint will report an error. For the above example, you can disable the rule:</p>
+<pre><code class=""js language-js"">// eslint-disable-next-line no-console
+console.error = function (message) {
+  throw new Error(message);
+};
+
+// or
+
+console.error = function (message) {  // eslint-disable-line no-console
+  throw new Error(message);
+};
+</code></pre>
+<p>However, you might not want to manually add <code>eslint-disable-next-line</code> or <code>eslint-disable-line</code>. You can achieve the effect of only receiving errors for console calls with the <code>no-restricted-syntax</code> rule:</p>
+<pre><code class=""json language-json"">{
+    ""rules"": {
+        ""no-console"": ""off"",
+        ""no-restricted-syntax"": [
+            ""error"",
+            {
+                ""selector"": ""CallExpression[callee.object.name='console'][callee.property.name!=/^(log|warn|error|info|trace)$/]"",
+                ""message"": ""Unexpected property on console object was called""
+            }
+        ]
+    }
+}
+</code></pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-control-regex,disallow control characters in regular expressions,"<p>Control characters are special, invisible characters in the ASCII range 0-31. These characters are rarely used in JavaScript strings so a regular expression containing these characters is most likely a mistake.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows control characters in regular expressions.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-control-regex: ""error""*/
+
+var pattern1 = /\x1f/;
+var pattern2 = new RegExp(""\x1f"");
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-control-regex: ""error""*/
+
+var pattern1 = /\x20/;
+var pattern2 = new RegExp(""\x20"");
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you need to use control character pattern matching, then you should turn this rule off.</p>",MINOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-octal-escape,disallow octal escape sequences in string literals,"<p>As of the ECMAScript 5 specification, octal escape sequences in string literals are deprecated and should not be used. Unicode escape sequences should be used instead.</p>
+<pre><code class=""js language-js"">var foo = ""Copyright \251"";
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows octal escape sequences in string literals.</p>
+<p>If ESLint parses code in strict mode, the parser (instead of this rule) reports the error.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-octal-escape: ""error""*/
+
+var foo = ""Copyright \251"";
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-octal-escape: ""error""*/
+
+var foo = ""Copyright \u00A9"";   // unicode
+
+var foo = ""Copyright \xA9"";     // hexadecimal
+</code></pre>",MINOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-catch-shadow,disallow `catch` clause parameters from shadowing variables in the outer scope,"<p>In IE 8 and earlier, the catch clause parameter can overwrite the value of a variable in the outer scope, if that variable has the same name as the catch clause parameter.</p>
+<pre><code class=""js language-js"">var err = ""x"";
+
+try {
+    throw ""problem"";
+} catch (err) {
+
+}
+
+console.log(err)    // err is 'problem', not 'x'
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at preventing unexpected behavior in your program that may arise from a bug in IE 8 and earlier, in which the catch clause parameter can leak into outer scopes. This rule will warn whenever it encounters a catch clause parameter that has the same name as a variable in an outer scope.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-catch-shadow: ""error""*/
+
+var err = ""x"";
+
+try {
+    throw ""problem"";
+} catch (err) {
+
+}
+
+function err() {
+    // ...
+};
+
+try {
+    throw ""problem"";
+} catch (err) {
+
+}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-catch-shadow: ""error""*/
+
+var err = ""x"";
+
+try {
+    throw ""problem"";
+} catch (e) {
+
+}
+
+function err() {
+    // ...
+};
+
+try {
+    throw ""problem"";
+} catch (e) {
+
+}
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you do not need to support IE 8 and earlier, you should turn this rule off.</p>",MAJOR,JavaScript,BUG,FALSE
+cs-js:no-floating-decimal,disallow leading or trailing decimal points in numeric literals,"<p>Float values in JavaScript contain a decimal point, and there is no requirement that the decimal point be preceded or followed by a number. For example, the following are all valid JavaScript numbers:</p>
+<pre><code class=""js language-js"">var num = .5;
+var num = 2.;
+var num = -.7;
+</code></pre>
+<p>Although not a syntax error, this format for numbers can make it difficult to distinguish between true decimal numbers and the dot operator. For this reason, some recommend that you should always include a number before and after a decimal point to make it clear the intent is to create a decimal number.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule is aimed at eliminating floating decimal points and will warn whenever a numeric value has a decimal point but is missing a number either before or after it.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-floating-decimal: ""error""*/
+
+var num = .5;
+var num = 2.;
+var num = -.7;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-floating-decimal: ""error""*/
+
+var num = 0.5;
+var num = 2.0;
+var num = -0.7;
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you aren't concerned about misinterpreting floating decimal point values, then you can safely turn this rule off.</p>
+<h2 id=""compatibility"">Compatibility</h2>
+<ul>
+<li><strong>JSHint</strong>: W008</li>
+</ul>",MINOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-new-wrappers,"disallow `new` operators with the `String`, `Number`, and `Boolean` objects","<p>There are three primitive types in JavaScript that have wrapper objects: string, number, and boolean. These are represented by the constructors <code>String</code>, <code>Number</code>, and <code>Boolean</code>, respectively. The primitive wrapper types are used whenever one of these primitive values is read, providing them with object-like capabilities such as methods. Behind the scenes, an object of the associated wrapper type is created and then destroyed, which is why you can call methods on primitive values, such as:</p>
+<pre><code class=""js language-js"">var text = ""Hello world"".substring(2);
+</code></pre>
+<p>Behind the scenes in this example, a <code>String</code> object is constructed. The <code>substring()</code> method exists on <code>String.prototype</code> and so is accessible to the string instance.</p>
+<p>It's also possible to manually create a new wrapper instance:</p>
+<pre><code class=""js language-js"">var stringObject = new String(""Hello world"");
+var numberObject = new Number(33);
+var booleanObject = new Boolean(false);
+</code></pre>
+<p>Although possible, there aren't any good reasons to use these primitive wrappers as constructors. They tend to confuse other developers more than anything else because they seem like they should act as primitives, but they do not. For example:</p>
+<pre><code class=""js language-js"">var stringObject = new String(""Hello world"");
+console.log(typeof stringObject);       // ""object""
+
+var text = ""Hello world"";
+console.log(typeof text);               // ""string""
+
+var booleanObject = new Boolean(false);
+if (booleanObject) {    // all objects are truthy!
+    console.log(""This executes"");
+}
+</code></pre>
+<p>The first problem is that primitive wrapper objects are, in fact, objects. That means <code>typeof</code> will return <code>""object""</code> instead of <code>""string""</code>, <code>""number""</code>, or <code>""boolean""</code>. The second problem comes with boolean objects. Every object is truthy, that means an instance of <code>Boolean</code> always resolves to <code>true</code> even when its actual value is <code>false</code>.</p>
+<p>For these reasons, it's considered a best practice to avoid using primitive wrapper types with <code>new</code>.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule aims to eliminate the use of <code>String</code>, <code>Number</code>, and <code>Boolean</code> with the <code>new</code> operator. As such, it warns whenever it sees <code>new String</code>, <code>new Number</code>, or <code>new Boolean</code>.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new-wrappers: ""error""*/
+
+var stringObject = new String(""Hello world"");
+var numberObject = new Number(33);
+var booleanObject = new Boolean(false);
+
+var stringObject = new String;
+var numberObject = new Number;
+var booleanObject = new Boolean;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new-wrappers: ""error""*/
+
+var text = String(someValue);
+var num = Number(someValue);
+
+var object = new MyString();
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you want to allow the use of primitive wrapper objects, then you can safely disable this rule.</p>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://www.inkling.com/read/javascript-definitive-guide-david-flanagan-6th/chapter-3/wrapper-objects"">Wrapper objects</a></li>
+</ul>",MINOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-shadow-restricted-names,disallow identifiers from shadowing restricted names,"<p>ES5 Â§15.1.1 Value Properties of the Global Object (<code>NaN</code>, <code>Infinity</code>, <code>undefined</code>) as well as strict mode restricted identifiers <code>eval</code> and <code>arguments</code> are considered to be restricted names in JavaScript. Defining them to mean something else can have unintended consequences and confuse others reading the code. For example, there's nothing prevent you from writing:</p>
+<pre><code class=""js language-js"">var undefined = ""foo"";
+</code></pre>
+<p>Then any code used within the same scope would not get the global <code>undefined</code>, but rather the local version with a very different meaning.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-shadow-restricted-names: ""error""*/
+
+function NaN(){}
+
+!function(Infinity){};
+
+var undefined;
+
+try {} catch(eval){}
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-shadow-restricted-names: ""error""*/
+
+var Object;
+
+function f(a, b){}
+</code></pre>
+<h2 id=""furtherreading"">Further Reading</h2>
+<ul>
+<li><a href=""https://es5.github.io/#x15.1.1"">Annotated ES5 - Â§15.1.1</a></li>
+<li><a href=""https://es5.github.io/#C"">Annotated ES5 - Annex C</a></li>
+</ul>",CRITICAL,JavaScript,BUG,FALSE
+cs-js:no-empty-character-class,disallow empty character classes in regular expressions,"<p>Because empty character classes in regular expressions do not match anything, they might be typing mistakes.</p>
+<pre><code class=""js language-js"">var foo = /^abc[]/;
+</code></pre>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows empty character classes in regular expressions.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-empty-character-class: ""error""*/
+
+/^abc[]/.test(""abcdefg""); // false
+""abcdefg"".match(/^abc[]/); // null
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-empty-character-class: ""error""*/
+
+/^abc/.test(""abcdefg""); // true
+""abcdefg"".match(/^abc/); // [""abc""]
+
+/^abc[a-z]/.test(""abcdefg""); // true
+""abcdefg"".match(/^abc[a-z]/); // [""abcd""]
+</code></pre>
+<h2 id=""knownlimitations"">Known Limitations</h2>
+<p>This rule does not report empty character classes in the string argument of calls to the <code>RegExp</code> constructor.</p>
+<p>Example of a <em>false negative</em> when this rule reports correct code:</p>
+<pre><code class=""js language-js"">/*eslint no-empty-character-class: ""error""*/
+
+var abcNeverMatches = new RegExp(""^abc[]"");
+</code></pre>",MINOR,JavaScript,BUG,FALSE
+cs-js:no-new-object,disallow `Object` constructors,"<p>The <code>Object</code> constructor is used to create new generic objects in JavaScript, such as:</p>
+<pre><code class=""js language-js"">var myObject = new Object();
+</code></pre>
+<p>However, this is no different from using the more concise object literal syntax:</p>
+<pre><code class=""js language-js"">var myObject = {};
+</code></pre>
+<p>For this reason, many prefer to always use the object literal syntax and never use the <code>Object</code> constructor.</p>
+<p>While there are no performance differences between the two approaches, the byte savings and conciseness of the object literal form is what has made it the de facto way of creating new objects.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>This rule disallows <code>Object</code> constructors.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new-object: ""error""*/
+
+var myObject = new Object();
+
+var myObject = new Object;
+</code></pre>
+<p>Examples of <strong>correct</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-new-object: ""error""*/
+
+var myObject = new CustomObject();
+
+var myObject = {};
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>If you wish to allow the use of the <code>Object</code> constructor, you can safely turn this rule off.</p>",MINOR,JavaScript,CODE_SMELL,FALSE
+cs-js:no-extend-native,disallow extending native types,"<p>In JavaScript, you can extend any object, including builtin or ""native"" objects. Sometimes people change the behavior of these native objects in ways that break the assumptions made about them in other parts of the code.</p>
+<p>For example here we are overriding a builtin method that will then affect all Objects, even other builtins.</p>
+<pre><code class=""js language-js"">// seems harmless
+Object.prototype.extra = 55;
+
+// loop through some userIds
+var users = {
+    ""123"": ""Stan"",
+    ""456"": ""David""
+};
+
+// not what you'd expect
+for (var id in users) {
+    console.log(id); // ""123"", ""456"", ""extra""
+}
+</code></pre>
+<p>A common suggestion to avoid this problem would be to wrap the inside of the <code>for</code> loop with <code>users.hasOwnProperty(id)</code>. However, if this rule is strictly enforced throughout your codebase you won't need to take that step.</p>
+<h2 id=""ruledetails"">Rule Details</h2>
+<p>Disallows directly modifying the prototype of builtin objects.</p>
+<p>Examples of <strong>incorrect</strong> code for this rule:</p>
+<pre><code class=""js language-js"">/*eslint no-extend-native: ""error""*/
+
+Object.prototype.a = ""a"";
+Object.defineProperty(Array.prototype, ""times"", { value: 999 });
+</code></pre>
+<h2 id=""options"">Options</h2>
+<p>This rule accepts an <code>exceptions</code> option, which can be used to specify a list of builtins for which extensions will be allowed.</p>
+<h3 id=""exceptions"">exceptions</h3>
+<p>Examples of <strong>correct</strong> code for the sample <code>{ ""exceptions"": [""Object""] }</code> option:</p>
+<pre><code class=""js language-js"">/*eslint no-extend-native: [""error"", { ""exceptions"": [""Object""] }]*/
+
+Object.prototype.a = ""a"";
+</code></pre>
+<h2 id=""knownlimitations"">Known Limitations</h2>
+<p>This rule <em>does not</em> report any of the following less obvious approaches to modify the prototype of builtin objects:</p>
+<pre><code class=""js language-js"">var x = Object;
+x.prototype.thing = a;
+
+eval(""Array.prototype.forEach = 'muhahaha'"");
+
+with(Array) {
+    prototype.thing = 'thing';
+};
+
+window.Function.prototype.bind = 'tight';
+</code></pre>
+<h2 id=""whennottouseit"">When Not To Use It</h2>
+<p>You may want to disable this rule when working with polyfills that try to patch older versions of JavaScript with the latest spec, such as those that might <code>Function.prototype.bind</code> or <code>Array.prototype.forEach</code> in a future-friendly way.</p>",MAJOR,JavaScript,CODE_SMELL,FALSE

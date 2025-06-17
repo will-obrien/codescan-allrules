@@ -1,0 +1,31 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:SingleMethodSingleton,Single Method Singleton,"Some classes contain overloaded getInstance. The problem with overloaded getInstance methods
+	is that the instance created using the overloaded method is not cached and so, new objects will be created for every invocation.
+	<BR><h2>Example:</h2><pre>
+public class Singleton {
+    
+  private static Singleton singleton = new Singleton( );
+	
+  private Singleton(){ }
+	
+  public static Singleton getInstance() {
+    return singleton;
+  }
+  
+  
+  public static Singleton getInstance(Object obj){   //Bad: You should only have one getInstance() method. 
+    Singleton singleton = (Singleton) obj;
+		return singleton;			
+  }
+}
+	
+	</pre>",CRITICAL,APEX,CODE_SMELL,FALSE
+sf:APIVersionsRetired,API Versions Retired,The retirement of older Salesforce Platform API versions (7.0 through 20.0) after the Summer '22 release is a critical step to ensure the continued smooth operation of Salesforce applications.,MAJOR,APEX,BUG,FALSE
+sf:FixDuplicateConditions,"Avoid duplicate conditions in ""if""/""else if"" and ""switch"" statements to eliminate dead code","When the same conditions are used in statements like ""if""/""else if"" or ""switch"", it can lead to duplicated or dead code.",MAJOR,APEX,BUG,FALSE
+sf:IdempotentBinaryOperators,Avoid Identical Expressions on Both Sides of a Binary Operator,"When both sides of a binary operator have identical values, the condition will always give the same result.",MAJOR,APEX,BUG,FALSE
+sf:AvoidEmailInLoops,Avoid Sending Emails in Loops,Avoid using Messaging.sendEmail within loops to prevent exceeding Salesforce governor limits and enhance application performance.,MAJOR,APEX,BUG,FALSE
+sf:NcinoAvoidDescribeMapInLoops,Avoid using methods getDescribe and getMap inside Loops,"The ‘getDescribe’ and ‘getMap’ methods typically involve fetching metadata information for objects and fields, and invoking them inside loops can result in unnecessary overhead.",MAJOR,APEX,BUG,TRUE
+sf:RefactorAssert,Consider Using Assert in place of System.Assert,Salesforce’s Assert class offers a collection of static methods that assist in creating clearer assertions within Apex test code. This new class aims to enhance the readability and maintainability of test code for developers. It is preferable to use Assert in your tests instead of older System.Assert methods.,MINOR,APEX,CODE_SMELL,FALSE
+sf:LongLines,Lines should not be too long in APEX,Limiting the length code lines enhances code clarity and readability by reducing complexity and improving quick understanding.,MINOR,APEX,CODE_SMELL,FALSE
+sf:FixDuplicateMethods,Methods should not share the same implementations,"To avoid duplication and confusion, it is important to ensure that two methods with identical implementations are avoided.",MAJOR,APEX,CODE_SMELL,FALSE
+sf:MisuseOfAssertClass,Misuse of Assert Class,"Assert Class can be misused if not applied correctly. To ensure the correctness of our code and avoid common pitfalls, we need to establish best practices for its usage.",CRITICAL,APEX,CODE_SMELL,FALSE

@@ -1,0 +1,156 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:URDataflowAnomalyAnalysis,Variable Not Assigned,"The dataflow analysis tracks local definitions, undefinitions and references to variables on different paths on the data flow.
+Various problems can be deduced from this information. Please note: If a variable's first use is being checked that if it is null, the variable should be assigned null when it is created.
+UR - Anomaly: There is a reference to a variable that was not defined before. This is a bug and leads to an error.
+
+
+          <BR><h2>Example:</h2><pre>
+
+public class Foo {
+ void bar() {
+  Integer buzz;
+  if (buzz == 0) {}  //Bad: buzz is not defined, this is a UR-Anomaly.
+ }
+}
+
+          </pre>",INFO,APEX,BUG,FALSE
+sf:OnlyOneReturn,Methods Should Not Have Too Many Return Statements,"Having too many return methods increases a methods complexity.
+      A method should ideally have only one exit point, and that should be the last statement in the method.
+     <BR><h2>Example:</h2><pre>
+ 
+public class OneReturnOnly1 {
+  public String foo(Integer x) {
+    if (x > 0) {
+      return 'hey';   
+    }
+    return 'hi';	//Bad: Method has two exit points.
+  }
+  
+  public String bar(Integer x {
+    String result = 'hi';
+    
+    if(x > 0){
+      result = 'hey';
+    }
+    return result;		//Good: Method has one exit point.
+  }
+  
+}
+ 
+     </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UnnecessaryCaseChange,Unnecessary Case Change,"Using equalsIgnoreCase() is faster than using toUpperCase()/toLowerCase().equals()
+       <BR><h2>Example:</h2><pre>
+       
+boolean answer1 = buz.toUpperCase().equals('BAZ');          //Bad: should be buz.equalsIgnoreCase('baz').
+    
+boolean answer2 = buz.toUpperCase().equalsIgnoreCase('baz');  //Bad:this is another unnecessary toUpperCase().
+
+boolean answer3 = buz.equalsIgnoreCase('baz')               //Good: this is preferred.
+ 
+       </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:EmptyMethodInAbstractClassShouldBeAbstract,Empty Method in Abstract Class should be Abstract,"Empty methods in an abstract class should be tagged as abstract. This helps to remove their inappropriate 
+usage by developers who should be implementing their own versions in the concrete subclasses. 
+        <BR><h2>Example:</h2><pre>
+        	
+public abstract class ShouldBeAbstract {
+
+    public Object couldBeAbstract()  {		//Bad: Method should be abstract.
+			return null;
+	}
+
+	public void couldBeAbstract()  {
+    }
+}
+	     	
+    	</pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:ImmutableField,Immutable Field,"Identifies private fields whose values never change once they are initialized either in the declaration 
+of the field or by a constructor.  Making these fields final helps in converting existing classes to becoming immutable ones.
+      <BR><h2>Example:</h2><pre>
+  
+public class Foo {
+  private Integer x; 	//Bad: x could be made final. 
+  public Foo() {
+      x = 7;
+  }
+  public void foo() {
+     Integer a = x + 2;
+  }
+}
+  
+      </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:UseAssertEqualsInsteadOfAssertEquality,Use System.assertEquals instead of System.assert,"This rule detects unit test assertions in object references equality. 
+Instead of using System.assert combined with ""=="" as an equality operator,
+these assertions should be made by more specific methods, like assertEquals.
+      <BR><h2>Example:</h2><pre>
+
+public class FooTest extends TestCase {
+ void testCode() {
+  Object a, b;
+  System.assert(a == b); 		//Bad: not recommended.
+  System.assertEquals(a, b);    //Good: this is preferred.
+ }
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:InefficientEmptyStringCheck,Inefficient Empty String Check,"String.trim().length() is an inefficient way to check if a String is really empty, as it
+creates a new String object just to check its size. Consider using String.isWhitespace() which
+checks if the String contains only white space characters or is empty
+    <BR><h2>Example:</h2><pre>
+
+public void bar(String string) {
+	if (string != null && string.trim().size() > 0) {  //Bad: This is not recommended.
+		doSomething();
+	}
+	
+	if (string != null && !string.isWhitespace() ) {  //Good: This is preferred.
+		doSomething();
+	}
+}
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:NcssTypeCount,NCSS Type Count,"This rule uses the NCSS (Non-Commenting Source Statements) algorithm to determine the number of lines
+of code for a given type. NCSS ignores comments, and counts actual statements. Using this algorithm,
+lines of code that are split are counted as one.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo extends Bar {		//this class only has 6 NCSS lines
+ public Foo() {
+     super();
+
+
+
+
+
+      super.foo();
+ }
+}
+
+   </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidCatchingNPE,Avoid Catching NPE,"Code should never throw NullPointerExceptions under normal circumstances.  A catch block may hide the original error, causing other, more subtle problems later on.
+<h2>See</h2>
+<ul>
+  <li> <a href=""http://cwe.mitre.org/data/definitions/395.html"">MITRE, CWE-395</a> -Use of NullPointerException Catch to Detect NULL Pointer Dereference</li>
+  <li> <a href=""https://www.securecoding.cert.org/confluence/x/BIB3AQ"">CERT, ERR08-J.</a> - Do not catch NullPointerException or any of its ancestors</li>
+</ul>
+    <BR><h2>Example:</h2><pre>  
+public class Foo {
+  void bar() {
+    try {
+      // do something
+      }  catch (NullPointerException npe) {  Bad: this is not recommended.
+    }
+  }
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidFinalLocalVariable,Avoid Final Local Variable,"Avoid using final local variables, turn them into fields.
+         <BR><h2>Example:</h2><pre>
+public class MyClass {
+  
+  final String finalField;  //Good: This is preferred.
+
+  public void foo() {
+        final String finalLocalVariable;  //Bad: Consider making this a field instead of a local variable.
+  }
+}
+	     </pre>",MINOR,APEX,CODE_SMELL,FALSE

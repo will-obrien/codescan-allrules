@@ -1,0 +1,176 @@
+﻿rules_key,rules_name,rules_mdDesc,rules_severity,rules_langName,rules_type,nCino Specific
+sf:CommentSize,Comment is Too Large,"Determines whether the dimensions of comments found are within the specified limits.
+    <BR><h2>Example:</h2><pre>
+
+/*
+*
+*	comment.  		//Bad: Too many lines.
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*/
+
+/*
+*  	comment.		//Good: Can be shortened.
+*/
+
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:AvoidNestedSwitchStmts,Avoid Nested Switch Statements,"Avoid creating nested 'switch' statements since they are error-prone, harder to read and harder to maintain.
+    <BR><h2>Example:</h2><pre>
+
+public class Foo {
+  
+  public void bar(Integer x, Integer y, Integer z) {
+    switch on x{
+      when 0 {}
+      when 1 {
+        switch on y {    //Bad: Nested switch statements are confusing.
+          when 0 {}
+        }
+      }
+    }
+  }
+  
+}
+
+    </pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:CallSuperTwiceInConstructor,Avoid Calling Super Twice in a Constructor,"Calling super in a constructor multiple times can be confusing. Try to use a single constructor
+      <BR><h2>Example:</h2><pre>
+
+public class Foo extends Bar{
+  public Foo(boolean p) {
+   if ( p )
+   	super('true value');
+   else
+   	super('false value'); //Bad: This can be confusing.
+  }
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UseLocaleWithCaseConversions,Use Locale with Case Conversions,"When doing String.toLowerCase() or String.toUpperCase() conversions, use Locales to avoids problems with languages that
+have unusual conventions, i.e. Turkish.
+      <BR><h2>Example:</h2><pre>
+    
+class Foo {
+
+ if (x.toLowerCase().equals('list')){ 	//Bad: This will not match 'LIST' when in Turkish locale.
+ 	//...
+ }
+ 
+ //The above could be..
+ if (x.toLowerCase(Locale.US).equals('list')) ...
+ 
+ ///or simply..
+ if (x.equalsIgnoreCase('list')) ...
+
+ 
+ String z = a.toLowerCase(Locale.EN); 	//Good.
+}
+    
+        </pre>",MINOR,APEX,BUG,FALSE
+sf:AvoidUsingSeeAllData,Avoid Using @IsTest(SeeAllData=true),"Whenever possible, you should create test data for each test. Using SeeAllData=true makes it harder to manage the environment as data changes can break unit tests.
+		<BR><h2>Example:</h2><pre>
+
+public class MyTestCase  {
+	@isTest(seeAllData=true) //Bad: this is not recommended.
+	public static void testWithAllData() {
+	}
+	
+	@isTest(seeAllData=false) //Good: this is preferred.
+	//Note: @isTest could have been left out in this case seeing as the class has 'testmethod' already.
+	public static testMethod void testMyCase() {
+	}
+	
+	
+}
+
+		</pre>",MAJOR,APEX,CODE_SMELL,FALSE
+sf:AvoidFieldNameMatchingTypeName,Avoid Field Name Matching Type Name,"It is somewhat confusing to have a field name matching the declaring class name.
+This probably means that type and/or field names should be chosen more carefully.
+      <BR><h2>Example:</h2><pre>
+
+public class Foo extends Bar {
+
+	Integer foo;	//Bad: there is probably a better name that can be used
+}
+
+      </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:JumbledIncrementer,Jumbled Incrementer,"Avoid jumbled loop incrementers - its usually a mistake, and is confusing even if intentional.
+     <BR><h2>Example:</h2><pre>
+ 
+public class JumbledIncrementerRule1 {
+	public void foo() {
+		for (Integer i = 0; i < 10; i++) {			//Good: only references 'i'
+			for (Integer k = 0; k < 20; i++) {		//Bad: references both 'i' and 'k'
+				system.debug('Hello');
+			}
+		}
+	}
+}
+ 
+     </pre>",MAJOR,APEX,BUG,FALSE
+sf:AvoidUsingHardCodedIP,Avoid Using Hard Coded IP,"Applications with hard-coded IP addresses can become impossible to deploy in some cases.
+<br/>
+<br/>
+This has led to the following vulnerabilities in the past:<br/>
+<br/>
+<ul>
+	<li>CVE-2006-5901</li>
+	<li>CVE-2005-3725</li>
+</ul>
+<br/>
+Externalizing IP adresses is preferable.
+<br/>
+<h2>See</h2>
+<ul>
+	<li>OWASP Top 10 2021 Category A2 - Cryptographic Failures</li>
+	<li><a href=""https://wiki.sei.cmu.edu/confluence/display/java/MSC03-J.+Never+hard+code+sensitive+information"">CERT, MSC03-J.</a> - Never hard code sensitive information</li>
+</ul>
+	    <BR><h2>Example:</h2><pre>
+	    
+public class Foo {
+	private String ip = '127.0.0.1';     //Bad: IP should not be hard coded.
+
+	public String GetIP(){
+		return ServerSettings__c.getInstance().TheIP__c;  //Good: IP is fetched from custom settings. 
+	}
+}
+	    
+	    </pre>",MAJOR,APEX,VULNERABILITY,FALSE
+sf:UnusedModifier,Unused Modifier,"Fields in interfaces are automatically public static final, and methods are public abstract.
+Classes or interfaces nested in an interface are automatically public and static (all nested interfaces are automatically static).
+For historical reasons, modifiers which are implied by the context are accepted by the compiler, but are superfluous.
+     <BR><h2>Example:</h2><pre>
+ 
+public interface Foo {
+  public abstract void bar(); 		//Both abstract and public are ignored by the compiler.
+  public static final Integer X = 0; 	//Public, static, and final all ignored.
+  public static class Bar {} 		//Public and static are ignored.
+  public static interface Baz {} 	//Public and static are ignored.
+}
+public class Bar {
+  public static interface Baz {} 	//Static is ignored.
+}
+ 
+     </pre>",MINOR,APEX,CODE_SMELL,FALSE
+sf:UselessParentheses,Useless Parentheses,"Useless parentheses should be removed.<BR><h2>Example:</h2><pre>
+    
+public class Foo {
+
+   private Integer _bar1;
+   private Integer _bar2;
+
+   public void setBar(Integer n) {
+      _bar1 = Integer.valueOf((n)); //Bad: parentheses around n should be removed here...
+      _bar2 = (n); 					// ...and here
+   }
+
+}
+    
+    </pre>",MINOR,APEX,CODE_SMELL,FALSE
