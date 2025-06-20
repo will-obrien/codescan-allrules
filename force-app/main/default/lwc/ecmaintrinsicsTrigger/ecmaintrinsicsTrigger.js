@@ -1,15 +1,9 @@
-// This component triggers VF/Lightning rule: ecma-intrinsics
+// This component triggers the ecma-intrinsics rule
 import { LightningElement } from 'lwc';
 
 export default class ecmaintrinsicsTrigger extends LightningElement {
     connectedCallback() {
-        // Triggers ecma-intrinsics - modifying intrinsic types
-        String.doSomething = function() {
-            return 'custom method';
-        }; // Violation: modifying intrinsic String type
-        
-        Array.customMethod = function() {
-            return [];
-        }; // Another intrinsic modification
+        String.customMethod = function() {}; // Modifying intrinsic String - triggers rule
+        Array.prototype.nonStandard = "test"; // Non-standard extension - triggers rule
     }
 }

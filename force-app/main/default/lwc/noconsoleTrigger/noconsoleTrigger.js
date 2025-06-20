@@ -1,12 +1,10 @@
-// This component triggers VF/Lightning rule: no-console
+// This component triggers the no-console rule
 import { LightningElement } from 'lwc';
 
 export default class noconsoleTrigger extends LightningElement {
     connectedCallback() {
-        // Triggers no-console - console usage in production code
-        console.log("Log a debug level message.");
-        console.warn("Log a warn level message.");
-        console.error("Log an error level message.");
-        console.info("Log an info message.");
+        console.log('This console.log triggers the no-console rule'); // Violation
+        console.error('Error message'); // Violation
+        console.warn('Warning message'); // Violation
     }
 }

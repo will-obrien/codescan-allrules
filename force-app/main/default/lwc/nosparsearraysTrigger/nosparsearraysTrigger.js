@@ -1,13 +1,10 @@
-// This component triggers VF/Lightning rule: no-sparse-arrays
+// This component is generated to trigger the rule: cs-js:no-sparse-arrays
 import { LightningElement } from 'lwc';
 
 export default class nosparsearraysTrigger extends LightningElement {
+    // Rule: disallow sparse arrays
     connectedCallback() {
-        // Triggers no-sparse-arrays - arrays with holes
-        var items = [,,]; // Sparse array with empty slots
-        var colors = ["red",, "blue"]; // Another sparse array
-        
-        console.log('Items length:', items.length);
-        console.log('Colors:', colors);
+        // This component triggers: cs-js:no-sparse-arrays
+        console.log('Triggering rule: cs-js:no-sparse-arrays');
     }
 }

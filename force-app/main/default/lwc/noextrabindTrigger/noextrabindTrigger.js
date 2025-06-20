@@ -1,14 +1,14 @@
-// This component is generated to trigger the VF/Lightning rule: cs-vf:no-extra-bind
+// This component triggers the no-extra-bind rule
 import { LightningElement } from 'lwc';
 
 export default class noextrabindTrigger extends LightningElement {
-    // Rule: disallow unnecessary calls to `.bind()`
     connectedCallback() {
-        // This component triggers: cs-vf:no-extra-bind
-        console.log('Triggering VF/Lightning rule: cs-vf:no-extra-bind');
+        const x = function () {
+            return "ESLint";
+        }.bind({ name: "ESLint" }); // Unnecessary bind - triggers rule
         
-        // Example code that might trigger the rule
-        var example = "This triggers rule cs-vf:no-extra-bind";
-        return example;
+        const y = (() => {
+            return "test";
+        }).bind(this); // Arrow function with bind - triggers rule
     }
 }

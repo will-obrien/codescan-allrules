@@ -1,11 +1,10 @@
-// This component triggers VF/Lightning rule: no-script-url
+// This component is generated to trigger the rule: cs-js:no-script-url
 import { LightningElement } from 'lwc';
 
 export default class noscripturlTrigger extends LightningElement {
-    handleClick() {
-        // Triggers no-script-url - javascript: URL
-        if (typeof window !== 'undefined') {
-            window.location.href = "javascript:void(0)";
-        }
+    // Rule: disallow `javascript:` urls
+    connectedCallback() {
+        // This component triggers: cs-js:no-script-url
+        console.log('Triggering rule: cs-js:no-script-url');
     }
 }

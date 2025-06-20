@@ -1,13 +1,8 @@
-// This component triggers VF/Lightning rule: no-div-regex
+// This component triggers the no-div-regex rule
 import { LightningElement } from 'lwc';
 
 export default class nodivregexTrigger extends LightningElement {
-    validatePattern() {
-        // Triggers no-div-regex - division operator at beginning of regex
-        function bar() { 
-            return /=foo/; // Should be /\=foo/
-        }
-        
-        return bar();
+    connectedCallback() {
+        const pattern = /=foo/; // Division-like regex - triggers rule
     }
 }

@@ -1,14 +1,13 @@
-// This component is generated to trigger the SonarJS rule: javascript:S3760
+// This component triggers SonarJS rule S3760
 import { LightningElement } from 'lwc';
 
 export default class s3760Trigger extends LightningElement {
-    // Rule: Arithmetic operators should only have numbers as operands
-    connectedCallback() {
-        // This component triggers: javascript:S3760
-        console.log('Triggering SonarJS rule: javascript:S3760');
+    badArithmetic() {
+        let str = "80";
+        let quarter = str / 4; // Triggers S3760 - string used in arithmetic
         
-        // Example code that might trigger the rule
-        var example = "This triggers rule javascript:S3760";
-        return example;
+        if (str < 10) { // Triggers S3760 - string comparison
+            console.log('Less than 10');
+        }
     }
 }

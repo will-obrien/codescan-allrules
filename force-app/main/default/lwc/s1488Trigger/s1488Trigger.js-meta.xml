@@ -2,5 +2,5 @@
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>58.0</apiVersion>
     <isExposed>false</isExposed>
-    <description>Component that triggers ESLint rule violations for testing</description>
+    <description>Component that triggers SonarJS rule violations for testing</description>
 </LightningComponentBundle>

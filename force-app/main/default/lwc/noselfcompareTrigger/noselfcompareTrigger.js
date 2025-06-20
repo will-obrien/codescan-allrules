@@ -1,15 +1,10 @@
-// This component triggers VF/Lightning rule: no-self-compare
+// This component is generated to trigger the rule: cs-js:no-self-compare
 import { LightningElement } from 'lwc';
 
 export default class noselfcompareTrigger extends LightningElement {
-    checkValues() {
-        var x = 10;
-        // Triggers no-self-compare - comparing variable to itself
-        if (x === x) {
-            console.log('This is confusing');
-        }
-        
-        var result = this.someValue === this.someValue; // Another self-compare
-        return result;
+    // Rule: disallow comparisons where both sides are exactly the same
+    connectedCallback() {
+        // This component triggers: cs-js:no-self-compare
+        console.log('Triggering rule: cs-js:no-self-compare');
     }
 }

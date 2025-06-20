@@ -1,13 +1,10 @@
-// This component triggers VF/Lightning rule: no-floating-decimal
+// This component triggers the no-floating-decimal rule
 import { LightningElement } from 'lwc';
 
 export default class nofloatingdecimalTrigger extends LightningElement {
-    calculateValues() {
-        // Triggers no-floating-decimal - floating decimals without leading/trailing digits
-        var num1 = .5; // Should be 0.5
-        var num2 = 2.; // Should be 2.0
-        var num3 = -.7; // Should be -0.7
-        
-        return num1 + num2 + num3;
+    connectedCallback() {
+        const num1 = .5; // Missing leading zero - triggers rule
+        const num2 = 2.; // Missing trailing zero - triggers rule
+        const num3 = -.7; // Missing leading zero - triggers rule
     }
 }

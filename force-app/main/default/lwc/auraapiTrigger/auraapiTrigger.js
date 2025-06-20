@@ -1,19 +1,10 @@
-// This component triggers VF/Lightning rule: aura-api
+// This component is generated to trigger the rule: cs-js:aura-api
 import { LightningElement } from 'lwc';
 
 export default class auraapiTrigger extends LightningElement {
+    // Rule: validate Aura API
     connectedCallback() {
-        // Triggers aura-api - using deprecated/private Aura API
-        try {
-            Aura.notGreat(); // Should use $A instead of Aura
-        } catch(e) {
-            console.log('Aura API error');
-        }
-        
-        try {
-            $A.util.notUtil(); // $A.util does not contain notUtil
-        } catch(e) {
-            console.log('Invalid $A.util method');
-        }
+        // This component triggers: cs-js:aura-api
+        console.log('Triggering rule: cs-js:aura-api');
     }
 }

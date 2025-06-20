@@ -1,14 +1,10 @@
-// This component is generated to trigger the VF/Lightning rule: cs-vf:no-shadow-restricted-names
+// This component triggers the no-shadow-restricted-names rule
 import { LightningElement } from 'lwc';
 
 export default class noshadowrestrictednamesTrigger extends LightningElement {
-    // Rule: disallow identifiers from shadowing restricted names
     connectedCallback() {
-        // This component triggers: cs-vf:no-shadow-restricted-names
-        console.log('Triggering VF/Lightning rule: cs-vf:no-shadow-restricted-names');
-        
-        // Example code that might trigger the rule
-        var example = "This triggers rule cs-vf:no-shadow-restricted-names";
-        return example;
+        const undefined = "foo"; // Shadows global undefined - triggers rule
+        const NaN = 123; // Shadows global NaN - triggers rule
+        const Infinity = 456; // Shadows global Infinity - triggers rule
     }
 }

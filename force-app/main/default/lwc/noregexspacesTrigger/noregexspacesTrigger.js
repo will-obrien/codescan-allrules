@@ -1,11 +1,9 @@
-// This component triggers VF/Lightning rule: no-regex-spaces
+// This component triggers the no-regex-spaces rule
 import { LightningElement } from 'lwc';
 
 export default class noregexspacesTrigger extends LightningElement {
-    validateInput() {
-        // Triggers no-regex-spaces - multiple spaces in regex
-        var re = /foo   bar/; // Should be /foo {3}bar/
-        var anotherRe = new RegExp("test   pattern"); // Multiple spaces
-        return re.test('foo   bar');
+    connectedCallback() {
+        const re = /foo   bar/; // Multiple spaces in regex - triggers rule
+        const re2 = new RegExp("foo   bar"); // Multiple spaces - triggers rule
     }
 }
