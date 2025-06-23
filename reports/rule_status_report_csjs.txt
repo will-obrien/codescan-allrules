@@ -1,0 +1,68 @@
+CodeScan Rule Status Report
+==================================================
+CSV File: csjs.csv
+Generated: 2025-06-23 11:08:12
+
+Summary:
+  Total rules in CSV: 53
+  Rules fired: 32
+  Rules NOT fired: 21
+
+Rules NOT fired (need examples created):
+----------------------------------------
+  - cs-js:dot-notation
+  - cs-js:handle-callback-err
+  - cs-js:no-eq-null
+  - cs-js:no-ex-assign
+  - cs-js:no-extra-boolean-cast
+  - cs-js:no-global-assign
+  - cs-js:no-invalid-regexp
+  - cs-js:no-irregular-whitespace
+  - cs-js:no-iterator
+  - cs-js:no-label-var
+  - cs-js:no-new
+  - cs-js:no-octal-escape
+  - cs-js:no-param-reassign
+  - cs-js:no-proto
+  - cs-js:no-unreachable
+  - cs-js:no-unused-expressions
+  - cs-js:npm-audit
+  - cs-js:secure-window
+  - cs-js:unknown
+  - cs-js:unsecure-js-dependency
+  - cs-js:valid-typeof
+
+Rules that are fired:
+-------------------------
+  - cs-js:aura-api
+  - cs-js:ecma-intrinsics
+  - cs-js:eqeqeq
+  - cs-js:exception
+  - cs-js:new-parens
+  - cs-js:no-catch-shadow
+  - cs-js:no-console
+  - cs-js:no-constant-condition
+  - cs-js:no-control-regex
+  - cs-js:no-div-regex
+  - cs-js:no-else-return
+  - cs-js:no-empty-character-class
+  - cs-js:no-extend-native
+  - cs-js:no-extra-bind
+  - cs-js:no-floating-decimal
+  - cs-js:no-func-assign
+  - cs-js:no-implied-eval
+  - cs-js:no-new-object
+  - cs-js:no-new-wrappers
+  - cs-js:no-obj-calls
+  - cs-js:no-plusplus
+  - cs-js:no-regex-spaces
+  - cs-js:no-return-assign
+  - cs-js:no-script-url
+  - cs-js:no-self-compare
+  - cs-js:no-shadow-restricted-names
+  - cs-js:no-sparse-arrays
+  - cs-js:no-throw-literal
+  - cs-js:no-undef
+  - cs-js:no-underscore-dangle
+  - cs-js:secure-document
+  - cs-js:wrap-iife

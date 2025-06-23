@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <description>Flow created to trigger rule: Unused Flow Variables</description>
+    <label>sfmeta_UnusedFlowVariables_Flow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <status>Active</status>
+    
+    <!-- Hard-coded values that trigger rules -->
+    <assignments>
+        <name>HardCodedAssignment</name>
+        <label>Hard Coded Assignment</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <assignmentItems>
+            <assignToReference>accountName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>ACME Corp</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    
+    <!-- Nested loops that trigger rules -->
+    <loops>
+        <name>OuterLoop</name>
+        <label>Outer Loop</label>
+        <locationX>176</locationX>
+        <locationY>278</locationY>
+        <collectionReference>accountList</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>InnerLoop</targetReference>
+        </nextValueConnector>
+    </loops>
+    
+    <loops>
+        <name>InnerLoop</name>
+        <label>Inner Loop</label>
+        <locationX>440</locationX>
+        <locationY>278</locationY>
+        <collectionReference>contactList</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>DMLInLoop</targetReference>
+        </nextValueConnector>
+    </loops>
+    
+    <!-- DML in loop that triggers rules -->
+    <recordUpdates>
+        <name>DMLInLoop</name>
+        <label>DML In Loop</label>
+        <locationX>704</locationX>
+        <locationY>278</locationY>
+        <inputAssignments>
+            <field>Name</field>
+            <value>
+                <stringValue>Updated Name</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>InnerLoop</inputReference>
+        <object>Account</object>
+    </recordUpdates>
+    
+    <!-- Many nodes to trigger large flow rule -->
+    <decisions>
+        <name>Decision1</name>
+        <label>Decision 1</label>
+        <locationX>176</locationX>
+        <locationY>422</locationY>
+        <defaultConnectorLabel>Default</defaultConnectorLabel>
+        <rules>
+            <name>Rule1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>accountName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Test</stringValue>
+                </rightValue>
+            </conditions>
+            <label>Rule 1</label>
+        </rules>
+    </decisions>
+    
+    <!-- Variables -->
+    <variables>
+        <name>accountName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    
+    <variables>
+        <name>accountList</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Account</objectType>
+    </variables>
+    
+    <variables>
+        <name>contactList</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Contact</objectType>
+    </variables>
+    
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>HardCodedAssignment</targetReference>
+        </connector>
+    </start>
+</Flow>

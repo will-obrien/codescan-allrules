@@ -1,0 +1,15 @@
+{
+  "total_rules": 100,
+  "generated_files": 97,
+  "rule_types": {
+    "CODE_SMELL": 57,
+    "SECURITY_HOTSPOT": 27,
+    "VULNERABILITY": 6,
+    "BUG": 10
+  },
+  "severity_distribution": {
+    "CRITICAL": 39,
+    "MAJOR": 35,
+    "MINOR": 21
+  }
+}

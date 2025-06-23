@@ -1,0 +1,120 @@
+CodeScan Rule Status Report
+==================================================
+CSV File: vfandlightning.csv
+Generated: 2025-06-23 11:08:12
+
+Summary:
+  Total rules in CSV: 105
+  Rules fired: 13
+  Rules NOT fired: 92
+
+Rules NOT fired (need examples created):
+----------------------------------------
+  - common-vf:DuplicatedBlocks
+  - common-vf:FailedUnitTests
+  - common-vf:InsufficientBranchCoverage
+  - common-vf:InsufficientCommentDensity
+  - common-vf:InsufficientLineCoverage
+  - common-vf:SkippedUnitTests
+  - cs-vf:aura-api
+  - cs-vf:dot-notation
+  - cs-vf:ecma-intrinsics
+  - cs-vf:eqeqeq
+  - cs-vf:handle-callback-err
+  - cs-vf:new-parens
+  - cs-vf:no-catch-shadow
+  - cs-vf:no-constant-condition
+  - cs-vf:no-control-regex
+  - cs-vf:no-div-regex
+  - cs-vf:no-else-return
+  - cs-vf:no-empty-character-class
+  - cs-vf:no-eq-null
+  - cs-vf:no-ex-assign
+  - cs-vf:no-extend-native
+  - cs-vf:no-extra-bind
+  - cs-vf:no-extra-boolean-cast
+  - cs-vf:no-floating-decimal
+  - cs-vf:no-func-assign
+  - cs-vf:no-global-assign
+  - cs-vf:no-implied-eval
+  - cs-vf:no-invalid-regexp
+  - cs-vf:no-irregular-whitespace
+  - cs-vf:no-iterator
+  - cs-vf:no-label-var
+  - cs-vf:no-new
+  - cs-vf:no-new-object
+  - cs-vf:no-new-wrappers
+  - cs-vf:no-obj-calls
+  - cs-vf:no-octal-escape
+  - cs-vf:no-param-reassign
+  - cs-vf:no-plusplus
+  - cs-vf:no-proto
+  - cs-vf:no-regex-spaces
+  - cs-vf:no-return-assign
+  - cs-vf:no-script-url
+  - cs-vf:no-self-compare
+  - cs-vf:no-shadow-restricted-names
+  - cs-vf:no-sparse-arrays
+  - cs-vf:no-throw-literal
+  - cs-vf:no-undef
+  - cs-vf:no-underscore-dangle
+  - cs-vf:no-unreachable
+  - cs-vf:no-unused-expressions
+  - cs-vf:npm-audit
+  - cs-vf:secure-document
+  - cs-vf:secure-window
+  - cs-vf:unknown
+  - cs-vf:unsecure-js-dependency
+  - cs-vf:valid-typeof
+  - cs-vf:wrap-iife
+  - vf:APIVersionsRetired
+  - vf:AccessibleLwc
+  - vf:AvoidApexInScript
+  - vf:AvoidDotNamespace
+  - vf:AvoidExternalResources
+  - vf:AvoidHardCodedPageLink
+  - vf:AvoidHardCodedResourceReferences
+  - vf:AvoidHighActionPollerInterval
+  - vf:AvoidLinkingToRecordIds
+  - vf:AvoidTabCharacter
+  - vf:AvoidUsingPolyfill
+  - vf:BoldTagsCheck
+  - vf:CrossSiteScriptingReflected
+  - vf:DoubleQuotesCheck
+  - vf:HotspotGetSessionIdUsage
+  - vf:ImgWithoutAltCheck
+  - vf:ImgWithoutWidthOrHeightCheck
+  - vf:InlineStyleAttributesCheck
+  - vf:InlineStyleCheck
+  - vf:ItalicTagsCheck
+  - vf:LightningAvoidHardcodedSalesforceDomain
+  - vf:LightningEnhancedListCheck
+  - vf:LightningIframeCheck
+  - vf:LightningPageCheck
+  - vf:MetaRefreshCheck
+  - vf:NoOnClickJavascript
+  - vf:OldPageApiVersion
+  - vf:PasswordAutocompleteCheck
+  - vf:RequireConfirmationToken
+  - vf:UnencodedScript
+  - vf:UnencodedStyle
+  - vf:UnescapedAttributes
+  - vf:UnsupportedTagsInHtml5Check
+  - vf:XPathRule
+  - vf:exception
+
+Rules that are fired:
+-------------------------
+  - cs-vf:exception
+  - cs-vf:no-console
+  - vf:AvoidHtmlCommentCheck
+  - vf:AvoidJavaScriptScriptlets
+  - vf:AvoidMultipleForms
+  - vf:HeaderCheck
+  - vf:InputImgWithoutAltCheck
+  - vf:InputImgWithoutWidthOrHeightCheck
+  - vf:LightningAvoidUsingSession
+  - vf:LongJavaScriptCheck
+  - vf:MaxLineLengthCheck
+  - vf:MouseEventWithoutKeyboardEquivalentCheck
+  - vf:NonConsecutiveHeadingCheck

@@ -1,0 +1,14 @@
+{
+  "api_url": "https://app.codescan.io",
+  "api_key": "your_api_key_here",
+  "api_token": "your_api_token_here",
+  "project_key": "will-obrien-codescan-allrules",
+  "csv_files": [
+    "apex.csv",
+    "sonarjs.csv",
+    "csjs.csv",
+    "sfmeta.csv",
+    "vfandlightning.csv"
+  ],
+  "output_directory": "reports"
+} 

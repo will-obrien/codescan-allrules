@@ -1,0 +1,113 @@
+CodeScan Rule Status Report
+==================================================
+CSV File: sfmeta.csv
+Generated: 2025-06-23 11:08:12
+
+Summary:
+  Total rules in CSV: 98
+  Rules fired: 5
+  Rules NOT fired: 93
+
+Rules NOT fired (need examples created):
+----------------------------------------
+  - codescan-policy:OrganizationPasswordPolicy
+  - codescan-policy:OrganizationSessionPolicy
+  - codescan-policy:PermissionSetApiAdminPolicy
+  - codescan-policy:PermissionSetDataAdminPolicy
+  - codescan-policy:PermissionSetDeveloperPolicy
+  - codescan-policy:PermissionSetFilesAndContentPolicy
+  - codescan-policy:PermissionSetFlowsPolicy
+  - codescan-policy:PermissionSetPackagesAdminPolicy
+  - codescan-policy:PermissionSetPermissionsAdminPolicy
+  - codescan-policy:PermissionSetPlatformAdminPolicy
+  - codescan-policy:PermissionSetReportsAndDashboardsAdminPolicy
+  - codescan-policy:PermissionSetSecuritySettingsPolicy
+  - codescan-policy:PermissionSetUserMgmtPolicy
+  - codescan-policy:ProfileApiAdminPolicy
+  - codescan-policy:ProfileDataAdminPolicy
+  - codescan-policy:ProfileDeveloperPolicy
+  - codescan-policy:ProfileFilesAndContentPolicy
+  - codescan-policy:ProfileFlowsPolicy
+  - codescan-policy:ProfilePackagesAdminPolicy
+  - codescan-policy:ProfilePasswordPolicy
+  - codescan-policy:ProfilePermissionsAdminPolicy
+  - codescan-policy:ProfilePlatformAdminPolicy
+  - codescan-policy:ProfileReportsAndDashboardsAdminPolicy
+  - codescan-policy:ProfileSecuritySettingsPolicy
+  - codescan-policy:ProfileSessionPolicy
+  - codescan-policy:ProfileUserMgmtPolicy
+  - common-sfmeta:DuplicatedBlocks
+  - common-sfmeta:FailedUnitTests
+  - common-sfmeta:InsufficientBranchCoverage
+  - common-sfmeta:InsufficientCommentDensity
+  - common-sfmeta:InsufficientLineCoverage
+  - common-sfmeta:SkippedUnitTests
+  - sfmeta:APIVersionsRetired
+  - sfmeta:AutoLayoutFlows
+  - sfmeta:AvoidLargeFlows
+  - sfmeta:AvoidNestedFlowLoops
+  - sfmeta:AvoidUsingPolyfillConfiguration
+  - sfmeta:CheckSystemAdministrator
+  - sfmeta:CrossObjectFormulaOveruse
+  - sfmeta:CustomFieldSecurityInStandardObject
+  - sfmeta:CustomProfilesPermission
+  - sfmeta:DescriptionRemoteSiteSettings
+  - sfmeta:DmlInFlowLoop
+  - sfmeta:DuplicateFlowDml
+  - sfmeta:EnableLWS
+  - sfmeta:ExceedsMaxAllowedComponentsPerType
+  - sfmeta:ExcessWorkflowsPerObject
+  - sfmeta:ExcessivePageLayout
+  - sfmeta:ExcessiveWorkflowsOrgWide
+  - sfmeta:ExposedLightningMessageChannel
+  - sfmeta:ExternalIdOveruse
+  - sfmeta:FastFieldUpdates
+  - sfmeta:FaultPathsInFlow
+  - sfmeta:FilterGetRecords
+  - sfmeta:FlowDMLNaming
+  - sfmeta:FlowDecisionLimit
+  - sfmeta:FlowInteractionNaming
+  - sfmeta:FlowLogicNaming
+  - sfmeta:FlowNaming
+  - sfmeta:FlowNullHandler
+  - sfmeta:FlowVariableResourceNaming
+  - sfmeta:HardCodedFlowValue
+  - sfmeta:ICULocaleFormats
+  - sfmeta:LimitCustomFields
+  - sfmeta:MigrateToFlow
+  - sfmeta:NcinoComponentNamingDuplicate
+  - sfmeta:NcinoDeprecatedFields
+  - sfmeta:NcinoDuplicateLabels
+  - sfmeta:NcinoDuplicateLookupKeys
+  - sfmeta:NcinoFeeTemplateScreenSection
+  - sfmeta:NcinoFieldNamingDuplicate
+  - sfmeta:NcinoInactiveWorkflowRule
+  - sfmeta:NcinoIntUserConfig
+  - sfmeta:NcinoNullCollateral
+  - sfmeta:NcinoNullLookupKeys
+  - sfmeta:NcinoProductFeatureNotExist
+  - sfmeta:NcinoProductFeatureSharing
+  - sfmeta:ObjectLookupsOveruse
+  - sfmeta:OldFlowApi
+  - sfmeta:OldLWCApi
+  - sfmeta:ProcessBuilderWithoutProduct
+  - sfmeta:RelationShipOveruse
+  - sfmeta:RemoveInactiveFlows
+  - sfmeta:RollUpOveruse
+  - sfmeta:SecuritySettings
+  - sfmeta:SystemBypassLogicFlow
+  - sfmeta:SystemBypassLogicValidation
+  - sfmeta:SystemBypassLogicWorkflow
+  - sfmeta:UnusedFlowVariables
+  - sfmeta:ValidationRuleWithoutProduct
+  - sfmeta:WorkflowWithoutProduct
+  - sfmeta:XPathRule
+  - sfmeta:nCinoFieldHistoryTracking
+
+Rules that are fired:
+-------------------------
+  - sfmeta:AvoidAllRecordPermissions
+  - sfmeta:DocumentFlows
+  - sfmeta:RequireDescriptionComponent
+  - sfmeta:RequireDescriptionField
+  - sfmeta:SharingRecordTypeId
