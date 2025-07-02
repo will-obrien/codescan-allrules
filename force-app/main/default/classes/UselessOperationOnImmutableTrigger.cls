@@ -4,4 +4,9 @@ public class UselessOperationOnImmutableTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:UselessOperationOnImmutable');
     }
+
+    void method1() {
+        String a=new String('a');
+        a.concat('b'); //Bad: String.concat is immutable and will not modify a.
+    }
 }

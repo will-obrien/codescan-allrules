@@ -4,4 +4,9 @@ public class CommentContentTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:CommentContent');
     }
+
+    /*
+    * OMG, this is horrible, Bob is an idiot !!!    //Bad: That's not very nice!
+    */
+    public void foo() {}
 }

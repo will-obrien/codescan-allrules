@@ -4,4 +4,12 @@ public class PreserveStackTraceTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:PreserveStackTrace');
     }
+
+    void bad() {
+        try{
+            Integer.parseInt('a');
+        } catch(Exception e){
+            throw new Exception(e.getMessage()); //Bad: Not recommended.
+        }
+    }
 }

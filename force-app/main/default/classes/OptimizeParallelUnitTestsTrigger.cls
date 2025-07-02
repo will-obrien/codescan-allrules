@@ -47,4 +47,8 @@ public class OptimizeParallelUnitTestsTrigger {
         System.assertNotEquals(null, currentUser);
         System.assertNotEquals('', currentUser.Name);
     }
+
+    public static void testSomething() {
+        System.debug('No @IsTest(IsParallel) annotation');
+    }
 }

@@ -4,4 +4,7 @@ public class LeftBracesLinePositionsTrigger
     { // Triggers rule for inconsistent positioning
         System.debug('Test method');
     }
+    public void test2() {
+        // This is an example of the opening brace on the same line.
+    }
 }

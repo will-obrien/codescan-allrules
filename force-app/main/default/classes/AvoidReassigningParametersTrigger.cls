@@ -4,4 +4,8 @@ public class AvoidReassigningParametersTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidReassigningParameters');
     }
+
+    private void foo(String bar) {
+        bar = 'something else'; // Bad: Not recommended.
+    }
 }

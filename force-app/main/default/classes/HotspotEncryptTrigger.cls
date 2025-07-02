@@ -25,4 +25,12 @@ public class HotspotEncryptTrigger {
         // Security hotspot: Using user-provided encryption key
         Blob encrypted = Crypto.encrypt('AES256', Blob.valueOf(userKey), Blob.valueOf(data)); // Triggers hotspot
     }
+
+    public void cryptoExamples(){
+        Blob hardCodedKey = Blob.valueOf('0000000000000000');
+        Blob hardCodedIV = Blob.valueOf('Hardcoded IV 123');
+        Blob data = Blob.valueOf('Data to be encrypted');
+        //Bad: use of hard coded key/iv.
+        Blob encrypted = Crypto.encrypt('AES128', hardCodedKey, hardCodedIV, data);
+    }
 }

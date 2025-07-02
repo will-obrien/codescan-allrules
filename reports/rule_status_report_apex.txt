@@ -1,12 +1,12 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: apex.csv
-Generated: 2025-06-23 11:08:12
+Generated: 2025-06-24 09:58:01
 
 Summary:
   Total rules in CSV: 267
-  Rules fired: 114
-  Rules NOT fired: 153
+  Rules fired: 110
+  Rules NOT fired: 157
 
 Rules NOT fired (need examples created):
 ----------------------------------------
@@ -30,11 +30,14 @@ Rules NOT fired (need examples created):
   - sf:AvoidDeeplyNestedIfStmts
   - sf:AvoidFieldNameMatchingMethodName
   - sf:AvoidFieldNameMatchingTypeName
+  - sf:AvoidFinalLocalVariable
+  - sf:AvoidHardCodedCredential
   - sf:AvoidHttpReferer
   - sf:AvoidInsecureMessageDigests
   - sf:AvoidInstanceofChecksInCatchClause
   - sf:AvoidLosingExceptionInformation
   - sf:AvoidMultipleUnaryOperators
+  - sf:AvoidNestedSwitchStmts
   - sf:AvoidPrefixingMethodParameters
   - sf:AvoidProtectedFieldInFinalClass
   - sf:AvoidReassigningParameters
@@ -158,6 +161,7 @@ Rules NOT fired (need examples created):
   - sf:UseIsTrueInsteadOfAreEqual
   - sf:UseObjectForClearerAPI
   - sf:UselessOperationOnImmutable
+  - sf:UselessParentheses
   - sf:VariableCouldBeTransient
   - sf:VariableNamingConventions
   - sf:WhileLoopsMustUseBraces
@@ -176,18 +180,15 @@ Rules that are fired:
   - sf:AvoidDMLInUnitTests
   - sf:AvoidDuplicateLiterals
   - sf:AvoidEmailInLoops
-  - sf:AvoidFinalLocalVariable
   - sf:AvoidForLoopToJustAddElementsToCollection
   - sf:AvoidGetSetMethods
   - sf:AvoidGlobalModifier
-  - sf:AvoidHardCodedCredential
   - sf:AvoidHardCodedError
   - sf:AvoidInsecureCookies
   - sf:AvoidInstantiatingObjectsInLoops
   - sf:AvoidLiteralsInIfCondition
   - sf:AvoidLogicInTrigger
   - sf:AvoidMethodsBeforeInitializers
-  - sf:AvoidNestedSwitchStmts
   - sf:AvoidNotFinalPublicStaticFields
   - sf:AvoidOutboundCallsInBatchApex
   - sf:AvoidPublicFields
@@ -277,6 +278,5 @@ Rules that are fired:
   - sf:UseCollectionIsEmpty
   - sf:UseLocaleWithCaseConversions
   - sf:UseSingleton
-  - sf:UselessParentheses
   - sf:UselessStringValueOf
   - sf:VariableDeclarationHidesAnother

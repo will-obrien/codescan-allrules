@@ -4,4 +4,12 @@ public class AvoidInsecureMessageDigestsTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidInsecureMessageDigests');
     }
+
+    public void insecureDigests() {
+        Blob blob = Blob.valueOf('test');
+        Blob md5 = Crypto.generateDigest('MD5', blob); // Bad: This is not secure.
+        Blob sha1 = Crypto.generateDigest('SHA1', blob); // Bad: This is not secure.
+        System.debug(md5);
+        System.debug(sha1);
+    }
 }

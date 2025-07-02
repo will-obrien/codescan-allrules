@@ -4,4 +4,14 @@ public class DoNotThrowExceptionInFinallyTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:DoNotThrowExceptionInFinally');
     }
+
+    public void bar() {
+        try {
+            // Here do some stuff
+        } catch( Exception e) {
+            // Handling the issue
+        } finally {
+            throw new Exception(); //Bad: this is not recommended.
+        }
+    }
 }

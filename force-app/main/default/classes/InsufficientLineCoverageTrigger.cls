@@ -4,4 +4,8 @@ public class InsufficientLineCoverageTrigger {
     public void triggerRule() {
         System.debug('This class triggers: common-sf:InsufficientLineCoverage');
     }
+
+    public void uncoveredMethod() {
+        System.debug('This method is not covered by any test');
+    }
 }

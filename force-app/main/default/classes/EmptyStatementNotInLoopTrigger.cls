@@ -4,4 +4,8 @@ public class EmptyStatementNotInLoopTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:EmptyStatementNotInLoop');
     }
+
+    public void doit() {
+        System.debug('look at the extra semicolon');; //Bad: This semicolon has no purpose.
+    }
 }

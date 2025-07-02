@@ -15,26 +15,23 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>sfmeta DescriptionRemoteSiteSettings Object  c</label>
+    <label>Description Remote Site Settings Object</label>
     <nameField>
         <label>Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>sfmeta DescriptionRemoteSiteSettings Object  cs</pluralLabel>
+    <pluralLabel>Description Remote Site Settings Objects</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
     
     <!-- Field without description to trigger rule -->
     <fields>
-        <fullName>Price__c</fullName>
-        <externalId>false</externalId>
-        <label>Price</label>
-        <precision>18</precision>
-        <required>false</required>
-        <scale>2</scale>
-        <trackTrending>false</trackTrending>
-        <type>Currency</type>
+        <fullName>RemoteSite__c</fullName>
+        <label>Remote Site</label>
+        <type>Text</type>
+        <length>80</length>
+        <!-- No description provided -->
     </fields>
     
     <!-- Another field without description -->

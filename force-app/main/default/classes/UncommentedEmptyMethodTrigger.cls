@@ -4,4 +4,7 @@ public class UncommentedEmptyMethodTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:UncommentedEmptyMethod');
     }
+
+    public void doSomething() { //Bad: Consider commenting this method.
+    }
 }

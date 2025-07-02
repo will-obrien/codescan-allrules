@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Flow Interaction Naming Object</label>
+    <pluralLabel>Flow Interaction Naming Objects</pluralLabel>
+    <nameField>
+        <type>Text</type>
+        <label>Name</label>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ReadWrite</sharingModel>
+    <fields>
+        <fullName>NonStandardInteractionName__c</fullName>
+        <label>Non-Standard Interaction Name</label>
+        <type>Text</type>
+        <length>80</length>
+    </fields>
+</CustomObject> 

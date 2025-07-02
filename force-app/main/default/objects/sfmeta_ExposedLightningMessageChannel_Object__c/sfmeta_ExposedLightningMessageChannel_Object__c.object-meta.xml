@@ -15,12 +15,12 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>sfmeta ExposedLightningMessageChannel Object  c</label>
+    <label>Exposed Lightning Message Channel Object</label>
     <nameField>
         <label>Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>sfmeta ExposedLightningMessageChannel Object  cs</pluralLabel>
+    <pluralLabel>Exposed Lightning Message Channel Objects</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
@@ -46,5 +46,12 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <length>255</length>
+    </fields>
+    
+    <fields>
+        <fullName>IsExposed__c</fullName>
+        <label>Is Exposed</label>
+        <type>Checkbox</type>
+        <defaultValue>true</defaultValue>
     </fields>
 </CustomObject>

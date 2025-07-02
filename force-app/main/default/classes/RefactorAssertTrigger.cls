@@ -94,6 +94,12 @@ public class RefactorAssertTrigger {
         System.assert(actualAmount.equals(expectedAmount));
     }
     
+    @IsTest
+    static void testMyCase() {
+        boolean myVar = true;
+        System.assert(myVar, 'myVar is true'); // Should use Assert instead
+    }
+    
     private static String getTestValue() {
         return 'Expected Value';
     }

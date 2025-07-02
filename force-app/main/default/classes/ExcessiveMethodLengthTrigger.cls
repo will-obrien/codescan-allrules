@@ -4,4 +4,18 @@ public class ExcessiveMethodLengthTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:ExcessiveMethodLength');
     }
+
+    public void doSomething() {
+        System.debug('Hello world!');
+        System.debug('Hello world!');
+        System.debug('Hello world!');
+        System.debug('Hello world!');
+        System.debug('Hello world!');
+        System.debug('Hello world!');
+        System.debug('Hello world!');
+        System.debug('Hello world!');
+        System.debug('Hello world!');
+        System.debug('Hello world!');
+        // ... (repeat as needed to make the method long)
+    }
 }

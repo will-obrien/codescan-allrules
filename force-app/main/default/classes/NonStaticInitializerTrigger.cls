@@ -4,4 +4,8 @@ public class NonStaticInitializerTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:NonStaticInitializer');
     }
+
+    {
+        System.debug('I am about to construct myself'); //Bad: This block gets run before any call to a constructor
+    }
 }

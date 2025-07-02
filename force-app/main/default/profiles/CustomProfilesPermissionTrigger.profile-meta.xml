@@ -3,8 +3,8 @@
     <fullName>CustomProfilesPermissionTrigger</fullName>
     <custom>true</custom>
     <userPermissions>
-        <enabled>true</enabled>
         <name>ModifyAllData</name>
+        <enabled>true</enabled>
     </userPermissions>
     <userPermissions>
         <enabled>true</enabled>

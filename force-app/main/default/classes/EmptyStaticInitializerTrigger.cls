@@ -4,4 +4,8 @@ public class EmptyStaticInitializerTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:EmptyStaticInitializer');
     }
+
+    static { //Bad: This should be removed.
+        // empty
+    }
 }

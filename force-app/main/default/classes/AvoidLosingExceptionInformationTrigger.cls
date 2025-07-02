@@ -4,4 +4,12 @@ public class AvoidLosingExceptionInformationTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidLosingExceptionInformation');
     }
+
+    public void bar() {
+        try {
+            // do something
+        } catch (SomeException se) {
+            se.getMessage();   // Bad: this is not recommended.
+        }
+    }
 }

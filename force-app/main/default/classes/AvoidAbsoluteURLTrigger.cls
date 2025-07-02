@@ -92,4 +92,9 @@ public class AvoidAbsoluteURLTrigger {
         
         System.debug('Email Body: ' + emailBody);
     }
+    
+    public void useAbsoluteUrl() {
+        String url = 'https://na1.salesforce.com/001xxxxxxxxxxxx'; // Bad: absolute URL
+        System.debug(url);
+    }
 }

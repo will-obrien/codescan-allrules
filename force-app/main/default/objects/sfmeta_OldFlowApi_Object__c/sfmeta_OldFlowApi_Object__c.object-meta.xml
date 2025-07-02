@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Old Flow API Object</label>
+    <pluralLabel>Old Flow API Objects</pluralLabel>
+    <nameField>
+        <type>Text</type>
+        <label>Name</label>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ReadWrite</sharingModel>
+    <fields>
+        <fullName>FlowApiVersion__c</fullName>
+        <label>Flow API Version</label>
+        <type>Text</type>
+        <length>10</length>
+        <defaultValue>'19.0'</defaultValue>
+    </fields>
+</CustomObject> 

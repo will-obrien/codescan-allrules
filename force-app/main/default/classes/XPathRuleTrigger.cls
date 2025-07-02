@@ -1,7 +1,6 @@
 public class XPathRuleTrigger {
-    // This class is generated to trigger the rule: sf:XPathRule
-    // Rule: XPath rule template
-    public void triggerRule() {
-        System.debug('This class triggers: sf:XPathRule');
+    // This class is intentionally simple to be matched by a custom XPath rule.
+    public void foo() {
+        Integer x = 1;
     }
 }

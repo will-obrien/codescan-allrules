@@ -4,4 +4,9 @@ public class IdempotentOperationsTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:IdempotentOperations');
     }
+
+    public void bar() {
+        Integer x = 2;
+        x = x; //Bad: Avoid this.
+    }
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Excessive Workflows Org Wide Object</label>
+    <pluralLabel>Excessive Workflows Org Wide Objects</pluralLabel>
+    <nameField>
+        <type>Text</type>
+        <label>Name</label>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ReadWrite</sharingModel>
+    <fields>
+        <fullName>WorkflowRule1__c</fullName>
+        <label>Workflow Rule 1</label>
+        <type>Checkbox</type>
+        <defaultValue>true</defaultValue>
+    </fields>
+    <fields>
+        <fullName>WorkflowRule2__c</fullName>
+        <label>Workflow Rule 2</label>
+        <type>Checkbox</type>
+        <defaultValue>true</defaultValue>
+    </fields>
+    <fields>
+        <fullName>WorkflowRule3__c</fullName>
+        <label>Workflow Rule 3</label>
+        <type>Checkbox</type>
+        <defaultValue>true</defaultValue>
+    </fields>
+    <fields>
+        <fullName>WorkflowRule4__c</fullName>
+        <label>Workflow Rule 4</label>
+        <type>Checkbox</type>
+        <defaultValue>true</defaultValue>
+    </fields>
+</CustomObject> 

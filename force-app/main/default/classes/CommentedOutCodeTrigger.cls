@@ -4,4 +4,12 @@ public class CommentedOutCodeTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:CommentedOutCode');
     }
+
+    /*
+    void somethingCool(){
+        //one day we should do this...     //Bad: remove this.
+        if ( true ) {}
+    }
+    */
+    public void foo() {}
 }

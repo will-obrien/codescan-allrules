@@ -4,4 +4,14 @@ public class AvoidDeeplyNestedIfStmtsTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidDeeplyNestedIfStmts');
     }
+
+    public void bar(Integer x, Integer y, Integer z) {
+        if (x > y) {
+            if (y > z) {
+                if (z == x) {
+                    System.debug('Too deep!');
+                }
+            }
+        }
+    }
 }

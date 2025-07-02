@@ -4,4 +4,9 @@ public class UnnecessaryConversionTemporaryTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:UnnecessaryConversionTemporary');
     }
+
+    public String convert(Integer x) {
+        String foo = new Integer(x).toString(); //Bad: this wastes an object.
+        return foo;
+    }
 }

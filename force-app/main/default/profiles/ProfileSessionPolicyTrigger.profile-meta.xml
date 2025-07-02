@@ -5,4 +5,8 @@
     <sessionSecurityPolicy>
         <sessionTimeout>TwentyFourHours</sessionTimeout>
     </sessionSecurityPolicy>
+    <userPermissions>
+        <name>SessionTimeout</name>
+        <enabled>true</enabled>
+    </userPermissions>
 </Profile>

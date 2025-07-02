@@ -4,4 +4,12 @@ public class CatchBlockShouldDoMoreThanRethrowTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:CatchBlockShouldDoMoreThanRethrow');
     }
+
+    public void doSomething() {
+        try {
+            // do stuff
+        } catch (Exception e) {
+            throw e;   //Bad: This serves no purpose.
+        }
+    }
 }

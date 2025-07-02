@@ -4,4 +4,13 @@ public class SimplifyBooleanReturnsTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:SimplifyBooleanReturns');
     }
+
+    public boolean isBarEqualTo(Integer x) {
+        Integer bar = 1;
+        if (bar == x) { //Bad: This bit of code...
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

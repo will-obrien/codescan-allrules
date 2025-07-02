@@ -4,4 +4,10 @@ public class SimplifiedTernaryTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:SimplifiedTernary');
     }
+
+    public boolean test(boolean condition) {
+        return condition ? true : something(); //Can be as simple as return condition || something();
+    }
+
+    public boolean something() { return false; }
 }

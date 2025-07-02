@@ -15,12 +15,12 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>sfmeta EnableLWS Object  c</label>
+    <label>Enable LWS Object</label>
     <nameField>
         <label>Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>sfmeta EnableLWS Object  cs</pluralLabel>
+    <pluralLabel>Enable LWS Objects</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
@@ -46,5 +46,12 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <length>255</length>
+    </fields>
+    
+    <fields>
+        <fullName>LWS_Enabled__c</fullName>
+        <label>LWS Enabled</label>
+        <type>Checkbox</type>
+        <defaultValue>false</defaultValue>
     </fields>
 </CustomObject>

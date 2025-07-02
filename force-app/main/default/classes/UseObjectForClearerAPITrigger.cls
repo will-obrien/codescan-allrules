@@ -4,4 +4,7 @@ public class UseObjectForClearerAPITrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:UseObjectForClearerAPI');
     }
+
+    public void connect(String username, String pssd, String databaseName, String databaseAdress) { //Bad: Not recommended.
+    }
 }

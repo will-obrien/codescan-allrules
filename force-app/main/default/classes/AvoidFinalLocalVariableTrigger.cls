@@ -4,4 +4,9 @@ public class AvoidFinalLocalVariableTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidFinalLocalVariable');
     }
+
+    public void foo() {
+        final String finalLocalVariable = 'bad'; // Bad: Consider making this a field instead of a local variable.
+        System.debug(finalLocalVariable);
+    }
 }

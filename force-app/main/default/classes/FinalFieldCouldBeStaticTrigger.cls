@@ -4,4 +4,6 @@ public class FinalFieldCouldBeStaticTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:FinalFieldCouldBeStatic');
     }
+
+    public final Integer BAR = 42; //Bad: BAR could be static to save some memory.
 }

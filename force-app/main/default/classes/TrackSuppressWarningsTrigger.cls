@@ -1,6 +1,6 @@
 @SuppressWarnings('all')
 public class TrackSuppressWarningsTrigger {
-    public void someMethod() {
-        System.debug('Suppressed warnings tracked');
+    public void foo() {
+        // The class will be ignored.
     }
 }

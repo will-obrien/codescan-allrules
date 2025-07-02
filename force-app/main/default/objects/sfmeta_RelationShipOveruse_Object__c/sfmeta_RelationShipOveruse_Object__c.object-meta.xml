@@ -15,12 +15,12 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>sfmeta RelationShipOveruse Object  c</label>
+    <label>Relationship Overuse Object</label>
     <nameField>
         <label>Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>sfmeta RelationShipOveruse Object  cs</pluralLabel>
+    <pluralLabel>Relationship Overuse Objects</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
@@ -46,5 +46,20 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <length>255</length>
+    </fields>
+    
+    <!-- Simulate 41 relationship fields -->
+    <fields>
+        <fullName>Relationship1__c</fullName>
+        <label>Relationship 1</label>
+        <type>Lookup</type>
+        <referenceTo>Account</referenceTo>
+    </fields>
+    <!-- ...repeat up to Relationship41__c... -->
+    <fields>
+        <fullName>Relationship41__c</fullName>
+        <label>Relationship 41</label>
+        <type>Lookup</type>
+        <referenceTo>Account</referenceTo>
     </fields>
 </CustomObject>

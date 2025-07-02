@@ -2,12 +2,12 @@
 <Profile xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>ProfileUserMgmtPolicyTrigger</fullName>
     <userPermissions>
-        <enabled>true</enabled>
         <name>ManageUsers</name>
+        <enabled>true</enabled>
     </userPermissions>
     <userPermissions>
-        <enabled>true</enabled>
         <name>ManageRoles</name>
+        <enabled>true</enabled>
     </userPermissions>
     <userPermissions>
         <enabled>true</enabled>

@@ -15,12 +15,12 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>sfmeta ObjectLookupsOveruse Object  c</label>
+    <label>Object Lookups Overuse Object</label>
     <nameField>
         <label>Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>sfmeta ObjectLookupsOveruse Object  cs</pluralLabel>
+    <pluralLabel>Object Lookups Overuse Objects</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
@@ -46,5 +46,26 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <length>255</length>
+    </fields>
+    
+    <!-- Simulate 26 lookup fields -->
+    <fields>
+        <fullName>Lookup1__c</fullName>
+        <label>Lookup 1</label>
+        <type>Lookup</type>
+        <referenceTo>Account</referenceTo>
+    </fields>
+    <fields>
+        <fullName>Lookup2__c</fullName>
+        <label>Lookup 2</label>
+        <type>Lookup</type>
+        <referenceTo>Account</referenceTo>
+    </fields>
+    <!-- ...repeat up to Lookup26__c... -->
+    <fields>
+        <fullName>Lookup26__c</fullName>
+        <label>Lookup 26</label>
+        <type>Lookup</type>
+        <referenceTo>Account</referenceTo>
     </fields>
 </CustomObject>

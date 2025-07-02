@@ -91,6 +91,12 @@ public class UseAreEqualInsteadOfIsTrueTrigger {
         }
     }
     
+    @IsTest
+    static void testMyCase() {
+        boolean result = (1 == 1);
+        Assert.isTrue(result, 'Should use Assert.areEqual');
+    }
+    
     private static Integer calculateValue() {
         return 100;
     }

@@ -4,4 +4,9 @@ public class AvoidPrefixingMethodParametersTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidPrefixingMethodParameters');
     }
+
+    public void bar(Integer inLeftOperand, Integer outRightOperand) {
+        Integer result = inLeftOperand + outRightOperand;
+        System.debug(result);
+    }
 }

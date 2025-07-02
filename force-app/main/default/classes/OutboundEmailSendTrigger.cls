@@ -1,9 +1,9 @@
 public class OutboundEmailSendTrigger {
     public void sendEmail() {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-        mail.setSubject('Test Email');
-        mail.setToAddresses(new String[]{ 'test@example.com' });
-        mail.setHtmlBody('Test email body');
-        Messaging.sendEmail(new Messaging.SingleEmailMessage[]{ mail }); // Triggers rule
+        mail.setSubject('Hello team');
+        mail.setToAddresses(new String[] {'test@codescan.io'});
+        mail.setHTMLBody('Testing my email');
+        Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail }); //Bad: Sending outbound emails using Messaging.sendEmail.
     }
 }

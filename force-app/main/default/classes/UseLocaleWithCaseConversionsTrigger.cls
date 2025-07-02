@@ -4,4 +4,10 @@ public class UseLocaleWithCaseConversionsTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:UseLocaleWithCaseConversions');
     }
+
+    public void foo(String x) {
+        if (x.toLowerCase().equals('list')){ //Bad: This will not match 'LIST' when in Turkish locale.
+            //...
+        }
+    }
 }

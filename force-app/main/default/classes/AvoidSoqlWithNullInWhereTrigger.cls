@@ -4,4 +4,9 @@ public class AvoidSoqlWithNullInWhereTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidSoqlWithNullInWhere');
     }
+
+    public void badNullWhere() {
+        Contact[] lst = [SELECT Id, Name FROM Contact WHERE CustomField__c = null]; // Bad: this is not recommended.
+        System.debug(lst);
+    }
 }

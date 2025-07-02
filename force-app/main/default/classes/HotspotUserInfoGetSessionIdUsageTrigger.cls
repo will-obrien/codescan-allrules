@@ -34,4 +34,9 @@ public class HotspotUserInfoGetSessionIdUsageTrigger {
         String currentSession = UserInfo.getSessionId(); // Triggers hotspot
         // Potentially storing in database or other persistent storage
     }
+
+    public void foo() {
+        HttpRequest req = new HttpRequest();
+        req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());   //There may be a workaround for this.
+    }
 }

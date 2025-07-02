@@ -4,4 +4,8 @@ public class BooleanGetMethodNameTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:BooleanGetMethodName');
     }
+
+    public boolean getFoo() { // Bad: not recommended.
+        return true;
+    }
 }

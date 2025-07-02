@@ -15,12 +15,12 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>sfmeta CheckSystemAdministrator Object  c</label>
+    <label>Check System Administrator Object</label>
     <nameField>
         <label>Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>sfmeta CheckSystemAdministrator Object  cs</pluralLabel>
+    <pluralLabel>Check System Administrator Objects</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
@@ -46,5 +46,12 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <length>255</length>
+    </fields>
+    
+    <fields>
+        <fullName>IsSysAdmin__c</fullName>
+        <label>Is System Admin</label>
+        <type>Checkbox</type>
+        <defaultValue>true</defaultValue>
     </fields>
 </CustomObject>

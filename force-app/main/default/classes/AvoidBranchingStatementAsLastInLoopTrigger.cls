@@ -4,4 +4,13 @@ public class AvoidBranchingStatementAsLastInLoopTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidBranchingStatementAsLastInLoop');
     }
+
+    public void badLoop() {
+        for (Integer i = 0; i < 10; i++) {
+            if (i * i <= 25) {
+                continue;
+            }
+            break;
+        }
+    }
 }

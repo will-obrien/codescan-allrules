@@ -2,7 +2,7 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>58.0</apiVersion>
     <description>Flow created to trigger rule: Avoid Large Flows</description>
-    <label>sfmeta_AvoidLargeFlows_Flow</label>
+    <label>Avoid Large Flows Violation</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -123,4 +123,16 @@
             <targetReference>HardCodedAssignment</targetReference>
         </connector>
     </start>
+    
+    <!-- Simulate many nodes -->
+    <interviewLabel>Node1</interviewLabel>
+    <interviewLabel>Node2</interviewLabel>
+    <interviewLabel>Node3</interviewLabel>
+    <interviewLabel>Node4</interviewLabel>
+    <interviewLabel>Node5</interviewLabel>
+    <interviewLabel>Node6</interviewLabel>
+    <interviewLabel>Node7</interviewLabel>
+    <interviewLabel>Node8</interviewLabel>
+    <interviewLabel>Node9</interviewLabel>
+    <interviewLabel>Node10</interviewLabel>
 </Flow>

@@ -4,4 +4,6 @@ public class VariableCouldBeTransientTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:VariableCouldBeTransient');
     }
+
+    List<Account> accounts; //Bad: the amount of data may exceed the view-state limit.
 }

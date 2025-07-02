@@ -4,4 +4,8 @@ public class AvoidSOQLInControllerGetterTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidSOQLInControllerGetter');
     }
+
+    public List<Account> getLines() {
+        return [SELECT Id FROM Account]; // BAD - SOQL in getter
+    }
 }

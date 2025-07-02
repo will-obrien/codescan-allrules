@@ -4,4 +4,8 @@ public class OldApiVersionTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:OldApiVersion');
     }
+
+    public void oldApiMethod() {
+        System.debug('This class should have an old API version in its meta.xml');
+    }
 }

@@ -4,4 +4,10 @@ public class EmptyStatementBlockTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:EmptyStatementBlock');
     }
+
+    private Integer _bar;
+    public void setBar(Integer bar) {
+        { _bar = bar; } //This is ok.
+        {} //Bad: This should be removed.
+    }
 }

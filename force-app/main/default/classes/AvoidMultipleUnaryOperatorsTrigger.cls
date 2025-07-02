@@ -4,4 +4,12 @@ public class AvoidMultipleUnaryOperatorsTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidMultipleUnaryOperators');
     }
+
+    public void badUnary() {
+        Integer i = - -1;
+        Integer j = + - +1;
+        Integer z = ~~2;
+        Boolean b = !!true;
+        Boolean c = !!!true;
+    }
 }

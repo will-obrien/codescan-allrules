@@ -4,4 +4,10 @@ public class InefficientEmptyStringCheckTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:InefficientEmptyStringCheck');
     }
+
+    public void bar(String string) {
+        if (string != null && string.trim().length() > 0) { //Bad: This is not recommended.
+            System.debug('Do something');
+        }
+    }
 }

@@ -19,9 +19,8 @@ public class HotspotTypeReflectionTrigger {
     
     public void init(String implementationName) {
         // Security hotspot: Dynamic type reflection with untrusted input
-        Type implementationType = Type.forName(implementationName); // Triggers hotspot
-        Implementation i = (Implementation) implementationType.newInstance();
-        i.run(); // Potentially dangerous dynamic execution
+        Implementation i = (Implementation)Type.forName(implementationName).newInstance();
+        i.run(); // Bad: This unchecked implementation could lead to unexpectedly running the AdminImplementation code.
     }
     
     public void dynamicTypeUsage() {

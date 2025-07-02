@@ -4,4 +4,15 @@ public class AvoidNestedSwitchStmtsTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidNestedSwitchStmts');
     }
+
+    public void bar(Integer x, Integer y) {
+        switch on x {
+            when 0 {}
+            when 1 {
+                switch on y { // Bad: Nested switch statements are confusing.
+                    when 0 {}
+                }
+            }
+        }
+    }
 }

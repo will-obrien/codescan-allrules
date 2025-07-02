@@ -4,4 +4,17 @@ public class SwitchStmtsShouldHaveDefaultTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:SwitchStmtsShouldHaveDefault');
     }
+
+    public void bar() {
+        Integer x = 2;
+        switch on x {
+            when 1 { 
+                Integer j = 6;
+            }
+            when 2 { 
+                Integer j = 8;
+            }
+            //Bad: Missing a default.
+        }
+    }
 }

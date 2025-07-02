@@ -4,4 +4,10 @@ public class EmptyWhileStmtTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:EmptyWhileStmt');
     }
+
+    void bar(Integer a, Integer b) {
+        while (a == b) {
+            //Bad: Nothing is done here.
+        }
+    }
 }

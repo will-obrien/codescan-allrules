@@ -4,4 +4,8 @@ public class ReturnEmptyArrayRatherThanNullTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:ReturnEmptyArrayRatherThanNull');
     }
+
+    public Integer[] badBehavior() { //Bad: Not recommended.
+        return null;
+    }
 }

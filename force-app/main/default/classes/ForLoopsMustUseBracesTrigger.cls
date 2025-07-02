@@ -4,4 +4,9 @@ public class ForLoopsMustUseBracesTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:ForLoopsMustUseBraces');
     }
+
+    public void foo() {
+        for (Integer i = 0; i < 42; i++)   //Bad: Not recommended.
+            System.debug(i);
+    }
 }

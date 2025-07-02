@@ -5,3 +5,8 @@ public class MultipleTriggersOnObjectTrigger {
         System.debug('This class triggers: sf:MultipleTriggersOnObject');
     }
 }
+
+trigger AccountTriggerInsert on Account (before insert) { //Bad: Multiple triggers on the same object should be avoided.
+}
+trigger AccountTriggerUpdate on Account (before update) {
+}

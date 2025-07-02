@@ -4,4 +4,6 @@ public class UnusedPrivateMethodTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:UnusedPrivateMethod');
     }
+
+    private void foo() {} //Bad: this method is unused.
 }

@@ -1,14 +1,10 @@
 public class CouplingBetweenObjectsTrigger {
-    private Account var1;
-    private Contact var2;
-    private Opportunity var3;
-    private Lead var4;
-    private Case var5;
-    
-    public Campaign doWork() {
-        User var6;
-        Profile var7;
-        Organization var8;
-        return new Campaign();
+    private Blah var1;
+    private Bar var2;
+    void ObjectC doWork() {
+        Bardo var55;
+        ObjectA var44;
+        ObjectZ var93;
+        return null;  //Bad: This is not recommended. Could indicate a high degree of coupling.
     }
 }

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>PermissionSetFilesAndContentPolicyTrigger</fullName>
-    <label>PermissionSetFilesAndContentPolicyTrigger</label>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Files and Content Policy Violation</label>
+    <description>Grants excessive files and content permissions</description>
     <userPermissions>
-        <enabled>true</enabled>
         <name>FilesConnectCloud</name>
+        <enabled>true</enabled>
     </userPermissions>
 </PermissionSet>

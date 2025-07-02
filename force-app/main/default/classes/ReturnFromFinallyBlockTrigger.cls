@@ -4,4 +4,15 @@ public class ReturnFromFinallyBlockTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:ReturnFromFinallyBlock');
     }
+
+    public String foo() {
+        try {
+            // doHeapsOfStuff();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            return 'A. O. K.'; //Bad: Return is not recommended here.
+        }
+        // unreachable
+    }
 }

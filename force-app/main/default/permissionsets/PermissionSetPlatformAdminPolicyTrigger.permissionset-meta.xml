@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Platform Admin Policy Violation</label>
+    <description>Grants excessive platform admin permissions</description>
+    <userPermissions>
+        <name>ManagePlatformEvents</name>
+        <enabled>true</enabled>
+    </userPermissions>
+    <userPermissions>
+        <name>ManageCustomPermissions</name>
+        <enabled>true</enabled>
+    </userPermissions>
+</PermissionSet> 

@@ -4,4 +4,10 @@ public class UnconditionalIfStatementTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:UnconditionalIfStatement');
     }
+
+    public void close() {
+        if (true) {    //Bad: There is no reason for a permanently true 'if' statement, this should be removed. 
+            // ...
+        }
+    }
 }

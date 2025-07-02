@@ -4,4 +4,12 @@ public class AvoidCatchingNPETrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidCatchingNPE');
     }
+
+    public void bar() {
+        try {
+            // do something
+        } catch (NullPointerException npe) { // Bad: this is not recommended.
+            System.debug('Caught NPE');
+        }
+    }
 }

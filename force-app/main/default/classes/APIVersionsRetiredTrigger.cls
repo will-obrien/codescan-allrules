@@ -140,4 +140,8 @@ public class APIVersionsRetiredTrigger {
         
         System.debug('Legacy versions: ' + LEGACY_API_VERSION + ', ' + OLD_SOAP_VERSION + ', ' + DEPRECATED_BULK_VERSION);
     }
+    
+    public void oldApiMethod() {
+        System.debug('This class should have an old API version in its meta.xml');
+    }
 }

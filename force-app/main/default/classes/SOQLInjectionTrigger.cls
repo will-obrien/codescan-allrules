@@ -4,4 +4,10 @@ public class SOQLInjectionTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:SOQLInjection');
     }
+
+    public void test1(String userInput) {
+        String field1 = userInput; // untrusted
+        String field2 = 'SELECT Id FROM Account WHERE ';
+        Database.query(field2 + field1); //Bad: getFilter function may return unescaped data (potentially from user input).
+    }
 }

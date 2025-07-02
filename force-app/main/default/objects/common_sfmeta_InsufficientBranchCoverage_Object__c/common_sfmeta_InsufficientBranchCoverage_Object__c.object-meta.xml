@@ -15,12 +15,12 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>common sfmeta InsufficientBranchCoverage Object  c</label>
+    <label>Insufficient Branch Coverage Object</label>
     <nameField>
         <label>Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>common sfmeta InsufficientBranchCoverage Object  cs</pluralLabel>
+    <pluralLabel>Insufficient Branch Coverage Objects</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
@@ -46,5 +46,14 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <length>255</length>
+    </fields>
+    
+    <fields>
+        <fullName>BranchCoverage__c</fullName>
+        <label>Branch Coverage</label>
+        <type>Percent</type>
+        <precision>3</precision>
+        <scale>2</scale>
+        <defaultValue>0</defaultValue>
     </fields>
 </CustomObject>

@@ -5,3 +5,6 @@ public class ClassNamedExceptionTrigger {
         System.debug('This class triggers: sf:ClassNamedException');
     }
 }
+
+public class MyException { //Bad: we would expect this class to be an exception
+}

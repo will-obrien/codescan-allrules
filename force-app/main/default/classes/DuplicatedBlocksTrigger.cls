@@ -4,4 +4,16 @@ public class DuplicatedBlocksTrigger {
     public void triggerRule() {
         System.debug('This class triggers: common-sf:DuplicatedBlocks');
     }
+
+    public void foo() {
+        System.debug('Hello world!');
+        System.debug('Hello world!');
+        System.debug('Hello world!');
+    }
+
+    public void bar() {
+        System.debug('Hello world!');
+        System.debug('Hello world!');
+        System.debug('Hello world!');
+    }
 }

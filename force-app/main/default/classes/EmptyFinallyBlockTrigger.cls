@@ -4,4 +4,12 @@ public class EmptyFinallyBlockTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:EmptyFinallyBlock');
     }
+
+    public void bar() {
+        try {
+            Integer x=2;
+        } finally {
+            //Bad: Nothing is done here.
+        }
+    }
 }

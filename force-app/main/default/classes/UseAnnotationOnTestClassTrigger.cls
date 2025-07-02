@@ -4,4 +4,7 @@ public class UseAnnotationOnTestClassTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:UseAnnotationOnTestClass');
     }
+
+    public static testmethod void testX(){}
+    public static testmethod void testY(){}
 }

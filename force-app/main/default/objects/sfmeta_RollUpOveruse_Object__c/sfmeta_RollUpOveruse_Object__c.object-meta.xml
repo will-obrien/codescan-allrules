@@ -15,12 +15,12 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>sfmeta RollUpOveruse Object  c</label>
+    <label>Roll Up Overuse Object</label>
     <nameField>
         <label>Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>sfmeta RollUpOveruse Object  cs</pluralLabel>
+    <pluralLabel>Roll Up Overuse Objects</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
@@ -46,5 +46,18 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <length>255</length>
+    </fields>
+    
+    <!-- Simulate 26 roll-up summary fields -->
+    <fields>
+        <fullName>Rollup1__c</fullName>
+        <label>Rollup 1</label>
+        <type>Summary</type>
+    </fields>
+    <!-- ...repeat up to Rollup26__c... -->
+    <fields>
+        <fullName>Rollup26__c</fullName>
+        <label>Rollup 26</label>
+        <type>Summary</type>
     </fields>
 </CustomObject>

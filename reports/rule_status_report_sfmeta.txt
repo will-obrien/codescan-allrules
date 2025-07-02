@@ -1,12 +1,12 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: sfmeta.csv
-Generated: 2025-06-23 11:08:12
+Generated: 2025-06-24 09:58:01
 
 Summary:
   Total rules in CSV: 98
-  Rules fired: 5
-  Rules NOT fired: 93
+  Rules fired: 7
+  Rules NOT fired: 91
 
 Rules NOT fired (need examples created):
 ----------------------------------------
@@ -62,7 +62,6 @@ Rules NOT fired (need examples created):
   - sfmeta:ExposedLightningMessageChannel
   - sfmeta:ExternalIdOveruse
   - sfmeta:FastFieldUpdates
-  - sfmeta:FaultPathsInFlow
   - sfmeta:FilterGetRecords
   - sfmeta:FlowDMLNaming
   - sfmeta:FlowDecisionLimit
@@ -94,7 +93,6 @@ Rules NOT fired (need examples created):
   - sfmeta:RelationShipOveruse
   - sfmeta:RemoveInactiveFlows
   - sfmeta:RollUpOveruse
-  - sfmeta:SecuritySettings
   - sfmeta:SystemBypassLogicFlow
   - sfmeta:SystemBypassLogicValidation
   - sfmeta:SystemBypassLogicWorkflow
@@ -108,6 +106,8 @@ Rules that are fired:
 -------------------------
   - sfmeta:AvoidAllRecordPermissions
   - sfmeta:DocumentFlows
+  - sfmeta:FaultPathsInFlow
   - sfmeta:RequireDescriptionComponent
   - sfmeta:RequireDescriptionField
+  - sfmeta:SecuritySettings
   - sfmeta:SharingRecordTypeId

@@ -4,4 +4,9 @@ public class exceptionTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:exception');
     }
+
+    // This class is intentionally malformed to cause a parser exception
+    public void foo() {
+        Integer x = ; // Syntax error: missing value
+    }
 }

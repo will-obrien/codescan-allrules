@@ -4,4 +4,6 @@ public class AvoidFieldNameMatchingTypeNameTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidFieldNameMatchingTypeName');
     }
+
+    Integer AvoidFieldNameMatchingTypeName; // Bad: there is probably a better name that can be used
 }

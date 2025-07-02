@@ -4,4 +4,7 @@ public class AvoidFieldNameMatchingMethodNameTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidFieldNameMatchingMethodName');
     }
+
+    Object bar;
+    void bar() {}
 }

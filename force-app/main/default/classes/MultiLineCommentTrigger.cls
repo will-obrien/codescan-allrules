@@ -1,4 +1,18 @@
 public class MultiLineCommentTrigger {
+    /*
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    */
+    public void foo() {}
+    
     // This class triggers the rule: sf:MultiLineComment by having empty multi-line comments
     
     /*

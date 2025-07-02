@@ -2,7 +2,7 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>58.0</apiVersion>
     <description>Flow created to trigger rule: Avoid Nested Loops In Flows</description>
-    <label>sfmeta_AvoidNestedFlowLoops_Flow</label>
+    <label>Avoid Nested Flow Loops Violation</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -11,6 +11,9 @@
     </processMetadataValues>
     <processType>Flow</processType>
     <status>Active</status>
+    <!-- Simulate nested loops -->
+    <interviewLabel>OuterLoop</interviewLabel>
+    <interviewLabel>InnerLoop</interviewLabel>
     
     <!-- Hard-coded values that trigger rules -->
     <assignments>

@@ -102,6 +102,12 @@ public class UseIsTrueInsteadOfAreEqualTrigger {
         System.assertEquals(recordExists, true);
     }
     
+    @IsTest
+    static void testMyCase() {
+        boolean myVar = true;
+        Assert.areEqual(true, myVar, 'myVar is true'); //Bad: this is not recommended.
+    }
+    
     private static Boolean performValidation() {
         return true;
     }

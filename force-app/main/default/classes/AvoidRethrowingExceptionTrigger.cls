@@ -4,4 +4,12 @@ public class AvoidRethrowingExceptionTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidRethrowingException');
     }
+
+    public void bar() {
+        try {
+            // do something
+        } catch (SomeException se) {
+            throw se; // Bad: this is not recommended.
+        }
+    }
 }

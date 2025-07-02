@@ -1,7 +1,7 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: vfandlightning.csv
-Generated: 2025-06-23 11:08:12
+Generated: 2025-06-24 09:58:01
 
 Summary:
   Total rules in CSV: 105

@@ -1,18 +1,16 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: csjs.csv
-Generated: 2025-06-23 11:08:12
+Generated: 2025-06-24 09:58:01
 
 Summary:
   Total rules in CSV: 53
-  Rules fired: 32
-  Rules NOT fired: 21
+  Rules fired: 35
+  Rules NOT fired: 18
 
 Rules NOT fired (need examples created):
 ----------------------------------------
-  - cs-js:dot-notation
   - cs-js:handle-callback-err
-  - cs-js:no-eq-null
   - cs-js:no-ex-assign
   - cs-js:no-extra-boolean-cast
   - cs-js:no-global-assign
@@ -24,7 +22,6 @@ Rules NOT fired (need examples created):
   - cs-js:no-octal-escape
   - cs-js:no-param-reassign
   - cs-js:no-proto
-  - cs-js:no-unreachable
   - cs-js:no-unused-expressions
   - cs-js:npm-audit
   - cs-js:secure-window
@@ -35,6 +32,7 @@ Rules NOT fired (need examples created):
 Rules that are fired:
 -------------------------
   - cs-js:aura-api
+  - cs-js:dot-notation
   - cs-js:ecma-intrinsics
   - cs-js:eqeqeq
   - cs-js:exception
@@ -46,6 +44,7 @@ Rules that are fired:
   - cs-js:no-div-regex
   - cs-js:no-else-return
   - cs-js:no-empty-character-class
+  - cs-js:no-eq-null
   - cs-js:no-extend-native
   - cs-js:no-extra-bind
   - cs-js:no-floating-decimal
@@ -64,5 +63,6 @@ Rules that are fired:
   - cs-js:no-throw-literal
   - cs-js:no-undef
   - cs-js:no-underscore-dangle
+  - cs-js:no-unreachable
   - cs-js:secure-document
   - cs-js:wrap-iife

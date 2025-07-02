@@ -4,4 +4,14 @@ public class AvoidInstanceofChecksInCatchClauseTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidInstanceofChecksInCatchClause');
     }
+
+    public void badCatch() {
+        try {
+            // do something
+        } catch (Exception ee) {
+            if (ee instanceof IOException) {
+                System.debug('Cleanup');
+            }
+        }
+    }
 }

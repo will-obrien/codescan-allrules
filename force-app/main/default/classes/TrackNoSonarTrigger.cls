@@ -4,4 +4,6 @@ public class TrackNoSonarTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:TrackNoSonar');
     }
+
+    integer unusedValue = 1; //NOSONAR
 }

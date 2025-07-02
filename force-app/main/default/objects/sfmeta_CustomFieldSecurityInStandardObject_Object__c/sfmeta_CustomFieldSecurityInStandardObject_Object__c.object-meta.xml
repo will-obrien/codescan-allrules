@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Custom Field Security In Standard Object</label>
+    <pluralLabel>Custom Field Security In Standard Objects</pluralLabel>
+    <nameField>
+        <type>Text</type>
+        <label>Name</label>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ReadWrite</sharingModel>
+    <fields>
+        <fullName>RequiredField__c</fullName>
+        <label>Required Field</label>
+        <type>Text</type>
+        <length>80</length>
+        <required>true</required>
+    </fields>
+</CustomObject> 

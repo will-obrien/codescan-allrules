@@ -21,4 +21,12 @@
         <enabled>true</enabled>
         <name>ManageInternalUsers</name>
     </userPermissions>
+    <userPermissions>
+        <name>ManagePlatformEvents</name>
+        <enabled>true</enabled>
+    </userPermissions>
+    <userPermissions>
+        <name>ManageCustomPermissions</name>
+        <enabled>true</enabled>
+    </userPermissions>
 </Profile>

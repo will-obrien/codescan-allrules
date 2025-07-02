@@ -4,4 +4,11 @@ public class OnlyOneReturnTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:OnlyOneReturn');
     }
+
+    public String foo(Integer x) {
+        if (x > 0) {
+            return 'hey';   
+        }
+        return 'hi'; //Bad: Method has two exit points.
+    }
 }

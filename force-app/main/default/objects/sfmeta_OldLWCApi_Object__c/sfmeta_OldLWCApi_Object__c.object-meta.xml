@@ -15,12 +15,12 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>sfmeta OldLWCApi Object  c</label>
+    <label>Old LWC API Object</label>
     <nameField>
         <label>Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>sfmeta OldLWCApi Object  cs</pluralLabel>
+    <pluralLabel>Old LWC API Objects</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
@@ -46,5 +46,13 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <length>255</length>
+    </fields>
+    
+    <fields>
+        <fullName>LwcApiVersion__c</fullName>
+        <label>LWC API Version</label>
+        <type>Text</type>
+        <length>10</length>
+        <defaultValue>'19.0'</defaultValue>
     </fields>
 </CustomObject>

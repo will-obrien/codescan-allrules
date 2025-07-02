@@ -4,4 +4,10 @@ public class EmptyIfStmtTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:EmptyIfStmt');
     }
+
+    public void bar(Integer x) {
+        if (x == 0) {
+            //Bad: Nothing is done here.
+        }
+    }
 }

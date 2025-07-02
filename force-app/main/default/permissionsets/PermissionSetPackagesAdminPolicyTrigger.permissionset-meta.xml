@@ -1,29 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>PermissionSetPackagesAdminPolicyTrigger</fullName>
-    <label>PermissionSetPackagesAdminPolicyTrigger</label>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Packages Admin Policy Violation</label>
+    <description>Grants excessive package admin permissions</description>
     <userPermissions>
+        <name>CreatePackaging</name>
         <enabled>true</enabled>
-        <name>CreateSecondGenPackages</name>
     </userPermissions>
     <userPermissions>
+        <name>DeletePackaging</name>
         <enabled>true</enabled>
-        <name>DeleteSecondGenPackages</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>true</enabled>
-        <name>ManagePackageLicenses</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>true</enabled>
-        <name>DownloadAppexchangePackages</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>true</enabled>
-        <name>CreateAppexchangePackages</name>
-    </userPermissions>
-    <userPermissions>
-        <enabled>true</enabled>
-        <name>UploadAppexchangePackages</name>
     </userPermissions>
 </PermissionSet>

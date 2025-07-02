@@ -15,15 +15,27 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>sfmeta ExcessivePageLayout Object  c</label>
+    <label>Excessive Page Layout Object</label>
     <nameField>
         <label>Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>sfmeta ExcessivePageLayout Object  cs</pluralLabel>
+    <pluralLabel>Excessive Page Layout Objects</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
+    <recordTypes>
+        <fullName>Layout1</fullName>
+        <label>Layout 1</label>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Layout2</fullName>
+        <label>Layout 2</label>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Layout3</fullName>
+        <label>Layout 3</label>
+    </recordTypes>
     
     <!-- Field without description to trigger rule -->
     <fields>

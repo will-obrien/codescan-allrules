@@ -2,7 +2,7 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>58.0</apiVersion>
     <description>Flow created to trigger rule: Set Flows to Auto Layout</description>
-    <label>sfmeta_AutoLayoutFlows_Flow</label>
+    <label>Auto Layout Flows Violation</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -11,6 +11,7 @@
     </processMetadataValues>
     <processType>Flow</processType>
     <status>Active</status>
+    <uiType>Freeform</uiType>
     
     <!-- Hard-coded values that trigger rules -->
     <assignments>

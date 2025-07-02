@@ -1,16 +1,15 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: sonarjs.csv
-Generated: 2025-06-23 11:08:12
+Generated: 2025-06-24 09:58:01
 
 Summary:
   Total rules in CSV: 269
-  Rules fired: 56
-  Rules NOT fired: 213
+  Rules fired: 76
+  Rules NOT fired: 193
 
 Rules NOT fired (need examples created):
 ----------------------------------------
-  - javascript:S103
   - javascript:S104
   - javascript:S1066
   - javascript:S1067
@@ -19,17 +18,9 @@ Rules NOT fired (need examples created):
   - javascript:S1105
   - javascript:S1110
   - javascript:S1116
-  - javascript:S1119
-  - javascript:S1125
-  - javascript:S1126
-  - javascript:S1128
-  - javascript:S1143
-  - javascript:S1154
   - javascript:S121
-  - javascript:S1219
   - javascript:S1226
   - javascript:S124
-  - javascript:S126
   - javascript:S1264
   - javascript:S128
   - javascript:S1301
@@ -37,9 +28,7 @@ Rules NOT fired (need examples created):
   - javascript:S1313
   - javascript:S1314
   - javascript:S1321
-  - javascript:S135
   - javascript:S138
-  - javascript:S1439
   - javascript:S1442
   - javascript:S1472
   - javascript:S1479
@@ -58,7 +47,6 @@ Rules NOT fired (need examples created):
   - javascript:S1541
   - javascript:S1656
   - javascript:S1751
-  - javascript:S1763
   - javascript:S1788
   - javascript:S1821
   - javascript:S1848
@@ -70,9 +58,7 @@ Rules NOT fired (need examples created):
   - javascript:S2077
   - javascript:S2092
   - javascript:S2123
-  - javascript:S2138
   - javascript:S2189
-  - javascript:S2201
   - javascript:S2208
   - javascript:S2234
   - javascript:S2245
@@ -84,12 +70,10 @@ Rules NOT fired (need examples created):
   - javascript:S2392
   - javascript:S2427
   - javascript:S2428
-  - javascript:S2589
   - javascript:S2598
   - javascript:S2612
   - javascript:S2681
   - javascript:S2685
-  - javascript:S2688
   - javascript:S2692
   - javascript:S2699
   - javascript:S2737
@@ -134,7 +118,6 @@ Rules NOT fired (need examples created):
   - javascript:S3801
   - javascript:S3834
   - javascript:S3854
-  - javascript:S3863
   - javascript:S3923
   - javascript:S3972
   - javascript:S3973
@@ -143,7 +126,6 @@ Rules NOT fired (need examples created):
   - javascript:S4030
   - javascript:S4043
   - javascript:S4123
-  - javascript:S4138
   - javascript:S4139
   - javascript:S4143
   - javascript:S4144
@@ -218,34 +200,43 @@ Rules NOT fired (need examples created):
   - javascript:S6351
   - javascript:S6353
   - javascript:S878
-  - javascript:S881
   - javascript:S888
   - javascript:S905
-  - javascript:S909
   - javascript:S930
 
 Rules that are fired:
 -------------------------
   - javascript:S100
   - javascript:S101
+  - javascript:S103
   - javascript:S105
   - javascript:S106
   - javascript:S109
   - javascript:S1117
+  - javascript:S1119
   - javascript:S1121
+  - javascript:S1125
+  - javascript:S1126
+  - javascript:S1128
   - javascript:S113
   - javascript:S1131
   - javascript:S1134
   - javascript:S1135
+  - javascript:S1143
+  - javascript:S1154
   - javascript:S117
   - javascript:S1172
   - javascript:S1186
   - javascript:S1192
+  - javascript:S1219
   - javascript:S122
   - javascript:S125
+  - javascript:S126
   - javascript:S134
+  - javascript:S135
   - javascript:S139
   - javascript:S1438
+  - javascript:S1439
   - javascript:S1440
   - javascript:S1441
   - javascript:S1451
@@ -254,14 +245,19 @@ Rules that are fired:
   - javascript:S1528
   - javascript:S1533
   - javascript:S1539
+  - javascript:S1763
   - javascript:S1764
   - javascript:S1774
   - javascript:S1854
   - javascript:S1994
   - javascript:S2137
+  - javascript:S2138
+  - javascript:S2201
   - javascript:S2260
   - javascript:S2424
   - javascript:S2432
+  - javascript:S2589
+  - javascript:S2688
   - javascript:S2703
   - javascript:S3353
   - javascript:S3403
@@ -278,7 +274,11 @@ Rules that are fired:
   - javascript:S3786
   - javascript:S3812
   - javascript:S3827
+  - javascript:S3863
+  - javascript:S4138
   - javascript:S4140
   - javascript:S6324
   - javascript:S6325
   - javascript:S6326
+  - javascript:S881
+  - javascript:S909

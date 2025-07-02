@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Reports And Dashboards Admin Policy Violation</label>
+    <description>Grants excessive reports and dashboards admin permissions</description>
+    <userPermissions>
+        <name>ManageReportsInPublicFolders</name>
+        <enabled>true</enabled>
+    </userPermissions>
+    <userPermissions>
+        <name>ManageDashboardsInPublicFolders</name>
+        <enabled>true</enabled>
+    </userPermissions>
+</PermissionSet> 

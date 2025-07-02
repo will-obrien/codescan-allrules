@@ -1,5 +1,2 @@
-public class LongClassNameTriggerWithAnExcessivelyLongNameThatExceedsRecommendedLimits {
-    public void someMethod() {
-        System.debug('Long class name triggers rule');
-    }
+public class AnExcessivelyLongApexClassNameAsNegativeExample {  //Bad: this is not recommended.
 }

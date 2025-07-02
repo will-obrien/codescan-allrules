@@ -15,12 +15,12 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>common sfmeta SkippedUnitTests Object  c</label>
+    <label>Skipped Unit Tests Object</label>
     <nameField>
         <label>Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>common sfmeta SkippedUnitTests Object  cs</pluralLabel>
+    <pluralLabel>Skipped Unit Tests Objects</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
@@ -46,5 +46,13 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <length>255</length>
+    </fields>
+    
+    <fields>
+        <fullName>TestStatus__c</fullName>
+        <label>Test Status</label>
+        <type>Text</type>
+        <length>20</length>
+        <defaultValue>Skipped</defaultValue>
     </fields>
 </CustomObject>

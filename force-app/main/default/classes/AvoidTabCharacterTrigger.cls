@@ -4,4 +4,8 @@ public class AvoidTabCharacterTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidTabCharacter');
     }
+
+    public void foo() {
+        System.debug('This method uses tab characters for indentation');
+    }
 }

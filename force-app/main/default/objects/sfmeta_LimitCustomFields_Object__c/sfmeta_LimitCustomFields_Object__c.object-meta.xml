@@ -15,12 +15,12 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>sfmeta LimitCustomFields Object  c</label>
+    <label>Limit Custom Fields Object</label>
     <nameField>
         <label>Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>sfmeta LimitCustomFields Object  cs</pluralLabel>
+    <pluralLabel>Limit Custom Fields Objects</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
@@ -46,5 +46,42 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <length>255</length>
+    </fields>
+    
+    <fields>
+        <fullName>Field1__c</fullName>
+        <label>Field 1</label>
+        <type>Text</type>
+        <length>80</length>
+    </fields>
+    <fields>
+        <fullName>Field2__c</fullName>
+        <label>Field 2</label>
+        <type>Text</type>
+        <length>80</length>
+    </fields>
+    <fields>
+        <fullName>Field3__c</fullName>
+        <label>Field 3</label>
+        <type>Text</type>
+        <length>80</length>
+    </fields>
+    <fields>
+        <fullName>Field4__c</fullName>
+        <label>Field 4</label>
+        <type>Text</type>
+        <length>80</length>
+    </fields>
+    <fields>
+        <fullName>Field5__c</fullName>
+        <label>Field 5</label>
+        <type>Text</type>
+        <length>80</length>
+    </fields>
+    <fields>
+        <fullName>Field6__c</fullName>
+        <label>Field 6</label>
+        <type>Text</type>
+        <length>80</length>
     </fields>
 </CustomObject>

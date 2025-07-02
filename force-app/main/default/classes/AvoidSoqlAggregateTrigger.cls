@@ -4,4 +4,9 @@ public class AvoidSoqlAggregateTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:AvoidSoqlAggregate');
     }
+
+    public void badAggregate() {
+        AggregateResult[] results = [SELECT Max(LastModifiedDate) FROM Account]; // Bad: This query can cause a governor limit error if there are too many Accounts.
+        System.debug(results);
+    }
 }

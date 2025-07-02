@@ -175,4 +175,9 @@ public class AvoidHttpRefererTrigger {
         
         System.debug('Legacy integration with referer header');
     }
+
+    public static void foo() {
+        String referer = ApexPages.currentPage().getHeaders().get('Referer'); // Bad: Do not rely on Referer headers.
+        System.debug(referer);
+    }
 }

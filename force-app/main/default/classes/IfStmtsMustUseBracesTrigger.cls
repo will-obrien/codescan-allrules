@@ -4,4 +4,9 @@ public class IfStmtsMustUseBracesTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:IfStmtsMustUseBraces');
     }
+
+    public void foo(boolean bar) {
+        if (bar)
+            System.debug('bar is true');
+    }
 }

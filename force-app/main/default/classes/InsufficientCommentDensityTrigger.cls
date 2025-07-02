@@ -4,4 +4,12 @@ public class InsufficientCommentDensityTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:InsufficientCommentDensity');
     }
+
+    public void doSomething() {
+        Integer x = 1;
+        Integer y = 2;
+        Integer z = x + y;
+        System.debug(z);
+    }
+    // Not enough comments in this class
 }

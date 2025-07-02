@@ -153,4 +153,10 @@ public class NcinoAvoidDescribeMapInLoopsTrigger {
             }
         }
     }
+    
+    public void badDescribeLoop() {
+        for (SObject s : [SELECT Id FROM Account]) {
+            Map<String, Schema.SObjectField> fields = s.getSObjectType().getDescribe().fields.getMap(); // Bad: getDescribe/getMap in loop
+        }
+    }
 }

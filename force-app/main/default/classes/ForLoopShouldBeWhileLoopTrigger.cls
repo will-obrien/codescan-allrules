@@ -4,4 +4,8 @@ public class ForLoopShouldBeWhileLoopTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:ForLoopShouldBeWhileLoop');
     }
+
+    public void bar() {
+        for (;true;) ; //Bad: The for loop contains no Initialiser or Update.
+    }
 }

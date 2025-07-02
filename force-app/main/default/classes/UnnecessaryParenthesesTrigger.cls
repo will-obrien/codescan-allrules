@@ -4,4 +4,8 @@ public class UnnecessaryParenthesesTrigger {
     public void triggerRule() {
         System.debug('This class triggers: sf:UnnecessaryParentheses');
     }
+
+    boolean bar() {
+        return (true);
+    }
 }

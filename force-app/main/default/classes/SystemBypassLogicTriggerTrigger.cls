@@ -67,3 +67,8 @@ public class SystemBypassLogicTriggerTrigger {
         return bypassTrigger || systemBypass;
     }
 }
+
+trigger SystemBypassLogicTriggerTrigger on Account (before insert) {
+    // No system bypass logic check here
+    System.debug('Trigger logic runs without bypass check');
+}
