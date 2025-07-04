@@ -11,4 +11,17 @@ export default class s138Trigger extends LightningElement {
         var example = "This triggers rule javascript:S138";
         return example;
     }
+
+    // Antipattern for S138: Functions should not have too many lines of code
+    connectedCallback() {
+        // BAD: Function with too many lines
+        function bigFunction() {
+            let sum = 0;
+            for (let i = 0; i < 100; i++) {
+                sum += i;
+            }
+            // ... imagine many more lines here ...
+            return sum;
+        }
+    }
 }

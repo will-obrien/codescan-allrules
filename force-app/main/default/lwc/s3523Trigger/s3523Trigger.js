@@ -11,4 +11,11 @@ export default class s3523Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3523";
         return example;
     }
+
+    // Antipattern for S3523: Function constructors should not be used
+    badFunctionConstructor(data) {
+        // BAD: Function constructor used to parse data
+        var obj = new Function('return ' + data)();
+        return obj;
+    }
 }

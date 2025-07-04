@@ -11,4 +11,12 @@ export default class s3800Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3800";
         return example;
     }
+
+    // Antipattern for S3800: Functions should always return the same type
+    badReturnType(a) {
+        if (a === 1) {
+            return true;
+        }
+        return 3; // BAD: returns different type
+    }
 }

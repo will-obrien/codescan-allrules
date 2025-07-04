@@ -11,4 +11,29 @@ export default class s1479Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1479";
         return example;
     }
+
+    // Antipattern for S1479: "switch" statements should not have too many "case" clauses
+    connectedCallback() {
+        let value = 0;
+        switch (value) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+                this.doSomething();
+                break;
+            default:
+                this.doSomethingElse();
+                break;
+        }
+    }
+
+    doSomething() {}
+    doSomethingElse() {}
 }

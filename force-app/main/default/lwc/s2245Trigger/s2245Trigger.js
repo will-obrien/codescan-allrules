@@ -11,4 +11,10 @@ export default class s2245Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2245";
         return example;
     }
+
+    // Antipattern for S2245: Using pseudorandom number generators (PRNGs) is security-sensitive
+    connectedCallback() {
+        // BAD: Use of Math.random for security-sensitive value
+        const val = Math.random();
+    }
 }

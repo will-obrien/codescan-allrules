@@ -12,3 +12,6 @@ export default class s1848Trigger extends LightningElement {
         return example;
     }
 }
+
+// Antipattern for S1848: Objects should not be created to be dropped immediately without being used
+class MyConstructor {}

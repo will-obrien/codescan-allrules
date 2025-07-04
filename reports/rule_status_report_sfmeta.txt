@@ -1,7 +1,7 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: sfmeta.csv
-Generated: 2025-06-24 09:58:01
+Generated: 2025-07-04 11:29:09
 
 Summary:
   Total rules in CSV: 98

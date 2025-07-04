@@ -11,4 +11,14 @@ export default class s4030Trigger extends LightningElement {
         var example = "This triggers rule javascript:S4030";
         return example;
     }
+
+    // Antipattern for S4030: Collection and array contents should be used
+    badUnusedCollection() {
+        const strings = [];
+        strings.push('a');
+        strings.push('b');
+        strings.push('c');
+        // BAD: collection is populated but never used
+        return 'done';
+    }
 }

@@ -11,4 +11,10 @@ export default class s2427Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2427";
         return example;
     }
+
+    // Antipattern for S2427: The base should be provided to "parseInt"
+    badParseIntBase() {
+        var value = parseInt("010");  // BAD: base not provided, may yield unexpected results
+        return value;
+    }
 }

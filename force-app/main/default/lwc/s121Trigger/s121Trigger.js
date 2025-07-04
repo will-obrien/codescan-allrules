@@ -11,4 +11,16 @@ export default class s121Trigger extends LightningElement {
         var example = "This triggers rule javascript:S121";
         return example;
     }
+
+    // Antipattern for S121: Control structures should use curly braces
+    connectedCallback() {
+        // BAD: No curly braces
+        let condition = true;
+        if (condition)
+            this.doSomething();
+    }
+
+    doSomething() {
+        // ...
+    }
 }

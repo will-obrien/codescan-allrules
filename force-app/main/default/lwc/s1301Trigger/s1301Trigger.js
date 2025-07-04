@@ -12,3 +12,22 @@ export default class s1301Trigger extends LightningElement {
         return example;
     }
 }
+
+// Antipattern for S1301: "switch" statements should have at least 3 "case" clauses
+import { LightningElement } from 'lwc';
+
+export default class s1301Trigger extends LightningElement {
+    connectedCallback() {
+        let variable = 0;
+        switch (variable) {
+            case 0:
+                this.doSomething();
+                break;
+            default:
+                this.doSomethingElse();
+                break;
+        }
+    }
+    doSomething() {}
+    doSomethingElse() {}
+}

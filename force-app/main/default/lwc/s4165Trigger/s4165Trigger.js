@@ -11,4 +11,13 @@ export default class s4165Trigger extends LightningElement {
         var example = "This triggers rule javascript:S4165";
         return example;
     }
+
+    // Antipattern for S4165: Assignments should not be redundant
+    badRedundantAssignment() {
+        let a = 1;
+        let b = a;
+        let c = b;
+        b = c; // BAD: redundant assignment
+        return b;
+    }
 }

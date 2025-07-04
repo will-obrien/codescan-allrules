@@ -11,4 +11,9 @@ export default class s3782Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3782";
         return example;
     }
+
+    // Antipattern for S3782: Arguments to built-in functions should match documented types
+    connectedCallback() {
+        const isTooSmall = Math.abs('not a number'); // BAD: argument type mismatch
+    }
 }

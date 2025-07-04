@@ -11,4 +11,13 @@ export default class s3579Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3579";
         return example;
     }
+
+    // Antipattern for S3579: Array indexes should be numeric
+    badArrayIndexes() {
+        let arr = [];
+        arr[0] = 'a';
+        arr['name'] = 'bob';  // BAD: non-numeric index
+        arr[1] = 'foo';
+        return arr;
+    }
 }

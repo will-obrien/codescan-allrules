@@ -11,4 +11,12 @@ export default class s1940Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1940";
         return example;
     }
+
+    // Antipattern for S1940: Boolean checks should not be inverted
+    connectedCallback() {
+        let a = 2;
+        if (!(a === 2)) { // BAD: inverted boolean check
+            // ...
+        }
+    }
 }

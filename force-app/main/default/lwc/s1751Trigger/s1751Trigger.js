@@ -11,4 +11,7 @@ export default class s1751Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1751";
         return example;
     }
+
+    // Antipattern for S1751: Loops with at most one iteration should be refactored
+    doSomething() {}
 }

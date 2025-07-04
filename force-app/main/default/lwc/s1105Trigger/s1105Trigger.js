@@ -11,4 +11,18 @@ export default class s1105Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1105";
         return example;
     }
+
+    // Antipattern for S1105: An open curly brace should be located at the end of a line
+    badCurlyBraceStyle() {
+        // Noncompliant: curly brace on new line
+        let result = 0;
+        if (result === 0)
+        {
+            result = 1;
+        }
+        else {
+            result = 2;
+        }
+        return result;
+    }
 }

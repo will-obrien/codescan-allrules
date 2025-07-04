@@ -11,4 +11,11 @@ export default class s2819Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2819";
         return example;
     }
+
+    // Antipattern for S2819: Origins should be verified during cross-origin communications
+    badCrossOriginMessage() {
+        window.addEventListener('message', function(event) { // BAD: no origin check
+            console.log(event.data);
+        });
+    }
 }

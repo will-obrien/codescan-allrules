@@ -11,4 +11,12 @@ export default class s1537Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1537";
         return example;
     }
+
+    // Antipattern for S1537: Trailing commas should not be used
+    connectedCallback() {
+        let settings = {
+            foo: 'oof',
+            bar: 'rab', // BAD: trailing comma
+        };
+    }
 }

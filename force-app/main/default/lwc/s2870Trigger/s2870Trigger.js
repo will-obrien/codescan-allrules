@@ -11,4 +11,11 @@ export default class s2870Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2870";
         return example;
     }
+
+    // Antipattern for S2870: "delete" should not be used on arrays
+    badDeleteOnArray() {
+        var myArray = ['a', 'b', 'c', 'd'];
+        delete myArray[2];  // BAD: leaves a hole in the array
+        return myArray;
+    }
 }

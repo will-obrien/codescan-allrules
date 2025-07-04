@@ -11,4 +11,13 @@ export default class s5856Trigger extends LightningElement {
         var example = "This triggers rule javascript:S5856";
         return example;
     }
+
+    // Antipattern for S5856: Regular expressions should be syntactically valid
+    badRegexSyntax() {
+        try {
+            new RegExp('(['); // BAD: invalid regex
+        } catch (e) {
+            return 'Regex error';
+        }
+    }
 }

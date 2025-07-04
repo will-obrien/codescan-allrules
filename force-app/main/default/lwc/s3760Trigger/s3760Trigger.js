@@ -2,11 +2,11 @@
 import { LightningElement } from 'lwc';
 
 export default class s3760Trigger extends LightningElement {
-    badArithmetic() {
+    connectedCallback() {
         let str = "80";
-        let quarter = str / 4; // Triggers S3760 - string used in arithmetic
+        let quarter = str / 4; // Antipattern: string used in arithmetic
         
-        if (str < 10) { // Triggers S3760 - string comparison
+        if (str < 10) { // Antipattern: string used in comparison
             console.log('Less than 10');
         }
     }

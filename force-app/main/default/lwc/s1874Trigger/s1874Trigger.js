@@ -11,4 +11,10 @@ export default class s1874Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1874";
         return example;
     }
+
+    // Antipattern for S1874: Deprecated APIs should not be used
+    connectedCallback() {
+        // BAD: Use of deprecated API
+        getLanguageService().getSyntacticClassifications('file', {});
+    }
 }

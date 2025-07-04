@@ -11,4 +11,10 @@ export default class s2068Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2068";
         return example;
     }
+
+    // Antipattern for S2068: Hard-coded credentials are security-sensitive
+    connectedCallback() {
+        // BAD: Hard-coded password
+        let password = 'mypassword';
+    }
 }

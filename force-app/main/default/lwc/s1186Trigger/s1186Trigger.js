@@ -8,4 +8,11 @@ export default class s1186Trigger extends LightningElement {
     
     anotherEmptyFunction() {
     }
+
+    connectedCallback() {
+        function foo() {
+        }
+        // BAD: Empty function
+        const bar = () => {};
+    }
 }

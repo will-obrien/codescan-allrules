@@ -11,4 +11,13 @@ export default class s1321Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1321";
         return example;
     }
+
+    // Antipattern for S1321: "with" statements should not be used
+    connectedCallback() {
+        let foo = { y: 1 };
+        // BAD: Use of with statement (not allowed in strict mode, but shown for antipattern)
+        // with (foo) {
+        //     y = 4;
+        // }
+    }
 }

@@ -14,4 +14,12 @@ export default class s3403Trigger extends LightningElement {
             console.log('Never executes');
         }
     }
+
+    connectedCallback() {
+        let a = 8;
+        let b = "8";
+        if (a === b) {  // Antipattern: always false
+            // ...
+        }
+    }
 }

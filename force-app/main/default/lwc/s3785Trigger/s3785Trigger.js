@@ -11,4 +11,11 @@ export default class s3785Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3785";
         return example;
     }
+
+    // Antipattern for S3785: "in" should not be used with primitive types
+    connectedCallback() {
+        var x = "Foo";
+        "length" in x; // BAD: TypeError
+        0 in x;        // BAD: TypeError
+    }
 }

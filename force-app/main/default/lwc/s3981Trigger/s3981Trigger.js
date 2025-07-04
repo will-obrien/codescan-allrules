@@ -11,4 +11,11 @@ export default class s3981Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3981";
         return example;
     }
+
+    // Antipattern for S3981: Collection sizes and array length comparisons should make sense
+    badLengthComparison() {
+        let someArray = [1, 2, 3];
+        let result = someArray.length >= 0; // BAD: always true
+        return result;
+    }
 }

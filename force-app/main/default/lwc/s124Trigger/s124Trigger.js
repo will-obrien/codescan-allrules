@@ -12,3 +12,11 @@ export default class s124Trigger extends LightningElement {
         return example;
     }
 }
+
+// Antipattern for S124: Track comments matching a regular expression (e.g., REVIEW)
+export default class s124Trigger extends LightningElement {
+    connectedCallback() {
+        // REVIEW: This needs to be checked for edge cases
+        let x = 42;
+    }
+}

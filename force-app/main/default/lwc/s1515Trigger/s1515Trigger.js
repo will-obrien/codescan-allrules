@@ -11,4 +11,14 @@ export default class s1515Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1515";
         return example;
     }
+
+    // Antipattern for S1515: Functions should not be defined inside loops
+    connectedCallback() {
+        let funs = [];
+        for (let i = 0; i < 4; i++) {
+            funs[i] = function() { // BAD: function defined inside loop
+                return i;
+            };
+        }
+    }
 }

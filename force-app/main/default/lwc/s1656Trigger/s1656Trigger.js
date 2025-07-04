@@ -11,4 +11,11 @@ export default class s1656Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1656";
         return example;
     }
+
+    // Antipattern for S1656: Variables should not be self-assigned
+    connectedCallback() {
+        function setName(name) {
+            name = name; // BAD: self-assignment
+        }
+    }
 }

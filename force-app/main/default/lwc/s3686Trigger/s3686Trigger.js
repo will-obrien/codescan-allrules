@@ -2,12 +2,17 @@
 import { LightningElement } from 'lwc';
 
 export default class s3686Trigger extends LightningElement {
-    confusingConstructor() {
+    connectedCallback() {
         function getNum() {
             return 5;
         }
-        
+        function Num(numeric, alphabetic) {
+            this.numeric = numeric;
+            this.alphabetic = alphabetic;
+        }
         var myFirstNum = getNum();
-        var my2ndNum = new getNum(); // Triggers S3686 - inconsistent usage
+        var my2ndNum = new getNum();  // BAD: called with new
+        var myNumObj1 = new Num();
+        var myNumObj2 = Num();  // BAD: called without new
     }
 }

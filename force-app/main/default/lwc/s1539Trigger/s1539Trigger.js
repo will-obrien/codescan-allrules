@@ -7,4 +7,10 @@ export default class s1539Trigger extends LightningElement {
         var a = 10;
         return a;
     }
+
+    connectedCallback() {
+        function strict() {
+            'use strict'; // BAD: strict mode may cause issues in some browsers
+        }
+    }
 }

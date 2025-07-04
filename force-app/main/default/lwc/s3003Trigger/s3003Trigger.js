@@ -11,4 +11,14 @@ export default class s3003Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3003";
         return example;
     }
+
+    // Antipattern for S3003: Comparison operators should not be used with strings
+    badStringComparison() {
+        var appleNumber = '123';
+        var orangeNumber = '45';
+        if (appleNumber < orangeNumber) {  // BAD: string comparison
+            return 'There are more oranges';
+        }
+        return 'Comparison done';
+    }
 }

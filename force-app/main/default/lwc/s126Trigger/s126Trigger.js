@@ -12,3 +12,20 @@ export default class s126Trigger extends LightningElement {
         return example;
     }
 }
+
+// Antipattern for S126: "if ... else if" constructs should end with "else" clauses
+import { LightningElement } from 'lwc';
+
+export default class s126Trigger extends LightningElement {
+    connectedCallback() {
+        let x = 1;
+        if (x === 0) {
+            this.doSomething();
+        } else if (x === 1) {
+            this.doSomethingElse();
+        }
+        // BAD: No final else
+    }
+    doSomething() {}
+    doSomethingElse() {}
+}

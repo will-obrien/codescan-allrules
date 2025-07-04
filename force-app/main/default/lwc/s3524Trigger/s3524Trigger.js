@@ -10,5 +10,9 @@ export default class s3524Trigger extends LightningElement {
         // Example code that might trigger the rule
         var example = "This triggers rule javascript:S3524";
         return example;
+
+        // Antipattern for S3524: Braces and parentheses should be used consistently with arrow functions
+        var foo = (a) => { /* ... */ };  // Should remove parens from arg
+        var bar = (a, b) => { return 0; };  // Should remove curly braces from body
     }
 }

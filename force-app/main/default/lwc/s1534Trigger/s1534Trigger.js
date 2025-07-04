@@ -11,4 +11,12 @@ export default class s1534Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1534";
         return example;
     }
+
+    // Antipattern for S1534: Property names should not be duplicated within a class or object literal
+    connectedCallback() {
+        let data = {
+            key: 'value',
+            key: 'value2', // BAD: duplicate property name
+        };
+    }
 }

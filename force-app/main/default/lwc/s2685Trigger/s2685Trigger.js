@@ -11,4 +11,17 @@ export default class s2685Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2685";
         return example;
     }
+
+    // Antipattern for S2685: "arguments.caller" and "arguments.callee" should not be used
+    badArgumentsCallerCallee() {
+        function whoCalled() {
+            if (arguments.caller == null)
+                console.log('I was called from the global scope.');
+            else
+                console.log(arguments.caller + ' called me!');
+            console.log(whoCalled.caller);
+            console.log(whoCalled.arguments);
+        }
+        whoCalled();
+    }
 }

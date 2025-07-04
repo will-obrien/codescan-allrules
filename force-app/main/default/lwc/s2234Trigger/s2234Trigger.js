@@ -11,4 +11,14 @@ export default class s2234Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2234";
         return example;
     }
+
+    // Antipattern for S2234: Parameters should be passed in the correct order
+    connectedCallback() {
+        function divide(divisor, dividend) {
+            return divisor/dividend;
+        }
+        var divisor = 15;
+        var dividend = 5;
+        var result = divide(dividend, divisor); // BAD: swapped order
+    }
 }

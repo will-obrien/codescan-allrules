@@ -1,12 +1,12 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: apex.csv
-Generated: 2025-06-24 09:58:01
+Generated: 2025-07-04 11:29:09
 
 Summary:
   Total rules in CSV: 267
-  Rules fired: 110
-  Rules NOT fired: 157
+  Rules fired: 205
+  Rules NOT fired: 62
 
 Rules NOT fired (need examples created):
 ----------------------------------------
@@ -17,93 +17,30 @@ Rules NOT fired (need examples created):
   - common-sf:InsufficientLineCoverage
   - common-sf:SkippedUnitTests
   - sf:APIVersionsRetired
-  - sf:AbstractNaming
   - sf:AddEmptyString
-  - sf:ArrayIsStoredDirectly
-  - sf:AssignmentInOperand
-  - sf:AssignmentToNonFinalStatic
   - sf:AvoidAbsoluteURL
-  - sf:AvoidBranchingStatementAsLastInLoop
-  - sf:AvoidCatchingNPE
-  - sf:AvoidCatchingThrowable
-  - sf:AvoidConstantsInterface
-  - sf:AvoidDeeplyNestedIfStmts
-  - sf:AvoidFieldNameMatchingMethodName
   - sf:AvoidFieldNameMatchingTypeName
-  - sf:AvoidFinalLocalVariable
-  - sf:AvoidHardCodedCredential
   - sf:AvoidHttpReferer
   - sf:AvoidInsecureMessageDigests
-  - sf:AvoidInstanceofChecksInCatchClause
-  - sf:AvoidLosingExceptionInformation
-  - sf:AvoidMultipleUnaryOperators
-  - sf:AvoidNestedSwitchStmts
-  - sf:AvoidPrefixingMethodParameters
-  - sf:AvoidProtectedFieldInFinalClass
-  - sf:AvoidReassigningParameters
-  - sf:AvoidRethrowingException
   - sf:AvoidReversedOperators
   - sf:AvoidSOQLInControllerGetter
-  - sf:AvoidSalesforceSystemClassNames
-  - sf:AvoidSoqlAggregate
-  - sf:AvoidSoqlWithNullInWhere
   - sf:AvoidTabCharacter
-  - sf:AvoidThrowingNewInstanceOfSameException
-  - sf:AvoidUsingBatchApexInTrigger
-  - sf:AvoidUsingHardCodedIP
-  - sf:AvoidUsingHardCodedId
-  - sf:AvoidUsingSeeAllData
-  - sf:BooleanGetMethodName
-  - sf:CallSuperInConstructor
-  - sf:CallSuperTwiceInConstructor
-  - sf:CatchBlockShouldDoMoreThanRethrow
-  - sf:ClassNamedException
-  - sf:ClassWithoutTestCases
-  - sf:CommentContent
-  - sf:CommentedOutCode
   - sf:CommentedTodo
-  - sf:ConstructorCallsOverridableMethod
   - sf:ControllerNaming
   - sf:CouplingBetweenObjects
-  - sf:DoNotThrowExceptionInFinally
-  - sf:EmptyFinallyBlock
-  - sf:EmptyIfStmt
-  - sf:EmptyInitializer
-  - sf:EmptyMethodInAbstractClassShouldBeAbstract
-  - sf:EmptyStatementBlock
-  - sf:EmptyStatementNotInLoop
-  - sf:EmptyStaticInitializer
-  - sf:EmptyTryBlock
-  - sf:EmptyWhileStmt
-  - sf:EqualsNull
   - sf:ExceptionAsFlowControl
   - sf:ExcessiveClassLength
   - sf:ExcessiveMethodLength
   - sf:ExcessiveParameterList
   - sf:ExcessivePublicCount
   - sf:FailedUnitTest
-  - sf:FinalFieldCouldBeStatic
-  - sf:ForLoopShouldBeWhileLoop
-  - sf:ForLoopsMustUseBraces
-  - sf:FutureMethodInLoop
   - sf:HotspotCookies
   - sf:HotspotDeserializeJson
   - sf:HotspotEncrypt
   - sf:HotspotTypeReflection
   - sf:HotspotUserInfoGetSessionIdUsage
-  - sf:IdempotentOperations
-  - sf:IfElseStmtsMustUseBraces
-  - sf:IfStmtsMustUseBraces
-  - sf:InefficientEmptyStringCheck
-  - sf:JumbledIncrementer
-  - sf:LeftBracesSpacingPositions
   - sf:LogicInversion
-  - sf:MethodNamingConventions
   - sf:MethodReturnsInternalArray
-  - sf:MethodWithSameNameAsEnclosingClass
-  - sf:MisleadingVariableName
-  - sf:MisplacedNullCheck
-  - sf:MissingStaticMethodInNonInstantiatableClass
   - sf:MisuseOfAssertClass
   - sf:MultipleTriggersOnObject
   - sf:NPathComplexity
@@ -111,128 +48,154 @@ Rules NOT fired (need examples created):
   - sf:NcssConstructorCount
   - sf:NcssMethodCount
   - sf:NcssTypeCount
-  - sf:NonStaticInitializer
   - sf:NonUnitTestContainsAsserts
-  - sf:NullAssignment
   - sf:OldApiVersion
-  - sf:OneDeclarationPerLine
-  - sf:OpenRedirect
   - sf:PossibleIncrementerBug
-  - sf:PreserveStackTrace
-  - sf:ReturnEmptyArrayRatherThanNull
-  - sf:ReturnFromFinallyBlock
   - sf:RightBracesLinePositions
   - sf:RightBracesSpacingPositions
-  - sf:SOQLInjection
   - sf:ShortMethodName
   - sf:SimpleRedirectAction
   - sf:SimplifyConditional
   - sf:SingleMethodSingleton
-  - sf:SingularField
-  - sf:StatementsShouldBeOnSeparateLines
-  - sf:StringInstantiation
   - sf:StringToString
-  - sf:SuspiciousConstantFieldName
   - sf:SwitchDensity
   - sf:SwitchStmtsShouldHaveDefault
   - sf:SystemBypassLogicTrigger
-  - sf:TestClassWithoutTestCases
-  - sf:ThrowFromFinallyBlock
   - sf:TooManyFields
   - sf:URDataflowAnomalyAnalysis
-  - sf:UncommentedEmptyConstructor
-  - sf:UnconditionalIfStatement
   - sf:UnescapedOutput
-  - sf:UnescapedSource
   - sf:UnitTestContainsTooManyAsserts
-  - sf:UnitTestsShouldIncludeAssert
-  - sf:UnnecessaryCaseChange
-  - sf:UnnecessaryConversionTemporary
-  - sf:UnnecessaryFinalModifier
-  - sf:UnnecessaryParentheses
   - sf:UnnecessaryReturn
-  - sf:UnnecessaryWrapperObjectCreation
-  - sf:UnreachableCode
-  - sf:UnusedModifier
-  - sf:UnusedNullCheckInEquals
   - sf:UseAnnotationOnTestClass
   - sf:UseAreEqualInsteadOfAssertBoolean
   - sf:UseAreEqualInsteadOfIsTrue
   - sf:UseIsTrueInsteadOfAreEqual
-  - sf:UseObjectForClearerAPI
-  - sf:UselessOperationOnImmutable
-  - sf:UselessParentheses
   - sf:VariableCouldBeTransient
-  - sf:VariableNamingConventions
-  - sf:WhileLoopsMustUseBraces
   - sf:XPathRule
-  - sf:exception
 
 Rules that are fired:
 -------------------------
   - sf:AbstractClassWithoutAbstractMethod
   - sf:AbstractClassWithoutAnyMethod
+  - sf:AbstractNaming
+  - sf:ArrayIsStoredDirectly
   - sf:AssertEqualsOrder
+  - sf:AssignmentInOperand
+  - sf:AssignmentToNonFinalStatic
   - sf:AtLeastOneConstructor
   - sf:AuraControllerNaming
   - sf:AuraEnabledWithoutCatchBlock
+  - sf:AvoidBranchingStatementAsLastInLoop
   - sf:AvoidCatchingGenericException
+  - sf:AvoidCatchingNPE
+  - sf:AvoidCatchingThrowable
+  - sf:AvoidConstantsInterface
   - sf:AvoidDMLInUnitTests
+  - sf:AvoidDeeplyNestedIfStmts
   - sf:AvoidDuplicateLiterals
   - sf:AvoidEmailInLoops
+  - sf:AvoidFieldNameMatchingMethodName
+  - sf:AvoidFinalLocalVariable
   - sf:AvoidForLoopToJustAddElementsToCollection
   - sf:AvoidGetSetMethods
   - sf:AvoidGlobalModifier
+  - sf:AvoidHardCodedCredential
   - sf:AvoidHardCodedError
   - sf:AvoidInsecureCookies
+  - sf:AvoidInstanceofChecksInCatchClause
   - sf:AvoidInstantiatingObjectsInLoops
   - sf:AvoidLiteralsInIfCondition
   - sf:AvoidLogicInTrigger
+  - sf:AvoidLosingExceptionInformation
   - sf:AvoidMethodsBeforeInitializers
+  - sf:AvoidMultipleUnaryOperators
+  - sf:AvoidNestedSwitchStmts
   - sf:AvoidNotFinalPublicStaticFields
   - sf:AvoidOutboundCallsInBatchApex
+  - sf:AvoidPrefixingMethodParameters
+  - sf:AvoidProtectedFieldInFinalClass
   - sf:AvoidPublicFields
+  - sf:AvoidReassigningParameters
+  - sf:AvoidRethrowingException
+  - sf:AvoidSalesforceSystemClassNames
   - sf:AvoidSizeOfSoql
+  - sf:AvoidSoqlAggregate
   - sf:AvoidSoqlInLoops
   - sf:AvoidSoqlWithNegativeLogic
+  - sf:AvoidSoqlWithNullInWhere
   - sf:AvoidSoqlWithoutLimits
+  - sf:AvoidThrowingNewInstanceOfSameException
+  - sf:AvoidUsingBatchApexInTrigger
+  - sf:AvoidUsingHardCodedIP
+  - sf:AvoidUsingHardCodedId
+  - sf:AvoidUsingSeeAllData
   - sf:AvoidUsingTestIsRunningTest
   - sf:BadCrypto
+  - sf:BooleanGetMethodName
   - sf:BrokenMathCast
   - sf:BrokenNullCheck
+  - sf:CallSuperInConstructor
+  - sf:CallSuperTwiceInConstructor
+  - sf:CatchBlockShouldDoMoreThanRethrow
   - sf:ClassExplicitSharing
+  - sf:ClassNamedException
   - sf:ClassNamingConventions
+  - sf:ClassWithoutTestCases
   - sf:ClassWithoutTestClass
   - sf:CognitiveComplexity
   - sf:CollapsibleIfStatements
+  - sf:CommentContent
   - sf:CommentHardcodedValues
   - sf:CommentRequired
   - sf:CommentSize
+  - sf:CommentedOutCode
   - sf:ConfusingTernary
+  - sf:ConstructorCallsOverridableMethod
   - sf:Csrf
   - sf:CyclomaticComplexity
   - sf:DMLWithoutSharingEnabled
   - sf:DUDataflowAnomalyAnalysis
   - sf:DirectAccessToTriggerArray
   - sf:DivisionByZeroPossible
+  - sf:DoNotThrowExceptionInFinally
   - sf:EmailAddressInLiteral
   - sf:EmptyCatchBlock
+  - sf:EmptyFinallyBlock
+  - sf:EmptyIfStmt
+  - sf:EmptyInitializer
+  - sf:EmptyMethodInAbstractClassShouldBeAbstract
+  - sf:EmptyStatementBlock
+  - sf:EmptyStatementNotInLoop
+  - sf:EmptyStaticInitializer
   - sf:EmptySwitchLabel
   - sf:EmptySwitchStatements
+  - sf:EmptyTryBlock
+  - sf:EmptyWhileStmt
+  - sf:EqualsNull
   - sf:ExceptionClassNaming
   - sf:FieldDeclarationsShouldBeAtStartOfClass
   - sf:FieldLevelSecurity
+  - sf:FinalFieldCouldBeStatic
   - sf:FixDuplicateConditions
   - sf:FixDuplicateMethods
+  - sf:ForLoopShouldBeWhileLoop
+  - sf:ForLoopsMustUseBraces
+  - sf:FutureMethodInLoop
   - sf:GodClass
   - sf:IdempotentBinaryOperators
+  - sf:IdempotentOperations
   - sf:IfElseDefaultCase
+  - sf:IfElseStmtsMustUseBraces
+  - sf:IfStmtsMustUseBraces
   - sf:ImmutableField
+  - sf:InefficientEmptyStringCheck
   - sf:InsecureEndpoint
   - sf:InsufficientCommentDensity
   - sf:IsBlankForNullChecks
+  - sf:JumbledIncrementer
   - sf:LawOfDemeter
   - sf:LeftBracesLinePositions
+  - sf:LeftBracesSpacingPositions
   - sf:LocalVariableCouldBeFinal
   - sf:LongClassName
   - sf:LongLines
@@ -241,35 +204,66 @@ Rules that are fired:
   - sf:LongVariable
   - sf:MaximumNumberOfCase
   - sf:MethodCouldBeStatic
+  - sf:MethodNamingConventions
+  - sf:MethodWithSameNameAsEnclosingClass
+  - sf:MisleadingVariableName
+  - sf:MisplacedNullCheck
+  - sf:MissingStaticMethodInNonInstantiatableClass
   - sf:MultiLineComment
   - sf:NcinoAvoidDescribeMapInLoops
+  - sf:NonStaticInitializer
+  - sf:NullAssignment
   - sf:NullCoalescingOperator
+  - sf:OneDeclarationPerLine
   - sf:OnlyOneReturn
+  - sf:OpenRedirect
   - sf:OptimizeParallelUnitTests
   - sf:OutboundEmailSend
   - sf:OuterClassExplicitSharing
   - sf:PositionLiteralsFirstInComparisons
+  - sf:PreserveStackTrace
   - sf:RefactorAssert
+  - sf:ReturnEmptyArrayRatherThanNull
+  - sf:ReturnFromFinallyBlock
+  - sf:SOQLInjection
   - sf:ShortClassName
   - sf:ShortVariable
   - sf:SimplifiedTernary
   - sf:SimplifyBooleanReturns
+  - sf:SingularField
+  - sf:StatementsShouldBeOnSeparateLines
   - sf:StaticCanNotBeUsedInInnerClass
+  - sf:StringInstantiation
+  - sf:SuspiciousConstantFieldName
   - sf:SystemDebug
   - sf:SystemRunAs
   - sf:TestClassNaming
+  - sf:TestClassWithoutTestCases
+  - sf:ThrowFromFinallyBlock
   - sf:TooFewBranchesForASwitchStatement
   - sf:TooManyMethods
   - sf:TrackNoSonar
   - sf:TrackSuppressWarnings
+  - sf:UncommentedEmptyConstructor
   - sf:UncommentedEmptyMethod
+  - sf:UnconditionalIfStatement
+  - sf:UnescapedSource
   - sf:UnitAssertionsShouldIncludeMessage
+  - sf:UnitTestsShouldIncludeAssert
   - sf:UnitTestsShouldIncludeStartTest
   - sf:UnnecessaryBooleanAssertion
+  - sf:UnnecessaryCaseChange
   - sf:UnnecessaryConstructor
+  - sf:UnnecessaryConversionTemporary
+  - sf:UnnecessaryFinalModifier
   - sf:UnnecessaryLocalBeforeReturn
+  - sf:UnnecessaryParentheses
+  - sf:UnnecessaryWrapperObjectCreation
+  - sf:UnreachableCode
   - sf:UnusedFormalParameter
   - sf:UnusedLocalVariable
+  - sf:UnusedModifier
+  - sf:UnusedNullCheckInEquals
   - sf:UnusedPrivateField
   - sf:UnusedPrivateMethod
   - sf:UseAssertEqualsInsteadOfAssert
@@ -277,6 +271,12 @@ Rules that are fired:
   - sf:UseAssertInsteadOfAssertEquals
   - sf:UseCollectionIsEmpty
   - sf:UseLocaleWithCaseConversions
+  - sf:UseObjectForClearerAPI
   - sf:UseSingleton
+  - sf:UselessOperationOnImmutable
+  - sf:UselessParentheses
   - sf:UselessStringValueOf
   - sf:VariableDeclarationHidesAnother
+  - sf:VariableNamingConventions
+  - sf:WhileLoopsMustUseBraces
+  - sf:exception

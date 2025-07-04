@@ -11,4 +11,10 @@ export default class s5842Trigger extends LightningElement {
         var example = "This triggers rule javascript:S5842";
         return example;
     }
+
+    // Antipattern for S5842: Repeated patterns in regular expressions should not match the empty string
+    badEmptyStringPattern() {
+        let pattern = /(?:)*/; // BAD: matches empty string repeatedly
+        return pattern;
+    }
 }

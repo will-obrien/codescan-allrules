@@ -11,4 +11,11 @@ export default class s3402Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3402";
         return example;
     }
+
+    // Antipattern for S3402: Strings and non-strings should not be added
+    badStringAddition() {
+        let x = 5 + 8; // okay
+        let z = '8';
+        return x + z; // BAD: yields string '138'
+    }
 }

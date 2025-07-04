@@ -12,3 +12,19 @@ export default class s1526Trigger extends LightningElement {
         return example;
     }
 }
+
+// Antipattern for S1526: Variables declared with "var" should be declared before they are used
+import { LightningElement } from 'lwc';
+
+export default class s1526Trigger extends LightningElement {
+    connectedCallback() {
+        var x = 1;
+        function fun() {
+            alert(x); // BAD: x is declared later in the same scope
+            if (true) {
+                var x = 42; // Declaration in function scope (not block scope!) shadows global variable
+            }
+        }
+        fun();
+    }
+}

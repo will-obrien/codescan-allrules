@@ -11,4 +11,15 @@ export default class s3498Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3498";
         return example;
     }
+
+    // Antipattern for S3498: Object literal shorthand syntax should be used
+    connectedCallback() {
+        let a = 1;
+        let myObj = {
+            a: a,  // BAD: should use shorthand
+            fun: function () {  // BAD: should use shorthand
+                // ...
+            }
+        };
+    }
 }

@@ -11,4 +11,12 @@ export default class s3001Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3001";
         return example;
     }
+
+    // Antipattern for S3001: "delete" should be used only with object properties
+    badDeleteUsage() {
+        var x  = 1;
+        // delete x; // BAD: deleting a variable (not allowed in strict mode)
+        function foo() {}
+        // delete foo; // BAD: deleting a function (not allowed in strict mode)
+    }
 }

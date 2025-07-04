@@ -11,4 +11,13 @@ export default class s3723Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3723";
         return example;
     }
+
+    // Antipattern for S3723: Trailing commas should be used
+    badTrailingComma() {
+        var joe = {
+            fname: "Joe",
+            lname: "Smith"      // BAD: missing trailing comma
+        };
+        return joe;
+    }
 }

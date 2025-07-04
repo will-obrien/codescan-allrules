@@ -11,4 +11,17 @@ export default class s3499Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3499";
         return example;
     }
+
+    // Antipattern for S3499: Shorthand object properties should be grouped at the beginning or end
+    badShorthandGrouping() {
+        let foo = 1, color = 'red', judyGarland = true;
+        let obj1 = {
+            foo,
+            a: 1,
+            color,  // BAD: not grouped
+            b: 2,
+            judyGarland  // BAD: not grouped
+        };
+        return obj1;
+    }
 }

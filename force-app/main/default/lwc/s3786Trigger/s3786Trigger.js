@@ -3,8 +3,8 @@ import { LightningElement } from 'lwc';
 
 export default class s3786Trigger extends LightningElement {
     connectedCallback() {
-        var date = new Date();
-        console.log("Today is ${date}"); // Triggers S3786 - should use backticks
+        // BAD: Template literal placeholder in regular string
+        console.log("Today is ${date}");
         var name = "John";
         console.log("Hello ${name}!"); // Triggers S3786
     }

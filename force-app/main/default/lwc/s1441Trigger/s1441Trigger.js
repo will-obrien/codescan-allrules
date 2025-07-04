@@ -7,4 +7,8 @@ export default class s1441Trigger extends LightningElement {
         var double = "double quotes"; // Triggers S1441 - inconsistent quotes
         var mixed = 'another' + "mixed"; // Triggers S1441
     }
+
+    connectedCallback() {
+        var firstParameter = "something"; // BAD: inconsistent quotes
+    }
 }

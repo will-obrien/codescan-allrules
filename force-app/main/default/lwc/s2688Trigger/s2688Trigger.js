@@ -11,4 +11,15 @@ export default class s2688Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2688";
         return example;
     }
+
+    // Antipattern for S2688: "NaN" should not be used in comparisons
+    connectedCallback() {
+        var a = NaN;
+        if (a === NaN) {  // BAD: always false
+            // ...
+        }
+        if (a !== NaN) { // BAD: always true
+            // ...
+        }
+    }
 }

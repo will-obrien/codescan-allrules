@@ -11,4 +11,15 @@ export default class s4619Trigger extends LightningElement {
         var example = "This triggers rule javascript:S4619";
         return example;
     }
+
+    // Antipattern for S4619: 'in' should not be used on arrays
+    badInOnArray() {
+        let arr = ['a', 'b', 'c'];
+        let expectedValue = 'b';
+        if (expectedValue in arr) { // BAD: always false
+            return expectedValue + ' found in the array';
+        } else {
+            return expectedValue + ' not found';
+        }
+    }
 }

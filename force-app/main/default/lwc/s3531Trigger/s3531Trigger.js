@@ -11,4 +11,12 @@ export default class s3531Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3531";
         return example;
     }
+
+    // Antipattern for S3531: Generators should "yield" something
+    connectedCallback() {
+        function* myGen(a, b) {  // BAD: generator without yield
+            let answer = 0;
+            answer += a * b;
+        }
+    }
 }

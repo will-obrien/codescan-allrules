@@ -11,4 +11,10 @@ export default class s6035Trigger extends LightningElement {
         var example = "This triggers rule javascript:S6035";
         return example;
     }
+
+    // Antipattern for S6035: Single-character alternations in regular expressions should be replaced with character classes
+    badRegexAlternation() {
+        let pattern = /a|b|c/; // BAD: should use /[abc]/
+        return pattern;
+    }
 }

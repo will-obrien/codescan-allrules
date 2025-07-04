@@ -11,4 +11,11 @@ export default class s2424Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2424";
         return example;
     }
+
+    // Antipattern for S2424: Built-in objects should not be overridden
+    badOverrideBuiltIn() {
+        Object = function() { return 'bad'; }; // BAD: Overriding built-in Object
+        Array = 42; // BAD: Overriding built-in Array
+        return Object();
+    }
 }

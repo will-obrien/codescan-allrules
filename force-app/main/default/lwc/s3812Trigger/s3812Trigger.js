@@ -14,4 +14,15 @@ export default class s3812Trigger extends LightningElement {
             console.log('Never executes');
         }
     }
+
+    connectedCallback() {
+        let myObj = {};
+        if (!"prop" in myObj) {  // BAD: "in" operator is checking property "false"
+            // ...
+        }
+        let foo = {};
+        if (!foo instanceof Object) {  // BAD: "!foo" returns a boolean, not an object
+            // ...
+        }
+    }
 }

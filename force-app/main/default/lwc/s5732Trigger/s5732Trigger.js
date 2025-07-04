@@ -11,4 +11,17 @@ export default class s5732Trigger extends LightningElement {
         var example = "This triggers rule javascript:S5732";
         return example;
     }
+
+    // Antipattern for S5732: Disabling content security policy frame-ancestors directive is security-sensitive
+    badCspFrameAncestors() {
+        const helmetConfig = {
+            contentSecurityPolicy: {
+                directives: {
+                    // BAD: frameAncestors is set to 'none' (should be a trusted domain)
+                    frameAncestors: ["'none'"]
+                }
+            }
+        };
+        return helmetConfig;
+    }
 }

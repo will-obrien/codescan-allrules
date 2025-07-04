@@ -12,3 +12,13 @@ export default class s2260Trigger extends LightningElement {
         return example;
     }
 }
+
+// Antipattern for S2260: JavaScript parser failure
+export default class s2260Trigger extends LightningElement {
+    connectedCallback() {
+        // BAD: Syntax error (simulated)
+        // function () { // missing function name
+        //     // ...
+        // }
+    }
+}

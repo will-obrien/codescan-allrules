@@ -12,3 +12,21 @@ export default class s131Trigger extends LightningElement {
         return example;
     }
 }
+
+// Antipattern for S131: "switch" statements should have "default" clauses
+export default class s131Trigger extends LightningElement {
+    connectedCallback() {
+        let param = 0;
+        switch (param) {
+            case 0:
+                this.doSomething();
+                break;
+            case 1:
+                this.doSomethingElse();
+                break;
+            // BAD: No default clause
+        }
+    }
+    doSomething() {}
+    doSomethingElse() {}
+}

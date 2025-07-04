@@ -11,4 +11,10 @@ export default class s3834Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3834";
         return example;
     }
+
+    // Antipattern for S3834: "Symbol" should not be used as a constructor
+    badSymbolConstructor() {
+        const sym = new Symbol('foo'); // BAD: Symbol used as a constructor
+        return sym;
+    }
 }

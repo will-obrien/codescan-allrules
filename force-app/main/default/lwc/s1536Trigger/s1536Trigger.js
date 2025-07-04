@@ -11,4 +11,10 @@ export default class s1536Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1536";
         return example;
     }
+
+    // Antipattern for S1536: Function argument names should be unique
+    connectedCallback() {
+        function compute(a, a, c) { // BAD: duplicate argument name
+        }
+    }
 }

@@ -11,4 +11,8 @@ export default class s1264Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1264";
         return example;
     }
+
+    // Antipattern for S1264: A "while" loop should be used instead of a "for" loop
+    someCondition() { return false; }
+    doSomething() {}
 }

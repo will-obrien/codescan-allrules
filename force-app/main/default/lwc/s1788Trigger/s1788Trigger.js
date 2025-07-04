@@ -11,4 +11,13 @@ export default class s1788Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1788";
         return example;
     }
+
+    // Antipattern for S1788: Function parameters with default values should be last
+    connectedCallback() {
+        // BAD: Default parameter not last
+        function multiply(a = 1, b) {
+            return a * b;
+        }
+        let x = multiply(42); // returns NaN as b is undefined
+    }
 }

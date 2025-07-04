@@ -11,4 +11,12 @@ export default class s1529Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1529";
         return example;
     }
+
+    // Antipattern for S1529: Bitwise operators should not be used in boolean contexts
+    connectedCallback() {
+        let a = 1, b = 2;
+        if (a & b) { // BAD: & used in boolean context
+            // ...
+        }
+    }
 }

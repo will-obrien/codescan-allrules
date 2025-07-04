@@ -11,4 +11,18 @@ export default class s1862Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1862";
         return example;
     }
+
+    // Antipattern for S1862: Related "if/else if" statements should not have the same condition
+    connectedCallback() {
+        let param = 1;
+        if (param == 1)
+            this.openWindow();
+        else if (param == 2)
+            this.closeWindow();
+        else if (param == 1) // BAD: duplicate condition
+            this.moveWindowToTheBackground();
+    }
+    openWindow() {}
+    closeWindow() {}
+    moveWindowToTheBackground() {}
 }

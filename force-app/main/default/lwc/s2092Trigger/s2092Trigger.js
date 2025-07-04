@@ -11,4 +11,6 @@ export default class s2092Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2092";
         return example;
     }
+
+    // Antipattern for S2092: Creating cookies without the "secure" flag is security-sensitive
 }

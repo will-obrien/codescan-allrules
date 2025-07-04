@@ -1,5 +1,7 @@
 // This component is generated to trigger the SonarJS rule: javascript:S2208
 import { LightningElement } from 'lwc';
+// BAD: Wildcard import
+import * as Imported from 'aModule';
 
 export default class s2208Trigger extends LightningElement {
     // Rule: Wildcard imports should not be used

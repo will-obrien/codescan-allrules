@@ -2,27 +2,16 @@
 import { LightningElement } from 'lwc';
 
 export default class s1541Trigger extends LightningElement {
-    complexFunction(a, b, c, d, e) { // Triggers S1541 - high complexity
-        if (a > 0) {
-            if (b > 0) {
-                if (c > 0) {
-                    if (d > 0) {
-                        if (e > 0) {
-                            return 'all positive';
-                        } else {
-                            return 'e negative';
-                        }
-                    } else {
-                        return 'd negative';
+    connectedCallback() {
+        function complexFunction(a, b, c) {
+            if (a) {
+                if (b) {
+                    if (c) {
+                        return 1;
                     }
-                } else {
-                    return 'c negative';
                 }
-            } else {
-                return 'b negative';
             }
-        } else {
-            return 'a negative';
+            return 0;
         }
     }
 }

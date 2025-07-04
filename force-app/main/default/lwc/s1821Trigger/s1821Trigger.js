@@ -11,4 +11,20 @@ export default class s1821Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1821";
         return example;
     }
+
+    // Antipattern for S1821: "switch" statements should not be nested
+    connectedCallback() {
+        function foo(n, m) {
+            switch (n) {
+                case 0:
+                    switch (m) { // BAD: nested switch
+                        // ...
+                    }
+                case 1:
+                    // ...
+                default:
+                    // ...
+            }
+        }
+    }
 }

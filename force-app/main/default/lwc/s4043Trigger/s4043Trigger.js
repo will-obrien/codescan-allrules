@@ -11,4 +11,13 @@ export default class s4043Trigger extends LightningElement {
         var example = "This triggers rule javascript:S4043";
         return example;
     }
+
+    // Antipattern for S4043: Array-mutating methods should not be used misleadingly
+    badArrayMutation() {
+        let a = [1, 2, 3];
+        let b = a.reverse(); // BAD: mutates 'a' and assigns to 'b'
+        let c = [4, 5, 6];
+        let d = c.sort(); // BAD: mutates 'c' and assigns to 'd'
+        return { b, d };
+    }
 }

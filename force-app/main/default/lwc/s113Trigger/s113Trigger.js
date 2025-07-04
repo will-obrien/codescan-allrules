@@ -12,3 +12,13 @@ export default class s113Trigger extends LightningElement {
         return example;
     }
 }
+
+// Antipattern for S113: Files should contain an empty newline at the end
+export default class s113Trigger extends LightningElement {
+    connectedCallback() {
+        // BAD: No newline at end of file
+        // class Test {
+        // }
+        // \ No newline at end of file
+    }
+}

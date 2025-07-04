@@ -18,6 +18,7 @@ export default class s1126Trigger extends LightningElement {
         this.validateUserData();
         this.processBusinessLogic();
         this.handleComplexConditions();
+        this.useAntipattern();
     }
     
     // Example 1: Basic redundant if-then-else returning boolean literals - triggers S1126
@@ -241,6 +242,17 @@ export default class s1126Trigger extends LightningElement {
             return true;    // BAD: Should return the condition directly
         } else {
             return false;
+        }
+    }
+    
+    // Antipattern for S1126: Return of boolean expressions should not be wrapped into an "if-then-else" statement
+    useAntipattern() {
+        function check(expression) {
+            if (expression) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

@@ -11,4 +11,14 @@ export default class s2589Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2589";
         return example;
     }
+
+    // Antipattern for S2589: Boolean expressions should not be gratuitous
+    badGratuitousBoolean(a) {
+        if (a) {
+            if (a) { // BAD: redundant check
+                return true;
+            }
+        }
+        return false;
+    }
 }

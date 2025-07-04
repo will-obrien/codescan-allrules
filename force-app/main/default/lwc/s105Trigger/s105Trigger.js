@@ -8,4 +8,9 @@ export default class s105Trigger extends LightningElement {
 			console.log('Using tabs');	// Triggers S105
 		}
     }
+
+    connectedCallback() {
+        // BAD: Tab character used
+        let str = 'Hello\tWorld';
+    }
 }

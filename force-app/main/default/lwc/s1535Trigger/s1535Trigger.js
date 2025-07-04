@@ -11,4 +11,14 @@ export default class s1535Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1535";
         return example;
     }
+
+    // Antipattern for S1535: "for...in" loops should filter properties before acting on them
+    connectedCallback() {
+        let object = { a: 1, b: 2 };
+        for (let name in object) {
+            this.doSomething(name); // BAD: no hasOwnProperty check
+        }
+    }
+
+    doSomething(name) {}
 }

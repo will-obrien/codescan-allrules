@@ -11,4 +11,12 @@ export default class s1226Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1226";
         return example;
     }
+
+    // Antipattern for S1226: Function parameters, caught exceptions and foreach variables' initial values should not be ignored
+    badParameterAssignment(name, strings) {
+        name = 'foo'; // BAD: assignment to parameter
+        for (var str of strings) {
+            str = ''; // BAD: assignment to foreach variable
+        }
+    }
 }

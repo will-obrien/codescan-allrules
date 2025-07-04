@@ -11,4 +11,12 @@ export default class s1442Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1442";
         return example;
     }
+
+    // Antipattern for S1442: "alert(...)" should not be used
+    connectedCallback() {
+        let unexpectedCondition = true;
+        if (unexpectedCondition) {
+            alert('Unexpected Condition'); // BAD: alert used
+        }
+    }
 }

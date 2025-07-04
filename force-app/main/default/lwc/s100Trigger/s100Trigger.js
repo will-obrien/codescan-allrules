@@ -9,4 +9,8 @@ export default class s100Trigger extends LightningElement {
     Another_Bad_Name() { // Triggers S100 - underscores not allowed
         console.log('Another bad name');
     }
+
+    connectedCallback() {
+        function DoSomething() { /* ... */ } // BAD: name does not match convention
+    }
 }

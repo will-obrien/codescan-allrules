@@ -11,4 +11,11 @@ export default class s2138Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2138";
         return example;
     }
+
+    // Antipattern for S2138: "undefined" should not be assigned
+    badUndefinedAssignment() {
+        let myObject = {};
+        myObject.fname = undefined; // BAD: assigning undefined
+        return myObject;
+    }
 }

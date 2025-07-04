@@ -9,4 +9,12 @@ export default class s1994Trigger extends LightningElement {
             i++; // Counter incremented outside increment clause
         }
     }
+
+    connectedCallback() {
+        // BAD: Counter incremented outside the increment clause
+        for (let i = 0; i < 10; j++) {
+            // ...
+            i++;
+        }
+    }
 }

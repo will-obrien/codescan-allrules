@@ -11,4 +11,14 @@ export default class s1066Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1066";
         return example;
     }
+
+    // Antipattern for S1066: Collapsible "if" statements should be merged
+    connectedCallback() {
+        let x = 1, y = 2;
+        if (x != undefined) {
+            if (y === 2) {
+                // BAD: collapsible if statements
+            }
+        }
+    }
 }

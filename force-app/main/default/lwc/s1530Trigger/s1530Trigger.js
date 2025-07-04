@@ -12,3 +12,13 @@ export default class s1530Trigger extends LightningElement {
         return example;
     }
 }
+
+// Antipattern for S1530: Function declarations should not be made within blocks
+export default class s1530Trigger extends LightningElement {
+    connectedCallback() {
+        let x = true;
+        if (x) {
+            function foo() {} // BAD: function declaration inside block
+        }
+    }
+}

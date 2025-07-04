@@ -11,4 +11,13 @@ export default class s3799Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3799";
         return example;
     }
+
+    // Antipattern for S3799: Destructuring patterns should not be empty
+    badEmptyDestructuring(myObj) {
+        var {a: {}, b} = myObj; // BAD: empty destructuring pattern
+        function foo({first: [], second}) { // BAD: empty array destructuring
+            // ...
+        }
+        return b;
+    }
 }

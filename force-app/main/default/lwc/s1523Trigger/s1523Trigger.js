@@ -11,4 +11,10 @@ export default class s1523Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1523";
         return example;
     }
+
+    // Antipattern for S1523: Function constructors should not be used
+    connectedCallback() {
+        // BAD: Use of Function constructor
+        var obj = new Function('return ' + 'data')();
+    }
 }

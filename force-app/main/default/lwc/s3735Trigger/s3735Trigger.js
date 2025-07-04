@@ -11,4 +11,10 @@ export default class s3735Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3735";
         return example;
     }
+
+    // Antipattern for S3735: "void" should not be used
+    badVoidUsage() {
+        void doSomething(); // BAD: void operator used unnecessarily
+    }
+    doSomething() {}
 }

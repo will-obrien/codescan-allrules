@@ -11,4 +11,7 @@ export default class s3923Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3923";
         return example;
     }
+
+    // Antipattern for S3923: All branches in a conditional structure should not have exactly the same implementation
+    doOneMoreThing() {}
 }

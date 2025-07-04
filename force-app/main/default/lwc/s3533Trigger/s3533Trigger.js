@@ -12,3 +12,13 @@ export default class s3533Trigger extends LightningElement {
         return example;
     }
 }
+
+// Antipattern for S3533: "import" should be used to include external code
+export default class s3533Trigger extends LightningElement {
+    connectedCallback() {
+        // BAD: old module management
+        // exports.area = function (r) { return PI * r * r; };
+        // define(["./cart", "./horse"], function(cart, horse) { });
+        // const circle = require('./circle.js');
+    }
+}

@@ -11,4 +11,12 @@ export default class s4624Trigger extends LightningElement {
         var example = "This triggers rule javascript:S4624";
         return example;
     }
+
+    // Antipattern for S4624: Template literals should not be nested
+    badNestedTemplateLiterals() {
+        let color = "red";
+        let count = 3;
+        let message = `I have ${color ? `${count} ${color}` : count} apples`; // BAD: nested template literals
+        return message;
+    }
 }

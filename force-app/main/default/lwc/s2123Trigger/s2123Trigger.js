@@ -11,4 +11,13 @@ export default class s2123Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2123";
         return example;
     }
+
+    // Antipattern for S2123: Values should not be uselessly incremented
+    connectedCallback() {
+        function pickNumber() {
+            let i = 0;
+            i = i++; // BAD: i is still zero
+            return i++; // BAD: 0 returned
+        }
+    }
 }

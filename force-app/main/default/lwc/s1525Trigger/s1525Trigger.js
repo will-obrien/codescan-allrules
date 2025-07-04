@@ -12,3 +12,16 @@ export default class s1525Trigger extends LightningElement {
         return example;
     }
 }
+
+// Antipattern for S1525: Debugger statements should not be used
+import { LightningElement } from 'lwc';
+
+export default class s1525Trigger extends LightningElement {
+    connectedCallback() {
+        for (let i = 1; i < 5; i++) {
+            // Print i to the Output window.
+            // Wait for user to resume.
+            debugger; // BAD: debugger statement
+        }
+    }
+}

@@ -6,7 +6,7 @@ export default class s2432Trigger extends LightningElement {
     
     set name(value) {
         this._name = value;
-        return 42; // Triggers S2432 - setter returning value
+        return 42; // Antipattern: returning value from setter
     }
     
     get name() {

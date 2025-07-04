@@ -1,16 +1,17 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: csjs.csv
-Generated: 2025-06-24 09:58:01
+Generated: 2025-07-04 11:29:09
 
 Summary:
   Total rules in CSV: 53
-  Rules fired: 35
-  Rules NOT fired: 18
+  Rules fired: 34
+  Rules NOT fired: 19
 
 Rules NOT fired (need examples created):
 ----------------------------------------
   - cs-js:handle-callback-err
+  - cs-js:no-eq-null
   - cs-js:no-ex-assign
   - cs-js:no-extra-boolean-cast
   - cs-js:no-global-assign
@@ -44,7 +45,6 @@ Rules that are fired:
   - cs-js:no-div-regex
   - cs-js:no-else-return
   - cs-js:no-empty-character-class
-  - cs-js:no-eq-null
   - cs-js:no-extend-native
   - cs-js:no-extra-bind
   - cs-js:no-floating-decimal
