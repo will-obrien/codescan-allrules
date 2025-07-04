@@ -11,4 +11,11 @@ export default class s5958Trigger extends LightningElement {
         var example = "This triggers rule javascript:S5958";
         return example;
     }
+
+    badExceptionTest() {
+        const expect = require('chai').expect;
+        function funcThrows() { throw new TypeError('What is this type?'); }
+        expect(funcThrows).to.throw();  // BAD: does not check specific exception
+        expect(funcThrows).to.throw(Error);  // BAD: does not check message
+    }
 }

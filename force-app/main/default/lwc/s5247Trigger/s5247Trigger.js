@@ -11,4 +11,12 @@ export default class s5247Trigger extends LightningElement {
         var example = "This triggers rule javascript:S5247";
         return example;
     }
+
+    // Antipattern for S5247: Disabling auto-escaping in template engines is security-sensitive
+    badTemplateEscaping() {
+        let Mustache = require('mustache');
+        Mustache.escape = function(text) {return text;}; // BAD: disables escaping
+        let rendered = Mustache.render('<div>{{name}}</div>', { name: '<script>alert(1)</script>' });
+        return rendered;
+    }
 }

@@ -11,4 +11,12 @@ export default class s3500Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3500";
         return example;
     }
+
+    // Antipattern for S3500: Attempts should not be made to update "const" variables
+    badConstUpdate() {
+        const pi = 'yes, please';
+        // BAD: attempt to update const
+        // pi = 3.14;
+        return pi;
+    }
 }

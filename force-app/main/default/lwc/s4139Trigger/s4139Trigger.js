@@ -11,4 +11,12 @@ export default class s4139Trigger extends LightningElement {
         var example = "This triggers rule javascript:S4139";
         return example;
     }
+
+    // Antipattern for S4139: 'for in' should not be used with iterables
+    badForInIterable() {
+        const arr = [4, 3, 2, 1];
+        for (let value in arr) {  // BAD: iterates indexes, not values
+            console.log(value);
+        }
+    }
 }

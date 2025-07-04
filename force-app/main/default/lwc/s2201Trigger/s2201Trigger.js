@@ -11,4 +11,9 @@ export default class s2201Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2201";
         return example;
     }
+
+    // Antipattern for S2201: Return values from functions without side effects should not be ignored
+    badIgnoredReturn() {
+        'hello'.lastIndexOf('e'); // BAD: return value ignored
+    }
 }

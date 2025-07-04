@@ -11,4 +11,10 @@ export default class s6323Trigger extends LightningElement {
         var example = "This triggers rule javascript:S6323";
         return example;
     }
+
+    // Antipattern for S6323: Alternation in regular expressions should not contain empty alternatives
+    badEmptyAlternative() {
+        let pattern = /Jack|Peter|/; // BAD: empty alternative matches any input
+        return pattern;
+    }
 }

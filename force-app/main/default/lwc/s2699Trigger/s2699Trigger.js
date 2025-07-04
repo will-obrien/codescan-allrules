@@ -11,4 +11,14 @@ export default class s2699Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2699";
         return example;
     }
+
+    // Antipattern for S2699: Tests should include assertions
+    badTestNoAssertion() {
+        const expect = require('chai').expect;
+        describe("No assertion", function() {
+            it("doesn't test anything", function() { // BAD: no assertion
+                const str = "";
+            });
+        });
+    }
 }

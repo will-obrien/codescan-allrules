@@ -11,4 +11,10 @@ export default class s5867Trigger extends LightningElement {
         var example = "This triggers rule javascript:S5867";
         return example;
     }
+
+    // Antipattern for S5867: Regular expressions using Unicode character classes or property escapes should enable the unicode flag
+    badUnicodePropertyRegex() {
+        let pattern = /\p{Alpha}/; // BAD: missing 'u' flag
+        return pattern;
+    }
 }

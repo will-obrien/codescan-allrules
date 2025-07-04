@@ -11,4 +11,13 @@ export default class s2970Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2970";
         return example;
     }
+
+    badIncompleteAssertion() {
+        const assert = require('chai').assert;
+        const expect = require('chai').expect;
+        const value = 42;
+        assert.fail;  // BAD: not called
+        expect(1 == 1);  // BAD: not followed by assertion method
+        expect(value.toString).to.throw;  // BAD: not called
+    }
 }

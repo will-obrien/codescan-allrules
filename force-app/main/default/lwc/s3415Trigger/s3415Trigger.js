@@ -3,12 +3,9 @@ import { LightningElement } from 'lwc';
 
 export default class s3415Trigger extends LightningElement {
     // Rule: Assertion arguments should be passed in the correct order
-    connectedCallback() {
-        // This component triggers: javascript:S3415
-        console.log('Triggering SonarJS rule: javascript:S3415');
-        
-        // Example code that might trigger the rule
-        var example = "This triggers rule javascript:S3415";
-        return example;
+    badAssertionOrder() {
+        const assert = require('chai').assert;
+        const aNumber = 5;
+        assert.equal(42, aNumber); // BAD: expected and actual are swapped
     }
 }

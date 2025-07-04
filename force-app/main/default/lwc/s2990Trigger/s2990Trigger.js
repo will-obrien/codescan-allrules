@@ -11,4 +11,10 @@ export default class s2990Trigger extends LightningElement {
         var example = "This triggers rule javascript:S2990";
         return example;
     }
+
+    // Antipattern for S2990: The global "this" object should not be used
+    badGlobalThis() {
+        this.foo = 1;   // BAD: using global this
+        console.log(this.foo); // BAD: using global this
+    }
 }

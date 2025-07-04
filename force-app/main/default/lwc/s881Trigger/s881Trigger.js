@@ -11,4 +11,11 @@ export default class s881Trigger extends LightningElement {
         var example = "This triggers rule javascript:S881";
         return example;
     }
+
+    // Antipattern for S881: Increment (++) and decrement (--) operators should not be used in a method call or mixed with other operators in an expression
+    badIncrementDecrement() {
+        let u8a = ++this.u8b + this.u8c--;
+        let foo = this.bar++ / 4;
+        return { u8a, foo };
+    }
 }

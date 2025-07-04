@@ -11,4 +11,10 @@ export default class s6331Trigger extends LightningElement {
         var example = "This triggers rule javascript:S6331";
         return example;
     }
+
+    // Antipattern for S6331: Regular expressions should not contain empty groups
+    badEmptyGroupRegex() {
+        let pattern = /foo()/; // BAD: empty group
+        return pattern;
+    }
 }

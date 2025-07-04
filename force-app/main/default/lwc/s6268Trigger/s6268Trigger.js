@@ -11,4 +11,15 @@ export default class s6268Trigger extends LightningElement {
         var example = "This triggers rule javascript:S6268";
         return example;
     }
+
+    // Antipattern for S6268: Disabling Angular built-in sanitization is security-sensitive
+    badAngularSanitization() {
+        // Simulated Angular bypass (for illustration)
+        const sanitizer = {
+            bypassSecurityTrustHtml: function(html) { return html; }
+        };
+        let html = '<h1>Hello <script>alert(1)</script></h1>';
+        let trusted = sanitizer.bypassSecurityTrustHtml(html); // BAD: disables sanitization
+        return trusted;
+    }
 }

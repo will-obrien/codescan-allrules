@@ -11,4 +11,12 @@ export default class s4634Trigger extends LightningElement {
         var example = "This triggers rule javascript:S4634";
         return example;
     }
+
+    badPromiseShorthand() {
+        let fulfilledPromise = new Promise(resolve => resolve(42)); // BAD: should use Promise.resolve(42)
+        let rejectedPromise = new Promise(function(resolve, reject) {
+            reject('fail');
+        }); // BAD: should use Promise.reject('fail')
+        return { fulfilledPromise, rejectedPromise };
+    }
 }

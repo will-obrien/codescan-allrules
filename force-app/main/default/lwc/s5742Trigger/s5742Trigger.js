@@ -11,4 +11,13 @@ export default class s5742Trigger extends LightningElement {
         var example = "This triggers rule javascript:S5742";
         return example;
     }
+
+    // Antipattern for S5742: Disabling Certificate Transparency monitoring is security-sensitive
+    badExpectCt() {
+        const helmet = require('helmet');
+        let app = {};
+        app.use = function() {};
+        app.use(helmet({ expectCt: false })); // BAD: disables Expect-CT
+        return app;
+    }
 }

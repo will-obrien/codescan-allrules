@@ -11,4 +11,13 @@ export default class s4158Trigger extends LightningElement {
         var example = "This triggers rule javascript:S4158";
         return example;
     }
+
+    // Antipattern for S4158: Empty collections should not be accessed or iterated
+    badEmptyCollectionAccess() {
+        let strings = [];
+        if (strings.includes('foo')) {}  // BAD: accessing empty collection
+        for (let str of strings) {}     // BAD: iterating empty collection
+        strings.forEach(str => this.doSomething(str)); // BAD: iterating empty collection
+    }
+    doSomething(str) {}
 }

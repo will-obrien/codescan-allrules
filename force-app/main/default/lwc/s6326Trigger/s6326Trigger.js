@@ -11,4 +11,10 @@ export default class s6326Trigger extends LightningElement {
         var example = "This triggers rule javascript:S6326";
         return example;
     }
+
+    // Antipattern for S6326: Regular expressions should not contain multiple spaces
+    badMultipleSpacesRegex() {
+        let pattern = /Hello,   world!/; // BAD: multiple spaces
+        return pattern;
+    }
 }

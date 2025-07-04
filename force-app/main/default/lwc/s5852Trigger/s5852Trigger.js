@@ -11,4 +11,12 @@ export default class s5852Trigger extends LightningElement {
         var example = "This triggers rule javascript:S5852";
         return example;
     }
+
+    // Antipattern for S5852: Using slow regular expressions is security-sensitive
+    badSlowRegex() {
+        let regex = /(a+)+b/; // BAD: catastrophic backtracking
+        let str = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!';
+        regex.test(str);
+        return regex;
+    }
 }

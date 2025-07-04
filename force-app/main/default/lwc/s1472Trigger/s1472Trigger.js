@@ -13,11 +13,10 @@ export default class s1472Trigger extends LightningElement {
     }
 
     // Antipattern for S1472: Function call arguments should not start on new lines
-    connectedCallback() {
+    badFunctionCallArguments() {
         var fn = function () {
             // ...
-        }
-
+        };
         (function () { // BAD: argument starts on new line
             // ...
         })();

@@ -11,4 +11,13 @@ export default class s1440Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1440";
         return example;
     }
+
+    // Antipattern for S1440: "===" and "!==" should be used instead of "==" and "!="
+    badEqualityOperators() {
+        var value = 'howdy';
+        if (value == 'howdy') { // BAD: should use ===
+            return true;
+        }
+        return false;
+    }
 }

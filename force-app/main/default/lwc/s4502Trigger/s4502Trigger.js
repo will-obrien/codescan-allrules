@@ -11,4 +11,13 @@ export default class s4502Trigger extends LightningElement {
         var example = "This triggers rule javascript:S4502";
         return example;
     }
+
+    // Antipattern for S4502: Disabling CSRF protections is security-sensitive
+    badCsrfProtection() {
+        const csrf = require('csurf');
+        let app = {};
+        app.use = function() {};
+        app.use(csrf({ cookie: true, ignoreMethods: ['POST', 'GET'] })); // BAD: disables CSRF protection for POST
+        return app;
+    }
 }

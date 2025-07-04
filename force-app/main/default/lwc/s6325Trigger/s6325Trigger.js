@@ -11,4 +11,10 @@ export default class s6325Trigger extends LightningElement {
         var example = "This triggers rule javascript:S6325";
         return example;
     }
+
+    // Antipattern for S6325: Regular expression literals should be used when possible
+    badRegExpConstructor() {
+        let pattern = new RegExp('bar'); // BAD: should use /bar/
+        return pattern;
+    }
 }

@@ -11,4 +11,10 @@ export default class s5869Trigger extends LightningElement {
         var example = "This triggers rule javascript:S5869";
         return example;
     }
+
+    // Antipattern for S5869: Character classes in regular expressions should not contain the same character twice
+    badDuplicateCharClass() {
+        let pattern = /[0-99]/; // BAD: duplicate characters in class
+        return pattern;
+    }
 }

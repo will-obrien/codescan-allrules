@@ -11,4 +11,10 @@ export default class s6019Trigger extends LightningElement {
         var example = "This triggers rule javascript:S6019";
         return example;
     }
+
+    // Antipattern for S6019: Reluctant quantifiers in regular expressions should be followed by an expression that can't match the empty string
+    badReluctantQuantifier() {
+        let pattern = /^.*?$/; // BAD: reluctant quantifier followed by end anchor
+        return pattern;
+    }
 }

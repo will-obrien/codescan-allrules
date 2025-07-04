@@ -3,12 +3,16 @@ import { LightningElement } from 'lwc';
 
 export default class s4143Trigger extends LightningElement {
     // Rule: Collection elements should not be replaced unconditionally
-    connectedCallback() {
-        // This component triggers: javascript:S4143
-        console.log('Triggering SonarJS rule: javascript:S4143');
-        
-        // Example code that might trigger the rule
-        var example = "This triggers rule javascript:S4143";
-        return example;
+    badCollectionReplacement() {
+        let fruits = [];
+        fruits[1] = "banana";
+        fruits[1] = "apple";  // BAD: value on index 1 is overwritten
+        let myMap = new Map();
+        myMap.set("key", 1);
+        myMap.set("key", 2); // BAD: value for key "key" is replaced
+        let mySet = new Set();
+        mySet.add(1);
+        mySet.add(1); // BAD: element is already in the set
+        return { fruits, myMap, mySet };
     }
 }

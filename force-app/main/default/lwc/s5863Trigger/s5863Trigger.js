@@ -11,4 +11,11 @@ export default class s5863Trigger extends LightningElement {
         var example = "This triggers rule javascript:S5863";
         return example;
     }
+
+    // Antipattern for S5863: Assertions should not be given twice the same argument
+    badDuplicateAssertion() {
+        const assert = require('chai').assert;
+        const actual = (1).toString();
+        assert.equal(actual, actual);  // BAD: same argument twice
+    }
 }

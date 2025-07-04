@@ -11,4 +11,13 @@ export default class s3699Trigger extends LightningElement {
         var example = "This triggers rule javascript:S3699";
         return example;
     }
+
+    // Antipattern for S3699: The output of functions that don't return anything should not be used
+    badOutputUsage() {
+        function foo() {
+            console.log("Hello, World!");
+        }
+        let a = foo(); // BAD: using output of function that returns nothing
+        return a;
+    }
 }

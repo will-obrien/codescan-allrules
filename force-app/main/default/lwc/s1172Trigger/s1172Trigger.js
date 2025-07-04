@@ -11,4 +11,13 @@ export default class s1172Trigger extends LightningElement {
         var example = "This triggers rule javascript:S1172";
         return example;
     }
+
+    // Antipattern for S1172: Unused function parameters should be removed
+    badUnusedParams(a, b) {
+        function doSomething(a, b) { // 'a' is unused
+            return compute(b);
+        }
+        function compute(x) { return x * 2; }
+        return doSomething(a, b);
+    }
 }

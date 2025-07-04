@@ -1,29 +1,23 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: csjs.csv
-Generated: 2025-07-04 11:29:09
+Generated: 2025-07-04 11:37:52
 
 Summary:
   Total rules in CSV: 53
-  Rules fired: 34
-  Rules NOT fired: 19
+  Rules fired: 40
+  Rules NOT fired: 13
 
 Rules NOT fired (need examples created):
 ----------------------------------------
   - cs-js:handle-callback-err
-  - cs-js:no-eq-null
   - cs-js:no-ex-assign
   - cs-js:no-extra-boolean-cast
-  - cs-js:no-global-assign
-  - cs-js:no-invalid-regexp
   - cs-js:no-irregular-whitespace
   - cs-js:no-iterator
   - cs-js:no-label-var
-  - cs-js:no-new
   - cs-js:no-octal-escape
-  - cs-js:no-param-reassign
   - cs-js:no-proto
-  - cs-js:no-unused-expressions
   - cs-js:npm-audit
   - cs-js:secure-window
   - cs-js:unknown
@@ -45,14 +39,19 @@ Rules that are fired:
   - cs-js:no-div-regex
   - cs-js:no-else-return
   - cs-js:no-empty-character-class
+  - cs-js:no-eq-null
   - cs-js:no-extend-native
   - cs-js:no-extra-bind
   - cs-js:no-floating-decimal
   - cs-js:no-func-assign
+  - cs-js:no-global-assign
   - cs-js:no-implied-eval
+  - cs-js:no-invalid-regexp
+  - cs-js:no-new
   - cs-js:no-new-object
   - cs-js:no-new-wrappers
   - cs-js:no-obj-calls
+  - cs-js:no-param-reassign
   - cs-js:no-plusplus
   - cs-js:no-regex-spaces
   - cs-js:no-return-assign
@@ -64,5 +63,6 @@ Rules that are fired:
   - cs-js:no-undef
   - cs-js:no-underscore-dangle
   - cs-js:no-unreachable
+  - cs-js:no-unused-expressions
   - cs-js:secure-document
   - cs-js:wrap-iife

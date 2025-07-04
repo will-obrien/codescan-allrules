@@ -11,4 +11,10 @@ export default class s5850Trigger extends LightningElement {
         var example = "This triggers rule javascript:S5850";
         return example;
     }
+
+    // Antipattern for S5850: Alternatives in regular expressions should be grouped when used with anchors
+    badRegexAlternatives() {
+        let pattern = /^a|b|c$/; // BAD: anchors not grouped
+        return pattern;
+    }
 }
