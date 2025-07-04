@@ -5,6 +5,9 @@ export default class s2259Trigger extends LightningElement {
     // Rule: Properties of variables with "null" or "undefined" values should not be accessed
     connectedCallback() {
         // This component triggers: javascript:S2259
+        // Noncompliant: accessing property of undefined
+        let x = undefined;
+        // console.log(x.bar); // Noncompliant (commented out to avoid runtime error)
         console.log('Triggering SonarJS rule: javascript:S2259');
         
         // Example code that might trigger the rule

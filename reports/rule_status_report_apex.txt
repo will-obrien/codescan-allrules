@@ -1,12 +1,12 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: apex.csv
-Generated: 2025-07-04 11:37:52
+Generated: 2025-07-04 12:36:55
 
 Summary:
   Total rules in CSV: 267
-  Rules fired: 205
-  Rules NOT fired: 62
+  Rules fired: 204
+  Rules NOT fired: 63
 
 Rules NOT fired (need examples created):
 ----------------------------------------
@@ -25,6 +25,7 @@ Rules NOT fired (need examples created):
   - sf:AvoidReversedOperators
   - sf:AvoidSOQLInControllerGetter
   - sf:AvoidTabCharacter
+  - sf:BrokenMathCast
   - sf:CommentedTodo
   - sf:ControllerNaming
   - sf:CouplingBetweenObjects
@@ -132,7 +133,6 @@ Rules that are fired:
   - sf:AvoidUsingTestIsRunningTest
   - sf:BadCrypto
   - sf:BooleanGetMethodName
-  - sf:BrokenMathCast
   - sf:BrokenNullCheck
   - sf:CallSuperInConstructor
   - sf:CallSuperTwiceInConstructor

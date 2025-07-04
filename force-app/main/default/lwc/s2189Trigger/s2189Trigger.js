@@ -5,6 +5,8 @@ export default class s2189Trigger extends LightningElement {
     // Rule: Loops should not be infinite
     connectedCallback() {
         // This component triggers: javascript:S2189
+        // Noncompliant: infinite loop
+        // for (;;) { /* ... */ } // Noncompliant: infinite loop (commented out to avoid infinite execution)
         console.log('Triggering SonarJS rule: javascript:S2189');
         
         // Example code that might trigger the rule

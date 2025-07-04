@@ -5,6 +5,8 @@ export default class s1314Trigger extends LightningElement {
     // Rule: Octal values should not be used
     connectedCallback() {
         // This component triggers: javascript:S1314
+        // Noncompliant: Octal value used
+        // var myNumber = 010;   // Noncompliant. myNumber will hold 8, not 10 - was this really expected? (Commented out to avoid linter error)
         console.log('Triggering SonarJS rule: javascript:S1314');
         
         // Example code that might trigger the rule

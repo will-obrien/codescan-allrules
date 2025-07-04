@@ -5,6 +5,8 @@ export default class s1848Trigger extends LightningElement {
     // Rule: Objects should not be created to be dropped immediately without being used
     connectedCallback() {
         // This component triggers: javascript:S1848
+        // Noncompliant: object created and immediately dropped
+        new MyConstructor(); // Noncompliant
         console.log('Triggering SonarJS rule: javascript:S1848');
         
         // Example code that might trigger the rule

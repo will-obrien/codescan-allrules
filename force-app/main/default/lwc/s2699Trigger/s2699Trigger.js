@@ -5,6 +5,14 @@ export default class s2699Trigger extends LightningElement {
     // Rule: Tests should include assertions
     connectedCallback() {
         // This component triggers: javascript:S2699
+        // Noncompliant: test with no assertion
+        /*
+        describe("No assertion", function() {
+            it("doesn't test anything", function() { // Noncompliant
+                const str = "";
+            });
+        });
+        */
         console.log('Triggering SonarJS rule: javascript:S2699');
         
         // Example code that might trigger the rule

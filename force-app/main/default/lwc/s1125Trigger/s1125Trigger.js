@@ -22,6 +22,14 @@ export default class s1125Trigger extends LightningElement {
         this.processSystemSettings();
         this.handleBusinessLogic();
         this.demonstrateBooleanComparisons();
+        
+        // This component triggers: javascript:S1125
+        // Noncompliant: Boolean literals used in comparisons
+        let someValue = "0";
+        let someBooleanValue = false;
+        if (someValue == true) { /* ... */ }
+        if (someBooleanValue != true) { /* ... */ }
+        this.doSomething(!false);
     }
     
     // Example 1: Boolean literal comparisons in conditions - triggers S1125

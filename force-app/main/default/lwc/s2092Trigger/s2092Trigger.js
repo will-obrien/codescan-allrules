@@ -5,6 +5,8 @@ export default class s2092Trigger extends LightningElement {
     // Rule: Creating cookies without the "secure" flag is security-sensitive
     connectedCallback() {
         // This component triggers: javascript:S2092
+        // Noncompliant: cookie created without secure flag
+        document.cookie = 'sessionId=abc123'; // Noncompliant (no secure flag)
         console.log('Triggering SonarJS rule: javascript:S2092');
         
         // Example code that might trigger the rule

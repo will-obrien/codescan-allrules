@@ -10,5 +10,13 @@ export default class s1110Trigger extends LightningElement {
         // Example code that might trigger the rule
         var example = "This triggers rule javascript:S1110";
         return example;
+
+        // Noncompliant: redundant pairs of parentheses
+        let x = 5;
+        let y = 10;
+        if (((x + y) > 10)) { // Noncompliant
+            console.log('Sum is greater than 10');
+        }
+        return ((x + 1)); // Noncompliant
     }
 }

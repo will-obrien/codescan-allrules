@@ -1,12 +1,12 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: sonarjs.csv
-Generated: 2025-07-04 11:37:52
+Generated: 2025-07-04 12:36:55
 
 Summary:
   Total rules in CSV: 269
-  Rules fired: 140
-  Rules NOT fired: 129
+  Rules fired: 156
+  Rules NOT fired: 113
 
 Rules NOT fired (need examples created):
 ----------------------------------------
@@ -14,7 +14,6 @@ Rules NOT fired (need examples created):
   - javascript:S1067
   - javascript:S107
   - javascript:S1110
-  - javascript:S1116
   - javascript:S1125
   - javascript:S124
   - javascript:S1264
@@ -40,13 +39,11 @@ Rules NOT fired (need examples created):
   - javascript:S2255
   - javascript:S2259
   - javascript:S2376
-  - javascript:S2598
   - javascript:S2612
   - javascript:S2681
   - javascript:S2692
   - javascript:S2699
   - javascript:S2737
-  - javascript:S2755
   - javascript:S2757
   - javascript:S2817
   - javascript:S2970
@@ -69,10 +66,6 @@ Rules NOT fired (need examples created):
   - javascript:S3984
   - javascript:S4123
   - javascript:S4138
-  - javascript:S4139
-  - javascript:S4143
-  - javascript:S4144
-  - javascript:S4158
   - javascript:S4275
   - javascript:S4326
   - javascript:S4423
@@ -80,7 +73,6 @@ Rules NOT fired (need examples created):
   - javascript:S4502
   - javascript:S4507
   - javascript:S4524
-  - javascript:S4634
   - javascript:S4721
   - javascript:S4784
   - javascript:S4787
@@ -115,26 +107,18 @@ Rules NOT fired (need examples created):
   - javascript:S5743
   - javascript:S5757
   - javascript:S5759
-  - javascript:S5843
-  - javascript:S5850
   - javascript:S5852
-  - javascript:S5860
   - javascript:S5863
-  - javascript:S5867
   - javascript:S5868
-  - javascript:S5869
   - javascript:S5876
   - javascript:S5958
-  - javascript:S6019
   - javascript:S6079
   - javascript:S6080
   - javascript:S6092
   - javascript:S6268
   - javascript:S6299
-  - javascript:S6323
   - javascript:S6328
   - javascript:S6351
-  - javascript:S6353
   - javascript:S878
   - javascript:S888
   - javascript:S909
@@ -151,6 +135,7 @@ Rules that are fired:
   - javascript:S108
   - javascript:S109
   - javascript:S1105
+  - javascript:S1116
   - javascript:S1117
   - javascript:S1119
   - javascript:S1121
@@ -223,9 +208,11 @@ Rules that are fired:
   - javascript:S2428
   - javascript:S2432
   - javascript:S2589
+  - javascript:S2598
   - javascript:S2685
   - javascript:S2688
   - javascript:S2703
+  - javascript:S2755
   - javascript:S2814
   - javascript:S2819
   - javascript:S2870
@@ -269,16 +256,29 @@ Rules that are fired:
   - javascript:S3981
   - javascript:S4030
   - javascript:S4043
+  - javascript:S4139
   - javascript:S4140
+  - javascript:S4143
+  - javascript:S4144
+  - javascript:S4158
   - javascript:S4165
   - javascript:S4619
   - javascript:S4624
+  - javascript:S4634
   - javascript:S5842
+  - javascript:S5843
+  - javascript:S5850
   - javascript:S5856
+  - javascript:S5860
+  - javascript:S5867
+  - javascript:S5869
+  - javascript:S6019
   - javascript:S6035
+  - javascript:S6323
   - javascript:S6324
   - javascript:S6325
   - javascript:S6326
   - javascript:S6331
+  - javascript:S6353
   - javascript:S881
   - javascript:S905

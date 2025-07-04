@@ -5,18 +5,12 @@ export default class s124Trigger extends LightningElement {
     // Rule: Track comments matching a regular expression
     connectedCallback() {
         // This component triggers: javascript:S124
+        // REVIEW: This needs to be checked for edge cases (Noncompliant)
+        let x = 42;
         console.log('Triggering SonarJS rule: javascript:S124');
         
         // Example code that might trigger the rule
         var example = "This triggers rule javascript:S124";
         return example;
-    }
-}
-
-// Antipattern for S124: Track comments matching a regular expression (e.g., REVIEW)
-export default class s124Trigger extends LightningElement {
-    connectedCallback() {
-        // REVIEW: This needs to be checked for edge cases
-        let x = 42;
     }
 }
