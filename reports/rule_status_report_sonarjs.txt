@@ -1,7 +1,7 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: sonarjs.csv
-Generated: 2025-07-04 13:26:35
+Generated: 2025-07-16 11:53:00
 
 Summary:
   Total rules in CSV: 269

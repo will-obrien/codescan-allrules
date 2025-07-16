@@ -1,7 +1,7 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: apex.csv
-Generated: 2025-07-04 13:26:35
+Generated: 2025-07-16 11:53:00
 
 Summary:
   Total rules in CSV: 267
@@ -50,7 +50,6 @@ Rules NOT fired (need examples created):
   - sf:NcssMethodCount
   - sf:NcssTypeCount
   - sf:NonUnitTestContainsAsserts
-  - sf:OldApiVersion
   - sf:PossibleIncrementerBug
   - sf:RightBracesLinePositions
   - sf:RightBracesSpacingPositions
@@ -70,6 +69,7 @@ Rules NOT fired (need examples created):
   - sf:UseAnnotationOnTestClass
   - sf:UseAreEqualInsteadOfAssertBoolean
   - sf:UseAreEqualInsteadOfIsTrue
+  - sf:UseAssertEqualsInsteadOfAssert
   - sf:UseIsTrueInsteadOfAreEqual
   - sf:VariableCouldBeTransient
   - sf:XPathRule
@@ -214,6 +214,7 @@ Rules that are fired:
   - sf:NonStaticInitializer
   - sf:NullAssignment
   - sf:NullCoalescingOperator
+  - sf:OldApiVersion
   - sf:OneDeclarationPerLine
   - sf:OnlyOneReturn
   - sf:OpenRedirect
@@ -266,7 +267,6 @@ Rules that are fired:
   - sf:UnusedNullCheckInEquals
   - sf:UnusedPrivateField
   - sf:UnusedPrivateMethod
-  - sf:UseAssertEqualsInsteadOfAssert
   - sf:UseAssertEqualsInsteadOfAssertEquality
   - sf:UseAssertInsteadOfAssertEquals
   - sf:UseCollectionIsEmpty
