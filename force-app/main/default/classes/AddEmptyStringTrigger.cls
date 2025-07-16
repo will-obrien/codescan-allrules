@@ -5,8 +5,8 @@ public class AddEmptyStringTrigger {
         System.debug('This class triggers: sf:AddEmptyString');
     }
 
-    public String convert(Integer x) {
-        String s = '' + x; // Bad: this is inefficient
+    public String convert() {
+        String s = '' + 123; // Bad: this is inefficient
         return s;
     }
 }
