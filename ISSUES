@@ -1,0 +1,10 @@
+AddEmptyString - XPath is looking for double quotes which don't parse in APEX.  
+    XPath should be //AdditiveExpression/PrimaryExpression/PrimaryPrefix/Literal[@Image="''"]
+    Fix the test so the example fails
+
+AvoidInsecureMessageDigests - Doesn't find when the crypto.generateDigest is assigned
+
+AvoidReversedOperators - Is a sack of garbage.  Doesn't even pick up our own example.
+
+AvoidSOQLInControllerGetterTrigger - Clead up the tests.  Good tests have Bad written in them??
+

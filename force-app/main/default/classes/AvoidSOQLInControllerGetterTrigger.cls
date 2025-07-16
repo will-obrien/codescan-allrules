@@ -1,11 +1,21 @@
 public class AvoidSOQLInControllerGetterTrigger {
     // This class is generated to trigger the rule: sf:AvoidSOQLInControllerGetter
     // Rule: Avoid SOQL in Controller Getter Methods
-    public void triggerRule() {
-        System.debug('This class triggers: sf:AvoidSOQLInControllerGetter');
+   
+
+    private List<Account> accountLines;
+    
+    public List<Account> lines {
+        get {
+            if (accountLines == null) {
+                accountLines = [SELECT Id FROM Account];
+            }
+            return accountLines;
+        }
+        private set;
     }
 
-    public List<Account> getLines() {
-        return [SELECT Id FROM Account]; // BAD - SOQL in getter
+    public void triggerRule() {
+        System.debug('This class triggers: sf:AvoidSOQLInControllerGetter');
     }
 }

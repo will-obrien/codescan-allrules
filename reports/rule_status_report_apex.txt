@@ -1,12 +1,12 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: apex.csv
-Generated: 2025-07-16 12:21:18
+Generated: 2025-07-16 13:05:59
 
 Summary:
   Total rules in CSV: 267
-  Rules fired: 205
-  Rules NOT fired: 62
+  Rules fired: 206
+  Rules NOT fired: 61
 
 Rules NOT fired (need examples created):
 ----------------------------------------
@@ -17,7 +17,6 @@ Rules NOT fired (need examples created):
   - common-sf:InsufficientLineCoverage
   - common-sf:SkippedUnitTests
   - sf:AddEmptyString
-  - sf:AvoidAbsoluteURL
   - sf:AvoidFieldNameMatchingTypeName
   - sf:AvoidHttpReferer
   - sf:AvoidInsecureMessageDigests
@@ -86,6 +85,7 @@ Rules that are fired:
   - sf:AtLeastOneConstructor
   - sf:AuraControllerNaming
   - sf:AuraEnabledWithoutCatchBlock
+  - sf:AvoidAbsoluteURL
   - sf:AvoidBranchingStatementAsLastInLoop
   - sf:AvoidCatchingGenericException
   - sf:AvoidCatchingNPE
