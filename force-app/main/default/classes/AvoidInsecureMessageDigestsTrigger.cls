@@ -17,4 +17,5 @@ public class AvoidInsecureMessageDigestsTrigger {
     public void insecureDigestsSimple() {
         Crypto.generateDigest('MD5', blob); //BAD: not secure
         Crypto.generatemac('sha1', blob); //BAD: not secure
+    }
 }

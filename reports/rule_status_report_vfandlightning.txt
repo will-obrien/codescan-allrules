@@ -1,12 +1,12 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: vfandlightning.csv
-Generated: 2025-07-16 13:05:59
+Generated: 2025-07-16 13:43:06
 
 Summary:
   Total rules in CSV: 105
-  Rules fired: 13
-  Rules NOT fired: 92
+  Rules fired: 12
+  Rules NOT fired: 93
 
 Rules NOT fired (need examples created):
 ----------------------------------------
@@ -23,6 +23,7 @@ Rules NOT fired (need examples created):
   - cs-vf:handle-callback-err
   - cs-vf:new-parens
   - cs-vf:no-catch-shadow
+  - cs-vf:no-console
   - cs-vf:no-constant-condition
   - cs-vf:no-control-regex
   - cs-vf:no-div-regex
@@ -106,7 +107,6 @@ Rules NOT fired (need examples created):
 Rules that are fired:
 -------------------------
   - cs-vf:exception
-  - cs-vf:no-console
   - vf:AvoidHtmlCommentCheck
   - vf:AvoidJavaScriptScriptlets
   - vf:AvoidMultipleForms

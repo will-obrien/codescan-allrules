@@ -1,12 +1,12 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: apex.csv
-Generated: 2025-07-16 13:05:59
+Generated: 2025-07-16 13:43:06
 
 Summary:
   Total rules in CSV: 267
-  Rules fired: 206
-  Rules NOT fired: 61
+  Rules fired: 209
+  Rules NOT fired: 58
 
 Rules NOT fired (need examples created):
 ----------------------------------------
@@ -17,12 +17,9 @@ Rules NOT fired (need examples created):
   - common-sf:InsufficientLineCoverage
   - common-sf:SkippedUnitTests
   - sf:AddEmptyString
-  - sf:AvoidFieldNameMatchingTypeName
-  - sf:AvoidHttpReferer
   - sf:AvoidInsecureMessageDigests
   - sf:AvoidReversedOperators
   - sf:AvoidSOQLInControllerGetter
-  - sf:AvoidTabCharacter
   - sf:BrokenMathCast
   - sf:CommentedTodo
   - sf:ControllerNaming
@@ -96,12 +93,14 @@ Rules that are fired:
   - sf:AvoidDuplicateLiterals
   - sf:AvoidEmailInLoops
   - sf:AvoidFieldNameMatchingMethodName
+  - sf:AvoidFieldNameMatchingTypeName
   - sf:AvoidFinalLocalVariable
   - sf:AvoidForLoopToJustAddElementsToCollection
   - sf:AvoidGetSetMethods
   - sf:AvoidGlobalModifier
   - sf:AvoidHardCodedCredential
   - sf:AvoidHardCodedError
+  - sf:AvoidHttpReferer
   - sf:AvoidInsecureCookies
   - sf:AvoidInstanceofChecksInCatchClause
   - sf:AvoidInstantiatingObjectsInLoops
@@ -125,6 +124,7 @@ Rules that are fired:
   - sf:AvoidSoqlWithNegativeLogic
   - sf:AvoidSoqlWithNullInWhere
   - sf:AvoidSoqlWithoutLimits
+  - sf:AvoidTabCharacter
   - sf:AvoidThrowingNewInstanceOfSameException
   - sf:AvoidUsingBatchApexInTrigger
   - sf:AvoidUsingHardCodedIP

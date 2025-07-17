@@ -1,12 +1,12 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: sonarjs.csv
-Generated: 2025-07-16 13:05:59
+Generated: 2025-07-16 13:43:06
 
 Summary:
   Total rules in CSV: 269
-  Rules fired: 164
-  Rules NOT fired: 105
+  Rules fired: 162
+  Rules NOT fired: 107
 
 Rules NOT fired (need examples created):
 ----------------------------------------
@@ -25,6 +25,7 @@ Rules NOT fired (need examples created):
   - javascript:S1479
   - javascript:S1515
   - javascript:S1523
+  - javascript:S1525
   - javascript:S1527
   - javascript:S1529
   - javascript:S1871
@@ -37,6 +38,7 @@ Rules NOT fired (need examples created):
   - javascript:S2251
   - javascript:S2255
   - javascript:S2259
+  - javascript:S2392
   - javascript:S2612
   - javascript:S2699
   - javascript:S2817
@@ -164,7 +166,6 @@ Rules that are fired:
   - javascript:S1481
   - javascript:S1488
   - javascript:S1516
-  - javascript:S1525
   - javascript:S1526
   - javascript:S1528
   - javascript:S1530
@@ -196,7 +197,6 @@ Rules that are fired:
   - javascript:S2260
   - javascript:S2310
   - javascript:S2376
-  - javascript:S2392
   - javascript:S2424
   - javascript:S2427
   - javascript:S2428
