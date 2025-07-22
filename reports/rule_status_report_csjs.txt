@@ -1,7 +1,7 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: csjs.csv
-Generated: 2025-07-16 13:43:06
+Generated: 2025-07-17 15:12:39
 
 Summary:
   Total rules in CSV: 53

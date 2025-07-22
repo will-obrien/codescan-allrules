@@ -3,5 +3,6 @@ public class BrokenMathCastTrigger {
     // Rule: Unexpected Casting of Types
     public void triggerRule() {
         System.debug('This class triggers: sf:BrokenMathCast');
+        double twoThirds = 2/3; 
     }
 }

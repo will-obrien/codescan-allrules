@@ -1,4 +1,4 @@
-public class Foo {  //Bad: not recommended.
+public class conNamingTrigger {  //Bad: not recommended.
     // This class is generated to trigger the rule: sf:ControllerNaming
     // Rule: Controller Naming Convention
     public void triggerRule() {

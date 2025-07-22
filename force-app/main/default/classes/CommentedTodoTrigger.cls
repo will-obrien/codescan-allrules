@@ -3,10 +3,7 @@ public class CommentedTodoTrigger {
     // Rule: Avoid leaving TODO/FIXME comments in code
     public void triggerRule() {
         System.debug('This class triggers: sf:CommentedTodo');
+        // TODO this would be much better if we did it without bugs...
     }
 
-    /*
-    * TODO: this would be much better if we did it without bugs...    //Bad: Resolve this before committing!
-    */
-    public void foo() {}
 }
