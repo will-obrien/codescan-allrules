@@ -5,9 +5,9 @@ public class CouplingBetweenObjectsTrigger {
     import ObjectC;
     // Removed invalid import and fixed method signature and return type.
     public void doWork() {
-        Bardo var55;
-        ObjectA var44;
-        ObjectZ var93;
+        CoolOtherObject1.doWork();
+        CoolOtherObject2.doWork();
+        CoolOtherObject3.doWork();
         // Implement logic here as needed.
     }
     

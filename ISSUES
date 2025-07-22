@@ -8,3 +8,12 @@ AvoidReversedOperators - Is a sack of garbage.  Doesn't even pick up our own exa
 
 AvoidSOQLInControllerGetterTrigger - Clead up the tests.  Good tests have Bad written in them??
 
+CouplingBetweenObjects - Tests are garbage.
+
+
+
+Fixing?
+
+BrokenNullCheck
+AvoidLogicInTrigger
+ControllerNaming

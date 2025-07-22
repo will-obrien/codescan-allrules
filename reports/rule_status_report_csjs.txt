@@ -1,15 +1,16 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: csjs.csv
-Generated: 2025-07-17 15:12:39
+Generated: 2025-07-22 12:10:05
 
 Summary:
   Total rules in CSV: 53
-  Rules fired: 40
-  Rules NOT fired: 13
+  Rules fired: 36
+  Rules NOT fired: 17
 
 Rules NOT fired (need examples created):
 ----------------------------------------
+  - cs-js:aura-api
   - cs-js:handle-callback-err
   - cs-js:no-ex-assign
   - cs-js:no-extra-boolean-cast
@@ -18,6 +19,9 @@ Rules NOT fired (need examples created):
   - cs-js:no-label-var
   - cs-js:no-octal-escape
   - cs-js:no-proto
+  - cs-js:no-return-assign
+  - cs-js:no-script-url
+  - cs-js:no-sparse-arrays
   - cs-js:npm-audit
   - cs-js:secure-window
   - cs-js:unknown
@@ -26,7 +30,6 @@ Rules NOT fired (need examples created):
 
 Rules that are fired:
 -------------------------
-  - cs-js:aura-api
   - cs-js:dot-notation
   - cs-js:ecma-intrinsics
   - cs-js:eqeqeq
@@ -54,11 +57,8 @@ Rules that are fired:
   - cs-js:no-param-reassign
   - cs-js:no-plusplus
   - cs-js:no-regex-spaces
-  - cs-js:no-return-assign
-  - cs-js:no-script-url
   - cs-js:no-self-compare
   - cs-js:no-shadow-restricted-names
-  - cs-js:no-sparse-arrays
   - cs-js:no-throw-literal
   - cs-js:no-undef
   - cs-js:no-underscore-dangle

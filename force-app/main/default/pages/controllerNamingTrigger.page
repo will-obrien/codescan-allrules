@@ -1,4 +1,4 @@
-<apex:page controller="ControllerNamingTrigger">
+<apex:page controller="ConNamingTrigger">
     <apex:form>
         <h1>VF Rule Trigger: vf:AccessibleLwc</h1>
         <p>This page is designed to trigger the rule: Use Accessibility Attributes</p>

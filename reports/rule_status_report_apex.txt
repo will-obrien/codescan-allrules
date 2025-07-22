@@ -1,12 +1,12 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: apex.csv
-Generated: 2025-07-17 15:12:39
+Generated: 2025-07-22 12:10:05
 
 Summary:
   Total rules in CSV: 267
-  Rules fired: 209
-  Rules NOT fired: 58
+  Rules fired: 205
+  Rules NOT fired: 62
 
 Rules NOT fired (need examples created):
 ----------------------------------------
@@ -18,12 +18,13 @@ Rules NOT fired (need examples created):
   - common-sf:SkippedUnitTests
   - sf:AddEmptyString
   - sf:AvoidInsecureMessageDigests
+  - sf:AvoidLogicInTrigger
   - sf:AvoidReversedOperators
   - sf:AvoidSOQLInControllerGetter
-  - sf:BrokenMathCast
-  - sf:CommentedTodo
+  - sf:BrokenNullCheck
   - sf:ControllerNaming
   - sf:CouplingBetweenObjects
+  - sf:Csrf
   - sf:ExceptionAsFlowControl
   - sf:ExcessiveClassLength
   - sf:ExcessiveMethodLength
@@ -35,7 +36,9 @@ Rules NOT fired (need examples created):
   - sf:HotspotEncrypt
   - sf:HotspotTypeReflection
   - sf:HotspotUserInfoGetSessionIdUsage
+  - sf:InsecureEndpoint
   - sf:LogicInversion
+  - sf:LongTriggerName
   - sf:MethodReturnsInternalArray
   - sf:MisuseOfAssertClass
   - sf:MultipleTriggersOnObject
@@ -52,6 +55,7 @@ Rules NOT fired (need examples created):
   - sf:SimpleRedirectAction
   - sf:SimplifyConditional
   - sf:SingleMethodSingleton
+  - sf:StaticCanNotBeUsedInInnerClass
   - sf:StringToString
   - sf:SwitchDensity
   - sf:SwitchStmtsShouldHaveDefault
@@ -64,8 +68,8 @@ Rules NOT fired (need examples created):
   - sf:UseAnnotationOnTestClass
   - sf:UseAreEqualInsteadOfAssertBoolean
   - sf:UseAreEqualInsteadOfIsTrue
-  - sf:UseAssertEqualsInsteadOfAssert
   - sf:UseIsTrueInsteadOfAreEqual
+  - sf:UseSingleton
   - sf:VariableCouldBeTransient
   - sf:XPathRule
 
@@ -105,7 +109,6 @@ Rules that are fired:
   - sf:AvoidInstanceofChecksInCatchClause
   - sf:AvoidInstantiatingObjectsInLoops
   - sf:AvoidLiteralsInIfCondition
-  - sf:AvoidLogicInTrigger
   - sf:AvoidLosingExceptionInformation
   - sf:AvoidMethodsBeforeInitializers
   - sf:AvoidMultipleUnaryOperators
@@ -133,7 +136,7 @@ Rules that are fired:
   - sf:AvoidUsingTestIsRunningTest
   - sf:BadCrypto
   - sf:BooleanGetMethodName
-  - sf:BrokenNullCheck
+  - sf:BrokenMathCast
   - sf:CallSuperInConstructor
   - sf:CallSuperTwiceInConstructor
   - sf:CatchBlockShouldDoMoreThanRethrow
@@ -149,9 +152,9 @@ Rules that are fired:
   - sf:CommentRequired
   - sf:CommentSize
   - sf:CommentedOutCode
+  - sf:CommentedTodo
   - sf:ConfusingTernary
   - sf:ConstructorCallsOverridableMethod
-  - sf:Csrf
   - sf:CyclomaticComplexity
   - sf:DMLWithoutSharingEnabled
   - sf:DUDataflowAnomalyAnalysis
@@ -189,7 +192,6 @@ Rules that are fired:
   - sf:IfStmtsMustUseBraces
   - sf:ImmutableField
   - sf:InefficientEmptyStringCheck
-  - sf:InsecureEndpoint
   - sf:InsufficientCommentDensity
   - sf:IsBlankForNullChecks
   - sf:JumbledIncrementer
@@ -200,7 +202,6 @@ Rules that are fired:
   - sf:LongClassName
   - sf:LongLines
   - sf:LongMethodName
-  - sf:LongTriggerName
   - sf:LongVariable
   - sf:MaximumNumberOfCase
   - sf:MethodCouldBeStatic
@@ -233,7 +234,6 @@ Rules that are fired:
   - sf:SimplifyBooleanReturns
   - sf:SingularField
   - sf:StatementsShouldBeOnSeparateLines
-  - sf:StaticCanNotBeUsedInInnerClass
   - sf:StringInstantiation
   - sf:SuspiciousConstantFieldName
   - sf:SystemDebug
@@ -267,12 +267,12 @@ Rules that are fired:
   - sf:UnusedNullCheckInEquals
   - sf:UnusedPrivateField
   - sf:UnusedPrivateMethod
+  - sf:UseAssertEqualsInsteadOfAssert
   - sf:UseAssertEqualsInsteadOfAssertEquality
   - sf:UseAssertInsteadOfAssertEquals
   - sf:UseCollectionIsEmpty
   - sf:UseLocaleWithCaseConversions
   - sf:UseObjectForClearerAPI
-  - sf:UseSingleton
   - sf:UselessOperationOnImmutable
   - sf:UselessParentheses
   - sf:UselessStringValueOf

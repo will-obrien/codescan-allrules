@@ -1,12 +1,12 @@
 CodeScan Rule Status Report
 ==================================================
 CSV File: vfandlightning.csv
-Generated: 2025-07-17 15:12:39
+Generated: 2025-07-22 12:10:05
 
 Summary:
   Total rules in CSV: 105
-  Rules fired: 12
-  Rules NOT fired: 93
+  Rules fired: 9
+  Rules NOT fired: 96
 
 Rules NOT fired (need examples created):
 ----------------------------------------
@@ -20,10 +20,10 @@ Rules NOT fired (need examples created):
   - cs-vf:dot-notation
   - cs-vf:ecma-intrinsics
   - cs-vf:eqeqeq
+  - cs-vf:exception
   - cs-vf:handle-callback-err
   - cs-vf:new-parens
   - cs-vf:no-catch-shadow
-  - cs-vf:no-console
   - cs-vf:no-constant-condition
   - cs-vf:no-control-regex
   - cs-vf:no-div-regex
@@ -92,8 +92,11 @@ Rules NOT fired (need examples created):
   - vf:LightningEnhancedListCheck
   - vf:LightningIframeCheck
   - vf:LightningPageCheck
+  - vf:LongJavaScriptCheck
   - vf:MetaRefreshCheck
+  - vf:MouseEventWithoutKeyboardEquivalentCheck
   - vf:NoOnClickJavascript
+  - vf:NonConsecutiveHeadingCheck
   - vf:OldPageApiVersion
   - vf:PasswordAutocompleteCheck
   - vf:RequireConfirmationToken
@@ -106,7 +109,7 @@ Rules NOT fired (need examples created):
 
 Rules that are fired:
 -------------------------
-  - cs-vf:exception
+  - cs-vf:no-console
   - vf:AvoidHtmlCommentCheck
   - vf:AvoidJavaScriptScriptlets
   - vf:AvoidMultipleForms
@@ -114,7 +117,4 @@ Rules that are fired:
   - vf:InputImgWithoutAltCheck
   - vf:InputImgWithoutWidthOrHeightCheck
   - vf:LightningAvoidUsingSession
-  - vf:LongJavaScriptCheck
   - vf:MaxLineLengthCheck
-  - vf:MouseEventWithoutKeyboardEquivalentCheck
-  - vf:NonConsecutiveHeadingCheck
