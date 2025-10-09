@@ -1,0 +1,35 @@
+<apex:page controller="noRegexSpacesTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-regex-spaces</h1>
+    <p>This page triggers the rule: disallow multiple spaces in regular expressions</p>
+    
+    <!-- Triggers cs-vf:no-regex-spaces - Multiple spaces in regex -->
+    <script>
+        function regexWithMultipleSpaces() {
+            // Bad: Multiple spaces in regular expressions
+            var re = /foo   bar/;  // Hard to tell how many spaces
+            var re2 = new RegExp("foo   bar");  // Also problematic
+            
+            // Bad: More examples with multiple spaces
+            var phoneRegex = /\d{3}  \d{3}  \d{4}/;  // Phone number with multiple spaces
+            var nameRegex = /[A-Z][a-z]+    [A-Z][a-z]+/;  // Name pattern with many spaces
+            
+            // Bad: Mixed spacing issues
+            var mixedRegex = /start   middle     end/;
+            
+            // Function to test the regex
+            var testString = "foo   bar";
+            if (re.test(testString)) {
+                console.log("Regex matched");
+            }
+            
+            // Bad: Regex in string methods
+            var result = "test   string".match(/test   string/);
+            var replaced = "foo   bar".replace(/foo   bar/, "replacement");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Test Regex Spaces" action="{!save}" onclick="regexWithMultipleSpaces();" />
+    </apex:form>
+</apex:page>

@@ -1,0 +1,95 @@
+<apex:page controller="npmAuditTriggerController">
+    <h1>VF Rule Trigger: cs-vf:npm-audit</h1>
+    <p>This page triggers the rule: Auditing npm dependencies for security vulnerabilities</p>
+    
+    <!-- Triggers cs-vf:npm-audit - NPM security vulnerabilities -->
+    <script>
+        function npmAuditExamples() {
+            // This rule typically works with package-lock.json files
+            // Since we're in a Visualforce context, we'll simulate the concepts
+            
+            console.log("NPM Audit Rule Information:");
+            console.log("This rule checks package-lock.json files for known vulnerabilities");
+            console.log("It relies on the GitHub Advisory Database");
+            
+            // Simulating vulnerable dependency scenarios
+            var vulnerablePackages = [
+                {
+                    name: "lodash",
+                    version: "4.17.15",
+                    vulnerability: "Prototype Pollution",
+                    severity: "high",
+                    cve: "CVE-2019-10744"
+                },
+                {
+                    name: "minimist", 
+                    version: "1.2.0",
+                    vulnerability: "Prototype Pollution",
+                    severity: "critical",
+                    cve: "CVE-2020-7598"
+                },
+                {
+                    name: "jquery",
+                    version: "3.3.1",
+                    vulnerability: "Cross-site Scripting (XSS)",
+                    severity: "medium",
+                    cve: "CVE-2019-11358"
+                },
+                {
+                    name: "handlebars",
+                    version: "4.0.12",
+                    vulnerability: "Arbitrary Code Execution",
+                    severity: "critical", 
+                    cve: "CVE-2019-19919"
+                }
+            ];
+            
+            console.log("Simulated vulnerable packages:");
+            vulnerablePackages.forEach(function(pkg) {
+                console.log("Package: " + pkg.name + "@" + pkg.version);
+                console.log("  Vulnerability: " + pkg.vulnerability);
+                console.log("  Severity: " + pkg.severity);
+                console.log("  CVE: " + pkg.cve);
+                console.log("---");
+            });
+            
+            // Simulate package-lock.json content that would trigger this rule
+            var simulatedPackageLock = {
+                "name": "vulnerable-project",
+                "version": "1.0.0",
+                "lockfileVersion": 1,
+                "dependencies": {
+                    "lodash": {
+                        "version": "4.17.15",  // Vulnerable version
+                        "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.15.tgz"
+                    },
+                    "minimist": {
+                        "version": "1.2.0",    // Vulnerable version
+                        "resolved": "https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz"
+                    },
+                    "jquery": {
+                        "version": "3.3.1",   // Vulnerable version
+                        "resolved": "https://registry.npmjs.org/jquery/-/jquery-3.3.1.tgz"
+                    }
+                }
+            };
+            
+            console.log("Simulated package-lock.json structure:");
+            console.log(JSON.stringify(simulatedPackageLock, null, 2));
+            
+            // Information about the rule
+            console.log("NPM Audit Rule Details:");
+            console.log("- Checks package-lock.json for known CVEs");
+            console.log("- Uses GitHub Advisory Database");
+            console.log("- Part of OWASP Top 10 - Using Components with Known Vulnerabilities");
+            console.log("- Helps prevent security breaches from third-party dependencies");
+            
+            console.log("NPM audit simulation completed");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="NPM Audit" action="{!save}" onclick="npmAuditExamples();" />
+    </apex:form>
+</apex:page>

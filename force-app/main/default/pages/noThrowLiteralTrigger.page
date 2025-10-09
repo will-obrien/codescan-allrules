@@ -1,0 +1,137 @@
+<apex:page controller="noThrowLiteralTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-throw-literal</h1>
+    <p>This page triggers the rule: disallow throwing literals as exceptions</p>
+    
+    <!-- Triggers cs-vf:no-throw-literal - Throwing literal values -->
+    <script>
+        function throwLiteralExamples() {
+            function demonstrateThrowLiterals() {
+                try {
+                    // Bad: Throwing string literal
+                    throw "error";               // Should throw new Error("error")
+                } catch (e) {
+                    console.log("Caught string:", e);
+                }
+                
+                try {
+                    // Bad: Throwing number literal
+                    throw 0;                     // Should throw new Error() or Error object
+                } catch (e) {
+                    console.log("Caught number:", e);
+                }
+                
+                try {
+                    // Bad: Throwing undefined
+                    throw undefined;             // Should throw Error object
+                } catch (e) {
+                    console.log("Caught undefined:", e);
+                }
+                
+                try {
+                    // Bad: Throwing null
+                    throw null;                  // Should throw Error object
+                } catch (e) {
+                    console.log("Caught null:", e);
+                }
+                
+                try {
+                    // Bad: Throwing boolean
+                    throw false;                 // Should throw Error object
+                } catch (e) {
+                    console.log("Caught boolean:", e);
+                }
+                
+                try {
+                    // Bad: String concatenation with Error (still literal)
+                    var err = new Error("base");
+                    throw "an " + err;           // err is recast to string literal
+                } catch (e) {
+                    console.log("Caught concatenated:", e);
+                }
+                
+                try {
+                    // Bad: Template literal (ES6) - still a literal
+                    var err = new Error("template");
+                    throw `Error: ${err}`;       // Template literal is still a literal
+                } catch (e) {
+                    console.log("Caught template:", e);
+                }
+                
+                try {
+                    // Bad: Object literal
+                    throw { message: "object error", code: 500 };  // Object literal
+                } catch (e) {
+                    console.log("Caught object:", e);
+                }
+                
+                try {
+                    // Bad: Array literal
+                    throw ["error", "array"];    // Array literal
+                } catch (e) {
+                    console.log("Caught array:", e);
+                }
+                
+                try {
+                    // Bad: Regular expression literal
+                    throw /error/;               // RegExp literal
+                } catch (e) {
+                    console.log("Caught regex:", e);
+                }
+            }
+            
+            function demonstrateThrowFunctions() {
+                try {
+                    // Bad: Throwing function literal
+                    throw function() { return "error function"; };  // Function literal
+                } catch (e) {
+                    console.log("Caught function:", typeof e);
+                }
+                
+                try {
+                    // Bad: Throwing result of function that returns literal
+                    function getLiteral() {
+                        return "literal error";
+                    }
+                    throw getLiteral();          // Returns literal
+                } catch (e) {
+                    console.log("Caught function result:", e);
+                }
+            }
+            
+            function demonstrateComplexLiterals() {
+                try {
+                    // Bad: Complex literal expressions
+                    throw "Error code: " + 404;  // String concatenation literal
+                } catch (e) {
+                    console.log("Caught complex string:", e);
+                }
+                
+                try {
+                    // Bad: Arithmetic expression literal
+                    throw 10 * 5;                // Number expression literal
+                } catch (e) {
+                    console.log("Caught arithmetic:", e);
+                }
+                
+                try {
+                    // Bad: Logical expression literal
+                    throw true && false;         // Boolean expression literal
+                } catch (e) {
+                    console.log("Caught logical:", e);
+                }
+            }
+            
+            // Execute the demonstration functions
+            demonstrateThrowLiterals();
+            demonstrateThrowFunctions();
+            demonstrateComplexLiterals();
+            
+            console.log("Throw literal examples completed");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Throw Literal" action="{!save}" onclick="throwLiteralExamples();" />
+    </apex:form>
+</apex:page>

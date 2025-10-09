@@ -1,0 +1,68 @@
+<apex:page controller="noEqNullTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-eq-null</h1>
+    <p>This page triggers the rule: disallow null comparisons without type-checking operators</p>
+    
+    <!-- Triggers cs-vf:no-eq-null - Null comparisons with == or != -->
+    <script>
+        function nullComparisonExamples() {
+            var foo = null;
+            var bar = undefined;
+            var qux = "test";
+            
+            // Bad: Using == or != with null (matches both null and undefined)
+            if (foo == null) {       // Bad: matches both null and undefined
+                bar();
+                console.log("Loose null comparison");
+            }
+            
+            while (qux != null) {    // Bad: != null also matches undefined
+                baz();
+                console.log("Loose not-null comparison");
+                break; // Prevent infinite loop
+            }
+            
+            // Bad: More examples of loose null comparisons
+            var result1 = (foo == null);     // Bad: loose equality
+            var result2 = (bar != null);     // Bad: loose inequality
+            var result3 = (qux == null);     // Bad: loose equality
+            
+            // Bad: In conditional expressions
+            var value = foo == null ? "default" : foo;  // Bad: loose comparison
+            var other = bar != null ? bar : "fallback"; // Bad: loose comparison
+            
+            // Bad: In function parameters and returns
+            function checkValue(param) {
+                if (param == null) {     // Bad: loose null check
+                    return "null or undefined";
+                }
+                return param;
+            }
+            
+            function isValid(input) {
+                return input != null;    // Bad: loose not-null check
+            }
+            
+            // Bad: In array/object methods
+            var items = [1, 2, null, undefined, 5];
+            var filtered = items.filter(function(item) {
+                return item != null;     // Bad: loose comparison
+            });
+            
+            // Bad: In loops and iterations
+            for (var i = 0; qux != null && i < 10; i++) {  // Bad: loose comparison
+                console.log("Loop iteration:", i);
+                if (i > 2) qux = null; // Break condition
+            }
+            
+            // Using the functions
+            console.log("Check value result:", checkValue(foo));
+            console.log("Is valid result:", isValid(bar));
+            console.log("Filtered items:", filtered);
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Eq Null" action="{!save}" onclick="nullComparisonExamples();" />
+    </apex:form>
+</apex:page>

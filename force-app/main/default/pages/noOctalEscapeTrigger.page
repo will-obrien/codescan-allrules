@@ -1,0 +1,46 @@
+<apex:page controller="noOctalEscapeTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-octal-escape</h1>
+    <p>This page triggers the rule: disallow octal escape sequences in string literals</p>
+    
+    <!-- Triggers cs-vf:no-octal-escape - Octal escape sequences -->
+    <script>
+        function octalEscapeExamples() {
+            // Bad: Using octal escape sequences (deprecated in ES5)
+            var copyright = "Copyright \251";        // Should use \u00A9 or \xA9
+            var registered = "Registered \256";      // Should use \u00AE or \xAE
+            var trademark = "Trademark \231";        // Should use unicode escape
+            
+            // Bad: More octal escape examples
+            var bell = "Bell sound \007";            // Should use \u0007
+            var tab = "Tab character \011";          // Should use \t or \u0009
+            var newline = "New line \012";           // Should use \n or \u000A
+            
+            // Bad: Octal escapes in different contexts
+            var message = "Error code: \033[31mRed\033[0m";  // ANSI color codes
+            var path = "C:\134Users\134Name";        // Backslash paths
+            
+            // Bad: Mixed with other escapes
+            var mixed = "Quote: \042Hello\042 and copyright \251";
+            var complex = "\101\102\103";            // ABC in octal
+            
+            // Bad: In regular expressions (if supported)
+            var regex = /\251/;                      // Octal in regex
+            
+            // Demonstrating the strings
+            console.log("Copyright string:", copyright);
+            console.log("Registered string:", registered);
+            console.log("Mixed string:", mixed);
+            console.log("Complex string:", complex);
+            
+            // Bad: Using in template literals (ES6)
+            var template = `Copyright symbol: \251`;  // Still bad in template literals
+            
+            console.log("Template:", template);
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Octal Escape" action="{!save}" onclick="octalEscapeExamples();" />
+    </apex:form>
+</apex:page>

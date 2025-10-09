@@ -1,0 +1,122 @@
+<apex:page controller="noExtraBindTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-extra-bind</h1>
+    <p>This page triggers the rule: disallow unnecessary calls to .bind()</p>
+    
+    <!-- Triggers cs-vf:no-extra-bind - Unnecessary bind() calls -->
+    <script>
+        function extraBindExamples() {
+            // Bad: Unnecessary bind() calls where 'this' is not used
+            var x = function () {
+                foo();  // 'this' is not used
+            }.bind(bar);  // bind() is unnecessary
+            
+            // Bad: Arrow functions with bind() (arrow functions can't have 'this' set)
+            var arrowWithBind = (function() {
+                foo();
+            }).bind(bar);  // Unnecessary for arrow-like functions
+            
+            // Bad: Function doesn't use 'this' but has bind()
+            var unnecessaryBind1 = function() {
+                return "test";  // No 'this' usage
+            }.bind({ name: "ESLint" });
+            
+            var unnecessaryBind2 = function(param) {
+                console.log("Parameter:", param);  // No 'this' usage
+                return param * 2;
+            }.bind(someContext);
+            
+            // Bad: IIFE with unnecessary bind
+            var result = (function() {
+                var localVar = "local";
+                return localVar.toUpperCase();  // No 'this' usage
+            }).bind({ context: "unused" })();
+            
+            // Bad: Function with nested function that uses 'this', but outer doesn't
+            var outerBind = function() {
+                function inner() {
+                    this.foo();  // 'this' used in inner function, not outer
+                }
+                inner();
+                return "outer result";  // Outer function doesn't use 'this'
+            }.bind(someObject);
+            
+            // Bad: Function that only calls other functions without 'this'
+            var chainedCalls = function() {
+                processData();
+                validateInput();
+                sendResponse();  // No 'this' in any of these calls
+            }.bind(controller);
+            
+            // Bad: Mathematical operations without 'this'
+            var mathFunction = function(a, b) {
+                return Math.max(a, b) + Math.min(a, b);  // No 'this' usage
+            }.bind(mathContext);
+            
+            // Bad: String manipulation without 'this'
+            var stringProcessor = function(str) {
+                return str.trim().toLowerCase().replace(/\s+/g, '-');  // No 'this'
+            }.bind(stringContext);
+            
+            // Bad: Array processing without 'this'
+            var arrayProcessor = function(arr) {
+                return arr.filter(function(item) {
+                    return item > 0;
+                }).map(function(item) {
+                    return item * 2;
+                });  // No 'this' usage
+            }.bind(arrayContext);
+            
+            // Bad: Conditional logic without 'this'
+            var conditionalFunction = function(condition) {
+                if (condition) {
+                    return "positive";
+                } else {
+                    return "negative";
+                }  // No 'this' usage
+            }.bind(conditionalContext);
+            
+            // Variables for context (would be defined elsewhere)
+            var bar = { name: "bar" };
+            var someContext = { type: "context" };
+            var someObject = { name: "object" };
+            var controller = { type: "controller" };
+            var mathContext = { type: "math" };
+            var stringContext = { type: "string" };
+            var arrayContext = { type: "array" };
+            var conditionalContext = { type: "conditional" };
+            
+            // Test the functions
+            console.log("Unnecessary bind result:", unnecessaryBind1());
+            console.log("Unnecessary bind 2 result:", unnecessaryBind2(5));
+            console.log("IIFE result:", result);
+            console.log("String processor result:", stringProcessor("  Hello World  "));
+            console.log("Array processor result:", arrayProcessor([-1, 0, 1, 2, 3]));
+            console.log("Conditional result:", conditionalFunction(true));
+            
+            console.log("Extra bind examples completed");
+            console.log("All bind() calls above are unnecessary because 'this' is not used");
+        }
+        
+        // Helper functions (would be defined elsewhere)
+        function foo() {
+            console.log("foo called");
+        }
+        
+        function processData() {
+            console.log("processing data");
+        }
+        
+        function validateInput() {
+            console.log("validating input");
+        }
+        
+        function sendResponse() {
+            console.log("sending response");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Extra Bind" action="{!save}" onclick="extraBindExamples();" />
+    </apex:form>
+</apex:page>

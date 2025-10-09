@@ -1,0 +1,46 @@
+<apex:page controller="noSparseArraysTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-sparse-arrays</h1>
+    <p>This page triggers the rule: disallow sparse arrays</p>
+    
+    <!-- Triggers cs-vf:no-sparse-arrays - Sparse array literals -->
+    <script>
+        function sparseArrayExamples() {
+            // Bad: Sparse arrays with holes
+            var items = [,,];                    // Array with 2 holes
+            var colors = ["red",, "blue"];       // Array with hole in middle
+            var numbers = [1,,,4,5];             // Multiple holes
+            
+            // Bad: More sparse array examples
+            var mixed = ["a", , "c", , "e"];     // Alternating holes
+            var trailing = ["x", "y",];          // This is actually OK (trailing comma)
+            var leading = [, "start"];           // Leading hole
+            
+            // Bad: Complex sparse arrays
+            var nested = [["a",, "c"], [, "b"]]; // Nested sparse arrays
+            var large = [1,,,,,,,8];             // Many consecutive holes
+            
+            // Demonstrating the problems with sparse arrays
+            console.log("Items length:", items.length);        // 2
+            console.log("Items[0]:", items[0]);                // undefined
+            console.log("Items[1]:", items[1]);                // undefined
+            
+            console.log("Colors length:", colors.length);      // 3
+            console.log("Colors[1]:", colors[1]);              // undefined
+            
+            // Bad: Sparse arrays in loops cause issues
+            for (var i = 0; i < colors.length; i++) {
+                console.log("Color " + i + ":", colors[i]);     // Will show undefined
+            }
+            
+            // Bad: forEach skips holes
+            colors.forEach(function(color, index) {
+                console.log("Color at " + index + ":", color);  // Skips index 1
+            });
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Sparse Arrays" action="{!save}" onclick="sparseArrayExamples();" />
+    </apex:form>
+</apex:page>

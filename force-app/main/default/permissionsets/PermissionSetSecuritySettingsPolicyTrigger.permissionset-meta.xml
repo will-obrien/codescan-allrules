@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Security Settings Policy Violation</label>
+    <description>Grants excessive security settings permissions</description>
+    <userPermissions>
+        <name>ManageEncryptionKeys</name>
+        <enabled>true</enabled>
+    </userPermissions>
+    <userPermissions>
+        <name>ManageCertificates</name>
+        <enabled>true</enabled>
+    </userPermissions>
+</PermissionSet> 

@@ -1,0 +1,12 @@
+<apex:page controller="duplicatedBlocksTriggerController">
+    <apex:form>
+        <h1>VF Rule Trigger: common-vf:DuplicatedBlocks</h1>
+        <p>This page is designed to trigger the rule: Source files should not have any duplicated blocks</p>
+        <p>Rule Description: common-vf:DuplicatedBlocks</p>
+        
+        <apex:pageBlock title="Test Block">
+            <apex:inputText value="{!testValue}" label="Test Input"/>
+            <apex:commandButton value="Test Action" action="{!testAction}"/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

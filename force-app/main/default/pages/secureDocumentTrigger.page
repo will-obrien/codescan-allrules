@@ -1,0 +1,16 @@
+<apex:page controller="secureDocumentTriggerController">
+    <h1>VF Rule Trigger: cs-vf:secure-document</h1>
+    <p>This page triggers the rule: validate document global access</p>
+    
+    <!-- Triggers cs-vf:secure-document - Invalid document global access -->
+    <script>
+        function invalidDocumentAccess() {
+            var curScriptElement = document.currentScript;
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Invalid Document Access" action="{!save}" onclick="invalidDocumentAccess();" />
+    </apex:form>
+</apex:page>

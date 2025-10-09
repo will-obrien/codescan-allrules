@@ -1,0 +1,12 @@
+<apex:page controller="skippedUnitTestsTriggerController">
+    <apex:form>
+        <h1>VF Rule Trigger: common-vf:SkippedUnitTests</h1>
+        <p>This page is designed to trigger the rule: Skipped unit tests should be either removed or fixed</p>
+        <p>Rule Description: common-vf:SkippedUnitTests</p>
+        
+        <apex:pageBlock title="Test Block">
+            <apex:inputText value="{!testValue}" label="Test Input"/>
+            <apex:commandButton value="Test Action" action="{!testAction}"/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

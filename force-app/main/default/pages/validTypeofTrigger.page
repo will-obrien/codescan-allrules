@@ -1,0 +1,47 @@
+<apex:page controller="validTypeofTriggerController">
+    <h1>VF Rule Trigger: cs-vf:valid-typeof</h1>
+    <p>This page triggers the rule: enforce comparing typeof expressions against valid strings</p>
+    
+    <!-- Triggers cs-vf:valid-typeof - Invalid typeof comparisons -->
+    <script>
+        function invalidTypeofUsage() {
+            var foo, bar;
+            
+            // Bad: Misspelled typeof comparisons
+            if (typeof foo === "strnig") {
+                console.log("String check with typo");
+            }
+            
+            if (typeof foo == "undefimed") {
+                console.log("Undefined check with typo");
+            }
+            
+            if (typeof bar != "nunber") {
+                console.log("Number check with typo");
+            }
+            
+            if (typeof bar !== "function") {
+                console.log("Function check with typo");
+            }
+            
+            // Bad: Invalid typeof string literals
+            if (typeof baz === "some invalid type") {
+                console.log("Invalid type string");
+            }
+            
+            // Bad: Comparing typeof to non-string literals
+            if (typeof foo === undefined) {
+                console.log("Comparing to undefined directly");
+            }
+            
+            if (typeof bar == Object) {
+                console.log("Comparing to Object constructor");
+            }
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Invalid Typeof" action="{!save}" onclick="invalidTypeofUsage();" />
+    </apex:form>
+</apex:page>

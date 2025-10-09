@@ -1,0 +1,92 @@
+<apex:page controller="noProtoTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-proto</h1>
+    <p>This page triggers the rule: disallow the use of the __proto__ property</p>
+    
+    <!-- Triggers cs-vf:no-proto - __proto__ property usage -->
+    <script>
+        function protoExamples() {
+            var obj = { name: "test" };
+            var another = { value: 42 };
+            
+            // Bad: Using __proto__ property (deprecated)
+            var a = obj.__proto__;           // Should use Object.getPrototypeOf(obj)
+            var b = another["__proto__"];    // Should use Object.getPrototypeOf(another)
+            
+            // Bad: Setting __proto__ property
+            var child = {};
+            child.__proto__ = obj;           // Should use Object.setPrototypeOf or Object.create
+            
+            // Bad: __proto__ in different contexts
+            function getProto(object) {
+                return object.__proto__;     // Should use Object.getPrototypeOf
+            }
+            
+            function setProto(object, prototype) {
+                object.__proto__ = prototype; // Should use Object.setPrototypeOf
+                return object;
+            }
+            
+            // Bad: __proto__ in conditionals
+            if (obj.__proto__) {             // Should check Object.getPrototypeOf(obj)
+                console.log("Object has prototype");
+            }
+            
+            // Bad: __proto__ comparison
+            if (obj.__proto__ === Object.prototype) {  // Should use Object.getPrototypeOf
+                console.log("Object prototype is Object.prototype");
+            }
+            
+            // Bad: __proto__ in loops
+            var current = obj;
+            while (current.__proto__) {      // Should use Object.getPrototypeOf
+                current = current.__proto__; // Should use Object.getPrototypeOf
+                console.log("Walking prototype chain");
+                if (current === Object.prototype) break; // Prevent infinite loop
+            }
+            
+            // Bad: __proto__ with constructor functions
+            function Parent() {
+                this.parentProp = "parent";
+            }
+            
+            function Child() {
+                this.childProp = "child";
+            }
+            
+            Child.prototype.__proto__ = Parent.prototype;  // Should use proper inheritance
+            
+            // Bad: __proto__ in object literals (ES6 syntax, but still discouraged)
+            var objWithProto = {
+                __proto__: obj,              // Should use Object.create or Object.setPrototypeOf
+                ownProp: "value"
+            };
+            
+            // Bad: Accessing __proto__ in method
+            var service = {
+                checkPrototype: function() {
+                    return this.__proto__;   // Should use Object.getPrototypeOf(this)
+                }
+            };
+            
+            // Bad: __proto__ in array-like usage
+            var protoArray = [];
+            protoArray[0] = obj.__proto__;   // Should use Object.getPrototypeOf
+            
+            // Demonstrating the usage (all problematic)
+            console.log("Proto a:", a);
+            console.log("Proto b:", b);
+            console.log("Get proto result:", getProto(obj));
+            console.log("Set proto result:", setProto({}, obj));
+            console.log("Object with proto:", objWithProto);
+            console.log("Service check:", service.checkPrototype());
+            console.log("Proto array:", protoArray);
+            
+            console.log("__proto__ examples completed (all deprecated usage)");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Proto" action="{!save}" onclick="protoExamples();" />
+    </apex:form>
+</apex:page>

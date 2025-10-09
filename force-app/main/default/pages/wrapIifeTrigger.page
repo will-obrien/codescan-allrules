@@ -1,0 +1,46 @@
+<apex:page controller="wrapIifeTriggerController">
+    <h1>VF Rule Trigger: cs-vf:wrap-iife</h1>
+    <p>This page triggers the rule: require parentheses around immediate function invocations</p>
+    
+    <!-- Triggers cs-vf:wrap-iife - Unwrapped IIFE -->
+    <script>
+        // Bad: Unwrapped immediately-invoked function expressions
+        var x = function () { 
+            return { y: 1 };
+        }(); // Should be wrapped
+        
+        // Bad: Function expression could be unwrapped
+        var result = function () { 
+            return "test";
+        }();
+        
+        // Bad: Another unwrapped IIFE
+        var data = function(param) {
+            return param * 2;
+        }(5);
+        
+        // Bad: Complex unwrapped IIFE
+        var config = function() {
+            var settings = {
+                debug: true,
+                version: "1.0"
+            };
+            return settings;
+        }();
+        
+        // Function to demonstrate the rule
+        function demonstrateIIFE() {
+            // Bad: More unwrapped IIFEs
+            var temp = function() {
+                return Math.random();
+            }();
+            
+            console.log("IIFE result: " + temp);
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Demonstrate IIFE" action="{!save}" onclick="demonstrateIIFE();" />
+    </apex:form>
+</apex:page>

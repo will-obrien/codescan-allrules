@@ -1,0 +1,95 @@
+<apex:page controller="noParamReassignTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-param-reassign</h1>
+    <p>This page triggers the rule: disallow reassigning function parameters</p>
+    
+    <!-- Triggers cs-vf:no-param-reassign - Function parameter reassignment -->
+    <script>
+        function paramReassignExamples() {
+            // Bad: Reassigning function parameters
+            function foo(bar) {
+                bar = 13;                    // Bad: Reassigning parameter
+                console.log("bar is now:", bar);
+            }
+            
+            function increment(value) {
+                value++;                     // Bad: Modifying parameter
+                return value;
+            }
+            
+            function process(data) {
+                data = data || {};           // Bad: Reassigning parameter (common pattern but problematic)
+                data.processed = true;
+                return data;
+            }
+            
+            // Bad: Multiple parameter reassignments
+            function calculate(x, y, z) {
+                x = x * 2;                   // Bad: Reassigning x
+                y = y + 10;                  // Bad: Reassigning y  
+                z = Math.max(z, 0);          // Bad: Reassigning z
+                return x + y + z;
+            }
+            
+            // Bad: Parameter reassignment in different contexts
+            function conditionalReassign(param) {
+                if (typeof param === 'undefined') {
+                    param = 'default';       // Bad: Reassigning in conditional
+                }
+                return param;
+            }
+            
+            function loopReassign(items) {
+                for (var i = 0; i < 3; i++) {
+                    items = items.concat([i]); // Bad: Reassigning in loop
+                }
+                return items;
+            }
+            
+            // Bad: Parameter property modification (if props option is enabled)
+            function modifyObject(obj) {
+                obj.prop = "value";          // Bad: Modifying parameter property
+                delete obj.aaa;              // Bad: Deleting parameter property
+                obj.count++;                 // Bad: Incrementing parameter property
+                return obj;
+            }
+            
+            // Bad: Complex parameter reassignment
+            function complexReassign(config) {
+                config = Object.assign({}, config); // Bad: Common defensive pattern but still reassignment
+                config.timestamp = Date.now();
+                return config;
+            }
+            
+            // Bad: Parameter reassignment with destructuring-like pattern
+            function destructuringLike(options) {
+                options = options || {};     // Bad: Reassignment
+                var debug = options.debug || false;
+                var timeout = options.timeout || 1000;
+                return { debug: debug, timeout: timeout };
+            }
+            
+            // Bad: Arrow function parameter reassignment (if ES6 supported)
+            var arrowReassign = function(param) {
+                param = param.toString();    // Bad: Reassigning parameter
+                return param.toUpperCase();
+            };
+            
+            // Testing the functions
+            foo("original");
+            console.log("Increment result:", increment(5));
+            console.log("Process result:", process({ name: "test" }));
+            console.log("Calculate result:", calculate(1, 2, 3));
+            console.log("Conditional result:", conditionalReassign());
+            console.log("Loop result:", loopReassign([0]));
+            console.log("Modify object result:", modifyObject({ prop: "old", aaa: "remove", count: 0 }));
+            console.log("Complex result:", complexReassign({ name: "test" }));
+            console.log("Destructuring-like result:", destructuringLike());
+            console.log("Arrow result:", arrowReassign(123));
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Param Reassign" action="{!save}" onclick="paramReassignExamples();" />
+    </apex:form>
+</apex:page>

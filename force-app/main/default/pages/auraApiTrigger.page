@@ -1,0 +1,46 @@
+<apex:page controller="auraApiTriggerController">
+    <h1>VF Rule Trigger: cs-vf:aura-api</h1>
+    <p>This page triggers the rule: validate Aura API</p>
+    
+    <!-- Triggers cs-vf:aura-api - Invalid Aura API usage -->
+    <script>
+        function invalidAuraApiUsage() {
+            // Bad: Using Aura instead of $A
+            if (typeof Aura !== 'undefined') {
+                Aura.notGreat();  // Should use $A instead of Aura
+            }
+            
+            // Bad: Using non-existent $A methods
+            if (typeof $A !== 'undefined') {
+                $A.util.notUtil();  // $A.util does not contain notUtil
+                $A.invalidMethod();  // Invalid method on $A
+                $A.component.nonExistent();  // Non-existent component method
+            }
+            
+            // Bad: More invalid API calls
+            if (typeof $A !== 'undefined') {
+                $A.fakeUtil.method();       // fakeUtil doesn't exist
+                $A.get("$Browser.invalid"); // Invalid global value provider
+                $A.createComponents();      // Wrong method name (should be createComponent)
+            }
+            
+            // Bad: Incorrect usage patterns
+            if (typeof window.Aura !== 'undefined') {
+                window.Aura.undocumentedFeature();  // Undocumented feature
+            }
+            
+            // Bad: Private API access
+            if (typeof $A !== 'undefined') {
+                $A._private.method();       // Accessing private APIs
+                $A.services._invalid();     // Invalid service access
+            }
+            
+            console.log("Invalid Aura API calls made");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Invalid Aura API" action="{!save}" onclick="invalidAuraApiUsage();" />
+    </apex:form>
+</apex:page>

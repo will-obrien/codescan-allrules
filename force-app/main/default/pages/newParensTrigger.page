@@ -1,0 +1,45 @@
+<apex:page controller="newParensTriggerController">
+    <h1>VF Rule Trigger: cs-vf:new-parens</h1>
+    <p>This page triggers the rule: require parentheses when invoking a constructor with no arguments</p>
+    
+    <!-- Triggers cs-vf:new-parens - Missing parentheses in constructor calls -->
+    <script>
+        function newParensExamples() {
+            // Bad: Constructor calls without parentheses
+            var person = new Person;        // Should be new Person()
+            var date = new Date;            // Should be new Date()
+            var array = new Array;          // Should be new Array()
+            var object = new Object;        // Should be new Object()
+            
+            // Bad: Custom constructor without parentheses
+            function CustomClass() {
+                this.value = 42;
+            }
+            var instance = new CustomClass;  // Should be new CustomClass()
+            
+            // Bad: Built-in constructors without parentheses
+            var regexp = new RegExp;         // Should be new RegExp()
+            var error = new Error;           // Should be new Error()
+            var promise = new Promise;       // Should be new Promise()
+            
+            // Bad: More examples
+            var map = new Map;               // Should be new Map()
+            var set = new Set;               // Should be new Set()
+            var weakMap = new WeakMap;       // Should be new WeakMap()
+            
+            // Bad: In assignments and expressions
+            var result = new String + " suffix";    // Should be new String()
+            var combined = new Number * 2;           // Should be new Number()
+            
+            // Using the created objects
+            console.log("Person:", person);
+            console.log("Date:", date);
+            console.log("Custom instance:", instance);
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="New Parens" action="{!save}" onclick="newParensExamples();" />
+    </apex:form>
+</apex:page>

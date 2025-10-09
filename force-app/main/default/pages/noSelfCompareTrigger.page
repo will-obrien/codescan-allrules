@@ -1,0 +1,50 @@
+<apex:page controller="noSelfCompareTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-self-compare</h1>
+    <p>This page triggers the rule: disallow comparisons where both sides are exactly the same</p>
+    
+    <!-- Triggers cs-vf:no-self-compare - Self comparisons -->
+    <script>
+        function selfComparisonExamples() {
+            var x = 10;
+            var y = 20;
+            
+            // Bad: Comparing variable against itself
+            if (x === x) {
+                x = 20;
+                console.log("Self comparison detected");
+            }
+            
+            // Bad: More self comparisons
+            if (y == y) {
+                console.log("Another self comparison");
+            }
+            
+            // Bad: Self comparison in different contexts
+            while (x === x) {
+                break; // Would be infinite loop
+            }
+            
+            // Bad: Self comparison with property access
+            var obj = { prop: 5 };
+            if (obj.prop === obj.prop) {
+                console.log("Property self comparison");
+            }
+            
+            // Bad: Complex expression self comparison
+            if ((x + y) === (x + y)) {
+                console.log("Complex self comparison");
+            }
+            
+            // Bad: Function call self comparison
+            function getValue() { return 42; }
+            if (getValue() === getValue()) {
+                console.log("Function call self comparison");
+            }
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Self Compare" action="{!save}" onclick="selfComparisonExamples();" />
+    </apex:form>
+</apex:page>

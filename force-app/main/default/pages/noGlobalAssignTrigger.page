@@ -1,0 +1,93 @@
+<apex:page controller="noGlobalAssignTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-global-assign</h1>
+    <p>This page triggers the rule: disallow assignment to native objects</p>
+    
+    <!-- Triggers cs-vf:no-global-assign - Assignment to global/native objects -->
+    <script>
+        function globalAssignExamples() {
+            // Bad: Assigning to native global objects
+            try {
+                Object = null;           // Bad: Reassigning Object constructor
+            } catch (e) {
+                console.log("Object assignment error:", e.message);
+            }
+            
+            try {
+                undefined = 1;           // Bad: Reassigning undefined
+            } catch (e) {
+                console.log("undefined assignment error:", e.message);
+            }
+            
+            // Bad: Browser environment globals (if available)
+            if (typeof window !== 'undefined') {
+                try {
+                    window = {};         // Bad: Reassigning window object
+                } catch (e) {
+                    console.log("window assignment error:", e.message);
+                }
+                
+                try {
+                    length = 1;          // Bad: Reassigning window.length
+                } catch (e) {
+                    console.log("length assignment error:", e.message);
+                }
+                
+                try {
+                    top = 1;             // Bad: Reassigning window.top
+                } catch (e) {
+                    console.log("top assignment error:", e.message);
+                }
+            }
+            
+            // Bad: Other native constructors
+            try {
+                Array = function() {     // Bad: Reassigning Array constructor
+                    return [];
+                };
+            } catch (e) {
+                console.log("Array assignment error:", e.message);
+            }
+            
+            try {
+                String = function() {    // Bad: Reassigning String constructor
+                    return "";
+                };
+            } catch (e) {
+                console.log("String assignment error:", e.message);
+            }
+            
+            try {
+                Number = function() {    // Bad: Reassigning Number constructor
+                    return 0;
+                };
+            } catch (e) {
+                console.log("Number assignment error:", e.message);
+            }
+            
+            // Bad: Math object reassignment
+            try {
+                Math = {                 // Bad: Reassigning Math object
+                    PI: 3.14
+                };
+            } catch (e) {
+                console.log("Math assignment error:", e.message);
+            }
+            
+            // Bad: JSON object reassignment
+            try {
+                JSON = {                 // Bad: Reassigning JSON object
+                    parse: function() { return {}; }
+                };
+            } catch (e) {
+                console.log("JSON assignment error:", e.message);
+            }
+            
+            console.log("Global assignment examples completed");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Global Assign" action="{!save}" onclick="globalAssignExamples();" />
+    </apex:form>
+</apex:page>

@@ -1,0 +1,77 @@
+<apex:page controller="noFuncAssignTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-func-assign</h1>
+    <p>This page triggers the rule: disallow reassigning function declarations</p>
+    
+    <!-- Triggers cs-vf:no-func-assign - Function declaration reassignment -->
+    <script>
+        // Bad: Function declaration followed by reassignment
+        function foo() {
+            return "original function";
+        }
+        foo = bar;  // Bad: Reassigning function declaration
+        
+        // Bad: Function reassignment inside the function itself
+        function selfReassign() {
+            selfReassign = bar;  // Bad: Self-reassignment
+            return "modified";
+        }
+        
+        // Bad: Reassignment before declaration (hoisting issue)
+        earlyAssign = bar;   // Bad: Reassignment before declaration
+        function earlyAssign() {
+            return "should not be reassigned";
+        }
+        
+        // Bad: Multiple reassignments
+        function multipleReassign() {
+            return "original";
+        }
+        multipleReassign = "first reassignment";   // Bad
+        multipleReassign = "second reassignment";  // Bad
+        
+        // Bad: Complex reassignment patterns
+        function complexFunction(param) {
+            return param * 2;
+        }
+        complexFunction = function(param) {        // Bad: Reassigning to function expression
+            return param * 3;
+        };
+        
+        // Bad: Reassignment in conditional blocks
+        function conditionalReassign() {
+            return "conditional";
+        }
+        
+        if (true) {
+            conditionalReassign = "reassigned in if";  // Bad
+        }
+        
+        // Bad: Reassignment in loops
+        function loopReassign() {
+            return "loop function";
+        }
+        
+        for (var i = 0; i < 1; i++) {
+            loopReassign = "reassigned in loop";       // Bad
+        }
+        
+        function demonstrateFuncAssign() {
+            console.log("Function reassignment examples");
+            
+            // These calls may not work as expected due to reassignments
+            try {
+                console.log("foo result:", typeof foo === 'function' ? foo() : foo);
+            } catch (e) {
+                console.log("foo error:", e.message);
+            }
+            
+            console.log("multipleReassign:", multipleReassign);
+            console.log("conditionalReassign:", conditionalReassign);
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Func Assign" action="{!save}" onclick="demonstrateFuncAssign();" />
+    </apex:form>
+</apex:page>

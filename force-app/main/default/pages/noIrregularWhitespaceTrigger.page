@@ -1,0 +1,94 @@
+<apex:page controller="noIrregularWhitespaceTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-irregular-whitespace</h1>
+    <p>This page triggers the rule: disallow irregular whitespace outside of strings and comments</p>
+    
+    <!-- Triggers cs-vf:no-irregular-whitespace - Irregular whitespace characters -->
+    <script>
+        // Bad: Functions with irregular whitespace characters
+        // Note: The actual irregular whitespace characters may not display properly in all editors
+        
+        function thing() {
+            // Bad: Non-breaking space (U+00A0) - represented as comment since it's invisible
+            // The following line contains a non-breaking space character: function thing (){}
+            return 'test';
+        }
+        
+        function irregularWhitespaceExamples() {
+          // Line Tabulation (U+000B)
+            var vtChar = "";
+
+            // Form Feed (U+000C)
+            var ffChar = "";
+
+            // No-Break Space (U+00A0)
+            var nbspChar = " ";
+
+            // Next Line (U+0085)
+            var nelChar = "";
+
+            // Ogham Space Mark (U+1680)
+            var oghamSpace = " ";
+
+            // Mongolian Vowel Separator (U+180E)
+            var mvsChar = "᠎";
+
+            // Zero Width No-Break Space / BOM (U+FEFF)
+            var bomChar = "﻿";
+
+            // En Quad (U+2000)
+            var  enQuad = " ";
+
+            // Em Quad (U+2001)
+            var emQuad = " ";
+
+            // En Space (U+2002)
+            var enSpace = " ";
+
+            // Em Space (U+2003)
+            var emSpace = " ";
+
+            // Three-Per-Em (U+2004)
+            var threePerEm = " ";
+
+            // Four-Per-Em (U+2005)
+            var  fourPerEm = " ";
+
+            // Six-Per-Em (U+2006)
+            var sixPerEm = " ";
+
+            // Figure Space (U+2007)
+            var figureSpace = " ";
+
+            // Punctuation Space (U+2008)
+            var punctuationSpace = " ";
+
+            // Thin Space (U+2009)
+            var thinSpace = " ";
+
+            // Hair Space (U+200A)
+            var hairSpace = " ";
+
+            // Line Separator (U+2028)
+            var lineSeparator = " ";
+
+            // Paragraph Separator (U+2029)
+            var paragraphSeparator = " ";
+
+            // Narrow No-Break Space (U+202F)
+            var narrowNbsp = " ";
+
+            // Medium Mathematical Space (U+205F)
+            var mathSpace = " ";
+
+            // Ideographic Space (U+3000)
+            var ideographicSpace = "　";
+
+            var  lineWithSeparator᠎ = "test᠎";
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Irregular Whitespace" action="{!save}" onclick="irregularWhitespaceExamples();" />
+    </apex:form>
+</apex:page>

@@ -1,0 +1,87 @@
+<apex:page controller="noInvalidRegexpTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-invalid-regexp</h1>
+    <p>This page triggers the rule: disallow invalid regular expression strings in RegExp constructors</p>
+    
+    <!-- Triggers cs-vf:no-invalid-regexp - Invalid RegExp constructor strings -->
+    <script>
+        function invalidRegexpExamples() {
+            try {
+                // Bad: Invalid regular expression patterns
+                var regex1 = RegExp('[');        // Bad: Unclosed bracket
+                console.log("Regex1 created successfully");
+            } catch (e) {
+                console.log("Regex1 error:", e.message);
+            }
+            
+            try {
+                var regex2 = RegExp('.', 'z');   // Bad: Invalid flag 'z'
+                console.log("Regex2 created successfully");
+            } catch (e) {
+                console.log("Regex2 error:", e.message);
+            }
+            
+            try {
+                var regex3 = new RegExp('\\');   // Bad: Unescaped backslash at end
+                console.log("Regex3 created successfully");
+            } catch (e) {
+                console.log("Regex3 error:", e.message);
+            }
+            
+            try {
+                var regex4 = RegExp('(abc');     // Bad: Unclosed group
+                console.log("Regex4 created successfully");
+            } catch (e) {
+                console.log("Regex4 error:", e.message);
+            }
+            
+            try {
+                var regex5 = new RegExp('abc)'); // Bad: Unmatched closing parenthesis
+                console.log("Regex5 created successfully");
+            } catch (e) {
+                console.log("Regex5 error:", e.message);
+            }
+            
+            try {
+                var regex6 = RegExp('[z-a]');    // Bad: Invalid character range
+                console.log("Regex6 created successfully");
+            } catch (e) {
+                console.log("Regex6 error:", e.message);
+            }
+            
+            try {
+                var regex7 = new RegExp('*abc'); // Bad: Quantifier without target
+                console.log("Regex7 created successfully");
+            } catch (e) {
+                console.log("Regex7 error:", e.message);
+            }
+            
+            try {
+                var regex8 = RegExp('abc', 'gg'); // Bad: Duplicate flag
+                console.log("Regex8 created successfully");
+            } catch (e) {
+                console.log("Regex8 error:", e.message);
+            }
+            
+            try {
+                var regex9 = new RegExp('(?P<name>abc)'); // Bad: Invalid named group syntax
+                console.log("Regex9 created successfully");
+            } catch (e) {
+                console.log("Regex9 error:", e.message);
+            }
+            
+            try {
+                var regex10 = RegExp('{5,3}');   // Bad: Invalid quantifier range
+                console.log("Regex10 created successfully");
+            } catch (e) {
+                console.log("Regex10 error:", e.message);
+            }
+            
+            console.log("Invalid RegExp examples completed");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Invalid Regexp" action="{!save}" onclick="invalidRegexpExamples();" />
+    </apex:form>
+</apex:page>

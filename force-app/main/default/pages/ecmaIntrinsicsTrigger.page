@@ -1,0 +1,56 @@
+<apex:page controller="ecmaIntrinsicsTriggerController">
+    <h1>VF Rule Trigger: cs-vf:ecma-intrinsics</h1>
+    <p>This page triggers the rule: validate javascript APIs</p>
+    
+    <!-- Triggers cs-vf:ecma-intrinsics - Invalid JavaScript API modifications -->
+    <script>
+        function invalidEcmaIntrinsics() {
+            // Bad: Modifying intrinsic JavaScript APIs
+            String.doSomething = function() {  // Modifying String constructor
+                return "custom method";
+            };
+            
+            // Bad: More intrinsic API modifications
+            Array.customMethod = function() {   // Adding method to Array
+                return "custom array method";
+            };
+            
+            // Bad: Modifying Object prototype
+            Object.prototype.customProp = "value";  // Adding to Object prototype
+            
+            // Bad: Modifying built-in constructors
+            Number.invalidMethod = function() {     // Adding to Number
+                return "invalid";
+            };
+            
+            // Bad: Modifying Function constructor
+            Function.prototype.customBind = function() {  // Custom bind method
+                return this;
+            };
+            
+            // Bad: Modifying Date constructor
+            Date.customNow = function() {           // Custom Date method
+                return new Date();
+            };
+            
+            // Bad: Modifying Math object
+            Math.customMethod = function() {        // Adding to Math
+                return 42;
+            };
+            
+            // Bad: Modifying RegExp constructor
+            RegExp.customFlags = "gi";             // Adding custom property
+            
+            // Using the modified APIs
+            console.log("Modified intrinsic APIs");
+            if (String.doSomething) {
+                console.log(String.doSomething());
+            }
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Invalid Intrinsics" action="{!save}" onclick="invalidEcmaIntrinsics();" />
+    </apex:form>
+</apex:page>

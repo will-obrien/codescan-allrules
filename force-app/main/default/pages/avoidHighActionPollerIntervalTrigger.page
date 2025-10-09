@@ -1,0 +1,14 @@
+<apex:page controller="avoidHighActionPollerIntervalTriggerController">
+    <apex:form>
+        <h1>VF Rule Trigger: vf:AvoidHighActionPollerInterval</h1>
+        <p>This page is designed to trigger the rule: Avoid High apex:actionpoller Interval</p>
+        <p>Rule Description: vf:AvoidHighActionPollerInterval</p>
+        
+        <apex:pageBlock title="Test Block">
+            <apex:inputText value="{!testValue}" label="Test Input"/>
+            <apex:commandButton value="Test Action" action="{!testAction}"/>
+        </apex:pageBlock>
+        <apex:outputText value="Watch this counter: {!count}" id="counter"/>
+        <apex:actionPoller action="{!incrementCounter}" reRender="counter" interval="14"/>  //Bad: An interval of 14 may be too high.
+    </apex:form>
+</apex:page>

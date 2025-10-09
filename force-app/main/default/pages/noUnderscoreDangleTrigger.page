@@ -1,0 +1,58 @@
+<apex:page controller="noUnderscoreDangleTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-underscore-dangle</h1>
+    <p>This page triggers the rule: disallow dangling underscores in identifiers</p>
+    
+    <!-- Triggers cs-vf:no-underscore-dangle - Dangling underscores -->
+    <script>
+        function underscoreDangleExamples() {
+            // Bad: Leading underscores
+            var _foo = "private variable";
+            var _bar = 42;
+            var _privateMethod = function() {
+                return "private";
+            };
+            
+            // Bad: Trailing underscores
+            var foo_ = "trailing underscore";
+            var data_ = [1, 2, 3];
+            var result_ = null;
+            
+            // Bad: Both leading and trailing
+            var _internal_ = "both sides";
+            
+            // Bad: In object properties
+            var obj = {
+                _privateProp: "value",
+                publicProp_: "another value"
+            };
+            
+            // Bad: Method calls with dangling underscores
+            obj._privateProp = "updated";
+            foo._bar();
+            
+            // Bad: Function names with dangling underscores
+            function _helperFunction() {
+                return "helper";
+            }
+            
+            function processData_() {
+                return "processed";
+            }
+            
+            // Bad: Variable declarations in loops
+            for (var _i = 0; _i < 10; _i++) {
+                console.log("Index: " + _i);
+            }
+            
+            // Using the variables
+            console.log(_foo);
+            console.log(foo_);
+            console.log(_helperFunction());
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Underscore Dangle" action="{!save}" onclick="underscoreDangleExamples();" />
+    </apex:form>
+</apex:page>

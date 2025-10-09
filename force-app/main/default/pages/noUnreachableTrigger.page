@@ -1,0 +1,46 @@
+<apex:page controller="noUnreachableTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-unreachable</h1>
+    <p>This page triggers the rule: disallow unreachable code after return, throw, continue, and break statements</p>
+    
+    <!-- Triggers cs-vf:no-unreachable - Unreachable code -->
+    <script>
+        function unreachableCode() {
+            // Bad: Code after return is unreachable
+            function foo() {
+                return true;
+                console.log("done"); // Unreachable
+            }
+            
+            // Bad: Code after throw is unreachable
+            function bar() {
+                throw new Error("Oops!");
+                console.log("done"); // Unreachable
+            }
+            
+            // Bad: Code after break is unreachable
+            while(value) {
+                break;
+                console.log("done"); // Unreachable
+            }
+            
+            // Bad: Code after throw at top level
+            throw new Error("Oops!");
+            console.log("done"); // Unreachable
+            
+            // Bad: Code after return in conditional
+            function baz() {
+                if (Math.random() < 0.5) {
+                    return;
+                } else {
+                    throw new Error();
+                }
+                console.log("done"); // Unreachable
+            }
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Trigger Unreachable Code" action="{!save}" onclick="unreachableCode();" />
+    </apex:form>
+</apex:page>

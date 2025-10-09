@@ -1,0 +1,16 @@
+<apex:page controller="noShadowRestrictedNamesTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-shadow-restricted-names</h1>
+    <p>This page triggers the rule: disallow identifiers from shadowing restricted names</p>
+    
+    <!-- Triggers cs-vf:no-shadow-restricted-names - Shadowing restricted identifiers -->
+    <script>
+        function NaN(){}
+
+        !function(Infinity){};
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Shadow Restricted" action="{!save}" onclick="shadowRestrictedNamesExamples();" />
+    </apex:form>
+</apex:page>

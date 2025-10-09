@@ -1,0 +1,71 @@
+<apex:page controller="noExAssignTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-ex-assign</h1>
+    <p>This page triggers the rule: disallow reassigning exceptions in catch clauses</p>
+    
+    <!-- Triggers cs-vf:no-ex-assign - Exception parameter reassignment -->
+    <script>
+        function exceptionAssignExamples() {
+            // Bad: Reassigning exception parameter in catch clause
+            try {
+                throw new Error("Test error");
+            } catch (e) {
+                e = 10;          // Bad: Reassigning exception parameter
+                console.log("Exception reassigned to:", e);
+            }
+            
+            // Bad: Different types of reassignment
+            try {
+                throw new TypeError("Type error");
+            } catch (error) {
+                error = "string value";  // Bad: Changing exception to string
+                console.log("Error is now:", error);
+            }
+            
+            // Bad: Reassignment with complex expressions
+            try {
+                throw new ReferenceError("Reference error");
+            } catch (err) {
+                err = { message: "custom error" };  // Bad: Reassigning to object
+                console.log("Custom error:", err.message);
+            }
+            
+            // Bad: Reassignment in nested try-catch
+            try {
+                try {
+                    throw new Error("Inner error");
+                } catch (innerError) {
+                    innerError = "modified inner";  // Bad: Reassigning inner exception
+                    throw innerError;
+                }
+            } catch (outerError) {
+                outerError = "modified outer";      // Bad: Reassigning outer exception
+                console.log("Outer error:", outerError);
+            }
+            
+            // Bad: Reassignment with operations
+            try {
+                throw new Error("Math error");
+            } catch (mathError) {
+                mathError = mathError.message + " - modified";  // Bad: Using then reassigning
+                console.log("Modified error:", mathError);
+            }
+            
+            // Bad: Multiple reassignments
+            try {
+                throw new Error("Multiple reassignment test");
+            } catch (multiError) {
+                multiError = "first change";     // Bad: First reassignment
+                multiError = "second change";    // Bad: Second reassignment
+                multiError = 42;                 // Bad: Third reassignment
+                console.log("Final error value:", multiError);
+            }
+            
+            console.log("Exception reassignment examples completed");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Ex Assign" action="{!save}" onclick="exceptionAssignExamples();" />
+    </apex:form>
+</apex:page>

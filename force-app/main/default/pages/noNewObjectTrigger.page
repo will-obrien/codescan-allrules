@@ -1,0 +1,82 @@
+<apex:page controller="noNewObjectTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-new-object</h1>
+    <p>This page triggers the rule: disallow Object constructors</p>
+    
+    <!-- Triggers cs-vf:no-new-object - Object constructor usage -->
+    <script>
+        function newObjectExamples() {
+            // Bad: Using Object constructor instead of object literal
+            var myObject = new Object();     // Should be var myObject = {};
+            var anotherObject = new Object;  // Should be var anotherObject = {};
+            
+            // Bad: Object constructor with properties
+            var configObject = new Object();
+            configObject.debug = true;
+            configObject.version = "1.0";
+            
+            // Bad: Object constructor in different contexts
+            function createConfig() {
+                return new Object();         // Should return {}
+            }
+            
+            // Bad: Object constructor in conditional
+            var settings = condition ? new Object() : null;  // Should use {}
+            
+            // Bad: Object constructor in array
+            var objects = [
+                new Object(),                // Should be {}
+                new Object(),                // Should be {}
+                new Object()                 // Should be {}
+            ];
+            
+            // Bad: Object constructor as function parameter
+            function processObject(obj) {
+                return obj;
+            }
+            
+            var result = processObject(new Object());  // Should pass {}
+            
+            // Bad: Object constructor with immediate property assignment
+            var user = new Object();
+            user.name = "John";
+            user.age = 30;
+            user.email = "john@example.com";
+            
+            // Bad: Object constructor in loops
+            var collection = [];
+            for (var i = 0; i < 3; i++) {
+                collection.push(new Object());  // Should push {}
+            }
+            
+            // Bad: Nested Object constructors
+            var nested = new Object();
+            nested.level1 = new Object();
+            nested.level1.level2 = new Object();
+            nested.level1.level2.value = "deep";
+            
+            // Bad: Object constructor with method assignment
+            var service = new Object();
+            service.method = function() {
+                return "service method";
+            };
+            
+            // Demonstrating the objects
+            console.log("myObject:", myObject);
+            console.log("configObject:", configObject);
+            console.log("objects length:", objects.length);
+            console.log("user:", user);
+            console.log("collection:", collection);
+            console.log("nested value:", nested.level1.level2.value);
+            console.log("service method:", service.method());
+            
+            var condition = true;
+            
+            console.log("Object constructor examples completed");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="New Object" action="{!save}" onclick="newObjectExamples();" />
+    </apex:form>
+</apex:page>

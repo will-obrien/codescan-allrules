@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profile xmlns="http://soap.sforce.com/2006/04/metadata">
+    <custom>true</custom>
+    <description>Profile created to trigger rule: Profile - Reports and Dashboards Admin Policy</description>
+    <userLicense>Salesforce</userLicense>
+    
+    <!-- Problematic permissions that trigger security rules -->
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ModifyAllData</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ViewAllData</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ManageUsers</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>EditReadOnlyFields</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>WeeklyDataExport</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ViewEncryptedData</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ManageDataIntegrations</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ManageDataCategories</name>
+    </userPermissions>
+    
+    <!-- Object permissions with problematic settings -->
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>true</modifyAllRecords>
+        <object>Account</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>true</modifyAllRecords>
+        <object>Contact</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    
+    <!-- Field permissions -->
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Account.Name</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    
+    <!-- Password policies that might trigger security rules -->
+    <passwordPolicies>
+        <complexity>NoRestriction</complexity>
+        <expiration>Never</expiration>
+        <historyRestriction>NoRestriction</historyRestriction>
+        <lockoutInterval>FifteenMinutes</lockoutInterval>
+        <maxLoginAttempts>3</maxLoginAttempts>
+        <minimumPasswordLength>5</minimumPasswordLength>
+        <minimumPasswordLifetime>false</minimumPasswordLifetime>
+        <obscureSecretAnswer>false</obscureSecretAnswer>
+        <passwordAssistanceMessage>Contact your administrator</passwordAssistanceMessage>
+        <passwordAssistanceURL></passwordAssistanceURL>
+        <questionRestriction>DoesNotContainPassword</questionRestriction>
+    </passwordPolicies>
+    
+    <!-- Session settings -->
+    <sessionSettings>
+        <externalCommunityUserIdentityVerif>false</externalCommunityUserIdentityVerif>
+        <forceRelogin>false</forceRelogin>
+        <requiredSessionLevel>LOW</requiredSessionLevel>
+        <sessionPersistence>true</sessionPersistence>
+        <sessionTimeout>TwoHours</sessionTimeout>
+        <sessionTimeoutWarning>true</sessionTimeoutWarning>
+    </sessionSettings>
+</Profile>

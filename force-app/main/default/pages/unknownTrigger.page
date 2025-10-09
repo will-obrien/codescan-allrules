@@ -1,0 +1,87 @@
+<apex:page controller="unknownTriggerController">
+    <h1>VF Rule Trigger: cs-vf:unknown</h1>
+    <p>This page triggers the rule: CodeScan Other Rules</p>
+    
+    <!-- Triggers cs-vf:unknown - Reserved for future rules and expansion -->
+    <script>
+        function unknownRuleExamples() {
+            console.log("Unknown Rule Information:");
+            console.log("This rule is reserved for future rules and expansion of the plugin");
+            console.log("It should not be turned off as it may catch future rule violations");
+            
+            // Simulate various JavaScript patterns that might trigger future rules
+            var potentialFutureViolations = [
+                "Use of deprecated JavaScript features",
+                "Performance anti-patterns",
+                "Security vulnerabilities not yet covered",
+                "Accessibility issues in JavaScript",
+                "Modern JavaScript best practices",
+                "Framework-specific violations",
+                "Browser compatibility issues",
+                "Memory leak patterns"
+            ];
+            
+            console.log("Potential future violations this rule might catch:");
+            potentialFutureViolations.forEach(function(violation) {
+                console.log("- " + violation);
+            });
+            
+            // Examples of code patterns that might be flagged in the future
+            
+            // Potential future rule: Deprecated JavaScript features
+            var deprecatedPattern1 = "Using 'with' statement (if detected)";
+            var deprecatedPattern2 = "Using 'caller' or 'callee' properties";
+            
+            // Potential future rule: Performance anti-patterns
+            var performancePattern1 = "Synchronous XMLHttpRequest usage";
+            var performancePattern2 = "Inefficient DOM manipulation patterns";
+            var performancePattern3 = "Memory-intensive operations in loops";
+            
+            // Potential future rule: Security patterns
+            var securityPattern1 = "Unsafe innerHTML usage";
+            var securityPattern2 = "Eval-like constructs not yet covered";
+            var securityPattern3 = "Insecure random number generation";
+            
+            // Potential future rule: Modern JavaScript practices
+            var modernPattern1 = "Missing const/let usage where appropriate";
+            var modernPattern2 = "Arrow function usage recommendations";
+            var modernPattern3 = "Promise/async-await best practices";
+            
+            console.log("Example patterns for future expansion:");
+            console.log("Deprecated patterns:", deprecatedPattern1, deprecatedPattern2);
+            console.log("Performance patterns:", performancePattern1, performancePattern2);
+            console.log("Security patterns:", securityPattern1, securityPattern2);
+            console.log("Modern patterns:", modernPattern1, modernPattern2);
+            
+            // Simulate unknown/unexpected JavaScript constructs
+            try {
+                // This might represent code that could trigger unknown rules
+                var unknownConstruct = "Future JavaScript feature usage";
+                console.log("Unknown construct:", unknownConstruct);
+                
+                // Placeholder for future rule detection logic
+                if (typeof futureJavaScriptFeature !== 'undefined') {
+                    console.log("Future feature detected");
+                }
+                
+            } catch (e) {
+                console.log("Unknown construct error:", e.message);
+            }
+            
+            // Information about the rule's purpose
+            console.log("Rule Purpose:");
+            console.log("- Catch violations not covered by specific rules");
+            console.log("- Allow for plugin expansion without version updates");
+            console.log("- Provide flexibility for custom rule implementations");
+            console.log("- Handle edge cases and unusual code patterns");
+            
+            console.log("Unknown rule simulation completed");
+            console.log("This rule serves as a catch-all for future enhancements");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Unknown Rule" action="{!save}" onclick="unknownRuleExamples();" />
+    </apex:form>
+</apex:page>

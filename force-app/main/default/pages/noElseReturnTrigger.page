@@ -1,0 +1,84 @@
+<apex:page controller="noElseReturnTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-else-return</h1>
+    <p>This page triggers the rule: disallow else blocks after return statements in if statements</p>
+    
+    <!-- Triggers cs-vf:no-else-return - Unnecessary else blocks after return -->
+    <script>
+        function elseReturnExamples() {
+            // Bad: else block after return statement
+            function foo() {
+                if (x) {
+                    return y;
+                } else {           // Unnecessary else
+                    return z;
+                }
+            }
+            
+            // Bad: else if after return
+            function bar() {
+                if (x) {
+                    return y;
+                } else if (z) {    // Unnecessary else if
+                    return w;
+                } else {           // Unnecessary else
+                    return t;
+                }
+            }
+            
+            // Bad: else block with statements after return
+            function baz() {
+                if (x) {
+                    return y;
+                } else {           // Unnecessary else
+                    var t = "foo";
+                    doSomething(t);
+                }
+                
+                return t;
+            }
+            
+            // Bad: nested else returns
+            function nested() {
+                if (error) {
+                    return 'It failed';
+                } else {           // Unnecessary else
+                    if (loading) {
+                        return "It's still loading";
+                    }
+                }
+            }
+            
+            // Bad: multiple nested else returns
+            function multipleNested() {
+                if (x) {
+                    if (y) {
+                        return y;
+                    } else {       // Unnecessary else
+                        return x;
+                    }
+                } else {           // Unnecessary else
+                    return z;
+                }
+            }
+            
+            // Bad: else with complex logic after return
+            function complexElse(condition) {
+                if (condition) {
+                    return "success";
+                } else {           // Unnecessary else
+                    var result = processData();
+                    logResult(result);
+                    return result;
+                }
+            }
+            
+            // Using the functions
+            console.log("Functions with unnecessary else blocks defined");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Else Return" action="{!save}" onclick="elseReturnExamples();" />
+    </apex:form>
+</apex:page>

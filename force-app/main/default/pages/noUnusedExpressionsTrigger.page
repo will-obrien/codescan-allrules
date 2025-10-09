@@ -1,0 +1,95 @@
+<apex:page controller="noUnusedExpressionsTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-unused-expressions</h1>
+    <p>This page triggers the rule: disallow unused expressions</p>
+    
+    <!-- Triggers cs-vf:no-unused-expressions - Unused expressions -->
+    <script>
+        function unusedExpressionsExamples() {
+            // Bad: Unused literal expressions
+            0;                               // Unused number literal
+            "unused string";                 // Unused string literal
+            true;                           // Unused boolean literal
+            
+            // Bad: Unused expressions in blocks
+            if (true) {
+                42;                         // Unused expression in if block
+            }
+            
+            {
+                "block expression";          // Unused expression in block
+            }
+            
+            // Bad: Unused expressions with operators
+            var a = 5, b = 10;
+            a + b;                          // Unused arithmetic expression
+            a && b;                         // Unused logical expression (without assignment)
+            a, b;                           // Unused sequence expression
+            
+            // Bad: Unused function calls that return values
+            Math.random();                  // Unused function call result
+            Date.now();                     // Unused function call result
+            
+            // Bad: Unused expressions in different contexts
+            function testFunction() {
+                var x = 10;
+                x * 2;                      // Unused expression
+                x > 5;                      // Unused comparison
+                
+                // Bad: Unused ternary expression
+                x > 5 ? "big" : "small";    // Unused ternary result
+            }
+            
+            // Bad: Unused property access
+            var obj = { prop: "value" };
+            obj.prop;                       // Unused property access
+            obj["prop"];                    // Unused bracket notation access
+            
+            // Bad: Unused method calls on objects
+            var str = "hello";
+            str.toUpperCase();              // Unused method call result
+            str.length;                     // Unused property access
+            
+            // Bad: Unused array access
+            var arr = [1, 2, 3];
+            arr[0];                         // Unused array element access
+            arr.length;                     // Unused array length access
+            
+            // Bad: Complex unused expressions
+            var complex = { nested: { deep: "value" } };
+            complex.nested.deep;            // Unused deep property access
+            
+            // Bad: Unused expressions with side effects (still unused)
+            var counter = 0;
+            counter++;                      // This has side effects but expression result is unused
+            ++counter;                      // Same issue
+            
+            // Bad: Unused logical expressions
+            a && b();                       // b() is called but overall expression is unused
+            a || b();                       // b() is called but overall expression is unused
+            
+            // Bad: Unused assignment expressions (not the assignment itself)
+            var result;
+            (result = a + b);               // Assignment in parentheses, but expression unused
+            
+            // Bad: Unused IIFE result
+            (function() {
+                return "iife result";
+            })();                           // IIFE result is unused
+            
+            // Bad: Unused template literals (ES6)
+            var name = "world";
+            `Hello ${name}!`;               // Unused template literal
+            
+            // Execute the test function
+            testFunction();
+            
+            console.log("Unused expressions examples completed");
+            console.log("Note: Many expressions above have no effect on program state");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Unused Expressions" action="{!save}" onclick="unusedExpressionsExamples();" />
+    </apex:form>
+</apex:page>

@@ -1,0 +1,56 @@
+<apex:page controller="noPlusPlusTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-plusplus</h1>
+    <p>This page triggers the rule: disallow the unary operators ++ and --</p>
+    
+    <!-- Triggers cs-vf:no-plusplus - Increment/decrement operators -->
+    <script>
+        function incrementDecrementExamples() {
+            // Bad: Using ++ and -- operators
+            var foo = 0;
+            foo++;                    // Should use foo += 1
+            
+            var bar = 42;
+            bar--;                    // Should use bar -= 1
+            
+            // Bad: Pre-increment/decrement
+            var count = 5;
+            ++count;                  // Should use count += 1
+            --count;                  // Should use count -= 1
+            
+            // Bad: In for loops (problematic due to ASI)
+            for (var i = 0; i < 10; i++) {  // Should use i += 1
+                console.log("Index: " + i);
+            }
+            
+            // Bad: In while loops
+            var j = 0;
+            while (j < 5) {
+                console.log("J: " + j);
+                j++;                  // Should use j += 1
+            }
+            
+            // Bad: In expressions
+            var result = foo++ + bar--;  // Multiple issues
+            var another = ++count - --bar; // More issues
+            
+            // Bad: In array access
+            var arr = [1, 2, 3, 4, 5];
+            var index = 0;
+            console.log(arr[index++]);   // Should use index += 1
+            
+            // Bad: In function calls
+            function process(val) {
+                return val * 2;
+            }
+            var x = 10;
+            console.log(process(x++));   // Should use x += 1
+            
+            console.log("Final values - foo:", foo, "bar:", bar, "count:", count);
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Plus Plus" action="{!save}" onclick="incrementDecrementExamples();" />
+    </apex:form>
+</apex:page>

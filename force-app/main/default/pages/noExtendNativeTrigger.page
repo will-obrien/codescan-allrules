@@ -1,0 +1,76 @@
+<apex:page controller="noExtendNativeTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-extend-native</h1>
+    <p>This page triggers the rule: disallow extending native types</p>
+    
+    <!-- Triggers cs-vf:no-extend-native - Extending native prototypes -->
+    <script>
+        function extendNativeExamples() {
+            // Bad: Extending Object prototype
+            Object.prototype.extra = 55;         // Modifies all objects
+            Object.prototype.customMethod = function() {
+                return "custom";
+            };
+            
+            // Bad: Extending Array prototype
+            Array.prototype.times = 999;         // Adds property to all arrays
+            Array.prototype.customFilter = function() {
+                return this.filter(function(item) { return item; });
+            };
+            
+            // Bad: Using Object.defineProperty to extend natives
+            Object.defineProperty(Array.prototype, "special", { 
+                value: "special value",
+                writable: true 
+            });
+            
+            // Bad: Extending String prototype
+            String.prototype.reverse = function() {
+                return this.split('').reverse().join('');
+            };
+            
+            // Bad: Extending Number prototype
+            Number.prototype.isEven = function() {
+                return this % 2 === 0;
+            };
+            
+            // Bad: Extending Function prototype
+            Function.prototype.customBind = function(context) {
+                var fn = this;
+                return function() {
+                    return fn.apply(context, arguments);
+                };
+            };
+            
+            // Bad: Extending Date prototype
+            Date.prototype.format = function() {
+                return this.getFullYear() + "-" + (this.getMonth() + 1) + "-" + this.getDate();
+            };
+            
+            // Demonstrating the problems this causes
+            var users = {
+                "123": "Stan",
+                "456": "David"
+            };
+            
+            console.log("Users object properties:");
+            for (var id in users) {
+                console.log(id + ":", users[id]); // Will also show "extra" property
+            }
+            
+            // Testing extended methods
+            var testArray = [1, 2, 3];
+            console.log("Array times property:", testArray.times);
+            
+            var testString = "hello";
+            console.log("String reverse:", testString.reverse());
+            
+            var testNumber = 4;
+            console.log("Number isEven:", testNumber.isEven());
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Extend Native" action="{!save}" onclick="extendNativeExamples();" />
+    </apex:form>
+</apex:page>

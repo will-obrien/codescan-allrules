@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sfmeta_SystemBypassLogicValidation_ValidationRule</fullName>
+    <active>true</active>
+    <description>Validation rule created to trigger rule: nCino - System Bypass Logic - Validation Rules</description>
+    <errorConditionFormula>
+        ISBLANK(Name)
+    </errorConditionFormula>
+    <errorMessage>Name is required</errorMessage>
+</ValidationRule>

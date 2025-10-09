@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>API Admin Policy Violation</label>
+    <description>Grants excessive API admin permissions</description>
+    <userPermissions>
+        <name>ModifyMetadataThroughMetadataApi</name>
+        <enabled>true</enabled>
+    </userPermissions>
+    <userPermissions>
+        <name>ApiEnabled</name>
+        <enabled>true</enabled>
+    </userPermissions>
+</PermissionSet>

@@ -1,0 +1,26 @@
+<aura:component>
+    <aura:attribute name="showContent" type="Boolean" default="false"/>
+    <lightning:button label="Toggle Content" onclick="{!c.handleToggle}" variant="brand"/>
+    <input type="button" value="Flawed HTML Button" onclick="alert('bad')"/>  
+    <div class="slds-m-around_medium">
+        <h1 class="slds-text-heading_small">No OnClick JavaScript Test Component</h1>
+        <p>This component demonstrates proper event handling without inline JavaScript.</p>
+        
+        <!-- BAD: This would trigger the no-onclick-javascript rule -->
+        <!-- <button onclick="alert('This is bad!')">Bad Button</button> -->
+        
+        <!-- GOOD: Using proper Aura event handling -->
+        <lightning:button label="Toggle Content" onclick="{!c.handleToggle}" variant="brand"/>
+        
+        <aura:if isTrue="{!v.showContent}">
+            <div class="slds-m-top_medium">
+                <p>Content is now visible!</p>
+            </div>
+        </aura:if>
+        
+        <!-- Another example of proper event handling -->
+        <div class="slds-m-top_medium">
+            <lightning:input label="Test Input" onchange="{!c.handleInputChange}"/>
+        </div>
+    </div>
+</aura:component>

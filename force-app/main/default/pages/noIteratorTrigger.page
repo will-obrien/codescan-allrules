@@ -1,0 +1,97 @@
+<apex:page controller="noIteratorTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-iterator</h1>
+    <p>This page triggers the rule: disallow the use of the __iterator__ property</p>
+    
+    <!-- Triggers cs-vf:no-iterator - __iterator__ property usage -->
+    <script>
+        function iteratorExamples() {
+            // Bad: Using __iterator__ property (SpiderMonkey extension)
+            function Foo() {
+                this.items = [1, 2, 3];
+            }
+            
+            // Bad: Defining __iterator__ on prototype
+            Foo.prototype.__iterator__ = function() {
+                return new FooIterator(this);
+            };
+            
+            // Bad: Direct __iterator__ assignment
+            var obj = {};
+            obj.__iterator__ = function () {
+                return {
+                    next: function() {
+                        return { done: true };
+                    }
+                };
+            };
+            
+            // Bad: __iterator__ with bracket notation
+            var another = {};
+            another["__iterator__"] = function () {
+                return {
+                    current: 0,
+                    items: [1, 2, 3],
+                    next: function() {
+                        if (this.current < this.items.length) {
+                            return { value: this.items[this.current++], done: false };
+                        }
+                        return { done: true };
+                    }
+                };
+            };
+            
+            // Bad: Using __iterator__ in different contexts
+            function CustomCollection() {
+                this.data = [];
+            }
+            
+            CustomCollection.prototype.__iterator__ = function() {
+                var index = 0;
+                var data = this.data;
+                
+                return {
+                    next: function() {
+                        if (index < data.length) {
+                            return { value: data[index++], done: false };
+                        }
+                        return { done: true };
+                    }
+                };
+            };
+            
+            // Bad: Accessing __iterator__ property
+            var collection = new CustomCollection();
+            collection.data = ['a', 'b', 'c'];
+            
+            if (collection.__iterator__) {
+                console.log("Iterator found");
+                var iterator = collection.__iterator__();
+                console.log("Iterator created");
+            }
+            
+            // Bad: Complex __iterator__ usage
+            var complexObj = {
+                items: [10, 20, 30],
+                __iterator__: function() {
+                    var i = 0;
+                    var items = this.items;
+                    return {
+                        next: function() {
+                            return i < items.length ? 
+                                { value: items[i++], done: false } : 
+                                { done: true };
+                        }
+                    };
+                }
+            };
+            
+            console.log("Iterator examples created");
+            console.log("Note: __iterator__ is deprecated and should not be used");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Iterator" action="{!save}" onclick="iteratorExamples();" />
+    </apex:form>
+</apex:page>

@@ -1,0 +1,42 @@
+<apex:page controller="noDivRegexTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-div-regex</h1>
+    <p>This page triggers the rule: disallow division operators explicitly at the beginning of regular expressions</p>
+    
+    <!-- Triggers cs-vf:no-div-regex - Division operators in regex -->
+    <script>
+        function divisionRegexExamples() {
+            // Bad: Division operator at start of regex (unescaped)
+            function bar() { 
+                return /=foo/;  // Should be /\=foo/
+            }
+            
+            // Bad: More examples of unescaped division operators
+            var pattern1 = /=test/;        // Looks like division
+            var pattern2 = /=begin/;       // Confusing syntax
+            var pattern3 = /=end$/;        // End anchor with division
+            
+            // Bad: In different contexts
+            var regex = /=value/g;         // Global flag with division
+            var multiline = /=start/m;     // Multiline with division
+            
+            // Bad: Complex patterns with division
+            var complexPattern = /^=header/;     // Start anchor with division
+            var numberPattern = /\d+=\d+/;       // Numbers with division
+            
+            // Using the regex patterns
+            var testString = "=foo";
+            if (bar().test(testString)) {
+                console.log("Division regex matched");
+            }
+            
+            // Bad: More regex usage
+            var matches = "=test=value".match(/=test/);
+            var replaced = "=begin content =end".replace(/=begin/, "start");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Division Regex" action="{!save}" onclick="divisionRegexExamples();" />
+    </apex:form>
+</apex:page>

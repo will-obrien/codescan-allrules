@@ -1,0 +1,32 @@
+<apex:page controller="noUndefTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-undef</h1>
+    <p>This page triggers the rule: disallow the use of undeclared variables</p>
+    
+    <!-- Triggers cs-vf:no-undef - Undeclared variables -->
+    <script>
+        function useUndeclaredVariables() {
+            // Bad: Using undeclared variables
+            var a = someFunction();  // someFunction is not declared
+            b = 10;  // b is not declared
+            
+            // Bad: More undeclared variable usage
+            if (typeof undeclaredVar === "string") {
+                console.log("This uses an undeclared variable");
+            }
+            
+            // Bad: Assignment to undeclared variable
+            undeclaredCounter = 0;
+            undeclaredCounter++;
+            
+            // Bad: Function call on undeclared object
+            undeclaredObject.method();
+            
+            return undeclaredReturnValue;
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Use Undeclared Vars" action="{!save}" onclick="useUndeclaredVariables();" />
+    </apex:form>
+</apex:page>

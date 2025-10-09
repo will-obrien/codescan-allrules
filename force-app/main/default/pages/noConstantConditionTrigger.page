@@ -1,0 +1,65 @@
+<apex:page controller="noConstantConditionTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-constant-condition</h1>
+    <p>This page triggers the rule: disallow constant expressions in conditions</p>
+    
+    <!-- Triggers cs-vf:no-constant-condition - Constant expressions in conditions -->
+    <script>
+        function constantConditionExamples() {
+            // Bad: Constant conditions in if statements
+            if (false) {
+                doSomethingUnfinished();  // Dead code
+            }
+            
+            if (true) {
+                console.log("This always executes");  // Always true
+            }
+            
+            // Bad: Constant conditions in ternary operators
+            var result = 0 ? "a" : "b";  // Always "b"
+            var another = 1 ? "yes" : "no";  // Always "yes"
+            
+            // Bad: Constant conditions in loops
+            for (;-2;) {
+                console.log("Infinite loop with constant");
+                break; // Need break to prevent actual infinite loop
+            }
+            
+            while (typeof x) {  // typeof always returns a string (truthy)
+                console.log("Another infinite loop");
+                break; // Need break to prevent actual infinite loop
+            }
+            
+            do {
+                console.log("Do-while with constant");
+                break; // Need break to prevent actual infinite loop
+            } while (x = -1);  // Assignment always returns -1 (truthy)
+            
+            // Bad: More constant condition examples
+            if (void x) {  // void always returns undefined (falsy)
+                console.log("This never executes");
+            }
+            
+            if (5) {  // Number literal (truthy)
+                console.log("Always true number");
+            }
+            
+            if ("string") {  // String literal (truthy)
+                console.log("Always true string");
+            }
+            
+            // Bad: Complex constant expressions
+            if (1 + 1) {  // Mathematical expression (truthy)
+                console.log("Math always true");
+            }
+            
+            if (!false) {  // Negation of false (true)
+                console.log("Negation always true");
+            }
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Constant Condition" action="{!save}" onclick="constantConditionExamples();" />
+    </apex:form>
+</apex:page>

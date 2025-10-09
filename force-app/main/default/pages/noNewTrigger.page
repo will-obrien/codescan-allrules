@@ -1,0 +1,95 @@
+<apex:page controller="noNewTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-new</h1>
+    <p>This page triggers the rule: disallow new operators outside of assignments or comparisons</p>
+    
+    <!-- Triggers cs-vf:no-new - New operators without assignment -->
+    <script>
+        function newOperatorExamples() {
+            // Bad: Using new without storing the result
+            new Thing();              // Bad: Result is thrown away
+            new Date();               // Bad: Date object not stored
+            new Array();              // Bad: Array not stored
+            new Object();             // Bad: Object not stored
+            
+            // Bad: New in expressions without assignment
+            if (new Boolean(true)) {  // Bad: Boolean object not stored
+                console.log("Boolean created but not stored");
+            }
+            
+            // Bad: New in function calls
+            console.log(new String("test")); // This is actually OK as it's used
+            processData(new Error("test"));  // This is actually OK as it's used
+            
+            // Bad: New in loops without storing
+            for (var i = 0; i < 3; i++) {
+                new CustomObject();   // Bad: Created but not stored
+            }
+            
+            // Bad: New in conditional blocks
+            if (shouldCreate) {
+                new TemporaryObject(); // Bad: Not stored
+            }
+            
+            // Bad: Multiple new calls without assignment
+            new FirstThing();
+            new SecondThing();
+            new ThirdThing();
+            
+            // Bad: New with side effects (still not recommended)
+            function SideEffectConstructor() {
+                console.log("Constructor called");
+                this.value = 42;
+            }
+            
+            new SideEffectConstructor(); // Bad: Even with side effects, not storing is bad practice
+            
+            // Bad: New in try-catch without assignment
+            try {
+                new PotentiallyFailingConstructor();
+            } catch (e) {
+                console.log("Constructor failed:", e.message);
+            }
+            
+            // Custom constructors for the examples
+            function Thing() {
+                this.name = "thing";
+            }
+            
+            function CustomObject() {
+                this.id = Math.random();
+            }
+            
+            function TemporaryObject() {
+                this.temp = true;
+            }
+            
+            function FirstThing() {
+                this.first = true;
+            }
+            
+            function SecondThing() {
+                this.second = true;
+            }
+            
+            function ThirdThing() {
+                this.third = true;
+            }
+            
+            function PotentiallyFailingConstructor() {
+                if (Math.random() > 0.5) {
+                    throw new Error("Random failure");
+                }
+                this.success = true;
+            }
+            
+            var shouldCreate = true;
+            
+            console.log("New operator examples without assignment completed");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="New Operator" action="{!save}" onclick="newOperatorExamples();" />
+    </apex:form>
+</apex:page>

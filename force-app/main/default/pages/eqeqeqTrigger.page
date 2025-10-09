@@ -1,0 +1,39 @@
+<apex:page controller="eqeqeqTriggerController">
+    <h1>VF Rule Trigger: cs-vf:eqeqeq</h1>
+    <p>This page triggers the rule: require the use of === and !==</p>
+    
+    <!-- Triggers cs-vf:eqeqeq - Type-unsafe equality operators -->
+    <script>
+        function checkEquality() {
+            var x = 42;
+            var text = "";
+            
+            // Bad: Using type-unsafe equality operators
+            if (x == 42) {
+                console.log("Loose equality check");
+            }
+            
+            if ("" == text) {
+                console.log("String comparison with loose equality");
+            }
+            
+            if (obj.getStuff() != undefined) {
+                console.log("Undefined check with loose inequality");
+            }
+            
+            // More problematic comparisons
+            if ([] == false) {
+                console.log("Array equals false");
+            }
+            
+            if (3 == "03") {
+                console.log("Number equals string");
+            }
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Check Equality" action="{!save}" onclick="checkEquality();" />
+    </apex:form>
+</apex:page>

@@ -1,0 +1,18 @@
+<apex:page controller="doubleQuotesCheckTriggerController">
+    <apex:form class='foo'>
+        <h1 class='foo'>VF Rule Trigger: vf:DoubleQuotesCheck</h1>
+        <p>This page is designed to trigger the rule: Use Double Quotes to Define Attributes</p>
+        <p>Rule Description: vf:DoubleQuotesCheck</p>
+        <div class='foo'></div>
+        <apex:pageBlock>
+        <html>
+            <div class='foo'>   //Bad: not recommended.
+                <h:someNode class='redflag'/>
+                <div class="bar">  //Good: double quotes are preferred.
+                    <form name="tabClickForm" action='<c:url value="FlexPricerAvailabilityServlet"/>' method="post"></form>
+                </div>
+            </div>
+        </html>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,76 @@
+<apex:page controller="noNewWrappersTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-new-wrappers</h1>
+    <p>This page triggers the rule: disallow new operators with the String, Number, and Boolean objects</p>
+    
+    <!-- Triggers cs-vf:no-new-wrappers - Primitive wrapper constructors -->
+    <script>
+        function newWrappersExamples() {
+            // Bad: Using new with primitive wrapper constructors
+            var stringObject = new String("Hello world");    // Should be String("Hello world") or "Hello world"
+            var numberObject = new Number(33);               // Should be Number(33) or 33
+            var booleanObject = new Boolean(false);          // Should be Boolean(false) or false
+            
+            // Bad: Without arguments
+            var emptyString = new String;                    // Should be String() or ""
+            var zeroNumber = new Number;                     // Should be Number() or 0
+            var falseBoolean = new Boolean;                  // Should be Boolean() or false
+            
+            // Demonstrating the problems with wrapper objects
+            console.log("String object type:", typeof stringObject);        // "object" not "string"
+            console.log("Number object type:", typeof numberObject);        // "object" not "number"  
+            console.log("Boolean object type:", typeof booleanObject);      // "object" not "boolean"
+            
+            // Bad: Boolean wrapper objects are always truthy
+            if (booleanObject) {    // This will always be true, even if booleanObject wraps false!
+                console.log("Boolean object is truthy even when wrapping false!");
+            }
+            
+            // Bad: More wrapper constructor examples
+            var wrappedZero = new Number(0);                 // Even wrapping 0
+            var wrappedEmptyString = new String("");         // Even wrapping empty string
+            var wrappedFalse = new Boolean(false);          // Even wrapping false
+            
+            // All wrapper objects are truthy in boolean context
+            if (wrappedZero) {
+                console.log("Wrapped zero is truthy!");
+            }
+            
+            if (wrappedEmptyString) {
+                console.log("Wrapped empty string is truthy!");
+            }
+            
+            if (wrappedFalse) {
+                console.log("Wrapped false is truthy!");
+            }
+            
+            // Bad: Using in different contexts
+            function createString() {
+                return new String("created");               // Bad
+            }
+            
+            var arrayOfWrappers = [
+                new String("first"),                        // Bad
+                new Number(42),                             // Bad
+                new Boolean(true)                           // Bad
+            ];
+            
+            // Bad: Wrapper constructors in expressions
+            var result = new String("test") + " suffix";    // Works but creates unnecessary object
+            var calculation = new Number(5) * 2;            // Works but creates unnecessary object
+            
+            console.log("String object value:", stringObject.valueOf());
+            console.log("Number object value:", numberObject.valueOf());
+            console.log("Boolean object value:", booleanObject.valueOf());
+            console.log("Array of wrappers:", arrayOfWrappers);
+            console.log("Result:", result);
+            console.log("Calculation:", calculation);
+            
+            console.log("Wrapper constructor examples completed");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="New Wrappers" action="{!save}" onclick="newWrappersExamples();" />
+    </apex:form>
+</apex:page>

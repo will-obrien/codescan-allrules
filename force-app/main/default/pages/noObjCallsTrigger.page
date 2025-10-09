@@ -1,0 +1,92 @@
+<apex:page controller="noObjCallsTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-obj-calls</h1>
+    <p>This page triggers the rule: disallow calling global object properties as functions</p>
+    
+    <!-- Triggers cs-vf:no-obj-calls - Calling global objects as functions -->
+    <script>
+        function objCallsExamples() {
+            try {
+                // Bad: Calling Math as a function
+                var math = Math();               // Math is not a constructor/function
+                console.log("Math() result:", math);
+            } catch (e) {
+                console.log("Math() error:", e.message);
+            }
+            
+            try {
+                // Bad: Calling JSON as a function  
+                var json = JSON();               // JSON is not a constructor/function
+                console.log("JSON() result:", json);
+            } catch (e) {
+                console.log("JSON() error:", e.message);
+            }
+            
+            try {
+                // Bad: Calling Reflect as a function (ES2015)
+                if (typeof Reflect !== 'undefined') {
+                    var reflect = Reflect();     // Reflect is not a constructor/function
+                    console.log("Reflect() result:", reflect);
+                }
+            } catch (e) {
+                console.log("Reflect() error:", e.message);
+            }
+            
+            // Bad: Attempting to use new with these objects
+            try {
+                var mathInstance = new Math();   // Math cannot be instantiated
+                console.log("new Math() result:", mathInstance);
+            } catch (e) {
+                console.log("new Math() error:", e.message);
+            }
+            
+            try {
+                var jsonInstance = new JSON();   // JSON cannot be instantiated
+                console.log("new JSON() result:", jsonInstance);
+            } catch (e) {
+                console.log("new JSON() error:", e.message);
+            }
+            
+            try {
+                if (typeof Reflect !== 'undefined') {
+                    var reflectInstance = new Reflect(); // Reflect cannot be instantiated
+                    console.log("new Reflect() result:", reflectInstance);
+                }
+            } catch (e) {
+                console.log("new Reflect() error:", e.message);
+            }
+            
+            // Bad: Trying to call other global objects as functions
+            try {
+                if (typeof console !== 'undefined') {
+                    var consoleResult = console();   // console is not a function
+                    console.log("console() result:", consoleResult);
+                }
+            } catch (e) {
+                console.log("console() error:", e.message);
+            }
+            
+            // Demonstrating correct usage (for comparison)
+            console.log("Correct Math usage:");
+            console.log("Math.PI:", Math.PI);
+            console.log("Math.max(1,2,3):", Math.max(1, 2, 3));
+            
+            console.log("Correct JSON usage:");
+            var testObj = { name: "test" };
+            console.log("JSON.stringify:", JSON.stringify(testObj));
+            console.log("JSON.parse:", JSON.parse('{"key":"value"}'));
+            
+            if (typeof Reflect !== 'undefined') {
+                console.log("Correct Reflect usage:");
+                var obj = { x: 1, y: 2 };
+                console.log("Reflect.get:", Reflect.get(obj, "x"));
+            }
+            
+            console.log("Object calls examples completed");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Obj Calls" action="{!save}" onclick="objCallsExamples();" />
+    </apex:form>
+</apex:page>

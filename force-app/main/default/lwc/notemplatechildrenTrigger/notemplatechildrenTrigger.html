@@ -1,0 +1,14 @@
+<template>
+    <div class="slds-card">
+        <div class="slds-card__header">
+            <h2 class="slds-card__header-title">cs-js:no-template-children Trigger</h2>
+        </div>
+        <div class="slds-card__body">
+            <p>This component triggers the no-template-children rule by accessing template.children directly.</p>
+            <div id="child1">Child 1</div>
+            <div id="child2">Child 2</div>
+            <div id="child3">Child 3</div>
+            <lightning-button label="Access Children" onclick={handleClick}></lightning-button>
+        </div>
+    </div>
+</template>

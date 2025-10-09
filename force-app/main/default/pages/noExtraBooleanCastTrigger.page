@@ -1,0 +1,70 @@
+<apex:page controller="noExtraBooleanCastTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-extra-boolean-cast</h1>
+    <p>This page triggers the rule: disallow unnecessary boolean casts</p>
+    
+    <!-- Triggers cs-vf:no-extra-boolean-cast - Unnecessary boolean casts -->
+    <script>
+        function extraBooleanCastExamples() {
+            var foo = "test";
+            var bar = 42;
+            var baz = null;
+            
+            // Bad: Unnecessary boolean casts in conditions
+            if (!!foo) {                    // Unnecessary double negation
+                console.log("Double negation in if");
+            }
+            
+            if (Boolean(foo)) {             // Unnecessary Boolean() call
+                console.log("Boolean call in if");
+            }
+            
+            while (!!foo) {                 // Unnecessary in while
+                console.log("Double negation in while");
+                break; // Prevent infinite loop
+            }
+            
+            do {
+                console.log("Boolean call in do-while");
+                break; // Prevent infinite loop
+            } while (Boolean(foo));         // Unnecessary in do-while
+            
+            for (; !!foo; ) {               // Unnecessary in for loop
+                console.log("Double negation in for");
+                break; // Prevent infinite loop
+            }
+            
+            // Bad: Unnecessary boolean casts in expressions
+            var result1 = !!!bar;           // Triple negation
+            var result2 = !!bar ? baz : bat; // Unnecessary in ternary
+            var result3 = Boolean(!!bar);   // Double unnecessary cast
+            var result4 = new Boolean(!!bar); // Even worse with new
+            
+            // Bad: Complex unnecessary casts
+            var complex1 = !!(foo && bar);   // Unnecessary with logical AND
+            var complex2 = Boolean(foo || bar); // Unnecessary with logical OR
+            var complex3 = !!(foo ? bar : baz); // Unnecessary with ternary
+            
+            // Bad: In function returns (unnecessary)
+            function unnecessaryReturn() {
+                return !!someCondition;     // Unnecessary if used in boolean context
+            }
+            
+            // Bad: In assignments where boolean context is expected
+            var isValid = !!validateInput(); // Unnecessary if validateInput returns boolean
+            var hasData = Boolean(getData()); // Unnecessary if used in boolean context
+            
+            // Bad: Nested unnecessary casts
+            var nested = !!(!!foo || !!bar); // Multiple unnecessary casts
+            var chained = Boolean(Boolean(foo)); // Chained Boolean calls
+            
+            console.log("Results:", result1, result2, result3, result4);
+            console.log("Complex:", complex1, complex2, complex3);
+            console.log("Nested:", nested, chained);
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Extra Boolean Cast" action="{!save}" onclick="extraBooleanCastExamples();" />
+    </apex:form>
+</apex:page>

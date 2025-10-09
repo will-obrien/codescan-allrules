@@ -1,0 +1,50 @@
+<apex:page controller="noControlRegexTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-control-regex</h1>
+    <p>This page triggers the rule: disallow control characters in regular expressions</p>
+    
+    <!-- Triggers cs-vf:no-control-regex - Control characters in regex -->
+    <script>
+        function controlRegexExamples() {
+            // Bad: Control characters in regular expressions (ASCII 0-31)
+            var pattern1 = /\x1f/;           // Unit Separator (ASCII 31)
+            var pattern2 = new RegExp("\x1f"); // Same as above but with RegExp constructor
+            
+            // Bad: More control characters
+            var pattern3 = /\x00/;           // Null character (ASCII 0)
+            var pattern4 = /\x01/;           // Start of Heading (ASCII 1)
+            var pattern5 = /\x02/;           // Start of Text (ASCII 2)
+            var pattern6 = /\x03/;           // End of Text (ASCII 3)
+            
+            // Bad: Control characters in different contexts
+            var pattern7 = /\x07/;           // Bell character (ASCII 7)
+            var pattern8 = /\x0E/;           // Shift Out (ASCII 14)
+            var pattern9 = /\x0F/;           // Shift In (ASCII 15)
+            var pattern10 = /\x1B/;          // Escape character (ASCII 27)
+            
+            // Bad: Control characters with RegExp constructor
+            var regexConstructor1 = new RegExp("\x04");  // End of Transmission
+            var regexConstructor2 = new RegExp("\x05");  // Enquiry
+            var regexConstructor3 = new RegExp("\x06");  // Acknowledge
+            
+            // Bad: Control characters in character classes
+            var charClass1 = /[\x00-\x1F]/;    // Range of control characters
+            var charClass2 = /[a-z\x01]/;      // Mixed with normal characters
+            
+            // Bad: Control characters in complex patterns
+            var complex1 = /^\x02.*\x03$/;     // STX...ETX pattern
+            var complex2 = /\w+\x1F\w+/;       // Words separated by Unit Separator
+            
+            // Testing the patterns (these would likely not match normal strings)
+            var testString = "normal text";
+            console.log("Pattern1 test:", pattern1.test(testString));
+            console.log("Pattern2 test:", pattern2.test(testString));
+            
+            console.log("Control character patterns created");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Control Regex" action="{!save}" onclick="controlRegexExamples();" />
+    </apex:form>
+</apex:page>

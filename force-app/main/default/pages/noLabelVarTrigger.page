@@ -1,0 +1,100 @@
+<apex:page controller="noLabelVarTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-label-var</h1>
+    <p>This page triggers the rule: disallow labels that share a name with a variable</p>
+    
+    <!-- Triggers cs-vf:no-label-var - Labels sharing names with variables -->
+    <script>
+        function labelVarExamples() {
+            // Bad: Label shares name with variable in scope
+            var x = "foo";
+            
+            function bar() {
+                // Bad: Label 'x' shares name with variable 'x' in outer scope
+                x:
+                for (var i = 0; i < 10; i++) {
+                    if (i === 5) {
+                        break x;  // Breaking to label x
+                    }
+                    console.log("Loop iteration:", i);
+                }
+            }
+            
+            // Bad: More complex example with nested scopes
+            var counter = 0;
+            var limit = 5;
+            
+            function processData() {
+                // Bad: Labels sharing names with outer variables
+                counter:
+                while (true) {
+                    counter++;
+                    
+                    limit:
+                    for (var j = 0; j < 3; j++) {
+                        if (counter >= limit) {
+                            break counter;  // Break to counter label
+                        }
+                        if (j === 2) {
+                            continue counter;  // Continue to counter label
+                        }
+                    }
+                }
+                
+                console.log("Final counter:", counter);
+            }
+            
+            // Bad: Label in function scope sharing name with parameter
+            function processItems(items) {
+                // Bad: Label 'items' shares name with parameter
+                items:
+                for (var k = 0; k < 5; k++) {
+                    if (k === 3) {
+                        break items;
+                    }
+                    console.log("Processing item:", k);
+                }
+            }
+            
+            // Bad: Multiple labels sharing names with variables
+            var start = 0;
+            var end = 10;
+            var step = 2;
+            
+            function complexLoop() {
+                // Bad: Multiple label/variable name conflicts
+                start:
+                for (var i = start; i < end; i += step) {
+                    end:
+                    for (var j = 0; j < 5; j++) {
+                        step:
+                        for (var k = 0; k < 3; k++) {
+                            if (i + j + k > 15) {
+                                break start;  // Break to start label
+                            }
+                            if (j === 2) {
+                                continue end;  // Continue to end label
+                            }
+                            if (k === 1) {
+                                continue step;  // Continue to step label
+                            }
+                            console.log("Complex loop:", i, j, k);
+                        }
+                    }
+                }
+            }
+            
+            // Execute the functions
+            bar();
+            processData();
+            processItems(['a', 'b', 'c']);
+            complexLoop();
+            
+            console.log("Label-variable name conflicts demonstrated");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Label Var" action="{!save}" onclick="labelVarExamples();" />
+    </apex:form>
+</apex:page>

@@ -1,0 +1,22 @@
+<apex:page controller="exceptionTriggerController">
+    <h1>VF Rule Trigger: cs-vf:exception</h1>
+    <p>This page triggers the rule: Tracks CodeScan Eslint Exceptions</p>
+    
+    <!-- Triggers cs-vf:exception - JavaScript syntax that causes parsing errors -->
+    <script>
+        // Intentionally problematic JavaScript that causes parsing exceptions
+        function badFunction() {
+            var x = ;  // Missing value - syntax error
+            if (true {  // Missing closing parenthesis
+                console.log("This will cause parser issues");
+            }
+            // Unterminated string
+            var str = "This string is not closed
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Submit" action="{!save}" />
+    </apex:form>
+</apex:page>

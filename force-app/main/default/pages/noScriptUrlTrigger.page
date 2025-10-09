@@ -1,0 +1,50 @@
+<apex:page controller="noScriptUrlTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-script-url</h1>
+    <p>This page triggers the rule: disallow javascript: urls</p>
+    
+    <!-- Triggers cs-vf:no-script-url - JavaScript URLs -->
+    <script>
+        function javascriptUrlExamples() {
+            // Bad: Using javascript: URLs
+            if (typeof location !== 'undefined') {
+                location.href = "javascript:void(0)";  // javascript: URL usage
+            }
+            
+            // Bad: More javascript: URL examples
+            var link1 = "javascript:alert('Hello')";
+            var link2 = "javascript:console.log('test')";
+            var link3 = "javascript:window.open('http://example.com')";
+            
+            // Bad: In different contexts
+            var maliciousUrl = "javascript:document.cookie='stolen'";
+            var redirectUrl = "javascript:location.replace('http://evil.com')";
+            
+            // Bad: Encoded javascript URLs
+            var encoded = "javascript%3Aalert('encoded')";
+            
+            // Bad: Creating elements with javascript URLs
+            if (typeof document !== 'undefined') {
+                var badLink = document.createElement('a');
+                badLink.href = "javascript:alert('click')";  // Bad practice
+                
+                // Bad: Setting iframe src to javascript URL
+                var iframe = document.createElement('iframe');
+                iframe.src = "javascript:void(0)";           // Bad practice
+            }
+            
+            // Bad: In event handlers (conceptual - would be in HTML)
+            var onClickHandler = "javascript:processData()";
+            
+            // Simulating the problematic usage
+            console.log("JavaScript URLs created:");
+            console.log("Link 1:", link1);
+            console.log("Link 2:", link2);
+            console.log("Malicious:", maliciousUrl);
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Script URL" action="{!save}" onclick="javascriptUrlExamples();" />
+    </apex:form>
+</apex:page>

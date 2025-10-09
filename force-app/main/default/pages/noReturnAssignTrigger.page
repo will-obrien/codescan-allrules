@@ -1,0 +1,52 @@
+<apex:page controller="noReturnAssignTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-return-assign</h1>
+    <p>This page triggers the rule: disallow assignment operators in return statements</p>
+    
+    <!-- Triggers cs-vf:no-return-assign - Assignment in return statements -->
+    <script>
+        // Bad: Assignment in return statements
+        function doSomething() {
+            var bar = 2;
+            return foo = bar + 2;  // Assignment in return
+        }
+        
+        function doSomethingElse() {
+            var result = 0;
+            return foo += 2;  // Compound assignment in return
+        }
+        
+        function anotherExample() {
+            var a = 5, b = 10;
+            return a = b * 2;  // More assignment in return
+        }
+        
+        function complexAssignment() {
+            var obj = {};
+            return obj.prop = "value";  // Property assignment in return
+        }
+        
+        // Bad: Multiple assignment patterns
+        function multipleAssignments() {
+            var x, y, z;
+            return x = y = z = 42;  // Chained assignments
+        }
+        
+        function conditionalAssignment(condition) {
+            var result;
+            if (condition) {
+                return result = "success";  // Conditional assignment
+            }
+            return result = "failure";
+        }
+        
+        function demonstrateReturnAssign() {
+            console.log("Result: " + doSomething());
+            console.log("Another: " + doSomethingElse());
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Return Assign" action="{!save}" onclick="demonstrateReturnAssign();" />
+    </apex:form>
+</apex:page>

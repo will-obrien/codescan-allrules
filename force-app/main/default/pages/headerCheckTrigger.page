@@ -1,0 +1,12 @@
+<apex:page controller="headerCheckTriggerController">
+    <apex:form>
+        <h1>VF Rule Trigger: vf:HeaderCheck</h1>
+        <p>This page is designed to trigger the rule: Files Should Have a Header Comment</p>
+        <p>Rule Description: vf:HeaderCheck</p>
+        
+        <apex:pageBlock title="Test Block">
+            <apex:inputText value="{!testValue}" label="Test Input"/>
+            <apex:commandButton value="Test Action" action="{!testAction}"/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,32 @@
+<apex:page controller="noImpliedEvalTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-implied-eval</h1>
+    <p>This page triggers the rule: disallow the use of eval()-like methods</p>
+    
+    <!-- Triggers cs-vf:no-implied-eval - Implied eval usage -->
+    <script>
+        function demonstrateImpliedEval() {
+            // Bad: Using setTimeout with string (implied eval)
+            setTimeout("alert('Hi!');", 100);
+            
+            // Bad: Using setInterval with string (implied eval)
+            setInterval("alert('Hi!');", 100);
+            
+            // Bad: Using execScript (IE only, but still bad)
+            if (window.execScript) {
+                execScript("alert('Hi!')");
+            }
+            
+            // Bad: More setTimeout examples
+            window.setTimeout("count = 5", 10);
+            window.setInterval("foo = bar", 10);
+            
+            // Bad: Dynamic code execution
+            setTimeout("console.log('Dynamic code execution')", 1000);
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Trigger Implied Eval" action="{!save}" onclick="demonstrateImpliedEval();" />
+    </apex:form>
+</apex:page>

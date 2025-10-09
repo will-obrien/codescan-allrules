@@ -1,0 +1,52 @@
+<apex:page controller="noEmptyCharacterClassTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-empty-character-class</h1>
+    <p>This page triggers the rule: disallow empty character classes in regular expressions</p>
+    
+    <!-- Triggers cs-vf:no-empty-character-class - Empty character classes in regex -->
+    <script>
+        function emptyCharacterClassExamples() {
+            // Bad: Empty character classes in regular expressions
+            var regex1 = /^abc[]/;           // Empty character class []
+            var regex2 = /def[]ghi/;         // Empty character class in middle
+            var regex3 = /[]xyz/;            // Empty character class at start
+            
+            // Bad: Testing with empty character classes
+            var testString1 = "abcdefg";
+            var result1 = /^abc[]/.test(testString1);     // false - will never match
+            var result2 = testString1.match(/^abc[]/);    // null - will never match
+            
+            // Bad: More empty character class examples
+            var pattern1 = /start[]end/;     // Empty class between words
+            var pattern2 = /\d[]letter/;     // Empty class after digit
+            var pattern3 = /word[]\s/;       // Empty class before whitespace
+            
+            // Bad: Empty character classes in different contexts
+            var emailRegex = /[\w\.-]+@[\w\.-]+\.[]$/;    // Empty class at end
+            var phoneRegex = /\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?[]\d{4}/; // Empty class in phone
+            
+            // Bad: Nested or complex patterns with empty classes
+            var complex1 = /(abc|def)[]xyz/;     // Empty class in alternation
+            var complex2 = /^(start[]|end)$/;    // Empty class in group
+            
+            // Bad: Empty classes with quantifiers
+            var quantified1 = /abc[]*def/;       // Empty class with * quantifier
+            var quantified2 = /xyz[]+123/;       // Empty class with + quantifier
+            var quantified3 = /test[]{2,4}/;     // Empty class with specific count
+            
+            // Testing the patterns
+            console.log("Empty character class test 1:", result1);  // false
+            console.log("Empty character class test 2:", result2);  // null
+            
+            // More tests that will fail
+            console.log("Pattern 1 test:", pattern1.test("startend"));     // false
+            console.log("Pattern 2 test:", pattern2.test("5letter"));      // false
+            
+            console.log("Empty character class patterns created");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Empty Char Class" action="{!save}" onclick="emptyCharacterClassExamples();" />
+    </apex:form>
+</apex:page>

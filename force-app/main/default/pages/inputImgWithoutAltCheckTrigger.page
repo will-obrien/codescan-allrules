@@ -1,0 +1,12 @@
+<apex:page controller="inputImgWithoutAltCheckTriggerController">
+    <apex:form>
+        <h1>VF Rule Trigger: vf:InputImgWithoutAltCheck</h1>
+        <p>This page triggers the rule: Image Buttons Should Have an "alt" Attribute</p>
+        
+        <!-- Triggers vf:InputImgWithoutAltCheck - Image input without alt attribute -->
+        <input type="image" src="{!URLFOR($Resource.SampleImage, 'button.png')}" />
+        
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Submit" action="{!save}" />
+    </apex:form>
+</apex:page>

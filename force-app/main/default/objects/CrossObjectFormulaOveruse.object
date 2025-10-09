@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <enableHistory>false</enableHistory>
+    <externalSharingModel>Private</externalSharingModel>
+    <fields>
+        <fullName>Candidate_Name__c</fullName>
+        <externalId>false</externalId>
+        <formula>Job_Application__r.Candidate__r.First_Name__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Candidate Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>AnnualRevenue</fullName>
+        <externalId>false</externalId>
+        <formula>CleanStatus.Candidate__r.First_Name__c</formula>
+        <label>Candidate Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>BillingAddress</fullName>
+        <formula>CleanStatus.Candidate__r.First_Name__c</formula>
+        <label>Candidate Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>CleanStatus</fullName>
+        <formula>CleanStatus.Candidate__r.First_Name__c</formula>
+        <label>Candidate Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>DandbCompanyId</fullName>
+        <formula>CleanStatus.Candidate__r.First_Name__c</formula>
+        <label>Candidate Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Description</fullName>
+        <formula>CleanStatus.Candidate__r.First_Name__c</formula>
+        <label>Candidate Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>DunsNumber</fullName>
+        <formula>CleanStatus.Candidate__r.First_Name__c</formula>
+        <label>Candidate Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Fax</fullName>
+        <formula>CleanStatus.Candidate__r.First_Name__c</formula>
+        <label>Candidate Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Industry</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+        <formula>CleanStatus.Candidate__r.First_Name__c</formula>
+        <label>Candidate Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>Jigsaw</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <formula>CleanStatus.Candidate__r.First_Name__c</formula>
+        <label>Candidate Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+    </fields>
+</CustomObject>

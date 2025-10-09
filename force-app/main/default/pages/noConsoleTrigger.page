@@ -1,0 +1,25 @@
+<apex:page controller="noConsoleTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-console</h1>
+    <p>This page triggers the rule: disallow the use of console</p>
+    
+    <!-- Triggers cs-vf:no-console - Console usage in JavaScript -->
+    <script>
+        // Bad: Console usage is not recommended for production
+        console.log("Made it here.");
+        console.error("That shouldn't have happened.");
+        console.warn("Log a warn level message.");
+        console.info("This is an info message");
+        console.debug("Debug information");
+        
+        function processData() {
+            console.log("Processing data...");
+            // More processing code
+            console.log("Data processed successfully");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Submit" action="{!save}" onclick="processData();" />
+    </apex:form>
+</apex:page>

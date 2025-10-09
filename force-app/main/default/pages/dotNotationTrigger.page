@@ -1,0 +1,60 @@
+<apex:page controller="dotNotationTriggerController">
+    <h1>VF Rule Trigger: cs-vf:dot-notation</h1>
+    <p>This page triggers the rule: enforce dot notation</p>
+    
+    <!-- Triggers cs-vf:dot-notation - Bracket notation when dot notation should be used -->
+    <script>
+        function dotNotationExamples() {
+            var obj = {
+                name: "test",
+                value: 42,
+                method: function() { return "method"; },
+                "simple-prop": "hyphenated"
+            };
+            
+            // Bad: Using bracket notation when dot notation is preferred
+            var x = obj["name"];           // Should be obj.name
+            var y = obj["value"];          // Should be obj.value
+            var z = obj["method"];         // Should be obj.method
+            
+            // Bad: More bracket notation examples
+            var result = obj["method"]();  // Should be obj.method()
+            obj["name"] = "updated";       // Should be obj.name = "updated"
+            
+            // Bad: In nested objects
+            var nested = {
+                level1: {
+                    level2: {
+                        prop: "deep"
+                    }
+                }
+            };
+            
+            var deep = nested["level1"]["level2"]["prop"];  // Should use dot notation
+            
+            // Bad: In array-like access where dot notation is possible
+            var config = {
+                debug: true,
+                version: "1.0",
+                features: ["a", "b", "c"]
+            };
+            
+            var debug = config["debug"];     // Should be config.debug
+            var version = config["version"]; // Should be config.version
+            
+            // Bad: Method calls with bracket notation
+            var str = "hello";
+            var length = str["length"];      // Should be str.length
+            var upper = str["toUpperCase"](); // Should be str.toUpperCase()
+            
+            console.log("Values:", x, y, z);
+            console.log("Deep value:", deep);
+            console.log("Config debug:", debug);
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Dot Notation" action="{!save}" onclick="dotNotationExamples();" />
+    </apex:form>
+</apex:page>

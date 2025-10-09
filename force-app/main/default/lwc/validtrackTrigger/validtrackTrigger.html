@@ -1,0 +1,16 @@
+<template>
+    <div class="slds-card">
+        <div class="slds-card__header">
+            <h2 class="slds-card__header-title">cs-js:valid-track Trigger</h2>
+        </div>
+        <div class="slds-card__body">
+            <p>This component triggers the valid-track rule by using @track incorrectly.</p>
+            <p>Primitive Value: {primitiveValue}</p>
+            <p>Number Value: {numberValue}</p>
+            <p>Boolean Value: {booleanValue}</p>
+            <p>Null Value: {nullValue}</p>
+            <p>Undefined Value: {undefinedValue}</p>
+            <lightning-button label="Update Tracked Values" onclick={handleClick}></lightning-button>
+        </div>
+    </div>
+</template>

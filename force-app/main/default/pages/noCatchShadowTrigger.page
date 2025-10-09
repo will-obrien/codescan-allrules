@@ -1,0 +1,63 @@
+<apex:page controller="noCatchShadowTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-catch-shadow</h1>
+    <p>This page triggers the rule: disallow catch clause parameters from shadowing variables in the outer scope</p>
+    
+    <!-- Triggers cs-vf:no-catch-shadow - Catch parameter shadowing -->
+    <script>
+        function catchShadowExamples() {
+            // Bad: Catch parameter shadows outer scope variable
+            var err = "x";
+            
+            try {
+                throw "problem";
+            } catch (err) {  // Bad: 'err' shadows the outer variable
+                console.log("Caught error:", err);
+            }
+            
+            console.log("Outer err:", err); // In IE 8-, this would be 'problem', not 'x'
+            
+            // Bad: Function name shadowing in catch
+            function err() {
+                return "function";
+            }
+            
+            try {
+                throw "another problem";
+            } catch (err) {  // Bad: 'err' shadows the function
+                console.log("Caught in function shadow:", err);
+            }
+            
+            // Bad: More complex shadowing scenarios
+            var exception = "outer exception";
+            var error = "outer error";
+            
+            try {
+                throw { message: "object error" };
+            } catch (exception) {  // Bad: shadows outer 'exception'
+                console.log("Object error:", exception.message);
+                
+                try {
+                    throw "nested error";
+                } catch (error) {  // Bad: shadows outer 'error'
+                    console.log("Nested error:", error);
+                }
+            }
+            
+            // Bad: Shadowing with different variable types
+            var result = 42;
+            
+            try {
+                throw new Error("test error");
+            } catch (result) {  // Bad: shadows numeric 'result'
+                console.log("Error result:", result.message);
+            }
+            
+            console.log("Final values - exception:", exception, "error:", error, "result:", result);
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Catch Shadow" action="{!save}" onclick="catchShadowExamples();" />
+    </apex:form>
+</apex:page>

@@ -1,0 +1,9 @@
+<apex:page controller="AvoidSOQLInControllerGetterTrigger">
+    <apex:form>
+        <h1>SF Rule Trigger: sf:avoidSoqlInControllerGetter</h1>
+        <apex:pageBlock title="Test Block">
+            <apex:inputText value="{!testValue}" label="Test Input"/>
+            <apex:commandButton value="Test Action" action="{!testAction}"/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

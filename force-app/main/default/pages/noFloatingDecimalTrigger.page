@@ -1,0 +1,44 @@
+<apex:page controller="noFloatingDecimalTriggerController">
+    <h1>VF Rule Trigger: cs-vf:no-floating-decimal</h1>
+    <p>This page triggers the rule: disallow leading or trailing decimal points in numeric literals</p>
+    
+    <!-- Triggers cs-vf:no-floating-decimal - Floating decimal points -->
+    <script>
+        function floatingDecimalExamples() {
+            // Bad: Leading decimal point missing
+            var num1 = .5;     // Should be 0.5
+            var num2 = -.7;    // Should be -0.7
+            var num3 = .123;   // Should be 0.123
+            
+            // Bad: Trailing decimal point missing
+            var num4 = 2.;     // Should be 2.0
+            var num5 = 42.;    // Should be 42.0
+            var num6 = -15.;   // Should be -15.0
+            
+            // Bad: More floating decimal examples
+            var price = 19.;   // Price without trailing zero
+            var percentage = .85;  // Percentage without leading zero
+            var ratio = -.25;      // Negative ratio without leading zero
+            
+            // Using these numbers in calculations
+            var result = num1 + num2;
+            var total = price * percentage;
+            
+            console.log("Floating decimal numbers used");
+            console.log("Result: " + result);
+            console.log("Total: " + total);
+            
+            // Bad: In array literals
+            var numbers = [.1, .2, .3, 4., 5., 6.];
+            
+            // Bad: In function calls
+            Math.round(.567);
+            parseFloat("3.");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Floating Decimal" action="{!save}" onclick="floatingDecimalExamples();" />
+    </apex:form>
+</apex:page>

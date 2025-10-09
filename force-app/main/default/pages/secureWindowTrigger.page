@@ -1,0 +1,43 @@
+<apex:page controller="secureWindowTriggerController">
+    <h1>VF Rule Trigger: cs-vf:secure-window</h1>
+    <p>This page triggers the rule: validate window global access</p>
+    
+    <!-- Triggers cs-vf:secure-window - Invalid window global access -->
+    <script>
+        function invalidWindowAccess() {
+            // Bad: Using disallowed window properties
+            if (typeof window !== 'undefined') {
+                var topWindow = window.top;  // Disallowed window.top access
+                
+                // Bad: Using disallowed window methods
+                if (window.setImmediate) {
+                    window.setImmediate(function() {  // Disallowed setImmediate
+                        console.log("This should not be allowed");
+                    });
+                }
+                
+                // Bad: More disallowed window access
+                var opener = window.opener;          // Disallowed opener access
+                var parent = window.parent;          // Disallowed parent access
+                var frames = window.frames;          // Disallowed frames access
+                
+                // Bad: Attempting to access restricted properties
+                var external = window.external;      // Disallowed external access
+                var history = window.history;        // May be restricted
+                
+                // Bad: Security-sensitive operations
+                window.postMessage("data", "*");     // Potentially unsafe postMessage
+                
+                // Bad: Attempting to modify window
+                window.customProperty = "value";     // Adding custom properties
+                
+                console.log("Accessed restricted window properties");
+            }
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Invalid Window Access" action="{!save}" onclick="invalidWindowAccess();" />
+    </apex:form>
+</apex:page>

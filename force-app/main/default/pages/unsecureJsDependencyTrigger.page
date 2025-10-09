@@ -1,0 +1,114 @@
+<apex:page controller="unsecureJsDependencyTriggerController">
+    <h1>VF Rule Trigger: cs-vf:unsecure-js-dependency</h1>
+    <p>This page triggers the rule: Auditing js dependencies for security vulnerabilities</p>
+    
+    <!-- Triggers cs-vf:unsecure-js-dependency - Insecure JavaScript dependencies -->
+    <script>
+        function unsecureJsDependencyExamples() {
+            console.log("Unsecure JS Dependency Rule Information:");
+            console.log("This rule identifies open source JS components with known CVEs");
+            
+            // Simulating insecure JavaScript dependencies that might be included
+            var insecureDependencies = [
+                {
+                    library: "Angular.js",
+                    version: "1.5.8",
+                    vulnerability: "Cross-site Scripting (XSS)",
+                    severity: "high",
+                    cve: "CVE-2019-10768",
+                    description: "Potential XSS in angular expressions"
+                },
+                {
+                    library: "Bootstrap",
+                    version: "3.3.7",
+                    vulnerability: "Cross-site Scripting (XSS)",
+                    severity: "medium", 
+                    cve: "CVE-2018-14040",
+                    description: "XSS in data-target attribute"
+                },
+                {
+                    library: "Moment.js",
+                    version: "2.15.1",
+                    vulnerability: "Regular Expression Denial of Service",
+                    severity: "high",
+                    cve: "CVE-2017-18214",
+                    description: "ReDoS in RFC 2822 parsing"
+                },
+                {
+                    library: "D3.js",
+                    version: "3.5.17",
+                    vulnerability: "Cross-site Scripting (XSS)",
+                    severity: "medium",
+                    cve: "CVE-2019-10751",
+                    description: "XSS via malicious SVG"
+                },
+                {
+                    library: "Underscore.js",
+                    version: "1.8.3",
+                    vulnerability: "Arbitrary Code Execution",
+                    severity: "critical",
+                    cve: "CVE-2021-23358",
+                    description: "Template injection vulnerability"
+                }
+            ];
+            
+            console.log("Detected insecure JavaScript dependencies:");
+            insecureDependencies.forEach(function(dep) {
+                console.log("Library: " + dep.library + " v" + dep.version);
+                console.log("  Vulnerability: " + dep.vulnerability);
+                console.log("  Severity: " + dep.severity);
+                console.log("  CVE: " + dep.cve);
+                console.log("  Description: " + dep.description);
+                console.log("---");
+            });
+            
+            // Simulate common insecure patterns in JavaScript inclusion
+            var insecureInclusions = [
+                "https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js", // Old jQuery
+                "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js", // Old Bootstrap
+                "https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js", // Old Angular
+                "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js", // Old Moment
+                "https://d3js.org/d3.v3.min.js" // Old D3
+            ];
+            
+            console.log("Insecure CDN inclusions that would trigger this rule:");
+            insecureInclusions.forEach(function(url) {
+                console.log("- " + url);
+            });
+            
+            // Information about vulnerability sources
+            console.log("Vulnerability Information Sources:");
+            console.log("- National Vulnerability Database (NVD)");
+            console.log("- GitHub Security Advisories");
+            console.log("- Snyk Vulnerability Database");
+            console.log("- CVE Details");
+            console.log("- OWASP Dependency Check");
+            
+            // Common vulnerability types in JS dependencies
+            var commonVulnerabilityTypes = [
+                "Cross-site Scripting (XSS)",
+                "Prototype Pollution", 
+                "Regular Expression Denial of Service (ReDoS)",
+                "Arbitrary Code Execution",
+                "Path Traversal",
+                "SQL Injection",
+                "Command Injection",
+                "Insecure Randomness",
+                "Cryptographic Issues"
+            ];
+            
+            console.log("Common vulnerability types in JS dependencies:");
+            commonVulnerabilityTypes.forEach(function(type) {
+                console.log("- " + type);
+            });
+            
+            console.log("Unsecure JS dependency analysis completed");
+            console.log("Recommendation: Update to latest secure versions of all dependencies");
+        }
+    </script>
+    
+    <apex:form>
+        <apex:inputText value="{!testValue}" />
+        <apex:commandButton value="Unsecure JS Dependency" action="{!save}" onclick="unsecureJsDependencyExamples();" />
+    </apex:form>
+</apex:page>
